@@ -5,8 +5,6 @@ sidebar_position: 80
 
 # Contributor Guide
 
-## How to contribute
-
 We welcome any issues, change requests or general feedback. Do not hestiate to [open an issue](https://github.com/osism/issues/issues/new).
 
 We use GitHub Issues to capture feature requests, feedback, bugs, etc. The tracker is available in the
