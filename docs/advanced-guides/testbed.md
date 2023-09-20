@@ -13,20 +13,16 @@ more best practices and experiences from the productive installations will be in
 It will become more production-like over time. However, at no point does it claim to represent a production
 setup exactly.
 
-For the German-speaking readers, [iX 2020/12](https://www.osism.tech/files/ix.2020.12.048_059.pdf_kiosk.pdf) contains an article
-by Kurt Garloff titled [Wolken-Verbund](https://www.osism.tech/files/ix.2020.12.048_059.pdf_kiosk.pdf), in which, among other
-things, the OSISM Testbed is briefly introduced.
-
 ## Supported releases
 
 The following stable Ceph and OpenStack releases are supported.
 
-The deployment of Ceph is based on [ceph-ansible](https://github.com/ceph/ceph-ansible).
+The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ansible/).
 
 * Ceph Pacific
 * Ceph Quincy (**default**)
 
-The deployment of OpenStack is based on [kolla-ansible](https://opendev.org/openstack/kolla-ansible).
+The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
 
 * OpenStack Zed
 * OpenStack 2023.1 (**default**)
