@@ -27,9 +27,23 @@ Storage          | at least 1 TByte                | has to be available as `/de
 Network          | at least 1 network interface    | an optional 2nd network interface can be used for external connectivity
 USB stick        | at least 2 GByte                |
 
+## Types
+
+There are two types of Cloud in a Box.
+
+1. The **sandbox** type is intended for developers and demonstrations. A full OSISM installation
+   is one there which also includes Ceph and OpenSearch, for example. In the course of the
+   installation, necessary images, networks, etc. are also created.
+
+2. The **edge** type is intended to be deployed as an appliance to provide an edge cloud on a
+   single node. Compared to the sandbox, certain services are not provided there or are
+   implemented differently. For example, OpenSearch is not deployed because the logs are
+   delivered to a central location. The storage backend will also be implemented differently there
+   in the future instead of Ceph.
+
 ## Installation
 
-1. Download one of the Cloud in a Box images.
+1. Download one of the Cloud in a Box images of type sandbox
 
    * [ubuntu-autoinstall-cloud-in-a-box-1.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-1.iso) (with first block device as `/dev/sda`)
    * [ubuntu-autoinstall-cloud-in-a-box-2.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-2.iso) (with first block device as `/dev/nvme0n1`)
