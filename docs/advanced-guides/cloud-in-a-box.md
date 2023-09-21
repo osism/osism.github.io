@@ -113,6 +113,8 @@ If you want to access the services please choose the URL from the following list
 | Homer                   | <https://homer.services.in-a-box.cloud>       | -          | -         |
 | Horizon - admin project | <https://api.in-a-box.cloud>                  | admin      | password  |
 | Horizon - test project  | <https://api.in-a-box.cloud>                  | test       | test      |
+| Skyline - admin project | <https://api.in-a-box.cloud:9999>             | admin      | password  |
+| Skyline - test project  | <https://api.in-a-box.cloud:9999>             | test       | test      |
 | OpenSearch Dashboards   | <https://api.in-a-box.cloud:5601>             | opensearch | password  |
 | Netbox                  | <https://netbox.services.in-a-box.cloud>      | admin      | password  |
 | Netdata                 | <http://manager.systems.in-a-box.cloud:19999> | -          | -         |
