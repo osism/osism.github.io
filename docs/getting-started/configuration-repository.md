@@ -145,11 +145,6 @@ manager_version [latest]: 6.0.0
     <td>1 to use Ceph, 0 to not use Ceph</td>
     <td><code>1</code></td>
   </tr>
-  <tr>
-    <td><code>with_vault</code></td>
-    <td>1 to use Ansible-Vault, 0 to not use Ansible-Vault</td>
-    <td><code>1</code></td>
-  </tr>
 </table>
 
 ### Post-processing
