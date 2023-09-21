@@ -405,13 +405,33 @@ Script                                                                      | De
 
 ## Troubleshooting
 
-### unsupported locale setting
+### Unsupported locale setting
 
 ```sh
 $ make prepare
 ansible-playbook -i localhost, ansible/check-local-versions.yml
 ERROR: Ansible could not initialize the preferred locale: unsupported locale setting
 make: *** [prepare] Error 1
+```
+
+To solve the problem you have to modify the `Makefile`. Change the 1st line as follows.
+
+```
+export LC_ALL = en_US.UTF-8
+```
+
+To find out the locale used on the system `printenv` can be used.
+
+```
+$ printenv | grep -i lang|locale
+LANG="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_CTYPE="UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_ALL=
 ```
 
 ## Notes
