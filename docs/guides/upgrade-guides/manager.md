@@ -8,7 +8,8 @@ sidebar_position: 10
 Always read the release notes first to learn what has changed and what
 adjustments are necessary
 
-1. Sync the image versions in the configuration repository.
+1. Sync the image versions in the configuration repository. It is important to do this so
+   that the correct versions are available in `environments/manager/images.yml`.
 
    ```
    MANAGER_VERSION=6.0.0 gilt overlay  # you have to do this 2x
@@ -24,19 +25,32 @@ adjustments are necessary
 3. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
    (or anywhere else), they must be removed when using a stable release.
 
-4. Update the configuration repository on the manager.
+4. Commit and push changes in the configuration repository. Since everyone here has their own
+   workflows for changes to the configuration repository, only a generic example for Git.
+
+   ```
+   git commit -a -s -m "manager: use OSISM version 6.0.0"
+   git push
+   ```
+
+5. Update the configuration repository on the manager.
 
    ```
    osism apply configuration
    ```
 
-5. Update the manager services on the manager.
+6. Update the manager services on the manager.
 
    ```
    osism update manager
    ```
 
-6. Refresh the facts cache.
+   If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the parameter
+   `--ask-vault-pass` is also appended.
+
+   If `osism update manager` does not work yet, use `osism-update-manager` instead.
+
+7. Refresh the facts cache.
 
    ```
    osism apply facts
