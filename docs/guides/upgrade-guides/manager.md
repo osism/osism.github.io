@@ -45,13 +45,20 @@ adjustments are necessary
    osism update manager
    ```
 
-   If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the parameter
-   `--ask-vault-pass` is also appended.
+   * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the parameter
+     `--ask-vault-pass` is also appended.
+   * If `osism update manager` does not work yet, use `osism-update-manager` instead.
 
-   If `osism update manager` does not work yet, use `osism-update-manager` instead.
 
 7. Refresh the facts cache.
 
    ```
    osism apply facts
+   ```
+
+8. If Traefik is used on the management plane (`traefik_enable: true` in `environments/infrastructure/configuration.yml`)
+   then Traefik should also be upgraded directly.
+
+   ```
+   osism apply traefik
    ```
