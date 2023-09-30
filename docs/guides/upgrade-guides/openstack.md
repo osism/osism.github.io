@@ -5,6 +5,13 @@ sidebar_position: 40
 
 # OpenStack
 
+## Keystone
+
+```
+osism apply -a pull keystone
+osism apply -a upgrade keystone
+```
+
 ## Glance
 
 ```
