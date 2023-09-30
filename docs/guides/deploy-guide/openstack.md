@@ -46,3 +46,10 @@ osism apply cinder
 osism apply -a pull neutron
 osism apply neutron
 ```
+
+## Nova
+
+```
+osism apply -a pull nova
+osism apply nova
+```

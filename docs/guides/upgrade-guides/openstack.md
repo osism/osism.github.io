@@ -46,3 +46,10 @@ osism apply -a upgrade cinder
 osism apply -a pull neutron
 osism apply -a rolling-upgrade neutron
 ```
+
+## Nova
+
+```
+osism apply -a pull nova
+osism apply -a rolling-upgrade nova
+```
