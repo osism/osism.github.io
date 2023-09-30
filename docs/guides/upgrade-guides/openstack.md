@@ -32,3 +32,10 @@ osism apply -a upgrade designate
 osism apply -a pull placement
 osism apply -a upgrade placement
 ```
+
+## Cinder
+
+```
+osism apply -a pull cinder
+osism apply -a upgrade cinder
+```
