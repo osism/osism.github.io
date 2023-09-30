@@ -1,6 +1,6 @@
 ---
 sidebar_label: OpenStack
-sidebar_position: 30
+sidebar_position: 40
 ---
 
 # OpenStack
@@ -9,5 +9,5 @@ sidebar_position: 30
 
 ```
 osism apply -a pull glance
-osism apply glance
+osism apply -a rolling-upgrade glance
 ```
