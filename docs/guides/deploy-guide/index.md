@@ -20,3 +20,8 @@ The guides always assume that a node is already initially accessible via SSH and
 needs to be bootstrapped and integrated into the machine. Deploying bare-metal nodes
 with an operating system is not part of the Deploy Guides and is covered in the
 Advanced Guides.
+
+In the examples, the pull of images (if supported by a role) is always run first. While
+this is optional, it is recommended to speed up the execution of the deploy action in
+the second step. This significantly reduces the times required for the restart from a
+service.

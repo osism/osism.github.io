@@ -7,11 +7,18 @@ sidebar_position: 40
 
 ## OpenSearch
 
-* OpenSearch dashboards is also upgraded with the `opensearch` role
+OpenSearch dashboards is also upgraded with the `opensearch` role.
 
 ```
 osism apply -a pull opensearch
 osism apply -a upgrade opensearch
+```
+
+## Prometheus
+
+```
+osism apply -a pull prometheus
+osism apply prometheus
 ```
 
 ## Grafana

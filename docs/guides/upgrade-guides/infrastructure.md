@@ -18,3 +18,17 @@ service.
 osism apply -a pull common
 osism apply -a upgrade common
 ```
+
+## Redis
+
+```
+osism apply -a pull redis
+osism apply -a upgrade redis
+```
+
+## Memcached
+
+```
+osism apply -a pull memcached
+osism apply -a upgrade memcached
+```
