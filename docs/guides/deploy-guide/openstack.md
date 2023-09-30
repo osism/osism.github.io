@@ -18,3 +18,10 @@ osism apply keystone
 osism apply -a pull glance
 osism apply glance
 ```
+
+## Designate
+
+```
+osism apply -a pull designate
+osism apply designate
+```

@@ -18,3 +18,10 @@ osism apply -a upgrade keystone
 osism apply -a pull glance
 osism apply -a rolling-upgrade glance
 ```
+
+## Designate
+
+```
+osism apply -a pull designate
+osism apply -a upgrade designate
+```
