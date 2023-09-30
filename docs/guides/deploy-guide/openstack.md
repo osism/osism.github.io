@@ -53,3 +53,10 @@ osism apply neutron
 osism apply -a pull nova
 osism apply nova
 ```
+
+## Octavia
+
+```
+osism apply -a pull octavia
+osism apply octavia
+```

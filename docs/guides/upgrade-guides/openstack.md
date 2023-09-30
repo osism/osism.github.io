@@ -53,3 +53,20 @@ osism apply -a rolling-upgrade neutron
 osism apply -a pull nova
 osism apply -a rolling-upgrade nova
 ```
+
+## Octavia
+
+```
+osism apply -a pull octavia
+osism apply -a upgrade octavia
+```
+
+### Amphora image update
+
+This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
+this step is not necessary.
+
+### Amphora rotation
+
+This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
+this step is not necessary.
