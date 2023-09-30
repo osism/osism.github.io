@@ -39,3 +39,10 @@ osism apply -a upgrade placement
 osism apply -a pull cinder
 osism apply -a upgrade cinder
 ```
+
+## Neutron
+
+```
+osism apply -a pull neutron
+osism apply -a rolling-upgrade neutron
+```

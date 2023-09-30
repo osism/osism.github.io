@@ -39,3 +39,10 @@ osism apply placement
 osism apply -a pull cinder
 osism apply cinder
 ```
+
+## Neutron
+
+```
+osism apply -a pull neutron
+osism apply neutron
+```
