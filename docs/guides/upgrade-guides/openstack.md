@@ -25,3 +25,10 @@ osism apply -a rolling-upgrade glance
 osism apply -a pull designate
 osism apply -a upgrade designate
 ```
+
+## Placement
+
+```
+osism apply -a pull placement
+osism apply -a upgrade placement
+```

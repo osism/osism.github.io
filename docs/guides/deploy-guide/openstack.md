@@ -25,3 +25,10 @@ osism apply glance
 osism apply -a pull designate
 osism apply designate
 ```
+
+## Placement
+
+```
+osism apply -a pull placement
+osism apply placement
+```
