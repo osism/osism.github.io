@@ -32,3 +32,12 @@ osism apply redis
 osism apply -a pull memcached
 osism apply memcached
 ```
+
+## OVN
+
+Before the deployment of OVN, the deployment of Open vSwitch must already have been done.
+
+```
+osism apply -a pull ovn
+osism apply ovn
+```

@@ -32,3 +32,10 @@ osism apply -a upgrade redis
 osism apply -a pull memcached
 osism apply -a upgrade memcached
 ```
+
+## OVN
+
+```
+osism apply -a pull ovn
+osism apply -a upgrade ovn
+```
