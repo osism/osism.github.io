@@ -5,6 +5,22 @@ sidebar_position: 20
 
 # Ceph
 
+```
+osism apply ceph-mons
+osism apply ceph-mgrs
+osism apply ceph-osds
+osism apply ceph-crash
+```
+
+```
+osism apply copy-ceph-keys
+```
+
+```
+osism apply cephclient
+```
+
+
 ## RGW service
 
 1. Add following configuration in `environments/ceph/configuration.yml`
