@@ -5,8 +5,12 @@ sidebar_position: 11
 
 # Testbed
 
-💡 With the Testbed, it is possible to run a full OSISM deployment on an existing
-OpenStack environment such as Cleura or REGIO.cloud.
+💡 With the OSISM Testbed, it is possible to run a full Sovereign Cloud Stack
+deployment on an existing OpenStack environment such as Cleura or REGIO.cloud.
+
+OSISM is the reference implementation for the infrastructure as a service layer in the
+[Sovereign Cloud Stack](https://scs.community) (SCS) project. The OSISM Testbed is therefore
+used in the SCS project to test and work on the Instrastructure as a Service layer.
 
 The OSISM Testbed is intended as a playground. Further services and integration will
 be added over time. More and more best practices and experiences from the productive
