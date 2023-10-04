@@ -13,20 +13,6 @@ be added over time. More and more best practices and experiences from the produc
 deployments will be included here in the future. It will become more production-like
 over time. However, at no point does it claim to represent a production setup exactly.
 
-## Supported releases
-
-The following stable Ceph and OpenStack releases are supported.
-
-The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ansible/).
-
-* Ceph Pacific
-* Ceph Quincy (**default**)
-
-The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
-
-* OpenStack Zed
-* OpenStack 2023.1 (**default**)
-
 ## Requirements
 
 ### Cloud access
@@ -506,6 +492,21 @@ LC_ALL=
   interface.
 
 ## Appendix
+
+### Supported releases
+
+The following stable Ceph and OpenStack releases are supported.
+
+The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ansible/).
+
+* Ceph Pacific
+* Ceph Quincy (**default**)
+
+The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
+
+* OpenStack Zed
+* OpenStack 2023.1 (**default**)
+
 
 ### Included services
 
