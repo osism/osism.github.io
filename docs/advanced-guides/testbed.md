@@ -5,13 +5,13 @@ sidebar_position: 11
 
 # Testbed
 
-💡 With the Testbed, it is possible to run a full OSISM installation on an existing OpenStack environment
-such as Cleura or REGIO.cloud.
+💡 With the Testbed, it is possible to run a full OSISM deployment on an existing
+OpenStack environment such as Cleura or REGIO.cloud.
 
-The OSISM Testbed is intended as a playground. Further services and integration will be added over time. More and
-more best practices and experiences from the productive installations will be included here in the future.
-It will become more production-like over time. However, at no point does it claim to represent a production
-setup exactly.
+The OSISM Testbed is intended as a playground. Further services and integration will
+be added over time. More and more best practices and experiences from the productive
+deployments will be included here in the future. It will become more production-like
+over time. However, at no point does it claim to represent a production setup exactly.
 
 ## Supported releases
 
@@ -32,11 +32,12 @@ The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.o
 ### Cloud access
 
 The prerequisite is to have an account on one of the supported OpenStack cloud providers.
+
 It is not part of this guide to describe the registration with the individual cloud
 providers. Please contact the respective cloud provider for this.
 
-Product          | Provider      | Profile name
------------------|---------------|--------------
+**Product**      | **Provider**  | **Profile name**
+-----------------|---------------|-----------------
 Cleura           | Cleura        | `cleura`
 Fuga Cloud       | FUGA          | `fuga`
 HuaweiCloud      | HuaweiCloud   | `huaweicloud`
@@ -46,21 +47,40 @@ pluscloud open   | plusserver    | `pluscloudopen`
 REGIO.cloud      | OSISM         | `regiocloud`
 Wavestack        | noris network | `wavestack`
 
+For each provider listed in the table, a predefined profile is available in the
+`terraform/environments` directory. This profile contains the name of the public
+network, which flavors to use, etc.
+
+Here is an example from the profile for REGIO.cloud.
+
+```
+flavor_manager            = "SCS-4V-8-50"
+flavor_node               = "SCS-8V-32-100"
+volume_type               = "ssd"
+image                     = "Ubuntu 22.04"
+image_node                = "Ubuntu 22.04"
+public                    = "public"
+availability_zone         = "nova"
+volume_availability_zone  = "nova"
+network_availability_zone = "nova"
+```
+
 ### Cloud resources
 
-The OSISM Testbed requires at least the following quota when using the default flavors:
+The OSISM Testbed requires at least the following project quota when using the default flavors:
 
-* 1 keypair
-* 6 security groups (50 security group rules)
-* 6 networks with 6 subnetworks
-* 1 router
-* 30 ports
-* 1 floating IP address
-* 9 volumes (min 90 GB) plus 140GB root disks (depends on flavors)
-* 4 instances (with 28 VCPUs and 104 GByte memory in total)
-
-If the cloud you are using does not offer a block storage service (Cinder), you can work with
-ephemeral volumes from the compute service (Nova).
+**Resource** | **Quantity**         | **Note**
+-------------|----------------------|-------------------------
+4            | Instances            | 28 VCPUs + 104 GByte RAM
+9            | Volumes              | 90 GByte volume storage
+1            | Floating IP          |
+1            | Keypair              |
+3            | Security group       |
+16           | Security group rules |
+1            | Network              |
+1            | Subetwork            |
+6            | Ports                |
+1            | Router               |
 
 ## Preparations
 
@@ -93,61 +113,58 @@ must be imported locally.
 This section describes step by step how to deploy the OSISM Testbed.
 
 1. Clone the [osism/testbed](https://github.com/osism/testbed) repository.
+   The repository can also be cloned to any other location.
 
    ```sh
    mkdir -p ~/src/github.com/osism
    git clone https://github.com/osism/testbed ~/src/github.com/osism/testbed
+   cd ~/src/github.com/osism/testbed
    ```
 
-   The repository can also be cloned to any other location. The path to this repository can later be
-   set via the parameter `basepath`.
 
 2. The access data for the cloud provider used is then stored in `terraform/clouds.yaml`.
    The `clouds.yaml` file is provided by the cloud provider used. Please check the documentation
    of the cloud provider you are using or their support for details.
 
-   OpenTelekomCloud is used as an example. The cloud name in `clouds.yaml`
-   and the environment name (value of `ENVIRONMENT`) are `otc` in this case. If another cloud
-   is used, replace `otc` with the respective profile name from the table above.
+   REGIO.cloud is used as an example. The cloud name in `clouds.yaml`
+   and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. If another cloud
+   is used, replace `regioclodu` with the respective profile name from the table above.
 
    ```yaml
    clouds:
-     otc:
+     regiocloud:
        auth:
-         auth_url: https://iam.eu-de.otc.t-systems.com:443/v3
-         project_name: eu-de
-         user_domain_name: OTC-EU-DE-00000000000000000000
-         domain_name: OTC-EU-DE-00000000000000000000
+         auth_url: https://keystone.services.a.regiocloud.tech/v3
+         project_name: PROJECT
          username: USERNAME
          password: PASSWORD
-       interface: public
-       identity_api_version: 3
+         project_domain_name: DOMAIN
+         user_domain_name: DOMAIN
    ```
 
-   The use of application credentials is preferred. This way it is not necessary to store
+3  The use of application credentials is preferred. This way it is not necessary to store
    details like username or project name or sensitive information like the password in the
    `clouds.yaml` file.
 
    The application credentials can be found in Horizon under **Identity**. Use `OSISM testbed` as
    name and click `Create Application Credential`.
 
-   The `clouds.yaml` file of Fuga Cloud can be used as an example for the use of
+   The `clouds.yaml` file of REGIO.cloud can be used as an example for the use of
    application credentials. With another cloud provider, only the `auth_url` must then be changed
    accordingly.
 
    ```yaml
    clouds:
-     fuga:
+     regiocloud:
        auth:
-         auth_url: https://core.fuga.cloud:5000/v3
-         application_credential_id: "ID"
-         application_credential_secret: "SECRET"
-       interface: public
-       identity_api_version: 3
+         auth_url: https://keystone.services.a.regiocloud.tech/v3
+         application_credential_id: ID
+         application_credential_secret: SECRET
        auth_type: "v3applicationcredential"
    ```
 
-3. Prepare the deployment.
+3. Prepare the deployment. The versions of Ansible and Terraform are checked and necessary
+   dependencies are cloned.
 
    ```sh
    make prepare
@@ -156,33 +173,53 @@ This section describes step by step how to deploy the OSISM Testbed.
 4. Create the infrastructure with Terraform.
 
    ```sh
-   make ENVIRONMENT=otc create
+   make ENVIRONMENT=regiocloud create
    ```
 
-5. Deploy OSISM. Depending on the cloud, the installation will take some time. Up to two hours
-   is not unusual.
+5. Deploy the OSISM manager and bootstrap all nodes.
 
    ```sh
-   make ENVIRONMENT=otc deploy
+   make ENVIRONMENT=regiocloud manager
    ```
 
-6. After the installation, you can log in to the manager via SSH.
+6. Deploy all services. Depending on the cloud, the installation will take some time. Up
+   to two hours is not unusual. In this step, Ceph, OpenStack and all necessary
+   infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
 
    ```sh
-   make ENVIRONMENT=otc login
+   make ENVIRONMENT=regiocloud deploy
    ```
 
-7. If you want you can create a test project with a test user after login. It also
+   Alternatively, it is also possible to deploy the services step by step directly on the
+   manager. To do this, first log in to the manager with `make ENVIRONMENT=regiocloud login`
+   and then execute the deploy scripts one after the other. It is recommended to do this
+   within a screen session.
+
+   ```sh
+   /opt/configuration/scripts/deploy/001-helper-services.sh
+   /opt/configuration/scripts/deploy/100-ceph-services-basic.sh
+   /opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh
+   /opt/configuration/scripts/deploy/300-openstack-services-basic.sh
+   /opt/configuration/scripts/deploy/400-monitoring-services.sh
+   ```
+
+7. After the deployment, you can log in to the manager via SSH.
+
+   ```sh
+   make ENVIRONMENT=regiocloud login
+   ```
+
+8. If you want you can create a test project with a test user after login. It also
    creates an instance with a volume attached to a network with a router.
 
    ```sh
    osism apply --environment openstack test
    ```
 
-8. When the OSISM Testbed is no longer needed, it can be deleted.
+9. When the OSISM Testbed is no longer needed, it can be deleted.
 
    ```sh
-   make ENVIRONMENT=otc clean
+   make ENVIRONMENT=regiocloud clean
    ```
 
 ## Configuration
@@ -218,9 +255,28 @@ volume_size_base          | `30`                      |
 volume_size_storage       | `10`                      |
 volume_type               | `__DEFAULT__`             |
 
-### Overlays
+### Overrides
+
+**Name**                                  | **Description**
+------------------------------------------|----------------
+`manager_boot_from_image`                 |
+`manager_boot_from_volume`                |
+`neutron_availability_zone_hints_network` |
+`neutron_availability_zone_hints_router`  |
+`neutron_router_enable_snat`              |
+`nodes_boot_from_image`                   |
+`nodes_boot_from_volume`                  |
+`nodes_use_ephemeral_storage`             |
 
 ### Customisations
+
+**Name**             | **Description**
+---------------------|----------------
+`access_floatingip`  |
+`access_ipv4`        |
+`access_ipv6`        |
+`default`            |
+`neutron_floatingip` |
 
 ## Usage
 
@@ -260,8 +316,8 @@ All SSL enabled services within the OSISM Testbed use certs which are signed by 
 
 If you want to access the services please choose the URL from the following table.
 
-Name                   | URL                                               | Username      | Password
------------------------|---------------------------------------------------|---------------|---------
+**Name**               | **URL**                                           | **Username**  | **Password**
+-----------------------|---------------------------------------------------|---------------|-------------
 ARA                    | <https://ara.testbed.osism.xyz/>                  | ara           | password
 Ceph                   | <https://api-int.testbed.osism.xyz:8140>          | admin         | password
 Flower                 | <https://api-int.testbed.osism.xyz:8140>          |               |
