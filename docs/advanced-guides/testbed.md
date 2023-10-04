@@ -142,7 +142,7 @@ This section describes step by step how to deploy the OSISM Testbed.
          user_domain_name: DOMAIN
    ```
 
-3  The use of application credentials is preferred. This way it is not necessary to store
+   The use of application credentials is preferred. This way it is not necessary to store
    details like username or project name or sensitive information like the password in the
    `clouds.yaml` file.
 
