@@ -47,10 +47,12 @@ $ apt-cache madison docker-ce
 If, for example, you want to change the Docker version from `20.10.24` to `24.0.6`, `docker_version` in
 `environments/configuration.yml` is changed accordingly. The `5:` prefix is placed in front of the version.
 
-The upgrade of Docker is then done with the OSISM CLI.
+The upgrade of Docker is then done with the OSISM CLI. Docker on the manager itself is updated differently.
+This does not work on the manager itself because the Docker service may be started during the upgrade and
+individual containers may be started as a result. This would interrupt the run of the role itself.
 
 ```
-osism apply docker
+osism apply docker -l 'docker:!manager'
 ```
 
 By default, `serial` is set to `1` so that the the hosts are upgrade one after the other.
@@ -61,6 +63,15 @@ with each iteration.
 ```yaml
 osism_serial:
   docker: 10%
+```
+
+On the manager itself, the `run.sh` script in the manager environment of the configuration must
+currently be used to upgrade the Docker service. In a future release a dedicated `osism update docker`
+command will be available for this purpose.
+
+```
+cd /opt/configuration/environments/manager
+ANSIBLE_ASK_VAULT_PASS=True ./run.sh docker
 ```
 
 ## Restart behaviour
