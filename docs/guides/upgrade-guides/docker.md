@@ -74,6 +74,8 @@ cd /opt/configuration/environments/manager
 ANSIBLE_ASK_VAULT_PASS=True ./run.sh docker
 ```
 
+Restart the docker service on the manager afterwards manually.
+
 ## Restart behaviour
 
 When upgrading, the Docker service is restarted. As a result, it can come to a restart of the
