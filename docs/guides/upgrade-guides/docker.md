@@ -45,7 +45,7 @@ $ apt-cache madison docker-ce
 ```
 
 If, for example, you want to change the Docker version from `20.10.24` to `24.0.6`, `docker_version` in
-`environments/configuration.yml` is changed accordingly. The `5:` prefix is placed in front of the version.
+`environments/configuration.yml` is changed accordingly. The `5:` prefix is placed in front of the version. Commit and push the changes to your configuration repository afterwards.
 
 The upgrade of Docker is then done with the OSISM CLI. Docker on the manager itself is updated differently.
 This does not work on the manager itself because the Docker service may be started during the upgrade and
