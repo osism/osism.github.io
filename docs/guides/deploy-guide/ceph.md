@@ -79,9 +79,15 @@ osism apply cephclient
        port: 8081
    ```
 
-4. Apply `ceph-rgws` and `ceph-rgw` roles.
+4. Apply roles `ceph-rgws` to deploy the Ceph RGW services and `ceph-rgw` to prepare the OpenStack endpoints.
 
    ```
    osism apply ceph-rgws
    osism apply ceph-rgw
+   ```
+5. Apply roles `loadbalancer` (HAProxy endpoints) and `horizon`.
+
+   ```
+   osism apply loadbalancer
+   osism apply horizon
    ```
