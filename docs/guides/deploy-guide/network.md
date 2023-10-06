@@ -12,7 +12,7 @@ osism apply -a pull openvswitch
 osism apply openvswitch
 ```
 
-## OVN
+## OVN (if used)
 
 Before the deployment of OVN, the deployment of Open vSwitch must already have been done.
 
