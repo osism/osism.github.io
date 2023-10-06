@@ -60,6 +60,10 @@ To adjust this, either use the `osism_serial` dictionary in the `environments/co
 to change the value in `docker` or append `-e serial=10%` to upgrade, for example, 10%
 with each iteration.
 
+Please note that it is not a good idea to upgrade more than one Docker service at a time.
+This can lead to anomalies, especially on storage nodes and control nodes. It is recommended
+not to change the default of 1.
+
 ```yaml
 osism_serial:
   docker: 10%
