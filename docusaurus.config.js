@@ -70,7 +70,7 @@ const config = {
             label: 'Docs',
           },
           {
-            href: 'https://github.com/osism',
+            href: 'https://github.com/osism/osism.github.io',
             label: 'GitHub',
             position: 'right',
           },
