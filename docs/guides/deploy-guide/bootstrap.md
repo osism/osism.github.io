@@ -27,6 +27,10 @@ The following steps are applied to bootstrap all nodes. After the completion of 
      osism apply operator -u osism --conn-pass-file /opt/configuration/secrets/osism_password
      ```
 
+   * When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism` and the password of this
+     user is `password`. If you install Ubuntu manually the user usually is `ubuntu`. The password according to what you
+     have set yourself
+
 2. Network configuration. It is recommended to backup the existing network configuration.
 
    ```

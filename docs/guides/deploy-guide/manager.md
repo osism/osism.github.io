@@ -27,7 +27,7 @@ on the manager node need to be run as this user. The name of the operator user i
 
 With `ANSIBLE_USER` the existing user account is set after the provsioning of the management
 node. When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
-and the password of this user is `password`. If you install Ubuntu manually it usually is `ubuntu`.
+and the password of this user is `password`. If you install Ubuntu manually the user usually is `ubuntu`.
 The password according to what you have set yourself.
 
 ```
