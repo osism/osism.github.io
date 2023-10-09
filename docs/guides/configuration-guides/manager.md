@@ -53,3 +53,28 @@ manager_opensearch_port: 9200
 
 The integration can also be enabled later. `osism update manager` is then
 executed after the configuration has been changed.
+
+## OpenStack broker integration
+
+If the Baremetal Service Integration in OSISM is used, the OpenStack Broker integration is
+required. The integration itself is activated by setting the parameter `enable_listener` to `true`.
+
+The hosts in the `manager_listener_broker_hosts` list are the control nodes of OpenStack.
+The user is set via `manager_listener_broker_username`. On OpenStack's RabbitMQ broker, the user `openstack`
+is present by default.
+
+```yaml title="environments/manager/configuration.yml"
+enable_listener: true
+manager_listener_broker_hosts:
+  - 192.168.16.10
+  - 192.168.16.11
+  - 192.168.16.12
+manager_listener_broker_username: openstack
+manager_listener_broker_uri: "{% for host in manager_listener_broker_hosts %}amqp://{{ manager_listener_broker_username }}:{{ manager_listener_broker_password }}@{{ host }}:5672/{% if not loop.last %};{% endif %}{% endfor %}"
+```
+
+The password used when using the `openstack` user is `rabbitmq_password` from `environments/kolla/secrets.yml`.
+
+```yaml title="environments/manager/secrets.yml"
+manager_listener_broker_password: RABBITMQ_PASSWORD
+```
