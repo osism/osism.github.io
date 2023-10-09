@@ -5,6 +5,8 @@ sidebar_position: 10
 
 # Infrastructure
 
+## Kubernetes
+
 ## Cron, Fluentd & Kolla Toolbox
 
 The common role of Kolla is used to manage the services `cron`, `fluentd`
