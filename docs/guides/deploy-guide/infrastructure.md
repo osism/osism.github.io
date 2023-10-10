@@ -41,3 +41,17 @@ osism apply redis
 osism apply -a pull memcached
 osism apply memcached
 ```
+
+## RabbitMQ
+
+```
+osism apply -a pull rabbitmq
+osism apply rabbitmq
+```
+
+## MariaDB
+
+```
+osism apply -a pull mariadb
+osism apply mariadb
+```

@@ -41,3 +41,17 @@ osism apply -a upgrade redis
 osism apply -a pull memcached
 osism apply -a upgrade memcached
 ```
+
+## RabbitMQ
+
+```
+osism apply -a pull rabbitmq
+osism apply -a upgrade rabbitmq
+```
+
+## MariaDB
+
+```
+osism apply -a pull mariadb
+osism apply -a upgrade mariadb
+```
