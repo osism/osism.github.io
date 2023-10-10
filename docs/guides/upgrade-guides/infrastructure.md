@@ -21,6 +21,13 @@ osism apply -a pull common
 osism apply -a upgrade common
 ```
 
+## Loadbalancer
+
+```
+osism apply -a pull loadbalancer
+osism apply -a upgrade loadbalancer
+```
+
 ## Redis
 
 ```
