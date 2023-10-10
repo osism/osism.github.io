@@ -3,14 +3,16 @@ sidebar_label: Cloud in a Box
 sidebar_position: 10
 ---
 
-# Cloud in a Box
+# Cloud in a Box - CiaB
 
-💡 Cloud in a Box is a single node installation of OSISM. Everything you need to work with Kubernetes is included.
-It is well suited for development and for use as an edge cloud in special cases.
+💡 Cloud in a Box (CiaB) is a minimalistic installation of OSISM with only services which are needed to
+make it work with Kubernetes. It is intended for use as a development
+system on bare-metal or for use in edge environments.
+
 
 :::warning
 
-In the moment the secrets are stored in plain text in the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box)
+At the moment the secrets are stored in plain text in the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box)
 repository and are not secure. Do not use for public accessible systems. In the future, the secrets will be generated automatically.
 
 :::
@@ -19,13 +21,13 @@ repository and are not secure. Do not use for public accessible systems. In the 
 
 The system to be used as Cloud in a Box must fulfill these minimum requirements.
 
-Type of resource | Amount                          | Note
------------------|---------------------------------|--------------------
-CPU              | at least 1 socket with 4 cores  |
-RAM              | at least 32 GByte               |
-Storage          | at least 1 TByte                | has to be available as `/dev/sda` or `/dev/nvme0n1`
-Network          | at least 1 network interface    | an optional 2nd network interface can be used for external connectivity
-USB stick        | at least 2 GByte                |
+| Type of resource | Amount                                                  | Note                                                                    |
+|------------------|---------------------------------------------------------|-------------------------------------------------------------------------|
+| CPU              | at least 1 socket with 4 cores                          |                                                                         |
+| RAM              | at least 32 GByte                                       |                                                                         |
+| Storage          | at least 1 TByte                                        | Has to be available as `/dev/sda` or `/dev/nvme0n1`                     |
+| Network          | at least 1 network interface (dhcp and internet access) | An optional 2nd network interface can be used for external connectivity |
+| USB stick        | at least 2 GByte                                        | Installation media for cloud in a box bootstrapping                     |
 
 ## Types
 
@@ -60,27 +62,31 @@ There are two types of Cloud in a Box.
 
    :::
 
-4. The installation of the operating system (Ubuntu 22.04)  will start and take a few minutes. After that the system
+4. The installation of the operating system (Ubuntu 22.04) will start and take a few minutes. After that the system
    will shutdown.
 
-5. Remove the USB stick and start the system again. The USB stick is only needed again if the
-   Cloud in a Box system is to be fully reinstalled.
-
+5. The first start of the system
+   * Remove the USB storage device
+     (The USB stick is only needed again if the Cloud in a Box system is to be fully reinstalled.)
+   * Connect the first network interface to an ethernet interface that provides access to the internet via DHCP configuration
+   * Boot the system from the internal hard disk device (if 
 6. The deployment will start. This takes some time and the system will shutdown when the
    deployment is finished. This takes roughly an hour, possibly longer depending on the
    hardware and internet connection.
 
-7. System is ready for use, by default DHCP is tried on the first network device.
+7. Start the system again. System is ready for use, by default DHCP is tried on the first network device.
 
 8. Login via SSH. Use the user `dragon` with the password `password`.
-
+   (You can obtain the ip address by inspecting the logs of your dhcp server or from the *issue text* of the virtual consoles of the system)
    ```bash
    ssh dragon@IP_FROM_YOUR_SERVER
+   passwd
    ```
+   ![CiaB Issue Text](images/cloud-in-a-box/issue.png)
 
-### VPN access
+### Wireguard VPN service access
 
-Copy the `/home/dragon/wireguard-client.conf` file to your workstation. This is necessary
+Copy the `/home/dragon/wireguard-client.conf` file from CiaB to your workstation. This is necessary
 for using the web endpoints on your workstation. Rename the wireguard config file to something
 like `cloud-in-a-box.conf`.
 
@@ -88,7 +94,7 @@ If you want to connect to the Cloud in a Box system from multiple clients, chang
 address in the config file to be different on each client.
 
 ```bash
-scp dragon@IP_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf /home/ubuntu/cloud-in-a-box.conf
+scp dragon@IP_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/cloud-in-a-box.conf
 ```
 
 Install wireguard on your workstation, if you have not done this before. For instructions how to do
@@ -98,7 +104,7 @@ wireguard documentation you will find [here](https://www.wireguard.com/).
 Start the wireguard tunnel.
 
 ```bash
-wg-quick up /home/ubuntu/cloud-in-a-box.conf
+sudo wg-quick up $HOME/cloud-in-a-box.conf
 ```
 
 ## Webinterfaces
@@ -123,18 +129,22 @@ If you want to access the services please choose the URL from the following list
 
 ## Command-line interfaces
 
-Select one of the preconfigured environments `system`, `admin`, or `test`
-by exporting the environment variable `OS_CLOUD`.
+Login to Ciab as described in step 8 of the installation chapter.
 
-```bash
-export OS_CLOUD=admin
-```
-
-The OpenStack CLI is then usable via the command `openstack`.
-
-```bash
-openstack server list
-```
+* Select one of the preconfigured environments:
+   - `system` 
+   - `admin`
+   - `test`
+* Set the environment by exporting the environment variable: `OS_CLOUD`:
+   ```bash
+   export OS_CLOUD=admin
+   ```
+* Use [OpenStack CLI](https://docs.openstack.org/newton/user-guide/cli.html) via the command `openstack`.
+   ```bash
+   openstack availability zone list
+   openstack image list
+   openstack server list # After installation there are no servers
+   ```
 
 ### Import of additional images
 
