@@ -5,6 +5,24 @@ sidebar_position: 10
 
 # Ceph
 
+## Client
+
+In order to use the Ceph client on the manager node, the IP addresses of the Ceph
+monitor services, usually they run on the Ceph control plane, are added in
+`environments/infrastructure/configuration.yml` first.
+
+```yaml title="environments/infrastructure/configuration.yml"
+##########################
+# cephclient
+
+cephclient_mons:
+  - 192.168.16.10
+  - 192.168.16.11
+  - 192.168.16.12
+```
+
+The `client.admin` keyring is placed in the file `environments/infrastructure/files/ceph/ceph.client.admin.keyring`.
+
 ## Swappiness
 
 The swappiness is set via the `os_tuning_params` dictionary. The dictionary can

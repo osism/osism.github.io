@@ -5,20 +5,42 @@ sidebar_position: 20
 
 # Ceph
 
-```
-osism apply ceph-mons
-osism apply ceph-mgrs
-osism apply ceph-osds
-osism apply ceph-crash
-```
+1. Deploy base services.
 
-```
-osism apply copy-ceph-keys
-```
+   ```
+   osism apply ceph-mons
+   osism apply ceph-mgrs
+   osism apply ceph-osds
+   osism apply ceph-crash
+   ```
 
-```
-osism apply cephclient
-```
+2. Get ceph keys. This places the necessary keys in /opt/configuration.
+
+   ```
+   osism apply copy-ceph-keys
+   ```
+
+   After run, these keys must be permanently added to the configuration repository
+   via Git.
+
+   ```
+   environments/infrastructure/files/ceph/ceph.client.admin.keyring
+   environments/kolla/files/overlays/gnocchi/ceph.client.gnocchi.keyring
+   environments/kolla/files/overlays/nova/ceph.client.cinder.keyring
+   environments/kolla/files/overlays/nova/ceph.client.nova.keyring
+   environments/kolla/files/overlays/cinder/cinder-backup/ceph.client.cinder.keyring
+   environments/kolla/files/overlays/cinder/cinder-backup/ceph.client.cinder-backup.keyring
+   environments/kolla/files/overlays/cinder/cinder-volume/ceph.client.cinder.keyring
+   environments/kolla/files/overlays/manila/ceph.client.manila.keyring
+   environments/kolla/files/overlays/glance/ceph.client.glance.keyring
+   ```
+
+3. After the Ceph keys have been persisted in the configuration repository, the Ceph
+   client can be deployed.
+
+   ```
+   osism apply cephclient
+   ```
 
 
 ## RGW service
