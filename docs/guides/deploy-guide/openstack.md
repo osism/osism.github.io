@@ -60,3 +60,10 @@ osism apply nova
 osism apply -a pull octavia
 osism apply octavia
 ```
+
+## Horizon
+
+```
+osism apply -a pull horizon
+osism apply horizon
+```

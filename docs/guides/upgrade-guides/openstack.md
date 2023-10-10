@@ -61,6 +61,13 @@ osism apply -a pull octavia
 osism apply -a upgrade octavia
 ```
 
+## Horizon
+
+```
+osism apply -a pull horizon
+osism apply -a upgrade horizon
+```
+
 ### Amphora image update
 
 This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
