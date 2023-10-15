@@ -77,6 +77,8 @@ The OSISM Testbed requires at least the following project quota when using the d
 ### Software
 
 * `make` must be installed on the system
+* `yq` must be installed on the system. [yq](https://github.com/mikefarah/yq) is a portable
+  command-line YAML, JSON, XML, CSV, TOML and properties processor.
 * Ansible in a current version must be installed and usable on the local workstation. Currently Ansible 8 is supported.
   Information on installing Ansible can be found in the [Ansible
   documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
@@ -479,6 +481,17 @@ LC_NUMERIC="en_US.UTF-8"
 LC_TIME="en_US.UTF-8"
 LC_ALL=
 ```
+
+### yq: No such file or directory
+
+The following error occurs when yq is not installed.
+
+```
+make: yq: No such file or directory
+```
+
+`yq` must be installed on the system. [yq](https://github.com/mikefarah/yq) is a portable
+command-line YAML, JSON, XML, CSV, TOML and properties processor.
 
 ## Notes
 
