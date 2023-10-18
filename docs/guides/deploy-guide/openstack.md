@@ -5,6 +5,9 @@ sidebar_position: 30
 
 # OpenStack
 
+Common issues with deploying OpenStack services are documented in the
+[OpenStack Troubleshooting Guide](../troubleshooting-guides/openstack.md).
+
 ## Keystone
 
 ```
