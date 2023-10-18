@@ -5,7 +5,8 @@ sidebar_position: 10
 
 # Infrastructure
 
-## Kubernetes
+Common issues with deploying infrastructure services required by OpenStack
+are documented in the [OpenStack Troubleshooting Guide](../troubleshooting-guides/openstack.md).
 
 ## Cron, Fluentd & Kolla Toolbox
 
