@@ -47,15 +47,26 @@ sidebar_position: 20
 
 1. [Configure the RGW service](../configuration-guides/ceph#rgw-service)
 
-2. Apply roles `ceph-rgws` to deploy the Ceph RGW services and `ceph-rgw` to prepare the OpenStack endpoints.
+2. Apply role `ceph-rgws` to deploy the Ceph RGW services.
 
    ```
    osism apply ceph-rgws
-   osism apply ceph-rgw
    ```
-3. Apply roles `loadbalancer` (HAProxy endpoints) and `horizon`.
+
+3. Apply role `kolla-ceph-rgw` to add the OpenStack endpoint.
+
+   ```
+   osism apply kolla-ceph-rgw
+   ```
+
+4. Apply role `loadbalancer` to add the HAProxy backend and frontend.
 
    ```
    osism apply loadbalancer
+   ```
+
+5. Apply role `horizon` to enable the Swift dashboard.
+
+   ```
    osism apply horizon
    ```
