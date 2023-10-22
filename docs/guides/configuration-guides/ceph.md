@@ -81,8 +81,8 @@ vm.min_free_kbytes=4194303
    If self-signed SSL certificates are used, two additional parameters must be set.
 
    ```
-    "rgw keystone verify ssl" = "false"
-    "rgw verify ssl" = "false"
+    "rgw keystone verify ssl": "false"
+    "rgw verify ssl": "false"
    ```
 
    For all possible configuration parameters visit the
