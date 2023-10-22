@@ -78,6 +78,13 @@ vm.min_free_kbytes=4194303
    If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
    expand it and do not overwrite it.
 
+   If self-signed SSL certificates are used, two additional parameters must be set.
+
+   ```
+    "rgw keystone verify ssl" = "false"
+    "rgw verify ssl" = "false"
+   ```
+
    For all possible configuration parameters visit the
    [Ceph configuration reference](https://docs.ceph.com/en/quincy/radosgw/config-ref/).
 
