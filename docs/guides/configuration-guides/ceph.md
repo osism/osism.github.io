@@ -78,6 +78,9 @@ vm.min_free_kbytes=4194303
    If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
    expand it and do not overwrite it.
 
+   For all possible configuration parameters visit the
+   [Ceph configuration reference](https://docs.ceph.com/en/quincy/radosgw/config-ref/).
+
 2. Add the `ceph_rgw_keystone_password` from `environments/kolla/secrets.yml` to
    `environments/ceph/secrets.yml`.
 
