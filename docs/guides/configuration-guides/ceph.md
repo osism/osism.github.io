@@ -87,11 +87,7 @@ vm.min_free_kbytes=4194303
 
    ```yaml
    enable_ceph_rgw: true
-   enable_swift: false
-
    enable_ceph_rgw_keystone: true
-   enable_ceph_rgw_loadbalancer: true
-   enable_swift_s3api: true
 
    ceph_rgw_swift_compatibility: false
    ceph_rgw_swift_account_in_url: true
