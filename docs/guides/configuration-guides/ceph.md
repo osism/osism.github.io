@@ -59,7 +59,7 @@ vm.min_free_kbytes=4194303
      "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
        "rgw content length compat": "true"
        "rgw enable apis": "swift, s3, swift_auth, admin"
-       "rgw keystone accepted roles": "_member_, member, admin"
+       "rgw keystone accepted roles": "member, admin"
        "rgw keystone accepted admin roles": "admin"
        "rgw keystone admin domain": "default"
        "rgw keystone admin password": "{{ ceph_rgw_keystone_password }}"
