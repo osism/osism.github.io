@@ -73,8 +73,6 @@ vm.min_free_kbytes=4194303
        "rgw s3 auth use keystone": "true"
        "rgw swift account in url": "true"
        "rgw swift versioning enabled": "true"
-       "rgw verify ssl": "true"
-       "rgw enforce swift acls": "true"
    ```
 
    If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
