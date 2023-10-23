@@ -58,7 +58,7 @@ vm.min_free_kbytes=4194303
    ceph_conf_overrides:
      "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
        "rgw content length compat": "true"
-       "rgw enable apis": "swift, s3, swift_auth, admin"
+       "rgw enable apis": "swift, s3, admin"
        "rgw keystone accepted roles": "member, admin"
        "rgw keystone accepted admin roles": "admin"
        "rgw keystone admin domain": "default"
