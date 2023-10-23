@@ -5,7 +5,7 @@ sidebar_position: 10
 
 # Cloud in a Box - CiaB
 
-💡 Cloud in a Box (CiaB) is a minimalistic installation of OSISM with only services which are needed to
+💡 Cloud in a Box (CiaB) is a minimalistic installation of the latest stable OSISM release with only services which are needed to
 make it work with Kubernetes. It is intended for use as a development
 system on bare-metal or for use in edge environments.
 
@@ -45,8 +45,12 @@ There are two types of Cloud in a Box.
 
 ## Installation
 
-1. Download one of the Cloud in a Box images of type sandbox
+The images currently download and install the 
+[latest release of the installation-scripts](https://github.com/osism/cloud-in-a-box),
+therefore it is mandatory to update the installation media at least when the underlying Ubuntu operating 
+system release changes.  The installation of historical releases is currently not supported. 
 
+1. Download one of the Cloud in a Box images of type sandbox
    * [ubuntu-autoinstall-cloud-in-a-box-1.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-1.iso) (with first block device as `/dev/sda`)
    * [ubuntu-autoinstall-cloud-in-a-box-2.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-2.iso) (with first block device as `/dev/nvme0n1`)
 
