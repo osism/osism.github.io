@@ -91,7 +91,7 @@ vm.min_free_kbytes=4194303
 2. Add the `ceph_rgw_keystone_password` from `environments/kolla/secrets.yml` to
    `environments/ceph/secrets.yml`.
 
-3. Add following configuration in ``environments/kolla/configuration.yml``
+3. Add following configuration in `environments/kolla/configuration.yml`
 
    ```yaml
    enable_ceph_rgw: true
@@ -111,3 +111,32 @@ vm.min_free_kbytes=4194303
        ip: 192.168.16.12
        port: 8081
    ```
+
+## Extra pools
+
+Extra pools can be defined via the `openstack_pools_extra` parameter.
+
+```yaml title="inventory/group_vars/generic/ceph.yml"
+openstack_cinder_extra001_pool:
+  name: extra001
+  pg_num: "{{ openstack_pool_default_pg_num }}"
+  pgp_num: "{{ openstack_pool_default_pg_num }}"
+  rule_name: "replicated_rule"
+  min_size: "{{ openstack_pool_default_min_size }}"
+  application: "rbd"
+
+openstack_pools_extra:
+  - "{{ openstack_cinder_extra001_pool }}"
+```
+
+If more than one Ceph cluster is managed with one manager, do not place the
+parameters in `inventory/group_vars/generic` but in a corresponding directory.
+
+If, for example, the inventory group of the Ceph cluster on which the additional
+pools are to be created is `ceph.rbd`, then the parameters would be stored in
+`inventory/group_vars/ceph.rbd.yml` accordingly.
+
+| Parameter                       | Default value |
+|---------------------------------|---------------|
+|openstack_pool_default_pg_num    | 64            |
+| openstack_pool_default_min_size | 0             |
