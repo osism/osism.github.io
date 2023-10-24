@@ -5,6 +5,16 @@ sidebar_position: 10
 
 # Ceph
 
+## Unique Identifier
+
+The File System ID is a unique identifier for the cluster.
+The identifier is set via the parameter `fsid` in `environments/ceph/configuration.yml`
+and must be unique. It can be generated with `uuidgen`.
+
+```yaml title="environments/ceph/configuration.yml"
+fsid: c2120a4a-669c-4769-a32c-b7e9d7b848f4
+```
+
 ## Client
 
 In order to use the Ceph client on the manager node, the IP addresses of the Ceph
