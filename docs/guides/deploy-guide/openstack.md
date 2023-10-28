@@ -70,3 +70,9 @@ osism apply octavia
 osism apply -a pull horizon
 osism apply horizon
 ```
+
+## OpenStack client
+
+```
+osism apply openstackclient
+```
