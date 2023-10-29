@@ -195,6 +195,10 @@ This section describes step by step how to deploy the OSISM Testbed.
    /opt/configuration/scripts/deploy/400-monitoring-services.sh
    ```
 
+   Deploying the services takes some time and depends on how much bandwidth is available,
+   how the instances are equipped, etc. 90-120 minutes is not unusual when Ceph and OpenStack
+   are fully deployed.
+
 7. After the deployment, you can log in to the manager via SSH.
 
    ```sh
