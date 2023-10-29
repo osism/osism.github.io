@@ -575,3 +575,21 @@ The following services can currently be used with this testbed without further a
 * Skyline
 
 ### Makfile reference
+
+### CI jobs
+
+**Name**                   | **Description**
+---------------------------|---------------------------------
+testbed-deploy             |
+testbed-deploy-ceph        |
+testbed-deploy-cleura      |
+testbed-deploy-pco         |
+testbed-deploy-stable      |
+testbed-deploy-wavestack   |
+testbed-update-stable      |
+testbed-upgrade            |
+testbed-upgrade-ceph       |
+testbed-upgrade-cleura     |
+testbed-upgrade-pco        |
+testbed-upgrade-stable     |
+testbed-upgrade-wavestack  |
