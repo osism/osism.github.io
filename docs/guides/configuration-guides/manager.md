@@ -49,6 +49,7 @@ address and port must be set.
 manager_opensearch_enable: true
 manager_opensearch_address: api-int.testbed.osism.xyz
 manager_opensearch_port: 9200
+manager_opensearch_protocol: https
 ```
 
 The integration can also be enabled later. `osism update manager` is then
