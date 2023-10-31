@@ -576,6 +576,18 @@ The following services can currently be used with this testbed without further a
 
 ### Makfile reference
 
+**Target**                 | **Description**
+---------------------------|---------------------------------
+clean                      | Destroy infrastructure with Terraform.
+create                     | Create required infrastructure with Terraform.
+login                      | Log in on the manager.
+bootstrap                  | Bootstrap everything.
+manager                    | Deploy only the manager service.
+identity                   | Deploy only identity services.
+ceph                       | Deploy only ceph services.
+deploy                     | Deploy everything and then check it.
+prepare                    | Run local preparations.
+
 ### CI jobs
 
 **Name**                   | **Description**
