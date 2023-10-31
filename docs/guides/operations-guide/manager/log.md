@@ -194,4 +194,16 @@ Oct 31 11:19:57 testbed-node-2 docker[880827]: 2023-10-31T11:19:57.650+0000 7fa7
 Oct 31 11:19:58 testbed-node-2 docker[844686]: cluster 2023-10-31T11:19:56.329684+0000 mgr.testbed-node-0 (mgr.5184) 25224 : cluster [DBG] pgmap v25226: 321 pgs: 321 active+clean; 577 KiB data, 270 MiB used, 60 GiB / 60 GiB avail
 Oct 31 11:19:58 testbed-node-2 docker[844686]: debug 2023-10-31T11:19:58.566+0000 7fdbc9728700  1 mon.testbed-node-2@2(peon).osd e74 _set_new_cache_sizes cache_size:1020054731 inc_alloc: 348127232 full_alloc: 348127232 kv_alloc: 322961408
 Oct 31 11:19:58 testbed-node-2 docker[880827]: 2023-10-31T11:19:58.710+0000 7fa7eb48f700  0 [dashboard INFO root] Redirecting to active 'http://192.168.16.10:7000/'
+>>> SELECT * FROM flog-2023.10.31 WHERE Hostname = 'testbed-node-0' LIMIT 5
+PATH_INFO: `/` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:29
+REQUEST_METHOD: `GET` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:27
+SCRIPT_NAME: `` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:28
+192.168.16.10 - - [31/Oct/2023 10:57:33] "GET / HTTP/1.1" 300 1761 0.001253
+(1039) accepted ('192.168.16.10', 58732) server /var/lib/kolla/venv/lib/python3.10/site-packages/eventlet/wsgi.py:1004
+>>> SELECT * FROM flog-2023.10.31 WHERE Hostname = 'testbed-node-0' AND programname = 'keystone' LIMIT 5
+PATH_INFO: `/` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:29
+REQUEST_METHOD: `GET` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:27
+SCRIPT_NAME: `` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:28
+PATH_INFO: `/` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:29
+REQUEST_METHOD: `GET` log_request_info /var/lib/kolla/venv/lib/python3.10/site-packages/keystone/server/flask/request_processing/req_logging.py:27
 ```
