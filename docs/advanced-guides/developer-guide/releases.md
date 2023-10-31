@@ -1,11 +1,11 @@
 ---
-sidebar_label: Developer Guide
-sidebar_position: 90
+sidebar_label: Releases
+sidebar_position: 10
 ---
 
-# Developer Guide
+# Releases
 
-## How do we release?
+## How we handle releases
 
 Currently we do a major release every 6 months. Minor releases we do when
 needed and about every 2 weeks.
@@ -26,7 +26,7 @@ It may be that manual intervention is necessary. For example, configuration
 parameters may need to be added or services that no longer exist may need to be
 removed.
 
-## How do you do a release?
+## How to make a release
 
 1. On all repositories that are used, check that the versions to be used have an
    appropriate version tag (e.g. `v0.20230308.0`).
@@ -172,7 +172,7 @@ removed.
 13. As the last of the release process, the previously prepared PR is merged on the
     `osism/testbed` repository to change the stable version.
 
-## Release notes
+## How we write release notes
 
 We use [Reno](https://docs.openstack.org/reno/latest/) to manage the release notes.
 
