@@ -75,3 +75,9 @@ docker_hosts: "{{ docker_hosts_defaults + docker_hosts_extra }}"
 ## Containerfiles
 
 ## Commit messages
+
+## Python
+
+We use [Black](https://github.com/psf/black) to automatically format the syntax of Python.
+A job is running in the CI that checks if Black has been applied. Therefore, format the
+files with Black accordingly in advance.
