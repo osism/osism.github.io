@@ -1,6 +1,6 @@
 ---
 sidebar_label: OpenStack
-sidebar_position: 20
+sidebar_position: 30
 ---
 
 # OpenStack
