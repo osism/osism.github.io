@@ -20,6 +20,16 @@ In the example, OSISM release 6.0.0 is used.
    MANAGER_VERSION=6.0.0 gilt overlay
    ```
 
+   Optionally, this is normally not necessary, it is possible to reference a specific tag of the
+   [osism/cfg-generics](https://github.com/osism/cfg-generics) repository. To do this, first
+   check which version of osism/cfg-generics is used in a particular release. The version is
+   defined in `generics_version` in the `base.yml` file in the `osism/release` repository. For OSISM 6.0.0,
+   for example, this is version [v0.20230919.0](https://github.com/osism/release/blob/main/6.0.0/base.yml#L6).
+   This version is then added to the file `gilt.yml` in the configuration repository instead of
+   `main` at `version`. This change must be made again after each execution of `gilt overlay` as
+   it is overwritten by the call of `gilt overlay`. This cannot be realized differently in the
+   current implementation of [Gilt](https://github.com/retr0h/gilt).
+
 2. Set the new manager version in the configuration repository.
 
    ```
