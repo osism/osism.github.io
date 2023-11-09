@@ -1,6 +1,5 @@
 ---
 sidebar_label: Network
-sidebar_position: 6
 ---
 
 # Network

@@ -9,6 +9,7 @@ This section contains the documentation of the Ansible collection [osism.commons
 
 **Role**                       | **Description**
 -------------------------------|----------------------------
+osism.commons.network          |
 osism.commons.packages         |
 osism.commons.services         |
 osism.commons.sshconfig        |
