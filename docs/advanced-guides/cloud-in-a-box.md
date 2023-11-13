@@ -9,7 +9,6 @@ sidebar_position: 10
 make it work with Kubernetes. It is intended for use as a development
 system on bare-metal or for use in edge environments.
 
-
 :::warning
 
 At the moment the secrets are stored in plain text in the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box)
@@ -45,10 +44,12 @@ There are two types of Cloud in a Box.
 
 ## Installation
 
-The images currently download and install the 
-[latest release of the installation-scripts](https://github.com/osism/cloud-in-a-box),
+### Automated installation (recommended)
+
+The images currently download and install the
+[latest state of the installation scripts](https://github.com/osism/cloud-in-a-box),
 therefore it is mandatory to update the installation media at least when the underlying Ubuntu operating 
-system release changes.  The installation of historical releases is currently not supported. 
+system release changes. The installation of older releases is currently not supported. 
 
 1. Download one of the Cloud in a Box images of type sandbox
    * [ubuntu-autoinstall-cloud-in-a-box-1.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-1.iso) (with first block device as `/dev/sda`)
@@ -73,7 +74,8 @@ system release changes.  The installation of historical releases is currently no
    * Remove the USB storage device
      (The USB stick is only needed again if the Cloud in a Box system is to be fully reinstalled.)
    * Connect the first network interface to an ethernet interface that provides access to the internet via DHCP configuration
-   * Boot the system from the internal hard disk device (if 
+   * Boot the system from the internal hard disk device
+
 6. The deployment will start. This takes some time and the system will shutdown when the
    deployment is finished. This takes roughly an hour, possibly longer depending on the
    hardware and internet connection.
@@ -88,9 +90,85 @@ system release changes.  The installation of historical releases is currently no
    ```
    ![CiaB Issue Text](images/cloud-in-a-box/issue.png)
 
+### Manual installation
+
+1. Follow the [provisioning guide](https://osism.github.io/docs/guides/deploy-guide/provisioning),
+   skip the part about disk layout and do it this way:
+
+   ![Disk layout](images/cloud-in-a-box/disk-layout.png)
+
+   1. Create a 1 GByte ext4 partition mounted in `/boot`
+   2. Create a 8 GByte swap partition
+   3. Create a 120 GByte unformatted partition
+   4. Use a `Create volume group (LVM)` to create a volume group called `system` with the size of
+      120 GByte on the partition 4 you just created
+   5. Create a logical volume by selecting the `Free Space` option under `system` LVM. This volume
+      should be mounted in `/` and have size of 100 GByte
+   6. Create a partition with the size of the rest of the drive's space
+   7. Create a new LVM volume group on partition 5 called `osd-vg` (will be used for Ceph)
+
+3. After the Ubuntu installation, the system will be rebooted
+
+4. Log into the machine via console to get its IP address and then use SSH to connect to the machine
+
+5. Clone the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository into `/opt/cloud-in-a-box`
+
+   ```bash
+   sudo git clone https://github.com/osism/cloud-in-a-box /opt/cloud-in-a-box
+   ```
+
+6. Disable conflicting services from the default Ubuntu installation
+
+   ```bash
+   sudo /opt/cloud-in-a-box/cleanup.sh
+   ```
+
+7. Install upgrades
+
+   ```bash
+   sudo apt update
+   sudo apt upgrade
+   ```
+
+8. Run the `bootstrap.sh` script with the required [type](#types) (use of `sandbox` is recommended)
+
+   ```bash
+   sudo /opt/cloud-in-a-box/bootstrap.sh sandbox
+   ```
+
+9. Run the `deploy.sh` script with the same type as in step 8 to deploy services like Ceph and OpenStack
+
+   ```bash
+   sudo /opt/cloud-in-a-box/deploy.sh sandbox
+   ```
+
+10. Shutdown the system
+
+    ```bash
+    sudo shutdown -h now
+    ```
+
+11. Start the system again. System is ready for use, by default DHCP is tried on the first network device.
+
+11. Login via SSH. Use the user `dragon` with the password `password`.
+    (You can obtain the ip address by inspecting the logs of your dhcp server or from the *issue text* of the virtual consoles of the system)
+    ```bash
+    ssh dragon@IP_FROM_YOUR_SERVER
+    passwd
+    ```
+    ![CiaB Issue Text](images/cloud-in-a-box/issue.png)
+
+
+:::info
+
+The scripts are not idempotent yet. In case there is any fail during `bootstrap.sh` or `deploy.sh` you have to
+start over with fresh installation.
+
+:::
+
 ### Wireguard VPN service access
 
-Copy the `/home/dragon/wireguard-client.conf` file from CiaB to your workstation. This is necessary
+Copy the `/home/dragon/wireguard-client.conf` file from Cloud in a Box to your workstation. This is necessary
 for using the web endpoints on your workstation. Rename the wireguard config file to something
 like `cloud-in-a-box.conf`.
 
@@ -115,28 +193,28 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 
 If you want to access the services please choose the URL from the following list:
 
-| Name                    | URL                                           | Username   | Password  |
-|-------------------------|-----------------------------------------------|------------|-----------|
-| ARA                     | <https://ara.services.in-a-box.cloud>         | ara        | password  |
-| Flower                  | <https://flower.services.in-a-box.cloud>      | -          | -         |
-| Grafana                 | <https://api.in-a-box.cloud:3000>             | admin      | password  |
-| Homer                   | <https://homer.services.in-a-box.cloud>       | -          | -         |
-| Horizon - admin project | <https://api.in-a-box.cloud>                  | admin      | password  |
-| Horizon - test project  | <https://api.in-a-box.cloud>                  | test       | test      |
-| Skyline - admin project | <https://api.in-a-box.cloud:9999>             | admin      | password  |
-| Skyline - test project  | <https://api.in-a-box.cloud:9999>             | test       | test      |
-| OpenSearch Dashboards   | <https://api.in-a-box.cloud:5601>             | opensearch | password  |
-| Netbox                  | <https://netbox.services.in-a-box.cloud>      | admin      | password  |
-| Netdata                 | <http://manager.systems.in-a-box.cloud:19999> | -          | -         |
-| phpMyAdmin              | <https://phpmyadmin.services.in-a-box.cloud>  | root       | password  |
-| RabbitMQ                | <https://api.in-a-box.cloud:15672>            | openstack  | password  |
+| Name                    | URL                                           | Username   | Password |
+|-------------------------|-----------------------------------------------|------------|----------|
+| ARA                     | <https://ara.services.in-a-box.cloud>         | ara        | password |
+| Flower                  | <https://flower.services.in-a-box.cloud>      | -          | -        |
+| Grafana                 | <https://api.in-a-box.cloud:3000>             | admin      | password |
+| Homer                   | <https://homer.services.in-a-box.cloud>       | -          | -        |
+| Horizon - admin project | <https://api.in-a-box.cloud>                  | admin      | password |
+| Horizon - test project  | <https://api.in-a-box.cloud>                  | test       | test     |
+| Skyline - admin project | <https://api.in-a-box.cloud:9999>             | admin      | password |
+| Skyline - test project  | <https://api.in-a-box.cloud:9999>             | test       | test     |
+| OpenSearch Dashboards   | <https://api.in-a-box.cloud:5601>             | opensearch | password |
+| Netbox                  | <https://netbox.services.in-a-box.cloud>      | admin      | password |
+| Netdata                 | <http://manager.systems.in-a-box.cloud:19999> | -          | -        |
+| phpMyAdmin              | <https://phpmyadmin.services.in-a-box.cloud>  | root       | password |
+| RabbitMQ                | <https://api.in-a-box.cloud:15672>            | openstack  | password |
 
 ## Command-line interfaces
 
-Login to Ciab as described in step 8 of the installation chapter.
+Login to Cloud in a Box as described in step 8 of the installation chapter.
 
 * Select one of the preconfigured environments:
-   - `system` 
+   - `system`
    - `admin`
    - `test`
 * Set the environment by exporting the environment variable: `OS_CLOUD`:
@@ -301,6 +379,48 @@ available for use. If instances are to be started directly in this network,
 advance with the provider of the external network whether the use of DHCP
 is permitted there.
 
+### Running on a Virtual Machine
+
+The Cloud in a Box has been tested to run on a virtual machine. However, the Cloud in a Box is mainly made
+for running on bare metal, the automated installation does not work, and other things may not work either.
+
+#### Nested virtualization
+
+You likely want to run virtual machines on top of your Cloud in a Box.
+The host machine has to support and enabled nested virtualization.
+
+To enable nested virtualization the CPU configuration of the VM has to be `host-passthrough` or `host-model`
+
+* [Enabling nested virtualization in Fedora](https://docs.fedoraproject.org/en-US/quick-docs/using-nested-virtualization-in-kvm/)
+
+The linked guide can be used in other distributions as well.
+
+#### Disk space saving
+
+When using Cloud in a Box in a VM, you can utilize the qcow2 disk image or similar technology to save space.
+In that case, the base installation requires just around 70 GB instead of a full 1 TB.
+(*The drive still needs to be made with a capacity of at least 1TB; however, the actual disk space usage is lower.*)
+
+Also in case you want to experiment a bit more and "hack around" using the manual installation
+you can make disk snapshots when turned off after the Ubuntu installs, `bootstrap.sh` and `deploy.sh` to speed up your
+progress.
+
+If you use qemu, you can use following command to do snapshots.
+
+```bash
+sudo virsh snapshot-create-as --domain cib bootstrap "run of bootstrap.sh" --disk-only --diskspec sda,snapshot=external,file=/var/lib/libvirt/images/ub2022_cib_boostrap.qcow2 --atomic
+```
+
+#### QEMU guest agent
+
+When running inside QEMU, it may be worth it to install the QEMU guest agent.
+
+```bash
+sudo apt -y install qemu-guest-agent
+sudo systemctl enable qemu-guest-agent
+sudo systemctl start qemu-guest-agent
+```
+
 ## Troubleshooting
 
 ![Broken disk setup](./images/cloud-in-a-box/screenshot1.png)
@@ -309,7 +429,6 @@ This error means that your disk setup is broken. Use `cfdisk` and delete all par
 the system on which you want to install the Cloud in a Box image.
 
 With `lsblk` you can verify if the partitions are empty.
-
 
 ## Development
 
