@@ -309,3 +309,22 @@ This error means that your disk setup is broken. Use `cfdisk` and delete all par
 the system on which you want to install the Cloud in a Box image.
 
 With `lsblk` you can verify if the partitions are empty.
+
+
+## Development
+
+For the further development of the scripts and the mechanisms of the Cloud in a Box,
+you need to know the following.
+
+* The operating system is brought onto the node via [an automatic Ubuntu installation](https://github.com/osism/node-image)
+  that uses [cloud-init](https://cloud-init.io)
+* The installation starts the script [init.sh](https://github.com/osism/cloud-in-a-box/blob/main/init.sh) which performs
+  an initial clone of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository and a checkout of
+  the `main` branch. It also executes the [deploy.sh](https://github.com/osism/cloud-in-a-box/blob/main/deploy.sh) and
+  [bootstrap.sh](https://github.com/osism/cloud-in-a-box/blob/main/bootstrap.sh) scripts.
+* The installation persists the kernel parameters of the initial boot to the file `/etc/.initial-kernel-commandline`
+* The status and activities of the deployment are logged in `/var/log/install-cloud-in-a-box.log`. For proper colors use `less -r`.
+  Search for `OVERALL STATUS` to find the result of the specific installation steps.
+* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overriden
+  by setting the kernel parameters `ciab_repo_url` (a public repository address without authentication) and `ciab_branch`
+  (a name of a branch, use only ASCII chars, `-`, and `_`).
