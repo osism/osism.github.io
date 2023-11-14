@@ -76,6 +76,7 @@ The OSISM Testbed requires at least the following project quota when using the d
 
 ### Software
 
+* currently only Ubuntu 22.04 is supported for the manager base distribution, this is caught by a precheck
 * `make` must be installed on the system
 * `yq` must be installed on the system. [yq](https://github.com/mikefarah/yq) is a portable
   command-line YAML, JSON, XML, CSV, TOML and properties processor.
