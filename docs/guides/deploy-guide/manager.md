@@ -6,7 +6,7 @@ sidebar_position: 1
 # Manager
 
 The prerequisite for the deployment of the Manager is the preparation of a
-[configuration repository](../../getting-started/configuration-repository.md).
+[configuration repository](https://osism.github.io/docs/getting-started/configuration-repository).
 
 1. Install Ubuntu 22.04 on the node to be used as manager
    (see [Provisioning of management and control plane nodes](./bootstrap.md##provisioning-of-management-and-control-plane-nodes)).
