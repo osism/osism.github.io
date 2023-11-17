@@ -167,7 +167,8 @@ How to add a deploy key on GitHub is documented in
 ### Post-processing
 
 The configuration repository that is initially created with the Cookiecutter is not directly usable.
-For example, the inventory needs to be built.
+For example, the inventory needs to be built. All further information can be found in the
+[Configuration Guide](../guides/configuration-guides/index.md).
 
 ### Notes
 
