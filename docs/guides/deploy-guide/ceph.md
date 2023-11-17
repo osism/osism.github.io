@@ -35,6 +35,9 @@ sidebar_position: 20
    environments/kolla/files/overlays/glance/ceph.client.glance.keyring
    ```
 
+   If the `osism apply copy-ceph-keys` fails and the keys are not found in the `/share`
+   directory, this can be solved with `osism apply ceph-fetch-keys`.
+
 3. After the Ceph keys have been persisted in the configuration repository, the Ceph
    client can be deployed.
 
