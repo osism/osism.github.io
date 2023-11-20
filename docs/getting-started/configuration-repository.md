@@ -103,7 +103,7 @@ Host and path to the Git repository are specified via the `git_` parameters: The
 In this case, the generated configuration in the `output/configuration` directory is
 stored on GitHub in the `osism/new-environment` repository.
 
-When you want to use a stable release this is done via the parameter `manager_version``
+When you want to use a stable release this is done via the parameter `manager_version`
 By default, this is always set to `latest`. If, for example, the stable release `6.0.0`
 is to be used, the value for this parameter is set to `6.0.0`.
 
