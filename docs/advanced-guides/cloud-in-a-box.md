@@ -20,13 +20,13 @@ repository and are not secure. Do not use for public accessible systems. In the 
 
 The system to be used as Cloud in a Box must fulfill these minimum requirements.
 
-| Type of resource | Amount                                                  | Note                                                                    |
-|------------------|---------------------------------------------------------|-------------------------------------------------------------------------|
-| CPU              | at least 1 socket with 4 cores                          |                                                                         |
-| RAM              | at least 32 GByte                                       |                                                                         |
-| Storage          | at least 1 TByte                                        | Has to be available as `/dev/sda` or `/dev/nvme0n1`                     |
-| Network          | at least 1 network interface (dhcp and internet access) | An optional 2nd network interface can be used for external connectivity |
-| USB stick        | at least 2 GByte                                        | Installation media for cloud in a box bootstrapping                     |
+| Type of resource | Amount                                                  | Note                                                                                                                                                                   |
+|------------------|---------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| CPU              | at least 1 socket with 4 cores                          | More is better here. This is the minimum where you can't use much payload (LBaaS, VMs). The use of Kubernetes with Cluster API is not possible with this minimum size. |
+| RAM              | at least 32 GByte                                       | More is better here. In principle, it also works with 8 GByte, but then no payload (LBaaS, VMs) can be used. Kubernetes with Cluster API cannot be used then.          |
+| Storage          | at least 1 TByte                                        | Has to be available as `/dev/sda` or `/dev/nvme0n1`. Less than 1 TByte is also possible, the smaller the less storage is available for use in Ceph.                    |
+| Network          | at least 1 network interface (DHCP and internet access) | An optional [2nd network interface can be used for external connectivity](#use-of-2nd-nic-for-external-network).                                                       |
+| USB stick        | at least 2 GByte                                        | Installation media for Cloud in a Box bootstrapping                                                                                                                    |
 
 ## Types
 
