@@ -69,7 +69,7 @@ gilt overlay
 
 If a stable OSISM release is used, the version to be used is specified by `MANAGER_VERSION`.
 In the example, OSISM release 6.0.0 is used. More detail about this in
-[Configuration Guides > Manager > Stable release](../guides/configuration-guides/manager.md#stable-release).
+[Configuration Guides > Manager > Stable release](https://osism.github.io/docs/guides/configuration-guides/manager#stable-release).
 
 ```
 MANAGER_VERSION=6.0.0 gilt overlay
