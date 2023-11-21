@@ -48,7 +48,7 @@ sidebar_position: 50
 
 ## RGW service
 
-1. [Configure the RGW service](../configuration-guide/ceph#rgw-service)
+1. [Configure the RGW service](../../configuration-guide/ceph#rgw-service)
 
 2. Apply role `ceph-rgws` to deploy the Ceph RGW services.
 
