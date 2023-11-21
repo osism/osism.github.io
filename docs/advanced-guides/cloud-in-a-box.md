@@ -166,6 +166,8 @@ start over with fresh installation.
 
 :::
 
+## Usage
+
 ### Wireguard VPN service access
 
 Copy the `/home/dragon/wireguard-client.conf` file from Cloud in a Box to your workstation. This is necessary
@@ -189,7 +191,7 @@ Start the wireguard tunnel.
 sudo wg-quick up $HOME/cloud-in-a-box.conf
 ```
 
-## Webinterfaces
+### Webinterfaces
 
 If you want to access the services please choose the URL from the following list:
 
@@ -209,7 +211,7 @@ If you want to access the services please choose the URL from the following list
 | phpMyAdmin              | <https://phpmyadmin.services.in-a-box.cloud>  | root       | password |
 | RabbitMQ                | <https://api.in-a-box.cloud:15672>            | openstack  | password |
 
-## Command-line interfaces
+### Command-line interfaces
 
 Login to Cloud in a Box as described in step 8 of the installation chapter.
 
@@ -240,7 +242,7 @@ osism manage images --filter 'Garden Linux'
 
 All available images: <https://github.com/osism/openstack-image-manager/tree/main/etc/images>
 
-## Upgrade
+### Upgrade
 
 It is best to execute the commands within a screen session, it takes some time. Please note
 that you cannot update the Ceph deployment at the moment. This will be enabled in the future.
