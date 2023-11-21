@@ -241,12 +241,12 @@ For example, the inventory needs to be built. All further information can be fou
   </tr>
   <tr>
     <td><code>ip_external</code></td>
-    <td>The external IP address of the API</td>
+    <td>The external IP address of the API (resolves to `fqdn_external`)</td>
     <td><code>192.168.96.9</code></td>
   </tr>
   <tr>
     <td><code>ip_internal</code></td>
-    <td>The internal IP address of the API</td>
+    <td>The internal IP address of the API (resolves to `fqdn_internal`)</td>
     <td><code>192.168.32.9</code></td>
   </tr>
   <tr>
