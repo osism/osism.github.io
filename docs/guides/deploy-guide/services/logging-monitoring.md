@@ -6,7 +6,7 @@ sidebar_position: 40
 # Logging & Monitoring
 
 Common issues with deploying logging & monitoring services provided by Kolla
-are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-guides/openstack).
+are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
 
 ## OpenSearch
 
