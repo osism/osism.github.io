@@ -1,6 +1,6 @@
 ---
 sidebar_label: Ceph
-sidebar_position: 20
+sidebar_position: 50
 ---
 
 # Ceph
@@ -48,7 +48,7 @@ sidebar_position: 20
 
 ## RGW service
 
-1. [Configure the RGW service](../configuration-guides/ceph#rgw-service)
+1. [Configure the RGW service](../configuration-guide/ceph#rgw-service)
 
 2. Apply role `ceph-rgws` to deploy the Ceph RGW services.
 

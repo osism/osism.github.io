@@ -6,7 +6,7 @@ sidebar_position: 10
 # Infrastructure
 
 Common issues with deploying infrastructure services required by OpenStack
-are documented in the [OpenStack Troubleshooting Guide](../troubleshooting-guides/openstack.md).
+are documented in the [OpenStack Troubleshooting Guide](../troubleshooting-guide/openstack).
 
 ## Cron, Fluentd & Kolla Toolbox
 

@@ -1,6 +1,6 @@
 ---
 sidebar_label: Inventory
-sidebar_position: 4
+sidebar_position: 10
 ---
 
 # Inventory

@@ -1,12 +1,12 @@
 ---
 sidebar_label: OpenStack
-sidebar_position: 30
+sidebar_position: 60
 ---
 
 # OpenStack
 
 Common issues with deploying OpenStack services are documented in the
-[OpenStack Troubleshooting Guide](../troubleshooting-guides/openstack.md).
+[OpenStack Troubleshooting Guide](../troubleshooting-guide/openstack).
 
 ## Keystone
 
