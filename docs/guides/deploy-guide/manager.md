@@ -5,21 +5,19 @@ sidebar_position: 20
 
 # Manager
 
-1. Install Ubuntu 22.04 on the node to be used as manager
-   (see [Provisioning of management and control plane nodes](./provisioning)).
+Change into the `configuration/environments/manager` directory of the configuration repository.
+on the seed node.
 
-2. A copy of the configuration repository is checked out on a local system,
-   the so-called seed node, with which the manager node can be reached via SSH.
+The deployment of the seed node is documented in the [Deploy Guide for the seed node](../deploy-guide/seed).
 
-   ```
-   git clone git@github.com:YOUR_ORGANISATION/YOUR_CONFIGURATION_REPOSITORY configuration
-   cd configuration/environments/manager
-   ```
+```
+cd configuration/environments/manager
+```
 
 ## Create operator user
 
-The operator user is created on each system. It is used as a service account for OSISM. All
-containers run with this user. Ansible also uses this user to access the systems. Commands
+The operator user is created on each node. It is used as a service account for OSISM. All
+containers run with this user. Ansible also uses this user to access the nodes. Commands
 on the manager node need to be run as this user. The name of the operator user is always `dragon`.
 
 With `ANSIBLE_USER` the existing user account is set after the provsioning of the management
@@ -35,6 +33,9 @@ ANSIBLE_USER=osism \
 ./run.sh operator
 ```
 
+* Details on all parameters can be found in
+  [Ansible Configuration Settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
+  in the Ansible documentation.
 * If a password is required to login to the manager node, `ANSIBLE_ASK_PASS=True` must be set.
 * If an SSH key is required to login to the manager node, the key has to be added on the manager
   node to `~/.ssh/authorized_keys` in the home directory of the user specified as `ANSIBLE_USER` first.
@@ -46,6 +47,7 @@ ANSIBLE_USER=osism \
   ```
   ANSIBLE_USER=osism ./run.sh python3
   ```
+
 * To verify the creation of the operator user, use the private key file `id_rsa.operator`. Make
   sure you purge all keys from ssh-agent identity cache using `ssh-add -D`. You can print the list
   using `ssh-add -l`. The list should be empty.
@@ -54,12 +56,14 @@ ANSIBLE_USER=osism \
   ssh-add -D
   ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@testbed-manager
   ```
+
 * If you receive the following error message `ssh: Too many authentication failures` set
   `ANSIBLE_SSH_ARGS` environment variable to use only the operator ssh key for authentication.
 
   ```
   export ANSIBLE_SSH_ARGS="-o IdentitiesOnly=yes"
   ```
+
 * The warning message `[WARNING]: running playbook inside collection osism.manager` can be ignored
 * If Ansible Vault is used, let Ansible ask for the Vault password:
 
@@ -75,14 +79,14 @@ must still be set.
 
 To prevent recurring installation of Ansible Collections, `export INSTALL_ANSIBLE_ROLES=False` can be set.
 
-The network configuration, already present on a system should be backuped before this step.
+The network configuration, already present on a node should be backuped before this step.
 Then you can deploy the network configuration with the network role.
 
 ```
 ./run.sh network
 ```
 
-Upon completion of the network configurtion, a system reboot should be performed to ensure the configuration
+Upon completion of the network configurtion, a node reboot should be performed to ensure the configuration
 is functional and reboot safe. Since network services are not restarted automatically, later changes to the
 network configuration are not effective without a manual apply of the network configuration or reboot of the
 nodes.
