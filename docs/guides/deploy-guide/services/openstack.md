@@ -6,7 +6,7 @@ sidebar_position: 60
 # OpenStack
 
 Common issues with deploying OpenStack services are documented in the
-[OpenStack Troubleshooting Guide](../troubleshooting-guide/openstack).
+[OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
 
 ## Keystone
 
