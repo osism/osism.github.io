@@ -1,8 +1,8 @@
 ---
-sidebar_label: Troubleshooting Guides
+sidebar_label: Troubleshooting Guide
 sidebar_position: 40
 ---
 
-# Troubleshooting Guides
+# Troubleshooting Guide
 
-💡 The Troubleshooting Guides describe how to solve issues.
+💡 The Troubleshooting Guide describe how to solve issues.

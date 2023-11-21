@@ -1,9 +1,9 @@
 ---
-sidebar_label: Operations Guides
+sidebar_label: Operations Guide
 sidebar_position: 30
 ---
 
-# Operations Guides
+# Operations Guide
 
 ## Node states
 

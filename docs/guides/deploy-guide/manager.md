@@ -5,9 +5,6 @@ sidebar_position: 20
 
 # Manager
 
-The prerequisite for the deployment of the Manager is the preparation of a
-[configuration repository](https://osism.github.io/docs/getting-started/configuration-repository).
-
 1. Install Ubuntu 22.04 on the node to be used as manager
    (see [Provisioning of management and control plane nodes](./provisioning)).
 
@@ -70,7 +67,7 @@ ANSIBLE_USER=osism \
   export ANSIBLE_ASK_VAULT_PASS=True
   ```
 
-## Network configuration
+## Apply the network configuration
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
 in the previous step are no longer necessary. If Ansible Vault is used, however, `ANSIBLE_ASK_VAULT_PASS`

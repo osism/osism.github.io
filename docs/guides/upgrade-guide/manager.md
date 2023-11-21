@@ -9,7 +9,7 @@ Always read the release notes first to learn what has changed and what
 adjustments are necessary
 
 1. Update the OSISM release in use in the configuration repository as described in
-   [Configuration Guides > Manager > Stable release](../configuration-guide/manager#stable-release).
+   [Configuration Guide > Manager > Stable release](../configuration-guide/manager#stable-release).
 
 2. Update the configuration repository on the manager.
 
