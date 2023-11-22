@@ -278,3 +278,183 @@ For example, the inventory needs to be built. All further information can be fou
     <td><code>1</code></td>
   </tr>
 </table>
+
+## Preparing a new configuration repository
+
+### Manager environment
+
+```none title="environments/manager/hosts"
+[manager]
+manager01
+```
+
+```yaml title="environments/manager/host_vars/manager01.yml"
+---
+##########################################################
+# ansible
+
+ansible_host: 192.168.16.5
+
+##########################################################
+# generic
+
+internal_interface: eno1
+
+##########################################################
+# network
+
+network_type: netplan
+network_ethernets:
+  eno1:
+    addresses:
+      - "192.168.16.10/20"
+    gateway4: "192.168.16.1"
+    mtu: 1500
+```
+
+### Inventory
+
+```none title="inventory/20-roles"
+##########################################################
+# roles
+
+# NOTE: If netbox is not used, nothing needs to be changed here. In
+#       this case this inventory is used as before. The hosts are
+#       then managed here as normal.
+#
+#       If netbox is used this file is only used to store the hosts
+#       for the initial import into the netbox.
+#
+#       After the initial import of the inventory in the netbox,
+#       the groups in this file can be emptied. The systems are
+#       then assigned to their roles via tags in the netbox.
+
+# The "all" group is not used in OSISM. Therefore it is important
+# that all nodes are explicitly listed here.
+[generic]
+node01
+
+# Nodes that act as manager (sometimes called deployment node)
+# are included in this group.
+[manager]
+manager01
+
+# Nodes which are intended for monitoring services belong to
+# this group
+[monitoring]
+
+# Nodes that serve as controllers, so things like scheduler,
+# API or database run there, of the environment.
+[control]
+
+# Virtual systems managed by OpenStack Nova are placed on
+# nodes in this group.
+[compute]
+
+# Network resources managed by OpenStack Neutron, such as
+# L3 routers, are placed on these nodes. This group has nothing
+# to do with the general network configuration.
+[network]
+
+# Nodes that serve as controllers for Ceph, so things like the
+# Ceph Monitor service run here.
+[ceph-control]
+
+# The storage available in these systems is provided in the
+# form of OSDs for Ceph.
+[ceph-resource]
+
+# NOTE: These empty groups are only necessary if netbox is used. After
+#       the initial import of the hosts these groups can be commented
+#       out. The groups above with the initial hosts can be commented.
+#
+# [generic]
+#
+# [manager]
+#
+# [monitoring]
+#
+# [control]
+#
+# [compute]
+#
+# [network]
+#
+# [ceph-control]
+#
+# [ceph-resource]
+```
+
+```yaml title="inventory/host_vars/node01.yml"
+---
+##########################################################
+# ansible
+
+# NOTE: Address where the node can be reached via SSH.
+ansible_host: 192.168.16.10
+
+##########################################################
+# generic
+
+internal_interface: eno1
+
+# NOTE: The address of the internal interface.
+internal_address: 192.168.16.10
+
+##########################################################
+# netdata
+
+netdata_host_type: client
+
+# NOTE: Uncomment this when this node should be a Netdata server.
+
+# netdata_host_type: server
+
+##########################################################
+# network
+
+# NOTE: This is the initial management interface. Further interfaces
+#       must be added.
+
+network_type: netplan
+network_ethernets:
+  eno1:
+    addresses:
+      - "192.168.16.10/20"
+    gateway4: "192.168.16.1"
+    mtu: 1500
+
+##########################################################
+# kolla
+
+network_interface: eno1
+
+# api_interface:
+# bifrost_network_interface:
+# dns_interface:
+# kolla_external_vip_interface:
+# migration_interface:
+# neutron_external_interface:
+# octavia_network_interface:
+# storage_interface:
+# tunnel_interface:
+
+##########################################################
+# ceph
+
+# NOTE: Uncomment this when this node is a part of the Ceph cluster.
+
+# monitor_address:
+# radosgw_address:
+
+# monitor_interface:
+# radosgw_interface:
+
+# NOTE: Uncomment this when this node should be a OSD node.
+
+# devices:
+#   - /dev/sdb
+#   - /dev/sdc
+#   - /dev/sdd
+#   - /dev/sde
+```
