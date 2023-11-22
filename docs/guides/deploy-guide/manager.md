@@ -22,8 +22,9 @@ on the manager node need to be run as this user. The name of the operator user i
 
 With `ANSIBLE_USER` the existing user account is set after the provsioning of the management
 node. When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
-and the password of this user is `password`. If you install Ubuntu manually the user usually is `ubuntu`.
-The password according to what you have set yourself.
+and the password of this user is `password`. If you install Ubuntu manually the user usually
+is `ubuntu`. If you want to use any other user here, that's no problem. It is important that
+this user has sudo rights. The password according to what you have set yourself.
 
 ```
 ANSIBLE_BECOME_ASK_PASS=True \
@@ -32,6 +33,14 @@ ANSIBLE_ASK_PASS=True \
 ANSIBLE_USER=osism \
 ./run.sh operator
 ```
+
+When the `./run.sh operator` is executed, the following prompts are displayed.
+
+| Prompt                                       | Value                                              | Comment                              |
+|----------------------------------------------|----------------------------------------------------|--------------------------------------|
+| `SSH password:`                              | Password so that the `ANSIBLE_USER` can login      | Enabled by `ANSIBLE_ASK_PASS`        |
+| `BECOME password[defaults to SSH password]:` | Password so that the `ANSIBLE_USER` can use `sudo` | Enabled by `ANSIBLE_BECOME_ASK_PASS` |
+| `Vault password:`                            | Value of `secrets/vaultpass`                       | Enabled by `ANSIBLE_ASK_VAULT_PASS`  |
 
 * If a password is required to login to the manager node, `ANSIBLE_ASK_PASS=True` must be set.
 * If an SSH key is required to login to the manager node, the key has to be added on the manager
@@ -43,15 +52,6 @@ ANSIBLE_USER=osism \
 
   ```
   ANSIBLE_USER=osism ./run.sh python3
-  ```
-
-* To verify the creation of the operator user, use the private key file `id_rsa.operator`. Make
-  sure you purge all keys from ssh-agent identity cache using `ssh-add -D`. You can print the list
-  using `ssh-add -l`. The list should be empty.
-
-  ```
-  ssh-add -D
-  ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@testbed-manager
   ```
 
 * If you receive the following error message `ssh: Too many authentication failures` set
@@ -79,12 +79,24 @@ in the Ansible documentation.
 | `ANSIBLE_BECOME_ASK_PASS` | Boolean | Toggle to prompt for privilege escalation password.                                                                                                                           |
 | `ANSIBLE_SSH_ARGS`        | String  | If set, this will override the Ansible default ssh arguments.                                                                                                                 |
 | `ANSIBLE_USER`            | String  | The user Ansible ‘logs in’ as.                                                                                                                                                |
+To verify the creation of the operator user, use the private key file `id_rsa.operator`. Make
+sure you purge all keys from ssh-agent identity cache using `ssh-add -D`. You can print the list
+using `ssh-add -l`. The list should be empty.
+
+```
+ssh-add -D
+ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@testbed-manager
+```
 
 ## Apply the network configuration
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
 in the previous step are no longer necessary. If Ansible Vault is used, however, `ANSIBLE_ASK_VAULT_PASS`
 must still be set.
+
+```
+export ANSIBLE_ASK_VAULT_PASS=True
+```
 
 To prevent recurring installation of Ansible Collections, `export INSTALL_ANSIBLE_ROLES=False` can be set.
 
@@ -103,10 +115,12 @@ nodes.
 ## Bootstrap
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
-in the previous step are no longer necessary. If Ansible Vault is used, however, `ANSIBLE_ASK_VAULT_PASS`
-must still be set.
+in the previous step are no longer necessary.
+
+If Ansible Vault is used, however, `export ANSIBLE_ASK_VAULT_PASS=True` must still be set.
 
 To prevent recurring installation of Ansible Collections, `export INSTALL_ANSIBLE_ROLES=False` can be set.
+This is recommended.
 
 1. Bootstrap the manager node.
 
