@@ -160,5 +160,12 @@ This is recommended.
    ./run.sh manager
    ```
 
+Finally, the Ansible Vault password is made known on the manager node.
+
+```
+osism set vault password
+Ansible Vault password: ********
+```
+
 Ready. The manager is now prepared and you can continue with the bootstrap of the other nodes.
 The seed node used until here is no longer necessary.
