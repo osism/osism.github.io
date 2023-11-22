@@ -17,7 +17,7 @@ service itself is then done as usual.
 
 # specify a rule that whitelists roles which domain admins are permitted
 # to assign and revoke within their domain
-"is_domain_managed_role": "'member':%(target.role.name)s"
+"is_domain_managed_role": "'member':%(target.role.name)s or 'load-balancer_member':%(target.role.name)s or 'creator':%(target.role.name)s"
 
 # allow domain admins to retrieve their own domain
 "identity:get_domain": "(rule:is_domain_manager and token.domain.id:%(target.domain.id)s) or rule:admin_required"
@@ -51,7 +51,7 @@ service itself is then done as usual.
 "identity:create_project": "(rule:is_domain_manager and token.domain.id:%(target.project.domain_id)s) or rule:admin_required"
 "identity:update_project": "(rule:is_domain_manager and token.domain.id:%(target.project.domain_id)s) or rule:admin_required"
 "identity:delete_project": "(rule:is_domain_manager and token.domain.id:%(target.project.domain_id)s) or rule:admin_required"
-"identity:list_user_projects": "(rule:is_domain_manager and token.domain.id:%(target.user.domain_id)s) or rule:admin_required"
+"identity:list_user_projects": "(rule:is_domain_manager and token.domain.id:%(target.user.domain_id)s) or user_id:%(user_id)s or rule:admin_required"
 
 # allow domain managers to manage role assignments within their domain
 # (restricted to specific roles by the 'is_domain_managed_role' rule)
