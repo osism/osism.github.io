@@ -18,6 +18,11 @@ the nodes are already ready for use.
    osism apply operator -u osism
    ```
 
+   * When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
+     and the password of this user is `password`. If you install Ubuntu manually the user usually
+     is `ubuntu`. If you want to use any other user here, that's no problem. It is important that
+     this user has sudo rights. The password according to what you have set yourself.
+
    * The operator public SSH key has to be added in advance on all nodes to `authorized_keys` file
      of the user specified with `-u`. This key is stored as `operator_public_key` in the file
      `environments/configuration.yml`.
