@@ -5,6 +5,8 @@ sidebar_position: 10
 
 # Getting Started
 
+## Deployment
+
 OSISM is deployed in a series of successive phases. The phases are documented in this chapter.
 
 1. [Creation of a configuration repository](./guides/configuration-guide/configuration-repository#creating-a-new-configuration-repository)
