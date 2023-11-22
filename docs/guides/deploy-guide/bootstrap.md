@@ -40,6 +40,14 @@ the nodes are already ready for use.
        --become-pass-file /opt/configuration/secrets/become_password
      ```
 
+   * If a password is required for both sudo and login, use both arguments at the same time.
+
+     ```
+     osism apply operator -u osism \
+       --become-pass-file /opt/configuration/secrets/become_password \
+       --conn-pass-file /opt/configuration/secrets/conn_password
+     ```
+
    * When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism` and the password of this
      user is `password`. If you install Ubuntu manually the user usually is `ubuntu`. The password according to what you
      have set yourself
