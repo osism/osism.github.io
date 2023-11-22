@@ -33,9 +33,6 @@ ANSIBLE_USER=osism \
 ./run.sh operator
 ```
 
-* Details on all parameters can be found in
-  [Ansible Configuration Settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
-  in the Ansible documentation.
 * If a password is required to login to the manager node, `ANSIBLE_ASK_PASS=True` must be set.
 * If an SSH key is required to login to the manager node, the key has to be added on the manager
   node to `~/.ssh/authorized_keys` in the home directory of the user specified as `ANSIBLE_USER` first.
@@ -70,6 +67,18 @@ ANSIBLE_USER=osism \
   ```
   export ANSIBLE_ASK_VAULT_PASS=True
   ```
+
+Details on all parameters can be found in
+[Ansible Configuration Settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
+in the Ansible documentation.
+
+| Environment variable      | Type    | Description                                                                                                                                                                   |
+|---------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ANSIBLE_ASK_PASS`        | Boolean | This controls whether an Ansible playbook should prompt for a login password. If using SSH keys for authentication, you probably do not need to change this setting.          |
+| `ANSIBLE_ASK_VAULT_PASS`  | Boolean | This controls whether an Ansible playbook should prompt for a vault password.                                                                                                 |
+| `ANSIBLE_BECOME_ASK_PASS` | Boolean | Toggle to prompt for privilege escalation password.                                                                                                                           |
+| `ANSIBLE_SSH_ARGS`        | String  | If set, this will override the Ansible default ssh arguments.                                                                                                                 |
+| `ANSIBLE_USER`            | String  | The user Ansible ‘logs in’ as.                                                                                                                                                |
 
 ## Apply the network configuration
 
