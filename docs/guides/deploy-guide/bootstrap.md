@@ -62,22 +62,28 @@ the nodes are already ready for use.
 
    ```
    osism apply squid
+   ```
+
+3. Proxy configuration (optional). This is only necessary if you use the proxy on the manager to enable external access to
+   the nodes.
+
+   ```
    osism apply proxy
    ```
 
-3. Network configuration. It is recommended to backup the existing network configuration.
+4. Network configuration. It is recommended to backup the existing network configuration.
 
    ```
    osism apply network
    ```
 
-4. Reboot (optional). The reboot at this point is recommended to ensure that the network configuration is working.
+5. Reboot (optional). The reboot at this point is recommended to ensure that the network configuration is working.
 
    ```
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
-5. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
+6. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
    ```
    osism apply ping
@@ -98,32 +104,32 @@ the nodes are already ready for use.
      to host\r", "unreachable": true}
      ```
 
-6. Refresh facts.
+7. Refresh facts.
 
    ```
    osism apply facts
    ```
 
-7. Bootstrap.
+8. Bootstrap.
 
    ```
    osism apply bootstrap
    ```
 
-8. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
+9. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
    the reboot should always be performed.
 
    ```
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
-9. Prepare the SSH configuration of the manager node.
+10. Prepare the SSH configuration of the manager node.
 
-   ```
-   osism apply sshconfig
-   ```
+    ```
+    osism apply sshconfig
+    ```
 
-10. Check again if all systems are reachable (you probably have to do this several times until all systems are accessible).
+11. Check again if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
    ```
    osism apply ping
