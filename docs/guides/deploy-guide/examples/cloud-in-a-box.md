@@ -198,7 +198,7 @@ If you want to access the services please choose the URL from the following list
 | Name                    | URL                                           | Username   | Password |
 |-------------------------|-----------------------------------------------|------------|----------|
 | ARA                     | <https://ara.services.in-a-box.cloud>         | ara        | password |
-| Ceph                    | <https://api.in-a-box.cloud:7000>             | admin      | password |
+| Ceph                    | <http://api.in-a-box.cloud:7000>              | admin      | password |
 | Flower                  | <https://flower.services.in-a-box.cloud>      | -          | -        |
 | Grafana                 | <https://api.in-a-box.cloud:3000>             | admin      | password |
 | Homer                   | <https://homer.services.in-a-box.cloud>       | -          | -        |
