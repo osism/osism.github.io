@@ -201,6 +201,7 @@ If you want to access the services please choose the URL from the following list
 | Ceph                    | <http://api.in-a-box.cloud:7000>              | admin      | password |
 | Flower                  | <https://flower.services.in-a-box.cloud>      | -          | -        |
 | Grafana                 | <https://api.in-a-box.cloud:3000>             | admin      | password |
+| HAProxy                 | <http://manager.systems.in-a-box.cloud:1984>  | openstack  | password |
 | Homer                   | <https://homer.services.in-a-box.cloud>       | -          | -        |
 | Horizon - admin project | <https://api.in-a-box.cloud>                  | admin      | password |
 | Horizon - test project  | <https://api.in-a-box.cloud>                  | test       | test     |
