@@ -129,6 +129,12 @@ the nodes are already ready for use.
     osism apply sshconfig
     ```
 
+11. Make all SSH public keys known.
+
+   ```
+   osism apply known-hosts
+   ```
+
 11. Check again if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
    ```
