@@ -314,22 +314,22 @@ If you want to access the services please choose the URL from the following tabl
 
 **Name**               | **URL**                                           | **Username**  | **Password**                                 | **Note**
 -----------------------|---------------------------------------------------|---------------|----------------------------------------------|-------------------
-ARA                    | <https://ara.testbed.osism.xyz/>                  | ara           | password                                     |
-Ceph                   | <https://api-int.testbed.osism.xyz:8140>          | admin         | password                                     |
-Flower                 | <https://api-int.testbed.osism.xyz:8140>          |               |                                              |
-Grafana                | <https://api-int.testbed.osism.xyz:3000>          | admin         | password                                     |
-Homer                  | <https://homer.testbed.osism.xyz>                 |               |                                              |
-Horizon (via Keystone) | <https://api.testbed.osism.xyz>                   | admin         | password                                     | domain: default
-Horizon (via Keystone) | <https://api.testbed.osism.xyz>                   | test          | test                                         | domain: test
-Horizon (via Keycloak) | <https://api.testbed.osism.xyz>                   | alice         | password                                     |
-Keycloak               | <https://keycloak.testbed.osism.xyz>              | admin         | password                                     |
-Kibana                 | <https://api.testbed.osism.xyz:5601>              | kibana        | password                                     |
-Netbox                 | <https://netbox.testbed.osism.xyz/>               | admin         | password                                     |
-Netdata                | <https://testbed-manager.testbed.osism.xyz:19999> |               |                                              |
-Patchman               | <https://patchman.testbed.osism.xyz/>             | patchman      | password                                     |
-Prometheus             | <https://api-int.testbed.osism.xyz:9091/>         |               |                                              |
-phpMyAdmin             | <https://phpmyadmin.testbed.osism.xyz>            | root          | password                                     |
-RabbitMQ               | <https://api-int.testbed.osism.xyz:15672/>        | openstack     | BO6yGAAq9eqA7IKqeBdtAEO7aJuNu4zfbhtnRo8Y     |
+ARA                    | https://ara.testbed.osism.xyz/                  | ara           | password                                     |
+Ceph                   | https://api-int.testbed.osism.xyz:8140          | admin         | password                                     |
+Flower                 | https://api-int.testbed.osism.xyz:8140          |               |                                              |
+Grafana                | https://api-int.testbed.osism.xyz:3000          | admin         | password                                     |
+Homer                  | https://homer.testbed.osism.xyz                 |               |                                              |
+Horizon (via Keystone) | https://api.testbed.osism.xyz                   | admin         | password                                     | domain: default
+Horizon (via Keystone) | https://api.testbed.osism.xyz                   | test          | test                                         | domain: test
+Horizon (via Keycloak) | https://api.testbed.osism.xyz                   | alice         | password                                     |
+Keycloak               | https://keycloak.testbed.osism.xyz              | admin         | password                                     |
+Kibana                 | https://api.testbed.osism.xyz:5601              | kibana        | password                                     |
+Netbox                 | https://netbox.testbed.osism.xyz/               | admin         | password                                     |
+Netdata                | https://testbed-manager.testbed.osism.xyz:19999 |               |                                              |
+Patchman               | https://patchman.testbed.osism.xyz/             | patchman      | password                                     |
+Prometheus             | https://api-int.testbed.osism.xyz:9091/         |               |                                              |
+phpMyAdmin             | https://phpmyadmin.testbed.osism.xyz            | root          | password                                     |
+RabbitMQ               | https://api-int.testbed.osism.xyz:15672/        | openstack     | BO6yGAAq9eqA7IKqeBdtAEO7aJuNu4zfbhtnRo8Y     |
 
 
 ### Authentication with OIDC
@@ -351,8 +351,8 @@ The expiration time of the Single Sign On tokens can be controlled on multiple l
 
 1. On realm level under *Realm Settings* > *Tokens*.
    Assuming the *keycloak_realm* ansible variable is the default *osism*, and keycloak is listening on
-   <https://keycloak.testbed.osism.xyz>, then the configuration form is available here:
-   <https://keycloak.testbed.osism.xyz/auth/admin/master/console/#/realms/osism/token-settings>
+   [keycloak.testbed.osism.xyz](https://keycloak.testbed.osism.xyz), then the configuration form is available
+   [here](https://keycloak.testbed.osism.xyz/auth/admin/master/console/#/realms/osism/token-settings).
 
    Detailed information is available in the Keycloak Server Administrator Documentation
    [Session and Token Timeouts](https://www.keycloak.org/docs/latest/server_admin/#_timeouts) section.

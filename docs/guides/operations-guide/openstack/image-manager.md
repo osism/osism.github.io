@@ -24,9 +24,9 @@ Since this script stores many images in a single project, the Glance quota must 
 user_storage_quota = 1TB
 ```
 
-With most storage backends it makes sense to convert the imported images directly to RAW. So it is required for using Ceph and it´s
-features too. Recited from the Ceph documentation <https://docs.ceph.com/en/latest/rbd/qemu-rbd/> and
-<https://docs.ceph.com/en/nautilus/rbd/rbd-openstack/>:
+With most storage backends it makes sense to convert the imported images directly to RAW. So it is required for using Ceph and it's
+features too. Recited from the Ceph documentation [QEMU and block devices](https://docs.ceph.com/en/latest/rbd/qemu-rbd/) and
+[Block devices and OpenStack](https://docs.ceph.com/en/latest/rbd/rbd-openstack/).
 
 >"The raw data format is really the only sensible format option to use with RBD. Technically, you could use other QEMU-supported formats
 >(such as qcow2 or vmdk), but doing so would add additional overhead, and would also render the volume unsafe for virtual machine live
