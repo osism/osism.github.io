@@ -102,26 +102,40 @@ do the appropriate maintenance work and after the node is back online
 unset the flag like so:
 
 ```
-$ ceph osd set noout
-... after maintenance is done and host is back up:
-$ ceph osd unset noout
+ceph osd set noout
+```
+
+After maintenance is done and host is back up:
+
+```
+ceph osd unset noout
 ```
 
 On versions Luminous or above you can set the flag individually for single
 OSDs or entire CRUSH buckets, which can be a safer option in case of prolonged
 maintenance periods.
 
-Add/Remove noout for a OSD:
+Add noout for a OSD:
 
 ```
-$ ceph osd add-noout osd.<ID>
-$ ceph osd rm-noout osd.<ID>
-```
+ceph osd add-noout osd.<ID>
 
-Add/Remove noout for CRUSH bucket (e.g. host name as seen in ``ceph osd tree``):
+Remove noout for a OSD:
 
 ```
-$ ceph osd set-group noout <crush-bucket-name>
+ceph osd rm-noout osd.<ID>
+```
+
+Add noout for CRUSH bucket (e.g. host name as seen in ``ceph osd tree``):
+
+```
+ceph osd set-group noout <crush-bucket-name>
+```
+
+Remove noout for CRUSH bucket:
+
+```
+ceph osd unset-group noout <crush-bucket-name>
 ```
 
 ## Gathering information about block devices
