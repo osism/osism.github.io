@@ -119,6 +119,7 @@ Add noout for a OSD:
 
 ```
 ceph osd add-noout osd.<ID>
+```
 
 Remove noout for a OSD:
 
