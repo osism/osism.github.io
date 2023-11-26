@@ -93,7 +93,7 @@ definition will be used.
 $ openstack-flavor-manager --name osism
 ```
 
-# Name parser and generator
+## Name parser and generator
 
 A generator and parser for flavor names according to the SCS standard is available on
 [flavors.scs.community](https://flavors.scs.community).
