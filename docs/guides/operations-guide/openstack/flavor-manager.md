@@ -2,14 +2,13 @@
 sidebar_label: Flavor Manager
 sidebar_position: 51
 ---
-
 # Flavor Manager
 
 ## Overview
 
 The OpenStack Flavor Manager manages the creation, modification, and removal of flavors within an OpenStack environment.
 The OpenStack Flavor Manager operates as a facilitator that orchestrates compute flavors in alignment 
-with the [SCS Flavor Naming Standard](https://docs.scs.community/standards/scs-0100-v3-flavor-naming)
+with the standard [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
 by utilizing YAML files provided by the SCS project.
 
 ## Installation
@@ -17,7 +16,7 @@ by utilizing YAML files provided by the SCS project.
 Install the `openstack-flavor-manager` package with pip.
 
 ```bash
-pip3 install openstack-flavor-manager
+pip install openstack-flavor-manager
 ```
 
 Or clone the repository [osism/openstack-flavor-manager](https://github.com/osism/openstack-flavor-manager)
@@ -79,7 +78,7 @@ openstack --os-cloud admin flavor list
 ```
 
 
-## Flavor definitions
+## Definitions
 
 There are two flavor definitions available by default. One for
 [SCS](https://raw.githubusercontent.com/SovereignCloudStack/standards/main/Tests/iaas/SCS-Spec.MandatoryFlavors.verbose.yaml)
@@ -93,3 +92,23 @@ definition will be used.
 ```
 $ openstack-flavor-manager --name osism
 ```
+
+# Name parser and generator
+
+A generator and parser for flavor names according to the SCS standard is available on
+[flavors.scs.community](https://flavors.scs.community).
+
+The flavor name `SCS-2V-4-20s` is inserted in field `Flavor name`:
+
+<img
+  src={require('./images/flavor-manager/flavors-1.png').default}
+  width="50%"
+/>
+
+The flavor `SCS-2V-4-20s` translated is
+`2 generic x86-64 vCPUs with 4.0 GiB RAM and SSD 20GB root volume`:
+
+<img
+  src={require('./images/flavor-manager/flavors-2.png').default}
+  width="50%"
+/>
