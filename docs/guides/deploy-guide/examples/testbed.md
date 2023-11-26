@@ -590,6 +590,8 @@ prepare                    | Run local preparations.
 
 ### CI jobs
 
+* [Results of the daily jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0)
+
 **Name**                   | **Description**
 ---------------------------|---------------------------------
 testbed-deploy             |
