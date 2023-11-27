@@ -195,10 +195,10 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 
 If you want to access the services please choose the URL from the following list:
 
-| Name                    | URL                                           | Username   | Password |
-|-------------------------|-----------------------------------------------|------------|----------|
+| Name                    | URL                                         | Username   | Password |
+|-------------------------|---------------------------------------------|------------|----------|
 | ARA                     | https://ara.services.in-a-box.cloud         | ara        | password |
-| Ceph                    | http://api.in-a-box.cloud:7000              | admin      | password |
+| Ceph                    | http://manager.systems.in-a-box.cloud:7000  | admin      | password |
 | Flower                  | https://flower.services.in-a-box.cloud      | -          | -        |
 | Grafana                 | https://api.in-a-box.cloud:3000             | admin      | password |
 | HAProxy                 | http://manager.systems.in-a-box.cloud:1984  | openstack  | password |
