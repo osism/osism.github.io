@@ -22,7 +22,12 @@ sudo apt-get install git python3-pip python3-virtualenv sshpass
 ## Get a copy of the configuration repository
 
 Each environment managed with OSISM is based on a configuration repository. This was
-previously created with Cookiecutter and the cfg-cookiecutter repository.
+previously created with Cookiecutter and the [osism/cfg-cookiecutter](https://github.com/osism/cfg-cookiecutter)
+repository.
+
+The creation of the configuration repository is covered in chapter
+[Creation of a configuration repository](../configuration-guide/configuration-repository#creating-a-new-configuration-repository)
+of the [Configuration Guide](../configuration-guide).
 
 A configuration repository is stored on a Git server (e.g. GitHub, Gitlab, ...). The
 configuration repository is individual for each environment and is therefore not provided
