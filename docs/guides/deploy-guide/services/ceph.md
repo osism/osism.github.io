@@ -53,6 +53,17 @@ sidebar_position: 50
 
 ## RGW service
 
+Deployment of the Ceph RGW Service is optional. How the Ceph RGW service can be deployed
+and integrated into OpenStack is described here.
+
+:::info
+
+If an initial deployment is performed and Ceph RGW is not added to an existing deployment,
+steps 4 and 5 are **not** required. Step 3 is then performed **later** after the OpenStack
+Keystone service has been deployed.
+
+:::
+
 1. [Configure the RGW service](./../../configuration-guide/ceph#rgw-service)
 
 2. Apply role `ceph-rgws` to deploy the Ceph RGW services.
