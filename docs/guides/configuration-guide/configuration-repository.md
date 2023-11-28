@@ -40,17 +40,6 @@ A configuration repository is always composed of the same basic layout.
   gilt overlay
   ```
 
-  If a stable OSISM release is used, the version to be used is specified by `MANAGER_VERSION`.
-  In the example, OSISM release 6.0.0 is used. The current stable release is listed at
-  [release.osism.tech](https://release.osism.tech/). Always check there in advance and do not
-  copy the stable release used here as an example. More detail about this in
-  [Configuration Guide > Manager > Stable release](manager#stable-release).
-
-  ```
-  MANAGER_VERSION=6.0.0 gilt overlay
-  MANAGER_VERSION=6.0.0 gilt overlay
-  ```
-
 ## Creating a new configuration repository
 
 The initial content for this repository is generated using the

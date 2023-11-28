@@ -17,8 +17,8 @@ In the example, OSISM release 6.0.0 is used.
    that the correct versions are available in `environments/manager/images.yml`.
 
    ```
-   MANAGER_VERSION=6.0.0 gilt overlay  # you have to do this 2x
-   MANAGER_VERSION=6.0.0 gilt overlay
+   gilt overlay  # you have to do this 2x
+   gilt overlay
    ```
 
    Optionally, this is normally not necessary, it is possible to reference a specific tag of the
