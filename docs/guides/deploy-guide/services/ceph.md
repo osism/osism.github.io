@@ -14,6 +14,12 @@ sidebar_position: 50
    osism apply ceph-crash
    ```
 
+   It's all done here step by step. It is also possible to do this in a single step:
+
+   ```
+   osism apply ceph-base
+   ```
+
 2. Get ceph keys. This places the necessary keys in /opt/configuration.
 
    ```
