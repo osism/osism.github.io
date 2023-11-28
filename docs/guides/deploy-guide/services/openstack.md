@@ -8,6 +8,12 @@ sidebar_position: 60
 Common issues with deploying OpenStack services are documented in the
 [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
 
+## OpenStack client
+
+```
+osism apply openstackclient
+```
+
 ## Keystone
 
 ```
@@ -69,10 +75,4 @@ osism apply octavia
 ```
 osism apply -a pull horizon
 osism apply horizon
-```
-
-## OpenStack client
-
-```
-osism apply openstackclient
 ```
