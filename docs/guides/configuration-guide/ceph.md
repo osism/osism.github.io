@@ -17,20 +17,6 @@ fsid: c2120a4a-669c-4769-a32c-b7e9d7b848f4
 
 ## Client
 
-In order to use the Ceph client on the manager node, the IP addresses of the Ceph
-monitor services, usually they run on the Ceph control plane, are added in
-`environments/infrastructure/configuration.yml` first.
-
-```yaml title="environments/infrastructure/configuration.yml"
-##########################
-# cephclient
-
-cephclient_mons:
-  - 192.168.16.10
-  - 192.168.16.11
-  - 192.168.16.12
-```
-
 The `client.admin` keyring is placed in the file `environments/infrastructure/files/ceph/ceph.client.admin.keyring`.
 
 ## Swappiness
@@ -109,17 +95,6 @@ vm.min_free_kbytes=4194303
 
    ceph_rgw_swift_compatibility: false
    ceph_rgw_swift_account_in_url: true
-
-   ceph_rgw_hosts:
-     - host: testbed-node-0
-       ip: 192.168.16.10
-       port: 8081
-     - host: testbed-node-1
-       ip: 192.168.16.11
-       port: 8081
-     - host: testbed-node-2
-       ip: 192.168.16.12
-       port: 8081
    ```
 
 ## Extra pools
@@ -148,5 +123,5 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 
 | Parameter                       | Default value |
 |---------------------------------|---------------|
-|openstack_pool_default_pg_num    | 64            |
+| openstack_pool_default_pg_num   | 64            |
 | openstack_pool_default_min_size | 0             |
