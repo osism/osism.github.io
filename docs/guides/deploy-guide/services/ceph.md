@@ -20,7 +20,7 @@ sidebar_position: 50
    osism apply ceph-base
    ```
 
-2. Get ceph keys. This places the necessary keys in /opt/configuration.
+2. Get ceph keys. This places the necessary keys in `/opt/configuration`.
 
    ```
    osism apply copy-ceph-keys
@@ -50,7 +50,6 @@ sidebar_position: 50
    ```
    osism apply cephclient
    ```
-
 
 ## RGW service
 
