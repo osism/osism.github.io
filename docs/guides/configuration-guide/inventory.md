@@ -15,6 +15,8 @@ manager node in it.
 
 ## Reconciler
 
+![Inventory Reconciler](./images/inventory/inventory-reconciler.png)
+
 ## Host Vars
 
 ## Group Vars
