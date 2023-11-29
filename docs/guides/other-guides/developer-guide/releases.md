@@ -166,10 +166,14 @@ removed.
 11. Add a new release notes file to `doc/sorce/notes`. Generate the versions table with the
     help of the `release-table.py` script in the `osism/sbom` repository.
 
-12. After all known issues are documented, a corresponding tag, e.g. `v5.0.0`, is set on the
-    release repository.
+12. After all known issues are documented, a corresponding tag, e.g. `5.0.0`, is set on the
+    [osism/release](https://github.com/osism/release/releases) repository.
 
-13. As the last of the release process, the previously prepared PR is merged on the
+13. Create a [GitHub release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with the new tag on the
+    [osism/release](https://github.com/osism/release/releases) repository. The release is
+    now public available.
+
+14. As the last of the release process, the previously prepared PR is merged on the
     `osism/testbed` repository to change the stable version.
 
 ## How we write release notes
