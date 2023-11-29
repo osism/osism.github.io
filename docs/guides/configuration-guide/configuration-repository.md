@@ -68,9 +68,9 @@ stored on GitHub in the `regiocloud/configuration` repository.
 
 ### Creation
 
-In this example a new configuration repository is created with the defaults. The latest versions of
-OSISM are used. The use of a stable release is described in the section
-[Use of a stable release](#use-of-a-stable-release).
+In this example a new configuration repository is created with the defaults. The current stable
+version of OSISM is used. The use of latest is described in the section
+[Use of latest](#use-of-latest).
 
 The directory `output` is created and used as output volume.
 
@@ -97,7 +97,7 @@ docker run --rm -v $(pwd)/output:/output -it quay.io/osism/cookiecutter
 [12/20] git_version (main):
 [13/20] ip_external (192.168.96.9):
 [14/20] ip_internal (192.168.32.9):
-[15/20] manager_version (latest):
+[15/20] manager_version (6.0.2):
 [16/20] name_server (149.112.112.112):
 [17/20] ntp_server (de.pool.ntp.org):
 [18/20] openstack_version (2023.1):
@@ -112,22 +112,17 @@ afterwards and have to be changed.
 sudo chown -R $USER: output/
 ```
 
-### Use of a stable release
+### Use of latest
 
-When you want to use a stable release this is done via the parameter `manager_version`.
-By default, this is always set to `latest`. If, for example, the stable release `6.0.0`
-is to be used, the value for this parameter is set to `6.0.0`.
-
-The current stable release is listed at [release.osism.tech](https://release.osism.tech/).
-Always check there in advance and do not copy the stable release used here as an example.
+When you want to use latest this is done via the parameter `manager_version`.
+By default, this is always set to the current stable version.
 
 ```
-manager_version [latest]: 6.0.0
+manager_version [6.0.2]: latest
 ```
 
-If the `manager_version` parameter is set to a stable release then it is no longer necessary
-to set the `ceph_version` and `openstack_version` parameters. These are then no longer needed
-and are ignored. The used versions result from the `manager_version`.
+If the `manager_version` parameter is set to `latest` it is also possible to explicitly
+set the `openstack_version` and the `ceph_version`.
 
 ### Make commit
 
@@ -239,7 +234,7 @@ For example, the inventory needs to be built. All further information can be fou
   <tr>
     <td><code>manager_version</code></td>
     <td>The version of OSISM. An overview of available OSISM releases can be found on <a href="https://release.osism.tech">release.osism.tech</a>.</td>
-    <td><code>latest</code></td>
+    <td><code>6.0.2</code></td>
   </tr>
   <tr>
     <td><code>name_server</code></td>
