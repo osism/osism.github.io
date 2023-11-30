@@ -7,6 +7,20 @@ sidebar_position: 10
 
 ## Ansible
 
+### Files
+
+Each Ansible service has its own local Ansible log file. These log files are not persistent. The ARA service is
+used for the persistence of Ansible logs. The log files can be used to view currently running Ansible Plays,
+for example if they are running as a background task.
+
+```
+$ docker exec -it osism-ansible tail -f /ansible/logs/ansible.log
+$ docker exec -it ceph-ansible tail -f /ansible/logs/ansible.log
+$ docker exec -it kolla-ansible tail -f /ansible/logs/ansible.log
+```
+
+### ARA - ARA Records Ansible
+
 ```
 $ osism log ansible
 (ara) help
