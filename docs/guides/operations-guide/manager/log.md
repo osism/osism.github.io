@@ -39,7 +39,7 @@ host delete  play list     playbook prune    result delete  task metrics
 host list    play show     playbook show     result list    task show
 ```
 
-### Sample usage
+#### Sample usage
 
 As an example, the role common is run. Irrelevant parts of outputs have been removed.
 
