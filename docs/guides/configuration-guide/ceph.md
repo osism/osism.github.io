@@ -121,101 +121,112 @@ If, for example, the inventory group of the Ceph cluster on which the additional
 pools are to be created is `ceph.rbd`, then the parameters would be stored in
 `inventory/group_vars/ceph.rbd.yml` accordingly.
 
-| Parameter                       | Default value |
-|---------------------------------|---------------|
-| openstack_pool_default_pg_num   | 64            |
-| openstack_pool_default_min_size | 0             |
+| Parameter                         | Default value |
+|-----------------------------------|---------------|
+| `openstack_pool_default_pg_num`   | 64            |
+| `openstack_pool_default_min_size` | 0             |
 
-## Devices
+## LVM devices
 
-```yaml
-ceph_osd_db_wal_devices_buffer_space_percent: 10
-```
+For more advanced OSD layout requirements leave out the `devices` key
+and instead use `lvm_volumes`. Details for this can be found on the
+[OSD Scenario](https://docs.ceph.com/projects/ceph-ansible/en/latest/osds/scenarios.html) documentation.
 
-### Dedicated DB devices
+In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
+OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-devices` available.
 
-```yaml
-ceph_db_devices:
-  nvme0n1:         # required, PV for a DB VG
-                   # Will be prefixed by /dev/ and can also be specified
-                   # like "by-path/foo" or other things under /dev/
-    num_osds: 6    # required, number of OSDs that shall be
-                   # maximum deployed to this device
-    db_size: 30 GB # optional, if not set, defaults to
-                   # (VG size - buffer space (if enabled)) / num_osds
-```
+1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
+   add a configuration like the following to it:
 
-### Dedicated WAL devices
+   ```
+   # optional percentage of VGs to leave free,
+   # defaults to false
+   # Can be helpful for SSD performance of some older SSD models
+   # or to extend lifetime of SSDs in general
 
-```yaml
-ceph_wal_devices:
-  nvme1n1:         # See above, PV for a WAL VG
-    num_osds: 6    # See above
-    wal_size: 2 GB # optional, if not set, defaults to 2 GiB
-```
+   ceph_osd_db_wal_devices_buffer_space_percent: 10
 
-### Shared DB & WAL devices
+   ceph_db_devices:
+     nvme0n1:            # required, PV for a DB VG
+                         # Will be prefixed by /dev/ and can also be specified
+                         # like "by-path/foo" or other things under /dev/
+       num_osds: 6       # required, number of OSDs that shall be
+                         # maximum deployed to this device
+       db_size: 30 GB    # optional, if not set, defaults to
+                         # (VG size - buffer space (if enabled)) / num_osds
+   ceph_wal_devices:
+     nvme1n1:            # See above, PV for a WAL VG
+       num_osds: 6       # See above
+       wal_size: 2 GB    # optional, if not set, defaults to 2 GiB
 
-```yaml
-ceph_db_wal_devices:
-  nvme2n1:         # See above, PV for combined WAL+DB VG
-    num_osds: 3    # See above
-    db_size: 30 GB # See above, except that it also considers
-                   # total WAL size when calculating LV sizes
-    wal_size: 2 GB # See above
-```
+   ceph_db_wal_devices:
+   nvme2n1:              # See above, PV for combined WAL+DB VG
+     num_osds: 3         # See above
+       db_size: 30 GB    # See above, except that it also considers
+                         # total WAL size when calculating LV sizes
+       wal_size: 2 GB    # See above
 
-### OSD devices
+   ceph_osd_devices:
+     sda:                # Device name, will be prefixed by /dev/, see above conventions
+                         # This would create a "block only" OSD without DB/WAL
+                         # In reality, to ensure each device is uniquely identifiable,
+                         # you should use WWN or EUI-64
+                         # (in that case the entry here would be something like 
+                         # disk/by-id/wwn-<something> or disk/by-id/nvme-eui.<something>)
+     sdb:                # Create an OSD with dedicated DB
+       db_pv: nvme0n1    # Must be one device configured in ceph_db_devices
+                         # or ceph_db_wal_devices
+     sdc:                # Create an OSD with dedicated WAL
+       wal_pv: nvme1n1   # Must be one device configured in ceph_wal_devices
+                         # or ceph_db_wal_devices
+     sdb:                # Create an OSD with dedicated DB/WAL residing on different devices
+       db_pv: nvme0n1    # See above
+       wal_pv: nvme1n1   # See above
+     sdc:                # Create an OSD with dedicated DB/WAL residing on the same VG/PV
+       db_pv: nvme2n1    # Must be one device configured in ceph_db_wal_devices
+       wal_pv: nvme2n1   # Must be the same device configured in ceph_db_wal_devices
+   ```
 
-```yaml
-ceph_osd_devices:
-  sda:              # Device name, will be prefixed by /dev/, see above conventions
-                    # This would create a "block only" OSD without DB/WAL
-```
+2. Push the configuration to your configuration repository and after that do the following
 
-```yaml
-ceph_osd_devices:
-  sda:              # Create an OSD with dedicated DB
-    db_pv: nvme0n1  # Must be one device configured in ceph_db_devices
-                    # or ceph_db_wal_devices
-```
+   ```
+   $ osism apply configuration
+   $ osism reconciler sync
+   $ osism apply facts
+   ```
 
-```yaml
-ceph_osd_devices:
-  sda:              # Create an OSD with dedicated WAL
-    wal_pv: nvme1n1 # Must be one device configured in ceph_wal_devices
-                    # or ceph_db_wal_devices
-```
+3. After the configuration has been pulled and facts updated,
+   you can run the LVM configuration playbook:
 
-```yaml
-ceph_osd_devices:
-  sda:              # Create an OSD with dedicated DB/WAL residing on different devices
-    db_pv: nvme0n1  # See above
-    wal_pv: nvme1n1 # See above
-```
+   ```
+   $ osism apply ceph-configure-lvm-volumes
+   ```
 
-```yaml
-ceph_osd_devices:
-  sda:              # Create an OSD with dedicated DB/WAL residing on the same VG/PV
-    db_pv: nvme2n1  # Must be one device configured in ceph_db_wal_devices
-    wal_pv: nvme2n1 # Must be the same device configured in ceph_db_wal_devices
-```
+   This will generate a new configuration file for each node in `/tmp` 
+   on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
 
-### Preparation
+4. Take the generated configuration file from `/tmp` and **replace the previously
+   generated configuration** for each node.
 
-1. Provide config stanza like above either in `group_vars` or `host_vars`
-   in the inventory of the configuration repository
-2. Do `osism reconciler sync` and `osism apply facts`
-3. Run the configuration playbook for the hosts you wish to configure:
-   `osism apply ceph-configure-lvm-volumes -e ireallymeanit=yes`
-4. The configuration generated for the hosts can be found on the
-   manager node of your setup in
-   `/tmp/<inventory_hostname>-ceph-lvm-configuration.yml`
-5. Add this configuration to your `host_vars` for the nodes (see step 2)
-6. Notice that the old config stanza has been expanded with UUIDs,
-   if you use group_vars for config stanza, you should leave the group_vars
-   untouched and integrate the entire generated configuration into `host_vars`
-   for the nodes, as UUIDs are generated _for each host_.
-7. After making sure that configuration is okay and synced and applied,
-   you can run the `ceph-create-lvm-devices` playbook:
-   `osism apply ceph-create-lvm-devices -e ireallymeanit=yes`
+5. Push the updated configuration **again** to your configuration repository and re-run:
+
+   ```
+   $ osism apply configuration
+   $ osism reconciler sync
+   $ osism apply facts
+   ```
+
+6. Finally let OSISM create the LVM devices for you.
+
+   ```
+   $ osism apply ceph-create-lvm-devices
+   ```
+
+7. Deploy OSDs with `ceph-osds`.
+
+   When everything has finished and is ready to be deployed,
+   you can run:
+
+   ```
+   $ osism apply ceph-osds
+   ```
