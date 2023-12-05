@@ -185,12 +185,14 @@ ceph_osd_devices:
   sda:              # Create an OSD with dedicated WAL
     wal_pv: nvme1n1 # Must be one device configured in ceph_wal_devices
                     # or ceph_db_wal_devices
+```
 
 ```yaml
 ceph_osd_devices:
   sda:              # Create an OSD with dedicated DB/WAL residing on different devices
     db_pv: nvme0n1  # See above
     wal_pv: nvme1n1 # See above
+```
 
 ```yaml
 ceph_osd_devices:
