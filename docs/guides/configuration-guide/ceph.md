@@ -126,11 +126,13 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 | openstack_pool_default_pg_num   | 64            |
 | openstack_pool_default_min_size | 0             |
 
-## OSD Devices
+## Devices
 
 ```yaml
 ceph_osd_db_wal_devices_buffer_space_percent: 10
 ```
+
+### Dedicated DB devices
 
 ```yaml
 ceph_db_devices:
@@ -143,12 +145,16 @@ ceph_db_devices:
                    # (VG size - buffer space (if enabled)) / num_osds
 ```
 
+### Dedicated WAL devices
+
 ```yaml
 ceph_wal_devices:
   nvme1n1:         # See above, PV for a WAL VG
     num_osds: 6    # See above
     wal_size: 2 GB # optional, if not set, defaults to 2 GiB
 ```
+
+### Shared DB & WAL devices
 
 ```yaml
 ceph_db_wal_devices:
@@ -159,23 +165,41 @@ ceph_db_wal_devices:
     wal_size: 2 GB # See above
 ```
 
+### OSD devices
+
 ```yaml
 ceph_osd_devices:
   sda:              # Device name, will be prefixed by /dev/, see above conventions
                     # This would create a "block only" OSD without DB/WAL
-  sdb:              # Create an OSD with dedicated DB
+```
+
+```yaml
+ceph_osd_devices:
+  sda:              # Create an OSD with dedicated DB
     db_pv: nvme0n1  # Must be one device configured in ceph_db_devices
                     # or ceph_db_wal_devices
-  sdc:              # Create an OSD with dedicated WAL
+```
+
+```yaml
+ceph_osd_devices:
+  sda:              # Create an OSD with dedicated WAL
     wal_pv: nvme1n1 # Must be one device configured in ceph_wal_devices
                     # or ceph_db_wal_devices
-  sdb:              # Create an OSD with dedicated DB/WAL residing on different devices
+
+```yaml
+ceph_osd_devices:
+  sda:              # Create an OSD with dedicated DB/WAL residing on different devices
     db_pv: nvme0n1  # See above
     wal_pv: nvme1n1 # See above
-  sdc:              # Create an OSD with dedicated DB/WAL residing on the same VG/PV
+
+```yaml
+ceph_osd_devices:
+  sda:              # Create an OSD with dedicated DB/WAL residing on the same VG/PV
     db_pv: nvme2n1  # Must be one device configured in ceph_db_wal_devices
     wal_pv: nvme2n1 # Must be the same device configured in ceph_db_wal_devices
 ```
+
+### Preparation
 
 1. Provide config stanza like above either in `group_vars` or `host_vars`
    in the inventory of the configuration repository
