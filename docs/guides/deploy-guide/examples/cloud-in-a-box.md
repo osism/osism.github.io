@@ -297,7 +297,8 @@ Settings for eno7:
 ```
 
 Now this device is made permanently known in the network configuration. Select the MTU
-accordingly. For 1 GBit rather `1500` than `9100`.
+accordingly. For 1 GBit rather `1500` than `9100`. The 2nd network interface should be
+configured without IP configuration (neither static nor DHCP).
 
 * `/opt/configuration/inventory/group_vars/generic/network.yml`
 * `/opt/configuration/environments/manager/group_vars/manager.yml`
