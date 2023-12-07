@@ -21,6 +21,87 @@ sidebar_position: 50
 `ironic_http_interface`        | `{{ api_interface }}`                                                  |
 `ironic_tftp_interface`        | `{{ api_interface }}`                                                  |
 
+## Customization of the service configurations
+
+:::info
+
+The following content is based on the [kolla-ansible uptream documentation](https://docs.openstack.org/kolla-ansible/latest/admin/advanced-configuration.html#openstack-service-configuration-in-kolla).
+
+:::
+
+OSISM will generally look for files in `environments/kolla/files/overlays/CONFIGFILE`,
+`environments/kolla/files/overlays/SERVICENAME/CONFIGFILE` or `environments/kolla/files/overlays/SERVICENAME/HOSTNAME/CONFIGFILE`
+in the configuration repository. These locations sometimes vary and you should check the config task in the appropriate
+Ansible role for a full list of supported locations. For example, in the case of `nova.conf` the following locations are
+supported, assuming that you have services using `nova.conf` running on hosts called ctl1, ctl2 and ctl3:
+
+* `environments/kolla/files/overlays/nova.conf`
+* `environments/kolla/files/overlays/nova/ctl1/nova.conf`
+* `environments/kolla/files/overlays/nova/ctl2/nova.conf`
+* `environments/kolla/files/overlays/nova/ctl3/nova.conf`
+* `environments/kolla/files/overlays/nova/nova-scheduler.conf`
+
+Using this mechanism, overrides can be configured per-project (Nova), per-project-service (Nova scheduler service) or
+per-project-service-on-specified-host (Nova servies on ctl1).
+
+Overriding an option is as simple as setting the option under the relevant section. For example, to set
+override `scheduler_max_attempts` in the Nova scheduler service, the operator could create
+`environments/kolla/files/overlays/nova/nova-scheduler.conf` in the configuration repository with this content:
+
+```ini
+[DEFAULT]
+scheduler_max_attempts = 100
+```
+
+If the operator wants to configure compute node cpu and ram allocation ratio on host com1, the operator needs to
+create the file  `environments/kolla/files/overlays/nova/com1/nova.conf` with this content:
+
+```ini
+[DEFAULT]
+cpu_allocation_ratio = 16.0
+ram_allocation_ratio = 5.0
+```
+
+This method of merging configuration sections is supported for all services using [oslo.config](https://docs.openstack.org/oslo.config/latest/),
+which includes the vast majority of OpenStack services, and in some cases for services using YAML configuration.
+Since the INI format is an informal standard, not all INI files can be merged in this way. In these cases OSISM supports
+overriding the entire config file.
+
+Additional flexibility can be introduced by using Jinja conditionals in the config files. For example, you may create
+Nova cells which are homogeneous with respect to the hypervisor model. In each cell, you may wish to configure the
+hypervisors differently, for example the following override shows one way of setting the `bandwidth_poll_interval`
+variable as a function of the cell:
+
+```ini
+[DEFAULT]
+{% if 'cell0001' in group_names %}
+bandwidth_poll_interval = 100
+{% elif 'cell0002' in group_names %}
+bandwidth_poll_interval = -1
+{% else %}
+bandwidth_poll_interval = 300
+{% endif %}
+```
+
+An alternative to Jinja conditionals would be to define a variable for the `bandwidth_poll_interval` and set
+it in according to your requirements in the inventory group or host vars:
+
+```ini
+[DEFAULT]
+bandwidth_poll_interval = {{ bandwidth_poll_interval }}
+```
+
+OSISM allows the operator to override configuration globally for all services. It will look for a file
+called `environments/kolla/files/overlays/global.conf` in the configuration repository.
+
+For example to modify database pool size connection for all services, the operator needs to create
+`environments/kolla/files/overlays/global.conf` in the configuration repository with this content:
+
+```ini
+[database]
+max_pool_size = 100
+```
+
 ## How does the configuration get into services?
 
 It is explained with example of OpenSearch Service how the configuration for OpenSearch
