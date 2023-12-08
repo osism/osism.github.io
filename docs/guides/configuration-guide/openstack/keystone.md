@@ -8,7 +8,7 @@ sidebar_label: Keystone
 
 | SCS Standard Track | SCS Standard | SCS Documentation |
 |--------------------|--------------|-------------------|
-| [IAM](https://docs.scs.community/standards/iam/) | [scs-0302](https://docs.scs.community/standards/iam/scs-0302) | [Domain Manager configuration for Keystone](https://docs.scs.community/standards/scs-0302-v1-domain-manager-role/) |
+| [IAM](https://docs.scs.community/standards/iam/) | [scs-0302](https://github.com/SovereignCloudStack/standards/blob/main/Standards/scs-0302-v1-domain-manager-role.md) | [Domain Manager configuration for Keystone](https://docs.scs.community/standards/scs-0302-v1-domain-manager-role/) |
 
 To configure and use the domain manager role from the SCS project, the
 `environments/kolla/files/overlays/keystone/policy.yaml` file is created

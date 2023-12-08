@@ -8,7 +8,7 @@ sidebar_position: 100
 ## Ansible
 
 We implement all the default rules of Ansible Lint. All default rules can be found in the
-Ansible Lint documentation: https://ansible-lint.readthedocs.io/en/latest/default_rules/
+Ansible Lint documentation: <https://ansible.readthedocs.io/projects/lint/rules/>
 
 ### Task names
 
