@@ -8,6 +8,16 @@ sidebar_position: 60
 Common issues with deploying OpenStack services are documented in the
 [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
 
+:::info
+
+An OpenStack deployment contains a number of components providing APIs to access infrastructure resources.
+The [OpenStack Components](https://www.openstack.org/software/project-navigator/openstack-components#openstack-services)
+page lists the various services that can be deployed to provide such resources to cloud end users.
+Unfortunately, not all of the OpenStack projects listed there are still active.
+Not all of the services listed there are supported by OSISM.
+
+:::
+
 ## OpenStack client
 
 ```
