@@ -1,0 +1,7 @@
+{
+    "ignorePatterns": [
+      {
+        "pattern": "^(?!http(s)?:\/\/.*)|^(http(s)?:\/\/.*((osism.xyz)|(in-a-box.cloud)))(:?[0-9]+)?(\/.*)?$"
+      }
+    ]
+  }
