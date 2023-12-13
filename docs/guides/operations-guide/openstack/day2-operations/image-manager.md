@@ -28,12 +28,19 @@ With most storage backends it makes sense to convert the imported images directl
 features too. Recited from the Ceph documentation [QEMU and block devices](https://docs.ceph.com/en/latest/rbd/qemu-rbd/) and
 [Block devices and OpenStack](https://docs.ceph.com/en/latest/rbd/rbd-openstack/).
 
->"The raw data format is really the only sensible format option to use with RBD. Technically, you could use other QEMU-supported formats
->(such as qcow2 or vmdk), but doing so would add additional overhead, and would also render the volume unsafe for virtual machine live
->migration when caching (see below) is enabled."
->
->"Important Ceph doesn't support QCOW2 for hosting a virtual machine disk. Thus if you want to boot virtual machines in Ceph (ephemeral
->backend or boot from volume), the Glance image format must be RAW."
+:::info
+
+The raw data format is really the only sensible format option to use with RBD. Technically, you could use other QEMU-supported formats
+(such as qcow2 or vmdk), but doing so would add additional overhead, and would also render the volume unsafe for virtual machine live
+migration when caching (see below) is enabled.
+
+Important Ceph doesn't support QCOW2 for hosting a virtual machine disk. Thus if you want to boot virtual machines in Ceph (ephemeral
+backend or boot from volume), the Glance image format must be RAW.
+
+See the [OpenStack Glance documentation](https://docs.openstack.org/glance/latest/configuration/sample-configuration.html)
+for more details.
+
+:::
 
 This requires the following parameter for the image import workflow.
 
@@ -47,9 +54,6 @@ image_import_plugins = ['image_decompression', 'image_conversion']
 [image_conversion]
 output_format = raw
 ```
-
-> See [OpenStack Glance documentation](https://docs.openstack.org/glance/latest/configuration/sample-configuration.html)
-> for more details.
 
 ### Object storage backend
 
