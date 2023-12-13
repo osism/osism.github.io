@@ -10,7 +10,7 @@ sidebar_position: 60
 ```
 osism apply operator -u osism -l NODE
 osism apply bootstrap -l NODE
-
+```
 
 If FRR is used:
 
