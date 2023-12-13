@@ -280,9 +280,9 @@ $ ceph osd metadata osd.<ID>
 
 :::
 
-### Add a new OSD using ceph-ansible
+### Add a new OSD
 
-### Remove a OSD using ceph-ansible
+### Remove a OSD
 
 ### Replace a defect OSD
 
