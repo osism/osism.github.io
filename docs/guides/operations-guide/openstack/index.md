@@ -10,6 +10,15 @@ sidebar_position: 60
 ```
 osism apply operator -u osism -l NODE
 osism apply bootstrap -l NODE
+
+
+If FRR is used:
+
+```
+osism apply frr -l NODE
+```
+
+```
 osism apply common -l NODE
 osism apply openvswitch -l NODE
 osism apply ovn -l NODE
@@ -23,4 +32,10 @@ If Scaphandre is used:
 
 ```
 osism apply scaphandre -l NODE
+```
+
+If Netdata is used:
+
+```
+osism apply netdata -l NODE
 ```
