@@ -1,6 +1,5 @@
 ---
 sidebar_label: Cinder
-sidebar_position: 20
 ---
 
 # Cinder

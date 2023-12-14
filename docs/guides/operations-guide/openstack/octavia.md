@@ -1,6 +1,5 @@
 ---
 sidebar_label: Octavia
-sidebar_position: 20
 ---
 
 # Octavia
