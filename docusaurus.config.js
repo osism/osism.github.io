@@ -70,6 +70,11 @@ const config = {
             label: 'Docs',
           },
           {
+            href: 'https://regiocloud.github.io',
+            label: 'REGIO',
+            position: 'right',
+          },
+          {
             href: 'https://scs.community',
             label: 'Sovereign Cloud Stack',
             position: 'right',
