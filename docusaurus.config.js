@@ -7,8 +7,8 @@ const darkCodeTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'OSISM',
-  tagline: 'Open Cloud Infrastructure',
+  title: 'OSISM – Open Cloud Infrastructure',
+  tagline: '',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
