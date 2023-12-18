@@ -105,6 +105,11 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      algolia: {
+        appId: 'DSAM4CQN3L',
+        apiKey: '82793e406d49011588827a3fd797ab2d',
+        indexName: 'osismio',
+      },
     }),
 };
 
