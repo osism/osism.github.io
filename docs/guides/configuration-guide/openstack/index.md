@@ -5,6 +5,26 @@ sidebar_position: 50
 
 # OpenStack
 
+## Image tags
+
+Sometimes it is necessary to specify the image tag to be used for a specific service or a specific image of a service.
+All available images and tags are listed in the [002-images-kolla.yml](https://github.com/osism/defaults/blob/main/all/002-images-kolla.yml)
+file.
+
+The image tags can be set in the `environments/kolla/images.yml` file.
+
+* Use a specific tag for all images of a service:
+
+  ```yaml title="environments/kolla/images.yml"
+  barbican_tag: "2023.1"
+  ```
+
+* Use a specific tag for a specific image of a service:
+
+  ```yaml title="environments/kolla/images.yml"
+  barbican_worker_tag: "2023.1"
+  ```
+
 ## Network interfaces
 
 **Parameter**                  | **Default**                                                            | **Description**
