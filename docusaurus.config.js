@@ -71,6 +71,11 @@ const config = {
             label: 'Docs',
           },
           {
+            href: 'https://scs.community',
+            label: 'Sovereign Cloud Stack',
+            position: 'right',
+          },
+          {
             href: 'https://github.com/osism/osism.github.io',
             label: 'GitHub',
             position: 'right',
