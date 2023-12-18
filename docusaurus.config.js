@@ -90,8 +90,12 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Community',
+            title: 'Links',
             items: [
+              {
+                label: 'Imprint',
+                href: '/imprint',
+              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
