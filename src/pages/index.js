@@ -23,7 +23,6 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
       description="Open Cloud Infrastructure">
       <HomepageHeader />
       <main>
