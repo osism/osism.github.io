@@ -97,6 +97,10 @@ const config = {
                 href: '/imprint',
               },
               {
+                label: 'Privacy',
+                href: '/privacy',
+              },
+              {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
               },
