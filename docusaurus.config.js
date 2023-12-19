@@ -80,7 +80,7 @@ const config = {
             position: 'right',
           },
           {
-            href: 'https://github.com/osism/osism.github.io',
+            href: 'https://github.com/osism',
             label: 'GitHub',
             position: 'right',
           },
@@ -100,6 +100,11 @@ const config = {
                 label: 'Privacy',
                 href: '/privacy',
               },
+            ],
+          },
+          {
+            title: 'Community',
+            items: [
               {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
