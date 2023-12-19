@@ -230,3 +230,25 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    ```
    $ osism apply ceph-osds
    ```
+
+## Dashboard
+
+Password for the admin user of the Ceph dashboard is set via `ceph_dashboard_password`.
+
+```yaml title="environments/ceph/secrets.yml"
+ceph_dashboard_password: password
+```
+
+User name of the admin user, port and listen IP address can be set via additional parameters.
+
+```yaml title="environments/ceph/configuration.yml"
+ceph_dashboard_addr: 0.0.0.0
+ceph_dashboard_port: 7000
+ceph_dashboard_username: admin
+```
+
+The Ceph dashboard is bootstrapped with the `ceph-bootstrap-dashboard` play.
+
+```
+$ osism apply ceph-bootstrap-dashboard
+```
