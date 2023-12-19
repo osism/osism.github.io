@@ -109,6 +109,10 @@ const config = {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
               },
+              {
+                label: 'Zuul CI',
+                href: 'https://zuul.services.betacloud.xyz/t/osism/status',
+              },
             ],
           },
         ],
