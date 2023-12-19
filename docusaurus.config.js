@@ -93,8 +93,8 @@ const config = {
             title: 'Links',
             items: [
               {
-                label: 'Imprint',
-                href: '/imprint',
+                label: 'Legals',
+                href: '/legals',
               },
               {
                 label: 'Privacy',
