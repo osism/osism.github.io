@@ -52,6 +52,18 @@ const config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'usecases',
+        path: 'usecases',
+        routeBasePath: 'usecases',
+        sidebarPath: require.resolve('./sidebarUsecases.js')
+      }
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -69,6 +81,7 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
+          { to: "/usecases", label: "Use Cases", position: "left" },
           {
             href: 'https://regiocloud.github.io',
             label: 'REGIO',
