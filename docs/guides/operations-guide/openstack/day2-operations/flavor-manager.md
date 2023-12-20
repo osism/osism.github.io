@@ -84,6 +84,27 @@ Check yourself by running:
 $ openstack --os-cloud admin flavor list
 ```
 
+```
+$ openstack --os-cloud admin flavor show SCS-2V-4-20s
++----------------------------+---------------------------------------------------------------------------------------------------------------------------------+
+| Field                      | Value                                                                                                                           |
++----------------------------+---------------------------------------------------------------------------------------------------------------------------------+
+| OS-FLV-DISABLED:disabled   | False                                                                                                                           |
+| OS-FLV-EXT-DATA:ephemeral  | 0                                                                                                                               |
+| access_project_ids         | None                                                                                                                            |
+| description                | None                                                                                                                            |
+| disk                       | 20                                                                                                                              |
+| id                         | 652e3a6c-330e-4ee3-922b-b49c3c093062                                                                                            |
+| name                       | SCS-2V-4-20s                                                                                                                    |
+| os-flavor-access:is_public | True                                                                                                                            |
+| properties                 | hw_rng:allowed='true', scs:cpu-type='shared-core', scs:disk0-type='ssd', scs:name-v1='SCS-2V:4:20s', scs:name-v2='SCS-2V-4-20s' |
+| ram                        | 4096                                                                                                                            |
+| rxtx_factor                | 1.0                                                                                                                             |
+| swap                       | 0                                                                                                                               |
+| vcpus                      | 2                                                                                                                               |
++----------------------------+---------------------------------------------------------------------------------------------------------------------------------+
+```
+
 ## Definitions
 
 There are two flavor definitions available by default. One for
