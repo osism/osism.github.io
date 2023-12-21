@@ -52,6 +52,7 @@ osism apply common -l NODE
 osism apply openvswitch -l NODE
 osism apply ovn -l NODE
 osism apply prometheus -l NODE
+osism apply prometheus -l control
 osism apply ceilometer -l NODE
 osism apply neutron -l NODE
 osism apply nova -l NODE
@@ -67,6 +68,24 @@ If Netdata is used:
 
 ```
 osism apply netdata -l NODE
+```
+
+Refresh the `/etc/hosts` file:
+
+```
+osism apply hosts
+```
+
+Refresh the SSH client configuration file:
+
+```
+osism apply sshconfig
+```
+
+Add compute node to the known hosts file:
+
+```
+osism apply known-hosts
 ```
 
 Containers that run on a compute node. Versions may differ.
@@ -90,3 +109,68 @@ ebc048b02ab2   quay.io/osism/openvswitch-db-server:3.1.2.20230919         "dumb-
 718aecaddde1   quay.io/osism/kolla-toolbox:16.1.1.20230919                "dumb-init --single-…"   7 hours ago     Up 7 hours                                             kolla_toolbox
 f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-init --single-…"   7 hours ago     Up 7 hours                                             fluentd
 ```
+
+## Remove a compute node
+
+1. In the configuration repository remove the compute node everywhere. Then update the configuration repository on the manager
+   with `osism apply configuration`
+
+2. Live migrate all instances running on the compute node
+   with the help of the [OpenStack Resource Manager](./day2-operations/resource-manager#live-migration)
+
+3. Evacuate all instances on the compute node
+   with the help of the [OpenStack Resource Manager](./day2-operations/resource-manager#evacutation)
+
+4. Ensure that no more instances are running on the compute node
+
+   ```
+   ps ax | grep qemu
+   ```
+
+5. Stop all OpenStack Nova services on the compute node
+
+   ```
+   systemctl stop kolla-nova_ssh-container.service
+   systemctl stop kolla-nova_libvirt-container.service
+   systemctl stop kolla-nova_compute-container.service
+
+6. Delete the compute service
+
+   ```
+   $ openstack --os-cloud admin compute service list
+   +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
+   | ID                                   | Binary         | Host    | Zone     | Status   | State | Updated At                 |
+   +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
+   | f161d739-21de-4cb0-a5d3-d21cff652697 | nova-scheduler | manager | internal | enabled  | up    | 2023-12-21T11:52:59.000000 |
+   | 646d16db-acd9-486c-bd16-8fe2c13bf198 | nova-conductor | manager | internal | enabled  | up    | 2023-12-21T11:53:04.000000 |
+   | 90345eb5-cf2f-47ef-becc-758ee36fb132 | nova-compute   | manager | nova     | disabled | down  | 2023-12-21T11:53:00.000000 |
+   +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
+   ```
+
+   ```
+   $ openstack --os-cloud admin compute service delete 90345eb5-cf2f-47ef-becc-758ee36fb132
+   ```
+
+7. Refresh the facts
+
+   ```
+   osism apply facts
+   ```
+
+8. Refresh the `/etc/hosts` file
+
+   ```
+   osism apply hosts
+   ```
+
+9. Refresh the SSH client configuration file
+
+   ```
+   osism apply sshconfig
+   ```
+
+9. Remove compute node from Prometheus monitoring
+
+   ```
+   osism apply prometheus -l monitoring
+   ```
