@@ -24,3 +24,4 @@ on the base of OpenStack and, in some cases, Ceph and SONiC.
 | Environment    | Operating company    | Short Description                       |
 |----------------|----------------------|-----------------------------------------|
 | -              | aov IT.Services GmbH |                                         |
+| DevCloud       | SEEBURGER AG         | Used for CI                             |
