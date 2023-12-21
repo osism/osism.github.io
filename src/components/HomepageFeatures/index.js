@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Cloud Infrastructure with OpenStack',
+    title: 'Infrastructure as a Service (IaaS) with OpenStack',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
@@ -13,7 +13,7 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Cloud Network with SONiC & OVN',
+    title: 'Software Defined Networking (SDN) with SONiC & OVN',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
@@ -22,7 +22,7 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Cloud Storage with Ceph',
+    title: 'Software Defined Storage (SDS) with Ceph',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
@@ -31,7 +31,7 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Bare Metal as a Service with Ironic',
+    title: 'Bare Metal as a Service (BMaaS) with Ironic',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>

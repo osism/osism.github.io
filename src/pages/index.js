@@ -12,8 +12,8 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <h1 className="hero__title">Get your data center ready for the multi-cloud era</h1>
+        <p className="hero__subtitle">OSISM provides production-grade OpenStack, Ceph & Kubernetes for ISVs, service providers & enterprises</p>
       </div>
     </header>
   );
@@ -23,7 +23,7 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      description="Open Cloud Infrastructure">
+      description="OSISM – Open Cloud Infrastructure">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
