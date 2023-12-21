@@ -5,6 +5,35 @@ sidebar_position: 60
 
 # OpenStack
 
+## Reboot a compute node
+
+1. Live migrate all instances running on the compute node
+   with the help of the [OpenStack Resource Manager](./day2-operations/resource-manager#live-migration)
+
+2. Ensure that no more instances are running on the compute node
+
+   ```
+   ps ax | grep qemu
+   ```
+
+3. Reboot the compute node
+
+   ```
+   osism apply reboot -l NODE -e ireallymeanit=yes
+   ```
+
+4. Re-enable the compute service
+
+   ```
+   openstack --os-cloud admin compute service set --enable --disable-reason "" NODE nova-compute
+   ```
+
+5. Check compute service
+
+   ```
+   openstack --os-cloud admin compute service list --host NODE --service nova-compute
+   ```
+
 ## Add a new compute node
 
 ```
