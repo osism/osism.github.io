@@ -51,6 +51,12 @@ sidebar_position: 50
    osism apply cephclient
    ```
 
+4. Enable and prepare the use of the Ceph dashboard.
+
+   ```
+   osism apply ceph-bootstrap-dashboard
+   ```
+
 ## RGW service
 
 Deployment of the Ceph RGW Service is optional. How the Ceph RGW service can be deployed
