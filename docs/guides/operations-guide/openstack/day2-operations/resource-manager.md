@@ -5,6 +5,38 @@ sidebar_position: 52
 
 # Resource Manager
 
+## Preparations
+
+Prepare use of the OpenStack Resource Manager.
+
+```
+git clone https://github.com/osism/openstack-resource-manager
+cd openstack-resource-manager
+pipenv install
+pipenv shell
+```
+
+Prepare cloud profile `admin` in `clouds.yml` and `secure.yml` (use `clouds.yml.sample` and `secure.yml.sample`
+in the [openstack-resource-manager](https://github.com/osism/openstack-resource-manager) repository as sample files).
+
+## Nova
+
+### Live migration
+
+Live migrate all instances from compute node `SOURCE` to compute node `TARGET`.
+
+```
+$ python3 src/host-action.py --yes --disable --action live-migrate --host SOURCE --input TARGET
+```
+
+### Evacutation
+
+Evacuate all instances from compute node `SOURCE` to compute node `TARGET`.
+
+```
+$ python3 src/host-action.py --yes --action evacutate --host SOURCE --input TARGET
+```
+
 ## Octavia
 
 ### Amphora rotation
