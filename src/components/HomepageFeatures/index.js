@@ -67,11 +67,11 @@ const FeatureList = [
     ),
   },
   {
-    title: 'AI & realtime insights with Netdata',
+    title: 'Realtime insights with Netdata',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Netdata is revolutionizing the world of real-time monitoring, offering an unparalleled experience in tracking system performance and health. This powerful tool provides instant insights, ensuring you're always one step ahead in identifying and resolving issues. With its user-friendly interface, Netdata makes monitoring accessible to everyone, regardless of technical expertise.
+        Netdata is revolutionizing the world of realtime monitoring, offering an unparalleled experience in tracking system performance and health. This powerful tool provides instant insights, ensuring you're always one step ahead in identifying and resolving issues. With its user-friendly interface, Netdata makes monitoring accessible to everyone, regardless of technical expertise.
       </>
     ),
   },
