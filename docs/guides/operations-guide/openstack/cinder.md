@@ -30,7 +30,7 @@ Service cinder-volume on host testbed-node-2@rbd-1 removed.
 ```
 
 ```
-dragon@mgr001:~$ openstack --os-cloud admin volume service list
+$ openstack --os-cloud admin volume service list
 +------------------+-----------------------------------+----------+---------+-------+----------------------------+
 | Binary           | Host                              | Zone     | Status  | State | Updated At                 |
 +------------------+-----------------------------------+----------+---------+-------+----------------------------+
@@ -38,4 +38,21 @@ dragon@mgr001:~$ openstack --os-cloud admin volume service list
 | cinder-scheduler | testbed-node-1                    | internal | enabled | up    | 2023-10-01T08:56:25.000000 |
 | cinder-scheduler | testbed-node-2                    | internal | enabled | up    | 2023-10-01T08:56:25.000000 |
 +------------------+-----------------------------------+----------+---------+-------+----------------------------+
+```
+
+## Sync quota
+
+It can happen that more block storage usage is stored in the database for a project than
+is actually used. This can be corrected using [cinder-manage](https://docs.openstack.org/cinder/latest/cli/cinder-manage.html).
+
+For all projects:
+
+```
+$ docker exec -it cinder_api cinder-manage quota sync
+```
+
+Only for a specific project:
+
+```
+$ docker exec -it cinder_api cinder-manage quota sync --project-id PROJECT_ID
 ```
