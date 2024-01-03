@@ -3,7 +3,7 @@ sidebar_label: Ceph
 sidebar_position: 50
 ---
 
-# Ceph operations cheatsheet
+# Ceph
 
 ## Where to find docs
 
@@ -707,6 +707,42 @@ in the section above, you do the following:
    ```
    # systemctl enable --now ceph-radosgw@<name>.service
    ```
+
+## Performance benchmark
+
+```
+# apt-get install -y fio
+```
+
+```bash
+#!/usr/bin/env bash
+
+BENCH_DEVICE="$2"
+DATE=$(date +%s)
+IOENGINE="libaio"
+LOGPATH="$1"
+SIZE=1G
+
+mkdir -p $LOGPATH
+
+for RW in "write" "randwrite" "read" "randread"
+do
+  for BS in "4K" "64K" "1M" "4M" "16M" "64M"
+  do
+    (
+    echo "==== $RW - $BS - DIRECT ===="
+    echo 3 > /proc/sys/vm/drop_caches
+    fio --rw=$RW --ioengine=${IOENGINE} --size=$SIZE --bs=$BS --direct=1 --runtime=60 --time_based --name=bench --filename=$BENCH_DEVICE --output=$LOGPATH/$RW.${BS}-direct-$(basename $BENCH_DEVICE).$DATE.log.json --output-format=json
+    sync
+    echo 3 > /proc/sys/vm/drop_caches
+    echo "==== $RW - $BS - DIRECT IODEPTH 32  ===="
+    fio --rw=$RW --ioengine=${IOENGINE} --size=$SIZE --bs=$BS --iodepth=32 --direct=1 --runtime=60 --time_based --name=bench --filename=$BENCH_DEVICE --output=$LOGPATH/$RW.${BS}-direct-iod32-$(basename $BENCH_DEVICE).$DATE.log.json --output-format=json
+    sync
+    ) | tee $LOGPATH/$RW.$BS-$(basename $BENCH_DEVICE).$DATE.log
+    echo
+  done
+done
+```
 
 ## Where and how to get further help
 
