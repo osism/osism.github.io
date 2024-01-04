@@ -103,21 +103,25 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Links',
+            title: 'Resources',
             items: [
               {
-                label: 'Legals',
-                href: '/legals',
+                label: 'Documentation',
+                href: '/docs/intro',
               },
               {
-                label: 'Privacy',
-                href: '/privacy',
+                label: 'Use Cases',
+                href: '/usecases',
               },
-            ],
+	    ],
           },
           {
             title: 'Community',
             items: [
+              {
+                href: 'https://scs.community',
+                label: 'Sovereign Cloud Stack',
+              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
@@ -125,6 +129,27 @@ const config = {
               {
                 label: 'Zuul CI',
                 href: 'https://zuul.services.betacloud.xyz/t/osism/status',
+              },
+            ],
+          },
+          {
+            title: 'Company',
+            items: [
+              {
+                label: 'About Us',
+                href: '/about',
+              },
+              {
+                label: 'Legals',
+                href: '/legals',
+              },
+              {
+                label: 'Privacy Policy',
+                href: '/privacy',
+              },
+              {
+                label: 'Terms & Conditions',
+                href: '/terms',
               },
             ],
           },
