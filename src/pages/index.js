@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import SoftwareModules from '@site/src/components/SoftwareModules';
+import Subscriptions from '@site/src/components/Subscriptions';
 
 import styles from './index.module.css';
 
@@ -26,7 +27,8 @@ export default function Home() {
       description="OSISM – Open Cloud Infrastructure">
       <HomepageHeader />
       <main>
-        <HomepageFeatures />
+        <SoftwareModules />
+        <Subscriptions />
       </main>
     </Layout>
   );
