@@ -13,8 +13,8 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <h1 className="osism__title">Get your data center ready for the AI & multi-cloud era</h1>
-        <p className="osism__subtitle">OSISM provides production-grade cloud infrastructure based on OpenStack for enterprises, service providers & ISVs</p>
+        <h1 style={{"font-size": "3em"}}>Get your data center ready for the AI & multi-cloud era</h1>
+        <p style={{"font-size": "1.5em"}}>OSISM provides production-grade cloud infrastructure based on OpenStack for enterprises, service providers & ISVs</p>
       </div>
     </header>
   );
