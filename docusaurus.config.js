@@ -137,7 +137,23 @@ const config = {
             items: [
               {
                 label: 'About Us',
-                href: '/about',
+                href: '/about-us',
+              },
+              {
+                label: 'Blog',
+                href: '/blog',
+              },
+              {
+                label: 'Contact Us',
+                href: '/contact-us',
+              },
+              {
+                label: 'Partners',
+                href: '/partners',
+              },
+              {
+                label: 'Careers',
+                href: '/careers',
               },
               {
                 label: 'Legals',
