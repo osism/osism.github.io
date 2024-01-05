@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkosism=self.webpackChunkosism||[]).push([[9897],{8563:l=>{l.exports=JSON.parse('{"label":"Hello World","permalink":"/blog/tags/hello-world","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);
