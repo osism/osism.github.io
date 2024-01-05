@@ -26,16 +26,17 @@ The prerequisite is to have an account on one of the supported OpenStack cloud p
 It is not part of this guide to describe the registration with the individual cloud
 providers. Please contact the respective cloud provider for this.
 
-**Product**      | **Provider**  | **Profile name**
------------------|---------------|-----------------
-Cleura           | Cleura        | `cleura`
-Fuga Cloud       | FUGA          | `fuga`
-HuaweiCloud      | HuaweiCloud   | `huaweicloud`
-OVH              | OVH           | `ovh`
-OpenTelekomCloud | T-Systems     | `otc`
-pluscloud open   | plusserver    | `pluscloudopen`
-REGIO.cloud      | OSISM         | `regiocloud`
-Wavestack        | noris network | `wavestack`
+**Product**         | **Provider**  | **Profile name**
+-----------------   |---------------|-----------------
+Cleura              | Cleura        | `cleura`
+Fuga Cloud          | FUGA          | `fuga`
+HuaweiCloud         | HuaweiCloud   | `huaweicloud`
+OVH                 | OVH           | `ovh`
+OpenTelekomCloud    | T-Systems     | `otc`
+pluscloud open      | plusserver    | `pluscloudopen`
+pluscloud SCS Test  | plussserver   | `gx-scs`
+REGIO.cloud         | OSISM         | `regiocloud`
+Wavestack           | noris network | `wavestack`
 
 For each provider listed in the table, a predefined profile is available in the
 `terraform/environments` directory. This profile contains the name of the public
@@ -59,7 +60,7 @@ network_availability_zone = "nova"
 
 The OSISM Testbed requires at least the following project quota when using the default flavors:
 
-**Resource** | **Quantity**         | **Note**
+**Quantity** | **Resource**         | **Note**
 -------------|----------------------|-------------------------
 4            | Instances            | 28 VCPUs + 104 GByte RAM
 9            | Volumes              | 90 GByte volume storage
@@ -77,14 +78,8 @@ The OSISM Testbed requires at least the following project quota when using the d
 ### Software
 
 * `make` must be installed on the system
-* `yq` must be installed on the system. [yq](https://github.com/mikefarah/yq) is a portable
-  command-line YAML, JSON, XML, CSV, TOML and properties processor.
-* Ansible in a current version must be installed and usable on the local workstation. Currently Ansible 8 is supported.
-  Information on installing Ansible can be found in the [Ansible
-  documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-* Terraform in a current version must be installed and usable on the local workstation. Currently Terraform 1.5 is supported.
-  Information on installing Terraform can be found in the [Terraform
-  documentation](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+* `wireguard` or `sshuttle` must be installed on your system for vpn access
+* `virtualenv` must be installed for managing python dependencies like `ansible`
 
 ### Custom CA
 
@@ -114,22 +109,22 @@ This section describes step by step how to deploy the OSISM Testbed.
    ```
 
 
-2. The access data for the cloud provider used is then stored in `terraform/clouds.yaml`.
+2. The access data for the cloud provider used is then stored in `terraform/clouds.yaml` and `terraform/secure.yaml`.
    The `clouds.yaml` file is provided by the cloud provider used. Please check the documentation
    of the cloud provider you are using or their support for details.
 
    REGIO.cloud is used as an example. The cloud name in `clouds.yaml`
    and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. If another cloud
-   is used, replace `regioclodu` with the respective profile name from the table above.
+   is used, replace `regiocloud` with the respective profile name from the table above.
 
+   TODO: add the correct example
    ```yaml
    clouds:
      regiocloud:
+       profile: regiocloud
        auth:
-         auth_url: https://keystone.services.a.regiocloud.tech/v3
          project_name: PROJECT
          username: USERNAME
-         password: PASSWORD
          project_domain_name: DOMAIN
          user_domain_name: DOMAIN
    ```
@@ -154,6 +149,7 @@ This section describes step by step how to deploy the OSISM Testbed.
          application_credential_secret: SECRET
        auth_type: "v3applicationcredential"
    ```
+   TODO: add a correct example for secure.yaml
 
 3. Prepare the deployment. The versions of Ansible and Terraform are checked and necessary
    dependencies are cloned.
@@ -199,10 +195,12 @@ This section describes step by step how to deploy the OSISM Testbed.
    how the instances are equipped, etc. 90-120 minutes is not unusual when Ceph and OpenStack
    are fully deployed.
 
-7. After the deployment, you can log in to the manager via SSH.
+7. After the deployment, you can log in to the manager via SSH and jump to the nodes of the cluster
 
    ```sh
    make ENVIRONMENT=regiocloud login
+   ssh testbed-node-0
+   ssh testbed-<TAB><TAB>
    ```
 
 8. If you want you can create a test project with a test user after login. It also
@@ -274,62 +272,59 @@ volume_type               | `__DEFAULT__`             |
 `default`            |
 `neutron_floatingip` |
 
-## Usage
+## Usage of the the Testbed
 
 ### VPN access
 
-Copy the `/home/dragon/wireguard-client.conf` file to your workstation. This is necessary
+Copy the `/home/dragon/wireguard-client.conf` from the manager file to your workstation. This is necessary
 for using the web endpoints on your workstation. Rename the wireguard config file to something
-like `testbed.conf`.
+like `wg-testbed-regiocloud.conf`.
 
 If you want to connect to the OSISM Testbed from multiple clients, change the client IP
-address in the config file to be different on each client.
-
-```bash
-scp dragon@IP_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf /home/ubuntu/testbed.conf
-```
+address in the downloaded configuration file to be different on each client.
 
 Install wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
 wireguard documentation you will find [here](https://www.wireguard.com/).
 
 Start the wireguard tunnel.
-
+(Press CTRL+c to keep the tunnel running forever. The make target also launches a browser tab with references to all services)
 ```bash
-wg-quick up /home/ubuntu/testbed.conf
+make vpn-wireguard ENVIRONMENT=regiocloud
 ```
 
 If you do not want to use Wireguard you can also work with [sshuttle](https://github.com/sshuttle/sshuttle).
-
-```sh
-make sshuttle ENVIRONMENT=regiocloud
+```bash
+make vpn-sshuttle ENVIRONMENT=regiocloud
+killall sshuttle
 ```
 
 ### Webinterfaces
 
 All SSL enabled services within the OSISM Testbed use certs which are signed by the self-signed
-[OSISM Testbed CA](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt).
+[OSISM Testbed CA](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
+(Download the file and import it as certification authority to your browser).
 
 If you want to access the services please choose the URL from the following table.
 
-**Name**               | **URL**                                           | **Username**  | **Password**                                 | **Note**
------------------------|---------------------------------------------------|---------------|----------------------------------------------|-------------------
-ARA                    | https://ara.testbed.osism.xyz/                  | ara           | password                                     |
-Ceph                   | https://api-int.testbed.osism.xyz:8140          | admin         | password                                     |
-Flower                 | https://api-int.testbed.osism.xyz:8140          |               |                                              |
-Grafana                | https://api-int.testbed.osism.xyz:3000          | admin         | password                                     |
-Homer                  | https://homer.testbed.osism.xyz                 |               |                                              |
-Horizon (via Keystone) | https://api.testbed.osism.xyz                   | admin         | password                                     | domain: default
-Horizon (via Keystone) | https://api.testbed.osism.xyz                   | test          | test                                         | domain: test
-Horizon (via Keycloak) | https://api.testbed.osism.xyz                   | alice         | password                                     |
-Keycloak               | https://keycloak.testbed.osism.xyz              | admin         | password                                     |
-Kibana                 | https://api.testbed.osism.xyz:5601              | kibana        | password                                     |
-Netbox                 | https://netbox.testbed.osism.xyz/               | admin         | password                                     |
-Netdata                | https://testbed-manager.testbed.osism.xyz:19999 |               |                                              |
-Patchman               | https://patchman.testbed.osism.xyz/             | patchman      | password                                     |
-Prometheus             | https://api-int.testbed.osism.xyz:9091/         |               |                                              |
-phpMyAdmin             | https://phpmyadmin.testbed.osism.xyz            | root          | password                                     |
-RabbitMQ               | https://api-int.testbed.osism.xyz:15672/        | openstack     | BO6yGAAq9eqA7IKqeBdtAEO7aJuNu4zfbhtnRo8Y     |
+**Name**               | **URL**                                         | **Username**  | **Password**                             | **Note**
+-----------------------|-------------------------------------------------|---------------|------------------------------------------|-------------------
+ARA                    | https://ara.testbed.osism.xyz/                  | ara           | password                                 |
+Ceph                   | https://api-int.testbed.osism.xyz:8140          | admin         | password                                 |
+Flower                 | https://api-int.testbed.osism.xyz:8140          |               |                                          |
+Grafana                | https://api-int.testbed.osism.xyz:3000          | admin         | password                                 |
+Homer                  | https://homer.testbed.osism.xyz                 |               |                                          |
+Horizon (via Keystone) | https://api.testbed.osism.xyz                   | admin         | password                                 | domain: default
+Horizon (via Keystone) | https://api.testbed.osism.xyz                   | test          | test                                     | domain: test
+Horizon (via Keycloak) | https://api.testbed.osism.xyz                   | alice         | password                                 |
+Keycloak               | https://keycloak.testbed.osism.xyz              | admin         | password                                 |
+Kibana                 | https://api.testbed.osism.xyz:5601              | kibana        | password                                 |
+Netbox                 | https://netbox.testbed.osism.xyz/               | admin         | password                                 |
+Netdata                | https://testbed-manager.testbed.osism.xyz:19999 |               |                                          |
+Patchman               | https://patchman.testbed.osism.xyz/             | patchman      | password                                 |
+Prometheus             | https://api-int.testbed.osism.xyz:9091/         |               |                                          |
+phpMyAdmin             | https://phpmyadmin.testbed.osism.xyz            | root          | password                                 |
+RabbitMQ               | https://api-int.testbed.osism.xyz:15672/        | openstack     | BO6yGAAq9eqA7IKqeBdtAEO7aJuNu4zfbhtnRo8Y |
 
 
 ### Authentication with OIDC
@@ -469,7 +464,7 @@ make: *** [prepare] Error 1
 To solve the problem you have to modify the `Makefile`. Change the 1st line as follows.
 
 ```
-export LC_ALL = en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 ```
 
 To find out the locale used on the system `printenv` can be used.
@@ -485,18 +480,6 @@ LC_NUMERIC="en_US.UTF-8"
 LC_TIME="en_US.UTF-8"
 LC_ALL=
 ```
-
-### yq: No such file or directory
-
-The following error occurs when yq is not installed.
-
-```
-make: yq: No such file or directory
-```
-
-`yq` must be installed on the system. [yq](https://github.com/mikefarah/yq) is a portable
-command-line YAML, JSON, XML, CSV, TOML and properties processor.
-
 ## Notes
 
 * The configuration is intentionally kept quite static. Please create no PRs to make the configuration more flexible/dynamic.
@@ -576,21 +559,32 @@ The following services can currently be used with this testbed without further a
 
 ### Makfile reference
 
-**Target**                 | **Description**
----------------------------|---------------------------------
-clean                      | Destroy infrastructure with Terraform.
-create                     | Create required infrastructure with Terraform.
-login                      | Log in on the manager.
-bootstrap                  | Bootstrap everything.
-manager                    | Deploy only the manager service.
-identity                   | Deploy only identity services.
-ceph                       | Deploy only ceph services.
-deploy                     | Deploy everything and then check it.
-prepare                    | Run local preparations.
+```bash
+$ make help
+
+Usage:
+  make <target>
+  help                  Display this help.
+  clean                 Destroy infrastructure with Terraform.
+  wipe-local-install    Wipe the software dependencies in `venv`.
+  create                Create required infrastructure with Terraform.
+  login                 Log in on the manager.
+  vpn-wireguard         Establish a wireguard vpn tunnel.
+  vpn-sshuttle          Establish a sshuttle vpn tunnel.
+  bootstrap             Bootstrap everything.
+  manager               Deploy only the manager service.
+  identity              Deploy only identity services.
+  ceph                  Deploy only ceph services.
+  deploy                Deploy everything and then check it.
+  prepare               Run local preperations.
+  deps                  Install software preconditions to `venv`.
+
+$ make <TAB> <TAB>
+```
 
 ### CI jobs
 
-* [Results of the daily jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0)
+You can inspect the [results of the daily zuul jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0).
 
 **Name**                   | **Description**
 ---------------------------|---------------------------------
