@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
+import Screenshots from '@site/src/components/Screenshots';
 import SoftwareModules from '@site/src/components/SoftwareModules';
 import Subscriptions from '@site/src/components/Subscriptions';
 
@@ -28,6 +29,7 @@ export default function Home() {
       <HomepageHeader />
       <main>
         <SoftwareModules />
+        <Screenshots />
         <Subscriptions />
       </main>
     </Layout>
