@@ -328,6 +328,7 @@ Horizon (via Keystone)   | https://api.testbed.osism.xyz                     | t
 Keycloak                 | https://keycloak.testbed.osism.xyz                | admin         | password      |
 Netbox                   | https://netbox.testbed.osism.xyz/                 | admin         | password      |
 Netdata                  | http://testbed-manager.testbed.osism.xyz:19999    |               |               |
+Nexus                    | https://nexus.testbed.osism.xyz/                  | admin         | password      |
 OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601                | opensearch    | password      |
 Prometheus               | https://api-int.testbed.osism.xyz:9091/           |               |               |
 RabbitMQ                 | https://api-int.testbed.osism.xyz:15672/          | openstack     | password      |
