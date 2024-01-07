@@ -48,6 +48,14 @@ export default function Screenshots() {
 	    <img className={styles.screenshotImage} src={useBaseUrl('/img/screenshots/kubernetes.png')} />
 	  </div>
         </div>
+        <div className="row" style={{"padding": "20px"}}>
+	  <div className={clsx('col col--6')}>
+	    <img className={styles.screenshotImage} src={useBaseUrl('/img/screenshots/openstack.png')} />
+	  </div>
+	  <div className={clsx('col col--6')}>
+	    <h3>Infrastructure as a Service (IaaS) with OpenStack</h3>
+          </div>
+        </div>
       </div>
     </section>
   );
