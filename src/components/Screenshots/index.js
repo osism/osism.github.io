@@ -56,6 +56,14 @@ export default function Screenshots() {
 	    <h3>Infrastructure as a Service (IaaS) with OpenStack</h3>
           </div>
         </div>
+        <div className="row">
+	  <div className={clsx('col col--6')}>
+	    <h3>OpenStack Health Monitor</h3>
+          </div>
+	  <div className={clsx('col col--6')}>
+	    <img className={styles.screenshotImage} src={useBaseUrl('/img/screenshots/openstack-health-monitor.png')} />
+	  </div>
+        </div>
       </div>
     </section>
   );
