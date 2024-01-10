@@ -315,24 +315,27 @@ All SSL enabled services within the OSISM Testbed use certs which are signed by 
 
 If you want to access the services please choose the URL from the following table.
 
-**Name**               | **URL**                                         | **Username**  | **Password**                             | **Note**
------------------------|-------------------------------------------------|---------------|------------------------------------------|-------------------
-ARA                    | https://ara.testbed.osism.xyz/                  | ara           | password                                 |
-Ceph                   | https://api-int.testbed.osism.xyz:8140          | admin         | password                                 |
-Flower                 | https://api-int.testbed.osism.xyz:8140          |               |                                          |
-Grafana                | https://api-int.testbed.osism.xyz:3000          | admin         | password                                 |
-Homer                  | https://homer.testbed.osism.xyz                 |               |                                          |
-Horizon (via Keystone) | https://api.testbed.osism.xyz                   | admin         | password                                 | domain: default
-Horizon (via Keystone) | https://api.testbed.osism.xyz                   | test          | test                                     | domain: test
-Horizon (via Keycloak) | https://api.testbed.osism.xyz                   | alice         | password                                 |
-Keycloak               | https://keycloak.testbed.osism.xyz              | admin         | password                                 |
-Kibana                 | https://api.testbed.osism.xyz:5601              | kibana        | password                                 |
-Netbox                 | https://netbox.testbed.osism.xyz/               | admin         | password                                 |
-Netdata                | https://testbed-manager.testbed.osism.xyz:19999 |               |                                          |
-Patchman               | https://patchman.testbed.osism.xyz/             | patchman      | password                                 |
-Prometheus             | https://api-int.testbed.osism.xyz:9091/         |               |                                          |
-phpMyAdmin             | https://phpmyadmin.testbed.osism.xyz            | root          | password                                 |
-RabbitMQ               | https://api-int.testbed.osism.xyz:15672/        | openstack     | BO6yGAAq9eqA7IKqeBdtAEO7aJuNu4zfbhtnRo8Y |
+**Name**                 | **URL**                                           | **Username**  | **Password**  | **Note**
+-------------------------|---------------------------------------------------|---------------|---------------|-------------------
+ARA                      | https://ara.testbed.osism.xyz/                    | ara           | password      |
+Ceph                     | https://api-int.testbed.osism.xyz:8140            | admin         | password      |
+Flower                   | https://flower.testbed.osism.xyz                  |               |               |
+Grafana                  | https://api-int.testbed.osism.xyz:3000            | admin         | password      |
+HAProxy (testbed-node-0) | http://testbed-node-0.testbed.osism.xyz:1984      | haproxy       | password      |
+HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984      | haproxy       | password      |
+HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984      | haproxy       | password      |
+Homer                    | https://homer.testbed.osism.xyz                   |               |               |
+Horizon (via Keycloak)   | https://api.testbed.osism.xyz                     | alice         | password      |
+Horizon (via Keystone)   | https://api.testbed.osism.xyz                     | admin         | password      | domain: default
+Horizon (via Keystone)   | https://api.testbed.osism.xyz                     | test          | test          | domain: test
+Keycloak                 | https://keycloak.testbed.osism.xyz                | admin         | password      |
+Netbox                   | https://netbox.testbed.osism.xyz/                 | admin         | password      |
+Netdata                  | http://testbed-manager.testbed.osism.xyz:19999    |               |               |
+Nexus                    | https://nexus.testbed.osism.xyz/                  | admin         | password      |
+OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601                | opensearch    | password      |
+Prometheus               | https://api-int.testbed.osism.xyz:9091/           |               |               |
+RabbitMQ                 | https://api-int.testbed.osism.xyz:15672/          | openstack     | password      |
+phpMyAdmin               | https://phpmyadmin.testbed.osism.xyz              | root          | password      |
 
 
 ### Authentication with OIDC

@@ -114,6 +114,30 @@ export default function Subscriptions() {
 	      <tr>
 	        <td colspan="4" style={{"text-align": "left", "font-weight": "bold"}}>Services</td>
 	      </tr>
+	      <tr>
+                <td style={{"text-align": "left"}}>Professional Services</td>
+	        <td></td>
+                <td><Checkmark className={styles.checkmark} /></td>
+                <td><Checkmark className={styles.checkmark} /></td>
+              </tr>
+	      <tr>
+                <td style={{"text-align": "left"}}>Remote Services</td>
+	        <td></td>
+	        <td></td>
+                <td><Checkmark className={styles.checkmark} /></td>
+              </tr>
+	      <tr>
+                <td style={{"text-align": "left"}}>Managed Services</td>
+	        <td></td>
+	        <td></td>
+                <td><Checkmark className={styles.checkmark} /></td>
+              </tr>
+	      <tr>
+                <td style={{"text-align": "left"}}>Regular Reviews</td>
+	        <td></td>
+	        <td></td>
+                <td><Checkmark className={styles.checkmark} /></td>
+              </tr>
             </tbody>
 	  </table>
         </div>
