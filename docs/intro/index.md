@@ -5,12 +5,6 @@ sidebar_position: 1
 
 # Introduction
 
-:::danger
-
-This documentation is currently under construction and is not yet complete.
-
-:::
-
 ![OSISM landing](./images/landing.drawio.png)
 
 OSISM is developing a solution for the holistic management of sustainable, sovereign
