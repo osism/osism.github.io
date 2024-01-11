@@ -58,3 +58,57 @@ openstack --os-cloud admin compute service list --long
 | b77c5aeb-91c0-4972-84ea-7c8bd5a49fdd | nova-compute   | testbed-node-0  | nova     | disabled | up    | 2023-12-14T14:20:24.000000 | None                                               | False       |
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+----------------------------------------------------+-------------+
 ```
+
+## Huge pages
+
+```
+$ grep Huge /proc/meminfo
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+FileHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+```
+
+```
+$ sudo sudo hugeadm --pool-list
+libhugetlbfs: ERROR: Line too long when parsing mounts
+      Size  Minimum  Current  Maximum  Default
+   2097152        0        0        0        *
+1073741824        0        0        0
+```
+
+```
+/etc/default/grub
+GRUB_CMDLINE_LINUX="default_hugepagesz=1G hugepagesz=1G hugepages=512 transparent_hugepage=never"
+```
+
+```
+update-grub
+reboot
+```
+
+```
+$ grep Huge /proc/meminfo
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+FileHugePages:         0 kB
+HugePages_Total:     512
+HugePages_Free:      512
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:    1048576 kB
+Hugetlb:        536870912 kB
+```
+
+```
+$ sudo hugeadm --pool-list
+libhugetlbfs: ERROR: Line too long when parsing mounts
+      Size  Minimum  Current  Maximum  Default
+   2097152        0        0        0        *
+1073741824      512      512      512
+```
