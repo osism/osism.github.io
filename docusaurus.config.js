@@ -82,6 +82,7 @@ const config = {
             label: 'Docs',
           },
           { to: "/usecases", label: "Use Cases", position: "left" },
+          { to: "/blog", label: "Blog", position: "left" },
           {
             href: 'https://regiocloud.github.io',
             label: 'REGIO',
