@@ -63,3 +63,19 @@ resource node. It is saved in the configuration repository in the file
       changed_when: false
       with_items: "{{ devices }}"
 ```
+
+## Manage services
+
+```
+osism apply manage-service \
+  -e service_name=rsysloc \
+  -e service_state=restarted
+```
+
+## Manage containers
+
+```
+osism apply manage-container \
+  -e container_name=nova_compute \
+  -e container_action=restart
+```
