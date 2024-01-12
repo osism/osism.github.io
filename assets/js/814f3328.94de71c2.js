@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkosism=self.webpackChunkosism||[]).push([[2535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Kubernetes Service Deployments","permalink":"/blog/2024-01-11-kubernetes-service-deployment","unlisted":false}]}')}}]);

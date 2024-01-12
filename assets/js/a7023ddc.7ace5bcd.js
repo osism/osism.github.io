@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkosism=self.webpackChunkosism||[]).push([[1713],{3457:e=>{e.exports=JSON.parse('[{"label":"Sneak Peak","permalink":"/blog/tags/sneak-peak","count":1},{"label":"Kubernetes","permalink":"/blog/tags/kubernetes","count":1}]')}}]);
