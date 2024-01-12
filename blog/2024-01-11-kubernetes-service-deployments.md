@@ -4,6 +4,17 @@ title: Kubernetes Service Deployments
 authors: [berendt]
 tags: [Sneak Peak, Kubernetes]
 ---
+New big and small features are constantly being added to OSISM. This makes using OSISM
+a little better for operators of the [Sovereign Cloud Stack](https://scs.community) every day.
+
+Since we currently only do a major release every 6 months in which we write about these big
+and small features in the release notes, there will be this kind of blog posts from now on.
+In blog posts with the tag [Sneak Peak](https://osism.github.io/blog/tags/sneak-peak),
+we will now write about new features before the next major release.
+
+This blog entry is specifically about the possibility of deploying services on the recently
+integrated Kubernetes cluster.
+
 The deployment of services on the integrated Kubernetes cluster will be possible in
 future via the `kubernetes` environment. A first simple example for the deployment
 of Nginx is already [available in the osism/testbed repository](https://github.com/osism/testbed/tree/main/environments/kubernetes).
