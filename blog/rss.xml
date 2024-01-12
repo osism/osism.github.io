@@ -39,8 +39,16 @@ services one by one.</p>
             <link>https://your-docusaurus-test-site.com/blog/2024-01-11-kubernetes-service-deployment</link>
             <guid>https://your-docusaurus-test-site.com/blog/2024-01-11-kubernetes-service-deployment</guid>
             <pubDate>Thu, 11 Jan 2024 00:00:00 GMT</pubDate>
-            <description><![CDATA[The deployment of services on the integrated Kubernetes cluster will be possible in]]></description>
-            <content:encoded><![CDATA[<p>The deployment of services on the integrated Kubernetes cluster will be possible in
+            <description><![CDATA[New big and small features are constantly being added to OSISM. This makes using OSISM]]></description>
+            <content:encoded><![CDATA[<p>New big and small features are constantly being added to OSISM. This makes using OSISM
+a little better for operators of the <a href="https://scs.community/" target="_blank" rel="noopener noreferrer">Sovereign Cloud Stack</a> every day.</p>
+<p>Since we currently only do a major release every 6 months in which we write about these big
+and small features in the release notes, there will be this kind of blog posts from now on.
+In blog posts with the tag <a href="https://osism.github.io/blog/tags/sneak-peak" target="_blank" rel="noopener noreferrer">Sneak Peak</a>,
+we will now write about new features before the next major release.</p>
+<p>This blog entry is specifically about the possibility of deploying services on the recently
+integrated Kubernetes cluster.</p>
+<p>The deployment of services on the integrated Kubernetes cluster will be possible in
 future via the <code>kubernetes</code> environment. A first simple example for the deployment
 of Nginx is already <a href="https://github.com/osism/testbed/tree/main/environments/kubernetes" target="_blank" rel="noopener noreferrer">available in the osism/testbed repository</a>.
 The new environment is used as usual with <code>osism apply</code>.</p>
