@@ -2,11 +2,34 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://your-docusaurus-test-site.com/blog</id>
     <title>OSISM – Open Cloud Infrastructure Blog</title>
-    <updated>2024-01-12T00:00:00.000Z</updated>
+    <updated>2024-01-14T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://your-docusaurus-test-site.com/blog"/>
     <subtitle>OSISM – Open Cloud Infrastructure Blog</subtitle>
     <icon>https://your-docusaurus-test-site.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Use of the ClusterShell]]></title>
+        <id>https://your-docusaurus-test-site.com/blog/2024-01-14-use-of-the-clustershell</id>
+        <link href="https://your-docusaurus-test-site.com/blog/2024-01-14-use-of-the-clustershell"/>
+        <updated>2024-01-14T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[ClusterShell is an]]></summary>
+        <content type="html"><![CDATA[<p><a href="https://clustershell.readthedocs.io/en/latest/intro.html" target="_blank" rel="noopener noreferrer">ClusterShell</a> is an
+event-driven open source Python framework, designed to run local or distant commands
+in parallel on server farms or on large Linux clusters. We learned to use it by chance
+during a large HPC project with the team there and learned to like it.</p>
+<p>ClusterShell can be used in a rudimentary way via the <code>console</code> command of the OSISM CLI.
+The Ansible inventory groups are available as node groups. These are automatically
+generated and updated by the inventory reconciler.</p>
+<p>In this example, the command <code>uname -v</code> is executed on all nodes in the node group
+<code>housing1047</code>.</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">$ osism console --type clush housing1047</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Enter 'quit' to leave this interactive mode</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Working with nodes: com[1047-1050]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">clush&gt; uname -v</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">com1049: #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">com1050: #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">com1047: #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">com1048: #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">clush&gt;</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>]]></content>
+        <author>
+            <name>Christian Berendt</name>
+            <uri>https://github.com/berendt</uri>
+        </author>
+        <category label="OSISM" term="OSISM"/>
+        <category label="Machine Room" term="Machine Room"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Restart of a container on a specific node]]></title>
         <id>https://your-docusaurus-test-site.com/blog/2024-01-12-restart-of-a-container-on-a-specific-node</id>
