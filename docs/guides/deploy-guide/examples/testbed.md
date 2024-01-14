@@ -45,7 +45,7 @@ network, which flavors to use, etc.
 Here is an example from the profile for REGIO.cloud.
 
 ```
-flavor_manager            = "SCS-4V-8-50"
+flavor_manager            = "SCS-4V-16-50"
 flavor_node               = "SCS-8V-32-100"
 volume_type               = "ssd"
 image                     = "Ubuntu 22.04"
@@ -62,7 +62,7 @@ The OSISM Testbed requires at least the following project quota when using the d
 
 **Quantity** | **Resource**         | **Note**
 -------------|----------------------|-------------------------
-4            | Instances            | 28 VCPUs + 104 GByte RAM
+4            | Instances            | 28 VCPUs + 112 GByte RAM
 9            | Volumes              | 90 GByte volume storage
 1            | Floating IP          |
 1            | Keypair              |
