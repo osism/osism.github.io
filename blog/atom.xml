@@ -8,6 +8,29 @@
     <subtitle>OSISM – Open Cloud Infrastructure Blog</subtitle>
     <icon>https://your-docusaurus-test-site.com/img/favicon.ico</icon>
     <entry>
+        <title type="html"><![CDATA[Switch to OpenTofu]]></title>
+        <id>https://your-docusaurus-test-site.com/blog/2024-01-16-switch-to-opentofu</id>
+        <link href="https://your-docusaurus-test-site.com/blog/2024-01-16-switch-to-opentofu"/>
+        <updated>2024-01-16T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[In blog posts with the tag News,]]></summary>
+        <content type="html"><![CDATA[<p>In blog posts with the tag <a href="https://osism.github.io/blog/tags/news" target="_blank" rel="noopener noreferrer">News</a>,
+we will now write about news that are not directly related to a new
+feature or one of our managed infrastrucutre environments.</p>
+<p>Marc Schöchlin, Site Reliability Engineer at the <a href="https://scs.community/" target="_blank" rel="noopener noreferrer">Sovereign Cloud Stack</a>
+project, successfully completed the migration of <a href="https://github.com/osism/testbed" target="_blank" rel="noopener noreferrer">osism/testbed</a>
+from <a href="https://github.com/hashicorp/terraform" target="_blank" rel="noopener noreferrer">Terraform</a> to <a href="https://github.com/opentofu/opentofu" target="_blank" rel="noopener noreferrer">OpenTofu</a>
+yesterday. The migration went smoothly and basically only the Terraform binary
+had to be replaced with the new OpenTofu binary.</p>
+<p>More details in the SCS blog in the <a href="https://scs.community/2024/01/12/testbed-with-opentofu/" target="_blank" rel="noopener noreferrer">Opensource - Testbed adopts OpenTofu</a>
+article written by Marc.</p>]]></content>
+        <author>
+            <name>Christian Berendt</name>
+            <uri>https://github.com/berendt</uri>
+        </author>
+        <category label="OSISM" term="OSISM"/>
+        <category label="News" term="News"/>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Use of the container shell]]></title>
         <id>https://your-docusaurus-test-site.com/blog/2024-01-16-use-of-the-container-shell</id>
         <link href="https://your-docusaurus-test-site.com/blog/2024-01-16-use-of-the-container-shell"/>

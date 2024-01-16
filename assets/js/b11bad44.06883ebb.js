@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkosism=self.webpackChunkosism||[]).push([[6221],{2030:s=>{s.exports=JSON.parse('{"label":"News","permalink":"/blog/tags/news","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);
