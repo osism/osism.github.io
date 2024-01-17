@@ -195,23 +195,23 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 
 If you want to access the services please choose the URL from the following list:
 
-| Name                                       | URL                                         | Username   | Password |
-|--------------------------------------------|---------------------------------------------|------------|----------|
-| ARA                                        | https://ara.services.in-a-box.cloud         | ara        | password |
-| Ceph                                       | http://manager.systems.in-a-box.cloud:7000  | admin      | password |
-| Flower                                     | https://flower.services.in-a-box.cloud      | -          | -        |
-| Grafana                                    | https://api.in-a-box.cloud:3000             | admin      | password |
-| HAProxy                                    | http://manager.systems.in-a-box.cloud:1984  | openstack  | password |
-| Homer                                      | https://homer.services.in-a-box.cloud       | -          | -        |
-| Horizon - admin project ('default' domain) | https://api.in-a-box.cloud                  | admin      | password |
-| Horizon - test project ('test' domain)     | https://api.in-a-box.cloud                  | test       | test     |
-| Netbox                                     | https://netbox.services.in-a-box.cloud      | admin      | password |
-| Netdata                                    | http://manager.systems.in-a-box.cloud:19999 | -          | -        |
-| OpenSearch Dashboards                      | https://api.in-a-box.cloud:5601             | opensearch | password |
-| PhpMyAdmin                                 | https://phpmyadmin.services.in-a-box.cloud  | root       | password |
-| RabbitMQ                                   | https://api.in-a-box.cloud:15672            | openstack  | password |
-| Skyline - admin project                    | https://api.in-a-box.cloud:9999             | admin      | password |
-| Skyline - test project                     | https://api.in-a-box.cloud:9999             | test       | test     |
+| Name                    | URL                                         | Username   | Password | Note              |
+|-------------------------|---------------------------------------------|------------|----------|-------------------|
+| ARA                     | https://ara.services.in-a-box.cloud         | ara        | password |                   |
+| Ceph                    | http://manager.systems.in-a-box.cloud:7000  | admin      | password |                   |
+| Flower                  | https://flower.services.in-a-box.cloud      | -          | -        |                   |
+| Grafana                 | https://api.in-a-box.cloud:3000             | admin      | password |                   |
+| HAProxy                 | http://manager.systems.in-a-box.cloud:1984  | openstack  | password |                   |
+| Homer                   | https://homer.services.in-a-box.cloud       | -          | -        |                   |
+| Horizon - admin project | https://api.in-a-box.cloud                  | admin      | password | domain: 'default' |
+| Horizon - test project  | https://api.in-a-box.cloud                  | test       | test     | domain: 'test'    |
+| Netbox                  | https://netbox.services.in-a-box.cloud      | admin      | password |                   |
+| Netdata                 | http://manager.systems.in-a-box.cloud:19999 | -          | -        |                   |
+| OpenSearch Dashboards   | https://api.in-a-box.cloud:5601             | opensearch | password |                   |
+| PhpMyAdmin              | https://phpmyadmin.services.in-a-box.cloud  | root       | password |                   |
+| RabbitMQ                | https://api.in-a-box.cloud:15672            | openstack  | password |                   |
+| Skyline - admin project | https://api.in-a-box.cloud:9999             | admin      | password |                   |
+| Skyline - test project  | https://api.in-a-box.cloud:9999             | test       | test     |                   |
 
 ### Command-line interfaces
 
