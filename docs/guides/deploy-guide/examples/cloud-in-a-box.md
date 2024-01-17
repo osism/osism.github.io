@@ -48,8 +48,8 @@ There are two types of Cloud in a Box.
 
 The images currently download and install the
 [latest state of the installation scripts](https://github.com/osism/cloud-in-a-box),
-therefore it is mandatory to update the installation media at least when the underlying Ubuntu operating 
-system release changes. The installation of older releases is currently not supported. 
+therefore it is mandatory to update the installation media at least when the underlying Ubuntu operating
+system release changes. The installation of older releases is currently not supported.
 
 1. Download one of the Cloud in a Box images of type sandbox
    * [ubuntu-autoinstall-cloud-in-a-box-1.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-1.iso) (with first block device as `/dev/sda`)
@@ -195,23 +195,23 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 
 If you want to access the services please choose the URL from the following list:
 
-| Name                    | URL                                         | Username   | Password |
-|-------------------------|---------------------------------------------|------------|----------|
-| ARA                     | https://ara.services.in-a-box.cloud         | ara        | password |
-| Ceph                    | http://manager.systems.in-a-box.cloud:7000  | admin      | password |
-| Flower                  | https://flower.services.in-a-box.cloud      | -          | -        |
-| Grafana                 | https://api.in-a-box.cloud:3000             | admin      | password |
-| HAProxy                 | http://manager.systems.in-a-box.cloud:1984  | openstack  | password |
-| Homer                   | https://homer.services.in-a-box.cloud       | -          | -        |
-| Horizon - admin project | https://api.in-a-box.cloud                  | admin      | password |
-| Horizon - test project  | https://api.in-a-box.cloud                  | test       | test     |
-| Netbox                  | https://netbox.services.in-a-box.cloud      | admin      | password |
-| Netdata                 | http://manager.systems.in-a-box.cloud:19999 | -          | -        |
-| OpenSearch Dashboards   | https://api.in-a-box.cloud:5601             | opensearch | password |
-| PhpMyAdmin              | https://phpmyadmin.services.in-a-box.cloud  | root       | password |
-| RabbitMQ                | https://api.in-a-box.cloud:15672            | openstack  | password |
-| Skyline - admin project | https://api.in-a-box.cloud:9999             | admin      | password |
-| Skyline - test project  | https://api.in-a-box.cloud:9999             | test       | test     |
+| Name                                       | URL                                         | Username   | Password |
+|--------------------------------------------|---------------------------------------------|------------|----------|
+| ARA                                        | https://ara.services.in-a-box.cloud         | ara        | password |
+| Ceph                                       | http://manager.systems.in-a-box.cloud:7000  | admin      | password |
+| Flower                                     | https://flower.services.in-a-box.cloud      | -          | -        |
+| Grafana                                    | https://api.in-a-box.cloud:3000             | admin      | password |
+| HAProxy                                    | http://manager.systems.in-a-box.cloud:1984  | openstack  | password |
+| Homer                                      | https://homer.services.in-a-box.cloud       | -          | -        |
+| Horizon - admin project ('default' domain) | https://api.in-a-box.cloud                  | admin      | password |
+| Horizon - test project ('test' domain)     | https://api.in-a-box.cloud                  | test       | test     |
+| Netbox                                     | https://netbox.services.in-a-box.cloud      | admin      | password |
+| Netdata                                    | http://manager.systems.in-a-box.cloud:19999 | -          | -        |
+| OpenSearch Dashboards                      | https://api.in-a-box.cloud:5601             | opensearch | password |
+| PhpMyAdmin                                 | https://phpmyadmin.services.in-a-box.cloud  | root       | password |
+| RabbitMQ                                   | https://api.in-a-box.cloud:15672            | openstack  | password |
+| Skyline - admin project                    | https://api.in-a-box.cloud:9999             | admin      | password |
+| Skyline - test project                     | https://api.in-a-box.cloud:9999             | test       | test     |
 
 ### Command-line interfaces
 
