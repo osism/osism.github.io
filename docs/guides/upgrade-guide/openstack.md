@@ -16,7 +16,7 @@ osism apply -a upgrade keystone
 
 ```
 osism apply -a pull glance
-osism apply -a rolling-upgrade glance
+osism apply -a upgrade glance
 ```
 
 ## Designate
@@ -44,14 +44,14 @@ osism apply -a upgrade cinder
 
 ```
 osism apply -a pull neutron
-osism apply -a rolling-upgrade neutron
+osism apply -a upgrade neutron
 ```
 
 ## Nova
 
 ```
 osism apply -a pull nova
-osism apply -a rolling-upgrade nova
+osism apply -a upgrade nova
 ```
 
 ## Octavia
