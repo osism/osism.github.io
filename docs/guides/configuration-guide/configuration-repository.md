@@ -31,9 +31,8 @@ A configuration repository is always composed of the same basic layout.
 The initial content for this repository is generated using the
 [cookiecutter](https://github.com/osism/cfg-cookiecutter).
 
-Cookiecutter generates a bootstrap configuration for your new cluster by prompting you for the basic details of
-the new system environment.
-
+[Cookiecutter](https://github.com/cookiecutter/cookiecutter) generates a bootstrap configuration for your 
+new cluster by prompting you for the basic details of the new system environment.
 
 ### Step 1: Preparation
 
@@ -74,7 +73,6 @@ version of OSISM is used. The use of latest is described in the section
 [Use of latest](#use-of-latest).
 
 The directory `output` is created and used as output volume.
-
 ```
 mkdir output
 ```
@@ -106,18 +104,17 @@ docker run --net=host --rm -v $(pwd)/output:/output -it quay.io/osism/cookiecutt
 [...]
 ```
 
-Since we run the cookiecutter inside a container, the user rights are not correct
-and have to be changed after the generation process.
-
-```
-sudo chown -R $USER: output/
-```
 
 
 ### Step 3: Upload the new configuration to the remote git repository
 
-The content is now committed to the previously created Git repository.
+Since we run the cookiecutter inside a container, the user rights are not correct
+and have to be changed after the generation process.
+```
+sudo chown -R $USER output/
+```
 
+Add the initial configuration state to the repository
 ```
 $ git clone git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git YOUR_NEW_CONFIGURATION_REPOSITORY
 $ cp -r output/COOKIECUTTER_PROJECT_NAME/{*,.gitignore} YOUR_NEW_CONFIGURATION_REPOSITORY
@@ -127,10 +124,13 @@ $ git commit -m "Initial commit after bootstrap"
 $ git push
 ```
 
-The `secrets` directory
+The content is now committed to the previously created Git repository.
+The `secrets` directory:
+
 * is not stored in the Git repository. Its contents should be stored in a trustworthy location
-* contains an SSH key pair which is used as a deployment key to  make the configuration repository available on the manager node later. Write access
-is not required. The public SSH key is stored in the file `secrets/id_rsa.configuration.pub`.
+* contains an SSH key pair which is used as a deployment key to  make the configuration repository available 
+  on the manager node later. Write access  is not required.
+  (The public SSH key is stored in the file `secrets/id_rsa.configuration.pub`.)
 
 How to add a deployment key on GitHub is documented in
 [Managing deploy keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys).
@@ -139,26 +139,23 @@ How to add a deployment key on GitHub is documented in
 
   To use Gilt the dependencies are installed first.
 
+  Install all dependencies:
   ```
-  virtualenv -p $(which python3) .venv
-  source .venv/bin/activate 
-  pip3 install -r requirements.txt
-  ```
-
-  After that you can update the manager environment in `environments/manager`. Since the `gilt.yml`
-  itself is updated with Gilt it is always important to run the command twice.
-
-  ```
-  gilt overlay
-  gilt overlay
+  cd YOUR_NEW_CONFIGURATION_REPOSITORY/YOUR_NEW_ENVIRONMENT
+  make deps
   ```
 
 ### Step 5: Post-processing of the generated configuration
 
 The configuration repository that is initially created with the Cookiecutter is not directly usable.
 
-1. Important: Change the password for Ansible Vault encrypted files `secrets/vaultpass`. 
-2. Important: Change the password of the generated Keepass file is (Initial password is: `password`)
+1. Important: Change the password for Ansible Vault encrypted files `secrets/vaultpass`.
+   TODO: Add a make target for re-keying
+2. Important: Change the password of the generated Keepass file i
+   (Initial password is: `password`, Menu "File" ⇢ "Change master key")
+   ```commandline
+   keepass2 secrets/keepass.kdbx
+   ```
 3. The creation or adaptation of the further configuration: Process all relevant 
    chapters beyond [Configuration Guide](./).
 
