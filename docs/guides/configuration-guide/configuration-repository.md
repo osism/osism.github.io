@@ -81,7 +81,7 @@ The cookiecutter is executed within a container. Docker must be usable on the sy
 on which the cookiecutter is to be used. It should also work with podman.
 
 ```
-docker run --net=host --rm -v $(pwd)/output:/output -it quay.io/osism/cookiecutter
+docker run --net=host -e TARGET_UID="$(id -u)" -e TARGET_GID="$(id -g)" --rm -v $(pwd)/output:/output -it
 [1/20] with_ceph (1):
 [2/20] ceph_network_backend (192.168.80.0/20):
 [3/20] ceph_network_frontend (192.168.64.0/20):
@@ -107,12 +107,6 @@ docker run --net=host --rm -v $(pwd)/output:/output -it quay.io/osism/cookiecutt
 
 
 ### Step 3: Upload the new configuration to the remote git repository
-
-Since we run the cookiecutter inside a container, the user rights are not correct
-and have to be changed after the generation process.
-```
-sudo chown -R $USER output/
-```
 
 Add the initial configuration state to the repository
 ```
