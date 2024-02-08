@@ -238,8 +238,7 @@ The [OpenStack Image Manager](https://github.com/osism/openstack-image-manager/)
 In the example, the `Garden Linux` image is imported.
 
 ```bash
-export OS_CLOUD=admin
-osism manage images --filter 'Garden Linux'
+osism manage images --cloud=admin --filter 'Garden Linux'
 ```
 
 All available images can be found in the [osism/openstack-image-manager](https://github.com/osism/openstack-image-manager/tree/main/etc/images) repository.
