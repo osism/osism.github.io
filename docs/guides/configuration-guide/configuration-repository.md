@@ -26,7 +26,8 @@ A configuration repository is always composed of the same basic layout.
   The [current gilt.yml](https://github.com/osism/cfg-generics/blob/main/gilt.yml) file is always
   located in the [osism/cfg-generics](https://github.com/osism/cfg-generics) repository.
 
-  To use Gilt the dependencies are installed first.
+  To use Gilt the dependencies are installed first. If Gilt is not installed via the `requirements.txt` it
+  is important to use a version smaller v2. The v2 of Gilt is not yet usable.
 
   ```
   pip3 install -r requirements.txt

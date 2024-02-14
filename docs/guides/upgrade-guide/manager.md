@@ -11,7 +11,9 @@ adjustments are necessary
 1. Update the OSISM release in use in the configuration repository.
 
     1.1. Sync the image versions in the configuration repository. It is important to do this so
-       that the correct versions are available in `environments/manager/images.yml`.
+       that the correct versions are available in `environments/manager/images.yml`. If Gilt is
+       not installed via the `requirements.txt` of the manager environment it is important to
+       use a version smaller v2. The v2 of Gilt is not yet usable.
 
        ```
        gilt overlay  # you have to do this 2x
