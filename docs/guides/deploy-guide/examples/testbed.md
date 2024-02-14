@@ -237,30 +237,31 @@ This section describes how to configure and customise the OSISM Testbed.
 
 The defaults for the OpenTofu variables are intended for REGIO.cloud.
 
-| **Variable**              | **Default**              | **Description** |
-|---------------------------|--------------------------|-----------------|
-| availability_zone         | `nova`                   |                 |
-| ceph_version              | `quincy`                 |                 |
-| cloud_provider            | `regiocloud`             |                 |
-| configuration_version     | `main`                   |                 |
-| deploy_monitoring         | `false`                  |                 |
-| dns_nameservers           | `["8.8.8.8", "9.9.9.9"]` |                 |
-| enable_config_drive       | `true`                   |                 |
-| flavor_manager            | `SCS-4V-16-50`           |                 |
-| flavor_node               | `SCS-8V-32-50`           |                 |
-| image                     | `Ubuntu 22.04`           |                 |
-| manager_version           | `latest`                 |                 |
-| network_availability_zone | `nova`                   |                 |
-| number_of_nodes           | `3`                      |                 |
-| number_of_volumes         | `3`                      |                 |
-| openstack_version         | `2023.1`                 |                 |
-| prefix                    | `testbed`                |                 |
-| public                    | `external`               |                 |
-| refstack                  | `false`                  |                 |
-| volume_availability_zone  | `nova`                   |                 |
-| volume_size_base          | `30`                     |                 |
-| volume_size_storage       | `10`                     |                 |
-| volume_type               | `__DEFAULT__`            |                 |
+| **Variable**              | **Default**              | **Description**                          |
+|---------------------------|--------------------------|------------------------------------------|
+| availability_zone         | `nova`                   |                                          |
+| ceph_version              | `quincy`                 |                                          |
+| cloud_provider            | `regiocloud`             |                                          |
+| configuration_version     | `main`                   |                                          |
+| deploy_monitoring         | `false`                  |                                          |
+| dns_nameservers           | `["8.8.8.8", "9.9.9.9"]` |                                          |
+| enable_config_drive       | `true`                   |                                          |
+| flavor_manager            | `SCS-4V-16-50`           |                                          |
+| flavor_node               | `SCS-8V-32-50`           |                                          |
+| image                     | `Ubuntu 22.04`           | Only Ubuntu 22.04 is currently supported |
+| image_node                | `Ubuntu 22.04`           | Only Ubuntu 22.04 is currently supported |
+| manager_version           | `latest`                 |                                          |
+| network_availability_zone | `nova`                   |                                          |
+| number_of_nodes           | `3`                      |                                          |
+| number_of_volumes         | `3`                      |                                          |
+| openstack_version         | `2023.1`                 |                                          |
+| prefix                    | `testbed`                |                                          |
+| public                    | `external`               |                                          |
+| refstack                  | `false`                  |                                          |
+| volume_availability_zone  | `nova`                   |                                          |
+| volume_size_base          | `30`                     |                                          |
+| volume_size_storage       | `10`                     |                                          |
+| volume_type               | `__DEFAULT__`            |                                          |
 
 ### Overrides
 
