@@ -7,7 +7,7 @@ sidebar_position: 40
 
 Before the nodes can be bootstrapped, they must all have already been provisioned.
 The guide for this can be found in the section
-[Provisioning of management and control plane nodes](./provisioning)
+[Provisioning of bare-metal nodes](./provisioning)
 
 The following steps are applied to bootstrap all nodes. After the completion of the bootstrap,
 the nodes are already ready for use.
