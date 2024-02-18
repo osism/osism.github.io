@@ -70,7 +70,12 @@ software RAID 1 should be used It is recommended to automate the creation of the
 file system and the creation of the mount point with a custom playbook.
 
 A `nova.conf` configuration file is created as an overlay file for the compute node
-`testbed-node-0`.
+`testbed-node-0`. The name of the directory must match the name of the host in the
+inventory. If the compute node has a file with the name `testbed-node-0.yml` in the
+`host_vars` directory in the inventory, then the name of the directory
+in the overlays is `testbed-node-0` accordingly. If the file name there were
+`testbed-node-0.testbed.osism.xyz.yml` then the name of the directory would be
+`testbed-node-0.testbed.osism.xyz`.
 
 ```ini title="environments/kolla/files/overlays/nova/testbed-node-0/nova.conf"
 [libvirt]
