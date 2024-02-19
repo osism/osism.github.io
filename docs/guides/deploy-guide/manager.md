@@ -8,7 +8,7 @@ sidebar_position: 30
 ## Provision the operating system of the manager
 
 The Manager Node serves as the central administration instance for managing the cloud environment.
-With the help of Ansible and other OSISM-specific [components](../../architecture), the entire life cycle of the
+With the help of Ansible and other OSISM-specific [components](../../architecture.md), the entire life cycle of the
 system is coordinated from here (installation, customization, upgrades, etc.).
 
 Requirements for the manager node:
@@ -18,10 +18,10 @@ Requirements for the manager node:
   - at least 256 GB hard disk space
   - the system should be initially and permanently accessible independently of the cloud environment itself from the seed node
   - the system should have direct access to the network areas of the individual server systems in the cloud environment
-- an Ubuntu version matching the OSISM version should be [provisioned](../provisioning) on the system
+- an Ubuntu version matching the OSISM version should be [provisioned](../provisioningi.md) on the system
   (typically the latest Ubuntu LTS version, a system based on one of the [osism - node-images](https://github.com/osism/node-image) would be ideal)
 - no manual adjustments or installations should have been made on the system apart from the basic installation
-- the system should be accessible from the [Seed Node](../seed) via SSH
+- the system should be accessible from the [Seed Node](../seed.md) via SSH
 
 
 ## Install the manager
