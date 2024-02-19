@@ -1,9 +1,9 @@
 ---
 sidebar_label: Provisioning
-sidebar_position: 30
+sidebar_position: 10
 ---
 
-# Provisioning of management and control plane nodes
+# Provisioning of bare-metal nodes
 
 For the initial deployment of the management plane and the control plane of OSISM,
 the nodes must be pre-provisioned with Ubuntu 22.04. Currently, only Ubuntu 22.04 is supported
@@ -21,7 +21,7 @@ There are different variants of the ISO image. The variants differ in the disc l
 The available variants are described in the README file of the [osism/node-image](https://github.com/osism/node-image)
 repository.
 
-### Manual provisioning
+## Manual provisioning
 
 If none of the provided variants is suitable, this section describes the manual
 installation with the help of the Ubuntu 22.04 live ISO image. The manual installation

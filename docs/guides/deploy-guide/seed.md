@@ -1,17 +1,21 @@
 ---
 sidebar_label: Seed
-sidebar_position: 10
+sidebar_position: 20
 ---
 
 # Seed
 
-The seed node is used once for the initial bootstrap of the manager node. It is sufficient
-to use the local workstation. It doesn't have to be a dedicated system. The seed node is
-no longer needed in the further process. The seed node must be able to reach the manager
-node via SSH.
+The seed node is used once for the initial bootstrap of the manager node. The seed node can
+also be used to initially create and prepare the configuration repository. The seed node is
+not the manager node itself. It is sufficient to use the local workstation. It doesn't have
+to be a dedicated system. The seed node is no longer needed in the further process. The seed
+node must be able to reach the manager node via SSH. It is important for the further process
+that no packages are installed manually on the manager. Especially not Docker.
+
 
 The use of Linux on the seed node is recommended. Other operating systems should also
-work without problems.
+work without problems. It is assumed in this documentation that Ubuntu 22.04 is used on
+the seed node.
 
 ## Install required packages
 
