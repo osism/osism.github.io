@@ -5,6 +5,29 @@ sidebar_position: 30
 
 # Manager
 
+## Provision the operating system of the manager
+
+The Manager Node serves as the central administration instance for managing the cloud environment.
+With the help of Ansible and other OSISM-specific [components](../../architecture), the entire life cycle of the
+system is coordinated from here (installation, customization, upgrades, etc.).
+
+Requirements for the manager node:
+
+- the system should have the following hardware features
+  - at least 64 GB RAM
+  - at least 256 GB hard disk space
+  - the system should be initially and permanently accessible independently of the cloud environment itself from the seed node
+  - the system should have direct access to the network areas of the individual server systems in the cloud environment
+- an Ubuntu version matching the OSISM version should be installed on the system
+  (typically the latest Ubuntu LTS version, a system based on one of the [osism - node-images](https://github.com/osism/node-image) would be ideal)
+- no manual adjustments or installations should have been made on the system apart from the basic installation
+- the system should be accessible from the [Seed Node](../seed) via SSH
+- the system should have the correct time
+- if possible, the system should use the operating system
+
+
+## Install the manager
+
 Change into the `configuration/environments/manager` directory of the configuration repository.
 on the seed node.
 
@@ -14,7 +37,7 @@ The deployment of the seed node is documented in the [Deploy Guide for the seed 
 cd configuration/environments/manager
 ```
 
-## Create operator user
+### Create operator user
 
 The operator user is created on each node. It is used as a service account for OSISM. All
 containers run with this user. Ansible also uses this user to access the nodes. Commands
@@ -88,7 +111,7 @@ ssh-add -D
 ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@testbed-manager
 ```
 
-## Apply the network configuration
+### Apply the network configuration
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
 in the previous step are no longer necessary. If Ansible Vault is used, however, `ANSIBLE_ASK_VAULT_PASS`
@@ -112,7 +135,7 @@ is functional and reboot safe. Since network services are not restarted automati
 network configuration are not effective without a manual apply of the network configuration or reboot of the
 nodes.
 
-## Bootstrap
+### Bootstrap
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
 in the previous step are no longer necessary.
@@ -134,7 +157,7 @@ This is recommended.
    ./run.sh reboot
    ```
 
-## Deploy
+### Deploy
 
 1. Transfer the configuration repository.
 
