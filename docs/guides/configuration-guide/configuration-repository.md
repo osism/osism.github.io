@@ -26,7 +26,6 @@ A configuration repository is always composed of the same basic layout.
   The [current gilt.yml](https://github.com/osism/cfg-generics/blob/main/gilt.yml) file is always
   located in the [osism/cfg-generics](https://github.com/osism/cfg-generics) repository.
 
-
 ## Creating a new configuration repository
 
 The initial content for this repository is generated using the
@@ -38,7 +37,6 @@ new cluster by prompting you for the basic details of the new system environment
 The configuration repository will not be created on the future manager node. It is created on a local
 workstation. If the local workstation cannot be used for this purpose, a dedicated virtual system can
 be used. More detailed information about this topic can be obtained in the documentation of the [seed node](./../seed).
-
 
 ### Step 1: Preparation
 
