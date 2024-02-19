@@ -190,7 +190,7 @@ scp dragon@IP_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/cloud-in
 
 Install wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
-wireguard documentation you will find [here](https://www.wireguard.com/).
+wireguard documentation you will find [here](https://www.wireguard.com).
 
 Start the wireguard tunnel.
 
