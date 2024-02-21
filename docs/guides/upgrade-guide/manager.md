@@ -10,7 +10,18 @@ adjustments are necessary
 
 1. Update the OSISM release in use in the configuration repository.
 
-    1.1. Sync the image versions in the configuration repository. It is important to do this so
+    1.1. Set the new manager version in the configuration repository.
+
+       ```
+       yq -i '.manager_version = "6.0.0"' environments/manager/configuration.yml
+       ```
+
+    1.2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
+       (or anywhere else), they must be removed. If these are set, the stable release is not used for
+       these components.
+
+
+    1.3. Sync the image versions in the configuration repository. It is important to do this so
        that the correct versions are available in `environments/manager/images.yml`. If Gilt is
        not installed via the `requirements.txt` of the manager environment it is important to
        use a version smaller v2. The v2 of Gilt is not yet usable.
@@ -29,16 +40,6 @@ adjustments are necessary
        `main` at `version`. This change must be made again after each execution of `gilt overlay` as
        it is overwritten by the call of `gilt overlay`. This cannot be realized differently in the
        current implementation of [Gilt](https://github.com/retr0h/gilt).
-
-    1.2. Set the new manager version in the configuration repository.
-
-       ```
-       yq -i '.manager_version = "6.0.0"' environments/manager/configuration.yml
-       ```
-
-    1.3. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
-       (or anywhere else), they must be removed. If these are set, the stable release is not used for
-       these components.
 
     1.4. Commit and push changes in the configuration repository. Since everyone here has their own
        workflows for changes to the configuration repository, only a generic example for Git.
@@ -76,4 +77,10 @@ adjustments are necessary
 
    ```
    osism apply traefik
+   ```
+
+6. Finally, the Ansible vault password must be made known again.
+
+   ```
+   osism set vault password
    ```
