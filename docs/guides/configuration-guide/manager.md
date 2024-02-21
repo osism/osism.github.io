@@ -13,7 +13,17 @@ the stable release used here as an example.
 
 In the example, OSISM release 6.0.0 is used.
 
-1. Sync the image versions in the configuration repository. It is important to do this so
+1. Set the new manager version in the configuration repository.
+
+   ```
+   yq -i '.manager_version = "6.0.0"' environments/manager/configuration.yml
+   ```
+
+2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
+   (or anywhere else), they must be removed. If these are set, the stable release is not used for
+   these components.
+
+3. Sync the image versions in the configuration repository. It is important to do this so
    that the correct versions are available in `environments/manager/images.yml`.
 
    ```
@@ -30,16 +40,6 @@ In the example, OSISM release 6.0.0 is used.
    `main` at `version`. This change must be made again after each execution of `gilt overlay` as
    it is overwritten by the call of `gilt overlay`. This cannot be realized differently in the
    current implementation of [Gilt](https://github.com/retr0h/gilt).
-
-2. Set the new manager version in the configuration repository.
-
-   ```
-   yq -i '.manager_version = "6.0.0"' environments/manager/configuration.yml
-   ```
-
-3. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
-   (or anywhere else), they must be removed. If these are set, the stable release is not used for
-   these components.
 
 4. Commit and push changes in the configuration repository. Since everyone here has their own
    workflows for changes to the configuration repository, only a generic example for Git.
