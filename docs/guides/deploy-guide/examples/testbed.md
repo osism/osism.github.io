@@ -334,7 +334,7 @@ If you want to access the services please choose the URL from the following tabl
 | Horizon (via Keycloak)   | https://api.testbed.osism.xyz                  | alice        | password     |                 |
 | Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin        | password     | domain: default |
 | Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test         | test         | domain: test    |
-| Keycloak                 | https://keycloak.testbed.osism.xyz             | admin        | password     |                 |
+| Keycloak                 | https://keycloak.testbed.osism.xyz/auth        | admin        | password     |                 |
 | Netbox                   | https://netbox.testbed.osism.xyz/              | admin        | password     |                 |
 | Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |              |              |                 |
 | Nexus                    | https://nexus.testbed.osism.xyz/               | admin        | password     |                 |
