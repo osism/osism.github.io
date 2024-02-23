@@ -49,7 +49,7 @@ network, which flavors to use, etc.
 
 Here is an example from the profile for REGIO.cloud.
 
-```
+```text
 flavor_manager            = "SCS-4V-16-50"
 flavor_node               = "SCS-8V-32-50"
 volume_type               = "ssd"
@@ -115,11 +115,10 @@ This section describes step by step how to deploy the OSISM Testbed.
    cd ~/src/github.com/osism/testbed
    ```
 
-
 3. Configure your cloud access profile
    The access data for the cloud provider used is stored in `terraform/clouds.yaml` and optionally
    in `terraform/secure.yaml` (same structure, if you want to store credentials on a separate place).
-   In file [terraform/clouds.yaml.samle](https://github.com/osism/testbed/blob/main/terraform/clouds.yaml.sample)
+   In file [terraform/clouds.yaml.sample](https://github.com/osism/testbed/blob/main/terraform/clouds.yaml.sample)
    you will find examples of typical setups. Settings that are identical for all users of a cloud can be defined
    centrally via the profiles of the file
    [terraform/clouds-public.yaml](https://github.com/osism/testbed/blob/main/terraform/clouds-public.yaml).
@@ -162,6 +161,7 @@ This section describes step by step how to deploy the OSISM Testbed.
          application_credential_secret: SECRET
        auth_type: "v3applicationcredential"
    ```
+
    TODO: add a correct example for secure.yaml
 
 4. Prepare the deployment. The versions of Ansible and OpenTofu are managed automatically and necessary
@@ -307,6 +307,7 @@ wireguard documentation you will find [here](https://www.wireguard.com/).
 
 Start the wireguard tunnel.
 (Press CTRL+c to keep the tunnel running forever. The make target also launches a browser tab with references to all services)
+
 ```bash
 make vpn-wireguard ENVIRONMENT=regiocloud
 ```
@@ -319,6 +320,7 @@ for using the web endpoints on your workstation. Rename the wireguard config fil
 like `wg-testbed-regiocloud.conf`.
 
 If you do not want to use Wireguard you can also work with [sshuttle](https://github.com/sshuttle/sshuttle).
+
 ```bash
 make vpn-sshuttle ENVIRONMENT=regiocloud
 killall sshuttle
@@ -332,27 +334,27 @@ All SSL enabled services within the OSISM Testbed use certs which are signed by 
 
 If you want to access the services please choose the URL from the following table.
 
-| **Name**                 | **URL**                                        | **Username** | **Password** | **Note**                                                     |
-|--------------------------|------------------------------------------------|--------------|--------------|--------------------------------------------------------------|
-| ARA                      | https://ara.testbed.osism.xyz/                 | ara          | password     |                                                              |
-| Ceph                     | https://api-int.testbed.osism.xyz:8140         | admin        | password     |                                                              |
-| Flower                   | https://flower.testbed.osism.xyz               |              |              |                                                              |
-| Grafana                  | https://api-int.testbed.osism.xyz:3000         | admin        | password     |                                                              |
-| HAProxy (testbed-node-0) | http://testbed-node-0.testbed.osism.xyz:1984   | haproxy      | password     |                                                              |
-| HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984   | haproxy      | password     |                                                              |
-| HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984   | haproxy      | password     |                                                              |
-| Homer                    | https://homer.testbed.osism.xyz                |              |              |                                                              |
-| Horizon (via Keycloak)   | https://api.testbed.osism.xyz                  | alice        | password     |                                                              |
-| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin        | password     | domain: default                                              |
-| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test         | test         | domain: test                                                 |
-| Keycloak                 | https://keycloak.testbed.osism.xyz/auth        | admin        | password     |                                                              |
-| Netbox                   | https://netbox.testbed.osism.xyz/              | admin        | password     |                                                              |
-| Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |              |              |                                                              |
-| Nexus                    | https://nexus.testbed.osism.xyz/               | admin        | password     |                                                              |
-| OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601             | opensearch   | password     |                                                              |
-| PhpMyAdmin               | https://phpmyadmin.testbed.osism.xyz           | root         | password     | Starting with OSISM 7, root_shard_0 is used as the user name |
-| Prometheus               | https://api-int.testbed.osism.xyz:9091/        |              |              |                                                              |
-| RabbitMQ                 | https://api-int.testbed.osism.xyz:15672/       | openstack    | password     |                                                              |
+| **Name**                 | **URL**                                        | **Username** | **Password** | **Note**        |
+|--------------------------|------------------------------------------------|--------------|--------------|-----------------|
+| ARA                      | <https://ara.testbed.osism.xyz/>                 | ara          | password     |                 |
+| Ceph                     | <https://api-int.testbed.osism.xyz:8140>         | admin        | password     |                 |
+| Flower                   | <https://flower.testbed.osism.xyz>               |              |              |                 |
+| Grafana                  | <https://api-int.testbed.osism.xyz:3000>         | admin        | password     |                 |
+| HAProxy (testbed-node-0) | <http://testbed-node-0.testbed.osism.xyz:1984>   | haproxy      | password     |                 |
+| HAProxy (testbed-node-1) | <http://testbed-node-1.testbed.osism.xyz:1984>   | haproxy      | password     |                 |
+| HAProxy (testbed-node-2) | <http://testbed-node-2.testbed.osism.xyz:1984>   | haproxy      | password     |                 |
+| Homer                    | <https://homer.testbed.osism.xyz>                |              |              |                 |
+| Horizon (via Keycloak)   | <https://api.testbed.osism.xyz>                  | alice        | password     |                 |
+| Horizon (via Keystone)   | <https://api.testbed.osism.xyz>                  | admin        | password     | domain: default |
+| Horizon (via Keystone)   | <https://api.testbed.osism.xyz>                  | test         | test         | domain: test    |
+| Keycloak                 | <https://keycloak.testbed.osism.xyz/auth>        | admin        | password     |                 |
+| Netbox                   | <https://netbox.testbed.osism.xyz/>              | admin        | password     |                 |
+| Netdata                  | <http://testbed-manager.testbed.osism.xyz:19999> |              |              |                 |
+| Nexus                    | <https://nexus.testbed.osism.xyz/>               | admin        | password     |                 |
+| OpenSearch Dashboards    | <https://api.testbed.osism.xyz:5601>             | opensearch   | password     |                 |
+| Prometheus               | <https://api-int.testbed.osism.xyz:9091/>        |              |              |                 |
+| RabbitMQ                 | <https://api-int.testbed.osism.xyz:15672/>       | openstack    | password     |                 |
+| phpMyAdmin               | <https://phpmyadmin.testbed.osism.xyz>           | root         | password     |                 |
 
 ### Authentication with OIDC
 
@@ -388,6 +390,7 @@ The expiration time of the Single Sign On tokens can be controlled on multiple l
 #### Usage the Openstack CLI
 
 The `terraform` contains the needed files for the openstack client:
+
 ```bash
 cd terraform
 export OS_CLOUD=<the cloud environment>  # i.e. gc-scs
@@ -400,6 +403,7 @@ Using the OpenStack cli is also possible via OIDC, assuming you provisioned the 
 then you can perform a simple `project list` operation like this:
 
 See chapter "Usage the Openstack CLI" for basic openstack usage.
+
 ```sh
 openstack \
  --os-cacert /etc/ssl/certs/ca-certificates.crt \
@@ -422,6 +426,7 @@ It is also possible to exchange your username/password to a token, for further u
 The `token issue` subcommand returns an SQL table, in which the `id` column's `value` field contains the token:
 
 See chapter "Usage the Openstack CLI" for basic openstack usage.
+
 ```sh
 openstack \
  --os-cacert /etc/ssl/certs/ca-certificates.crt \
@@ -501,13 +506,13 @@ make: *** [prepare] Error 1
 
 To solve the problem you have to modify the `Makefile`. Change the 1st line as follows.
 
-```
+```bash
 export LC_ALL=en_US.UTF-8
 ```
 
 To find out the locale used on the system `printenv` can be used.
 
-```
+```bash
 $ printenv | grep -i lang|locale
 LANG="en_US.UTF-8"
 LC_COLLATE="en_US.UTF-8"
@@ -518,6 +523,7 @@ LC_NUMERIC="en_US.UTF-8"
 LC_TIME="en_US.UTF-8"
 LC_ALL=
 ```
+
 ## Notes
 
 * The configuration is intentionally kept quite static. Please create no PRs to make the configuration more flexible/dynamic.
@@ -548,7 +554,6 @@ The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.o
 
 * OpenStack Zed
 * OpenStack 2023.1 (**default**)
-
 
 ### Included services
 
