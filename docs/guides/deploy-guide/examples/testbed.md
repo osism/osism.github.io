@@ -23,9 +23,9 @@ over time. However, at no point does it claim to represent a production setup ex
 
 The usual prerequisite is to have an account on one of the supported OpenStack cloud providers.
 
-In principle, it is also possible to add further environments on which the testbed can be operated 
+In principle, it is also possible to add further environments on which the testbed can be operated
 with manageable effort: Virtual machines, network and storage based on OpenStack are used as the basis or to
-provide the testbed. As OSISM/SCS also virtualizes systems itself, the OpenStack environment must provide 
+provide the testbed. As OSISM/SCS also virtualizes systems itself, the OpenStack environment must provide
 the capabilities for nested virtualization.
 
 It is not part of this guide to describe the registration with the individual cloud
@@ -207,6 +207,17 @@ This section describes step by step how to deploy the OSISM Testbed.
    Deploying the services takes some time and depends on how much bandwidth is available,
    how the instances are equipped, etc. 90-120 minutes is not unusual when Ceph and OpenStack
    are fully deployed.
+
+   If you only want to install the monitoring services, a few dependencies must be installed first:
+
+   ```sh
+   osism apply common
+   osism apply loadbalancer
+   osism apply opensearch
+   osism apply mariadb
+   ```
+
+   You can then use the monitoring services without having to install a complete Openstack environment.
 
 8. After the deployment, you can log in to the manager via SSH and jump to the nodes of the cluster
 
