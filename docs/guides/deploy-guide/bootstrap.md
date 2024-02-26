@@ -6,8 +6,7 @@ sidebar_position: 40
 # Bootstrap
 
 Before the nodes can be bootstrapped, they must all have already been provisioned.
-The guide for this can be found in the section
-[Provisioning of bare-metal nodes](./provisioning)
+The guide for this can be found in the section [Provisioning of bare-metal nodes](./provisioning).
 
 The following steps are applied to bootstrap all nodes. After the completion of the bootstrap,
 the nodes are already ready for use.
