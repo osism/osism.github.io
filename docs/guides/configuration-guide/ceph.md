@@ -136,7 +136,8 @@ In order to aid in creating the `lvm_volumes` config entries and provision the L
 OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-devices` available.
 
 1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
-   add a configuration like the following to it:
+   add a configuration like the following to it. Ensure that no `devices` parameter
+   is present in the file.
 
    ```
    # optional percentage of VGs to leave free,
