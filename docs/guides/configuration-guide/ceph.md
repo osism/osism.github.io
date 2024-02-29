@@ -140,11 +140,9 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    is present in the file.
 
    ```
-   # optional percentage of VGs to leave free,
-   # defaults to false
+   # Optional percentage of VGs to leave free, defaults to false.
    # Can be helpful for SSD performance of some older SSD models
-   # or to extend lifetime of SSDs in general
-
+   # or to extend lifetime of SSDs in general.
    ceph_osd_db_wal_devices_buffer_space_percent: 10
 
    ceph_db_devices:
@@ -161,8 +159,8 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
        wal_size: 2 GB    # optional, if not set, defaults to 2 GiB
 
    ceph_db_wal_devices:
-   nvme2n1:              # See above, PV for combined WAL+DB VG
-     num_osds: 3         # See above
+     nvme2n1:            # See above, PV for combined WAL+DB VG
+       num_osds: 3       # See above
        db_size: 30 GB    # See above, except that it also considers
                          # total WAL size when calculating LV sizes
        wal_size: 2 GB    # See above
