@@ -50,7 +50,7 @@ vm.min_free_kbytes=4194303
 
 1. Add following configuration in `environments/ceph/configuration.yml`
 
-   ```yaml
+   ```yaml title="environments/ceph/configuration.yml"
    ceph_conf_overrides:
      "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
        "rgw content length compat": "true"
@@ -76,7 +76,7 @@ vm.min_free_kbytes=4194303
 
    If self-signed SSL certificates are used, two additional parameters must be set.
 
-   ```
+   ```yaml title="environments/ceph/configuration.yml"
     "rgw keystone verify ssl": "false"
     "rgw verify ssl": "false"
    ```
@@ -89,7 +89,7 @@ vm.min_free_kbytes=4194303
 
 3. Add following configuration in `environments/kolla/configuration.yml`
 
-   ```yaml
+   ```yaml title="environments/kolla/configuration.yml"
    enable_ceph_rgw: true
    enable_ceph_rgw_keystone: true
 
@@ -139,7 +139,7 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    add a configuration like the following to it. Ensure that no `devices` parameter
    is present in the file.
 
-   ```
+   ```yaml title="inventory/host_vars/<nodename>.yml"
    # Optional percentage of VGs to leave free, defaults to false.
    # Can be helpful for SSD performance of some older SSD models
    # or to extend lifetime of SSDs in general.
