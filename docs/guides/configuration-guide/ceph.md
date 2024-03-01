@@ -287,7 +287,6 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    ```
    $ osism apply configuration
    $ osism reconciler sync
-   $ osism apply facts
    ```
 
 6. Finally let OSISM create the LVM devices for you.
@@ -296,14 +295,8 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    $ osism apply ceph-create-lvm-devices
    ```
 
-7. Deploy OSDs with `ceph-osds`.
-
-   When everything has finished and is ready to be deployed,
-   you can run:
-
-   ```
-   $ osism apply ceph-osds
-   ```
+7. Everything is now ready for the deployment of the OSDs.
+   Details on deploying Ceph in the [Ceph deploy guide](../deploy-guide/services/ceph).
 
 ## Dashboard
 
