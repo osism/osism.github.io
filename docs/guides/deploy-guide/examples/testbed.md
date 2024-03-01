@@ -31,17 +31,17 @@ the capabilities for nested virtualization.
 It is not part of this guide to describe the registration with the individual cloud
 providers. Please contact the respective cloud provider for this.
 
-| **Product**        | **Provider**  | **Profile name** |
-|--------------------|---------------|------------------|
-| Cleura             | Cleura        | `cleura`         |
-| Fuga Cloud         | FUGA          | `fuga`           |
-| HuaweiCloud        | HuaweiCloud   | `huaweicloud`    |
-| OVH                | OVH           | `ovh`            |
-| OpenTelekomCloud   | T-Systems     | `otc`            |
-| pluscloud open     | plusserver    | `pluscloudopen`  |
-| pluscloud SCS Test | plussserver   | `gx-scs`         |
-| REGIO.cloud        | OSISM         | `regiocloud`     |
-| Wavestack          | noris network | `wavestack`      |
+| Product             | Provider       | Profile name     |
+|:--------------------|:---------------|:-----------------|
+| Cleura              | Cleura         | `cleura`         |
+| Fuga Cloud          | FUGA           | `fuga`           |
+| HuaweiCloud         | HuaweiCloud    | `huaweicloud`    |
+| OVH                 | OVH            | `ovh`            |
+| OpenTelekomCloud    | T-Systems      | `otc`            |
+| pluscloud open      | plusserver     | `pluscloudopen`  |
+| pluscloud SCS Test  | plussserver    | `gx-scs`         |
+| REGIO.cloud         | OSISM          | `regiocloud`     |
+| Wavestack           | noris network  | `wavestack`      |
 
 For each provider listed in the table, a predefined profile is available in the
 `terraform/environments` directory. This profile contains the name of the public
@@ -65,18 +65,18 @@ network_availability_zone = "nova"
 
 The OSISM Testbed requires at least the following project quota when using the default flavors:
 
-| **Quantity** | **Resource**         | **Note**                                      |
-|--------------|----------------------|-----------------------------------------------|
-| 4            | Instances            | 28 VCPUs + 112 GByte RAM (3 modes, 1 manager) |
-| 9            | Volumes              | 90 GByte volume storage                       |
-| 1            | Floating IP          |                                               |
-| 1            | Keypair              |                                               |
-| 3            | Security group       |                                               |
-| 16           | Security group rules |                                               |
-| 1            | Network              |                                               |
-| 1            | Subetwork            |                                               |
-| 6            | Ports                |                                               |
-| 1            | Router               |                                               |
+| Quantity | Resource             | Note                                          |
+|:---------|:---------------------|:----------------------------------------------|
+| 4        | Instances            | 28 VCPUs + 112 GByte RAM (3 modes, 1 manager) |
+| 9        | Volumes              | 90 GByte volume storage                       |
+| 1        | Floating IP          |                                               |
+| 1        | Keypair              |                                               |
+| 3        | Security group       |                                               |
+| 16       | Security group rules |                                               |
+| 1        | Network              |                                               |
+| 1        | Subetwork            |                                               |
+| 6        | Ports                |                                               |
+| 1        | Router               |                                               |
 
 ## Preparations
 
@@ -248,8 +248,8 @@ This section describes how to configure and customise the OSISM Testbed.
 
 The defaults for the OpenTofu variables are intended for REGIO.cloud.
 
-| **Variable**              | **Default**              | **Description**                          |
-|---------------------------|--------------------------|------------------------------------------|
+| Variable                  | Default                  | Description                              |
+|:--------------------------|:-------------------------|:-----------------------------------------|
 | availability_zone         | `nova`                   |                                          |
 | ceph_version              | `quincy`                 |                                          |
 | cloud_provider            | `regiocloud`             |                                          |
@@ -276,26 +276,26 @@ The defaults for the OpenTofu variables are intended for REGIO.cloud.
 
 ### Overrides
 
-| **Name**                                  | **Description** |
-|-------------------------------------------|-----------------|
-| `manager_boot_from_image`                 |                 |
-| `manager_boot_from_volume`                |                 |
-| `neutron_availability_zone_hints_network` |                 |
-| `neutron_availability_zone_hints_router`  |                 |
-| `neutron_router_enable_snat`              |                 |
-| `nodes_boot_from_image`                   |                 |
-| `nodes_boot_from_volume`                  |                 |
-| `nodes_use_ephemeral_storage`             |                 |
+| Name                                       | Description      |
+|:-------------------------------------------|:-----------------|
+| `manager_boot_from_image`                  |                  |
+| `manager_boot_from_volume`                 |                  |
+| `neutron_availability_zone_hints_network`  |                  |
+| `neutron_availability_zone_hints_router`   |                  |
+| `neutron_router_enable_snat`               |                  |
+| `nodes_boot_from_image`                    |                  |
+| `nodes_boot_from_volume`                   |                  |
+| `nodes_use_ephemeral_storage`              |                  |
 
 ### Customisations
 
-| **Name**             | **Description** |
-|----------------------|-----------------|
-| `access_floatingip`  |                 |
-| `access_ipv4`        |                 |
-| `access_ipv6`        |                 |
-| `default`            |                 |
-| `neutron_floatingip` |                 |
+| Name                  | Description      |
+|:----------------------|:-----------------|
+| `access_floatingip`   |                  |
+| `access_ipv4`         |                  |
+| `access_ipv6`         |                  |
+| `default`             |                  |
+| `neutron_floatingip`  |                  |
 
 ## Usage of the the Testbed
 
@@ -334,8 +334,8 @@ All SSL enabled services within the OSISM Testbed use certs which are signed by 
 
 If you want to access the services please choose the URL from the following table.
 
-| **Name**                 | **URL**                                        | **Username** | **Password** | **Note**        |
-|--------------------------|------------------------------------------------|--------------|--------------|-----------------|
+| Name                     | URL                                            | Username     | Password     | Note            |
+|:-------------------------|:-----------------------------------------------|:-------------|:-------------|:----------------|
 | ARA                      | https://ara.testbed.osism.xyz                  | ara          | password     |                 |
 | Ceph                     | https://api-int.testbed.osism.xyz:8140         | admin        | password     |                 |
 | Flower                   | https://flower.testbed.osism.xyz               |              |              |                 |
@@ -470,7 +470,7 @@ Cl7E7XvvUoFr1N8Gh09vaYLvRvYgCGV05xBUSs76qCHa0qElPUsk56s5ft4ALrSrzD
 ### Deploy services
 
 | Script                                                                      | Description |
-|-----------------------------------------------------------------------------|-------------|
+|:----------------------------------------------------------------------------|:------------|
 | `/opt/configuration/scripts/deploy/000-manager-service.sh`                  |             |
 | `/opt/configuration/scripts/deploy/001-helper-services.sh`                  |             |
 | `/opt/configuration/scripts/deploy/100-ceph-services-basic.sh`              |             |
@@ -485,7 +485,7 @@ Cl7E7XvvUoFr1N8Gh09vaYLvRvYgCGV05xBUSs76qCHa0qElPUsk56s5ft4ALrSrzD
 ### Upgrade services
 
 | Script                                                                    | Description |
-|---------------------------------------------------------------------------|-------------|
+|:--------------------------------------------------------------------------|:------------|
 | `/opt/configuration/scripts/upgrade/100-ceph-services.sh`                 |             |
 | `/opt/configuration/scripts/upgrade/200-infrastructure-services-basic.sh` |             |
 | `/opt/configuration/scripts/upgrade/300-openstack-services-basic.sh`      |             |
@@ -629,18 +629,18 @@ $ make <TAB> <TAB>
 
 You can inspect the [results of the daily zuul jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0).
 
-| **Name**                  | **Description** |
-|---------------------------|-----------------|
-| testbed-deploy            |                 |
-| testbed-deploy-ceph       |                 |
-| testbed-deploy-cleura     |                 |
-| testbed-deploy-pco        |                 |
-| testbed-deploy-stable     |                 |
-| testbed-deploy-wavestack  |                 |
-| testbed-update-stable     |                 |
-| testbed-upgrade           |                 |
-| testbed-upgrade-ceph      |                 |
-| testbed-upgrade-cleura    |                 |
-| testbed-upgrade-pco       |                 |
-| testbed-upgrade-stable    |                 |
-| testbed-upgrade-wavestack |                 |
+| Name                      | Description |
+|:--------------------------|:------------|
+| testbed-deploy            |             |
+| testbed-deploy-ceph       |             |
+| testbed-deploy-cleura     |             |
+| testbed-deploy-pco        |             |
+| testbed-deploy-stable     |             |
+| testbed-deploy-wavestack  |             |
+| testbed-update-stable     |             |
+| testbed-upgrade           |             |
+| testbed-upgrade-ceph      |             |
+| testbed-upgrade-cleura    |             |
+| testbed-upgrade-pco       |             |
+| testbed-upgrade-stable    |             |
+| testbed-upgrade-wavestack |             |

@@ -21,7 +21,7 @@ repository and are not secure. Do not use for public accessible systems. In the 
 The system to be used as Cloud in a Box must fulfill these minimum requirements.
 
 | Type of resource | Amount                                                  | Note                                                                                                                                                                   |
-|------------------|---------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:-----------------|:--------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | CPU              | at least 1 socket with 4 cores                          | More is better here. This is the minimum where you can't use much payload (LBaaS, VMs). The use of Kubernetes with Cluster API is not possible with this minimum size. |
 | RAM              | at least 32 GByte                                       | More is better here. In principle, it also works with 8 GByte, but then no payload (LBaaS, VMs) can be used. Kubernetes with Cluster API cannot be used then.          |
 | Storage          | at least 1 TByte                                        | Has to be available as `/dev/sda` or `/dev/nvme0n1`. Less than 1 TByte is also possible, the smaller the less storage is available for use in Ceph.                    |
@@ -203,7 +203,7 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 If you want to access the services please choose the URL from the following list:
 
 | Name                    | URL                                         | Username   | Password | Note                                                         |
-|-------------------------|---------------------------------------------|------------|----------|--------------------------------------------------------------|
+|:------------------------|:--------------------------------------------|:-----------|:---------|:-------------------------------------------------------------|
 | ARA                     | https://ara.services.in-a-box.cloud         | ara        | password |                                                              |
 | Ceph                    | http://manager.systems.in-a-box.cloud:7000  | admin      | password |                                                              |
 | Flower                  | https://flower.services.in-a-box.cloud      | -          | -        |                                                              |
