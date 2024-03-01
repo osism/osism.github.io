@@ -280,7 +280,35 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
 
 4. Take the generated configuration file from `/tmp` and **replace the previously
-   generated configuration** for each node.
+   configuration** for each node.
+
+   In this example, the following content was in the host vars file before
+   `osism apply ceph-configure-lvm-volumes` was called.
+
+   ```yaml
+   ceph_osd_devices:
+     sdb:
+     sdc:
+   ```
+
+   The following content has now been generated in the file in the `/tmp` directory by running
+   `osism apply ceph-configure-lvm-volumes`.
+
+   ```yaml
+   ceph_osd_devices:
+     sdb:
+       osd_lvm_uuid: 196aad32-7cc4-5350-8a45-1b03f50fc9bb
+     sdc:
+       osd_lvm_uuid: c6df96be-1264-5815-9cb2-da5eb453a6de
+   lvm_volumes:
+   - data: osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb
+     data_vg: ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb
+   - data: osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de
+     data_vg: ceph-c6df96be-1264-5815-9cb2-da5eb453a6de
+   ```
+
+   This content from the file in the `/tmp` directory is added in the host vars file.
+   The previous `ceph_osd_devices` is replaced with the new content.
 
 5. Push the updated configuration **again** to your configuration repository and re-run:
 
@@ -289,10 +317,29 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    $ osism reconciler sync
    ```
 
-6. Finally let OSISM create the LVM devices for you.
+6. Finally create the LVM devices.
 
    ```
    $ osism apply ceph-create-lvm-devices
+   ```
+
+   These PVs, VGs and LVs are created using the example from step 4.
+
+   ```
+   $ sudo pvs
+     PV         VG                                        Fmt  Attr PSize   PFree
+     /dev/sdb   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb lvm2 a--  <20.00g    0
+     /dev/sdc   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de lvm2 a--  <20.00g    0
+
+   $ sudo vgs
+     VG                                        #PV #LV #SN Attr   VSize   VFree
+     ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb   1   1   0 wz--n- <20.00g    0
+     ceph-c6df96be-1264-5815-9cb2-da5eb453a6de   1   1   0 wz--n- <20.00g    0
+
+   $ sudo lvs
+     LV                                             VG                                        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+     osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb -wi-a----- <20.00g
+     osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
    ```
 
 7. Everything is now ready for the deployment of the OSDs.
