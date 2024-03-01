@@ -122,7 +122,7 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 `inventory/group_vars/ceph.rbd.yml` accordingly.
 
 | Parameter                         | Default value |
-|-----------------------------------|---------------|
+|:----------------------------------|:--------------|
 | `openstack_pool_default_pg_num`   | 64            |
 | `openstack_pool_default_min_size` | 0             |
 
@@ -139,52 +139,127 @@ OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-de
    add a configuration like the following to it. Ensure that no `devices` parameter
    is present in the file.
 
-   ```yaml title="inventory/host_vars/<nodename>.yml"
-   # Optional percentage of VGs to leave free, defaults to false.
-   # Can be helpful for SSD performance of some older SSD models
-   # or to extend lifetime of SSDs in general.
-   ceph_osd_db_wal_devices_buffer_space_percent: 10
+   1. Parameters
 
-   ceph_db_devices:
-     nvme0n1:            # required, PV for a DB VG
-                         # Will be prefixed by /dev/ and can also be specified
-                         # like "by-path/foo" or other things under /dev/
-       num_osds: 6       # required, number of OSDs that shall be
-                         # maximum deployed to this device
-       db_size: 30 GB    # optional, if not set, defaults to
-                         # (VG size - buffer space (if enabled)) / num_osds
-   ceph_wal_devices:
-     nvme1n1:            # See above, PV for a WAL VG
-       num_osds: 6       # See above
-       wal_size: 2 GB    # optional, if not set, defaults to 2 GiB
+      * With the optional parmaeter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
+        set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
+        for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
 
-   ceph_db_wal_devices:
-     nvme2n1:            # See above, PV for combined WAL+DB VG
-       num_osds: 3       # See above
-       db_size: 30 GB    # See above, except that it also considers
-                         # total WAL size when calculating LV sizes
-       wal_size: 2 GB    # See above
+        ```yaml
+        ceph_osd_db_wal_devices_buffer_space_percent: 10
+        ```
+      * It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
+        `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
+      * It is always possible to use device names such as `sda` or device IDs such as
+        `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`. `/dev/` is not
+        prefixed and is added automatically.
+      * The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
+      * The `wal_size` parameter is optional and defaults to `2 GB`.
+      * The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
+      * The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
+      * The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
 
-   ceph_osd_devices:
-     sda:                # Device name, will be prefixed by /dev/, see above conventions
-                         # This would create a "block only" OSD without DB/WAL
-                         # In reality, to ensure each device is uniquely identifiable,
-                         # you should use WWN or EUI-64
-                         # (in that case the entry here would be something like 
-                         # disk/by-id/wwn-<something> or disk/by-id/nvme-eui.<something>)
-     sdb:                # Create an OSD with dedicated DB
-       db_pv: nvme0n1    # Must be one device configured in ceph_db_devices
-                         # or ceph_db_wal_devices
-     sdc:                # Create an OSD with dedicated WAL
-       wal_pv: nvme1n1   # Must be one device configured in ceph_wal_devices
-                         # or ceph_db_wal_devices
-     sdb:                # Create an OSD with dedicated DB/WAL residing on different devices
-       db_pv: nvme0n1    # See above
-       wal_pv: nvme1n1   # See above
-     sdc:                # Create an OSD with dedicated DB/WAL residing on the same VG/PV
-       db_pv: nvme2n1    # Must be one device configured in ceph_db_wal_devices
-       wal_pv: nvme2n1   # Must be the same device configured in ceph_db_wal_devices
-   ```
+   2. OSD only
+
+      The `sda` device will be used as an OSD device without WAL and DB device.
+
+      ```yaml
+      ceph_osd_devices:
+        sda:
+      ```
+
+    3. OSD + DB device
+
+       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
+       OSD is provided with 30 GB.
+
+       ```yaml
+       ceph_db_devices:
+         nvme0n1:
+           num_osds: 6
+           db_size: 30 GB
+       ```
+
+       The `sda` device will be used as an OSD device with `nvme0n1` as DB device.
+
+       ```yaml
+       ceph_osd_devices:
+          sda:
+            db_pv: nvme0n1
+       ```
+
+    4. OSD + WAL device
+
+       The `nvme0n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
+       OSD is provided with 2 GB.
+
+       ```yaml
+       ceph_wal_devices:
+         nvme0n1:
+           num_osds: 6
+           wal_size: 2 GB
+       ```
+
+       The `sda` device will be used as an OSD device with `nvme0n1` as WAL device.
+
+       ```yaml
+       ceph_osd_devices:
+          sda:
+            wal_pv: nvme0n1
+       ```
+
+    5. OSD + DB device + WAL device (same device for DB + WAL)
+
+       The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
+       to 6 OSDs.
+
+       ```yaml
+       ceph_db_wal_devices:
+         nvme0n1:
+           num_osds: 6
+           db_size: 30 GB
+           wal_size: 2 GB
+       ```
+
+       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
+
+       ```yaml
+       ceph_osd_devices:
+          sda:
+            db_pv: nvme0n1
+            wal_pv: nvme0n1
+       ```
+
+    6. OSD + DB device + WAL device (different device for DB + WAL)
+
+       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
+       OSD is provided with 30 GB.
+
+       ```yaml
+       ceph_db_devices:
+         nvme0n1:
+           num_osds: 6
+           db_size: 30 GB
+       ```
+
+       The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
+       OSD is provided with 2 GB.
+
+       ```yaml
+       ceph_wal_devices:
+         nvme1n1:
+           num_osds: 6
+           wal_size: 2 GB
+       ```
+
+       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
+
+       ```yaml
+       ceph_osd_devices:
+          sda:
+            db_pv: nvme0n1
+            wal_pv: nvme1n1
+       ```
 
 2. Push the configuration to your configuration repository and after that do the following
 
