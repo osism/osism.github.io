@@ -161,7 +161,23 @@ This section describes step by step how to deploy the OSISM Testbed.
        auth_type: "v3applicationcredential"
    ```
 
-   TODO: add a correct example for secure.yaml
+   If you want to make use of `terraform/secure.yaml` add your secrets there instead of `clouds.yaml`, e.g:
+
+   ```yaml
+   clouds:
+     regiocloud:
+       auth:
+         password: PASSWORD
+   ```
+
+   or
+
+   ```yaml
+   clouds:
+     regiocloud:
+       auth:
+         application_credential_secret: SECRET
+   ```
 
 4. Prepare the deployment. The versions of Ansible and OpenTofu are managed automatically and necessary
    dependencies are cloned.
