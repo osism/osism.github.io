@@ -302,7 +302,7 @@ The defaults for the OpenTofu variables are intended for REGIO.cloud.
 
 Install wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
-wireguard documentation you will find [here](https://www.wireguard.com/).
+wireguard documentation you will find [here](https://www.wireguard.com).
 
 Start the wireguard tunnel.
 (Press CTRL+c to keep the tunnel running forever. The make target also launches a browser tab with references to all services)
