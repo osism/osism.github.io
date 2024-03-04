@@ -98,7 +98,7 @@ system release changes. The installation of older releases is currently not supp
 
 ### Manual installation
 
-1. Follow the [provisioning guide](../provisioning),
+1. Follow the [provisioning guide](../deploy-guide/provisioning),
    skip the part about disk layout and do it this way:
 
    ![Disk layout](images/cloud-in-a-box/disk-layout.png)
