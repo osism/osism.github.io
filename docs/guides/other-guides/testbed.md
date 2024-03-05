@@ -341,6 +341,34 @@ make vpn-sshuttle ENVIRONMENT=regiocloud
 killall sshuttle
 ```
 
+If you are unable to access the following domains, you can customize your local `/etc/hosts` with the following entries:
+
+```bash
+# OSISM testbed Hosts
+192.168.16.5   ara.testbed.osism.xyz
+192.168.16.5   cgit.testbed.osism.xyz
+192.168.16.5   flower.testbed.osism.xyz
+192.168.16.5   homer.testbed.osism.xyz
+192.168.16.5   netbox.testbed.osism.xyz
+192.168.16.5   testbed-manager.testbed.osism.xyz
+192.168.16.5   nexus.testbed.osism.xyz
+192.168.16.5   phpmyadmin.testbed.osism.xyz
+192.168.16.5   testbed-manager.testbed.osism.xyz
+192.168.16.9   api-int.testbed.osism.xyz
+192.168.16.10  testbed-node-0.testbed.osism.xyz
+192.168.16.11  testbed-node-1.testbed.osism.xyz
+192.168.16.12  testbed-node-2.testbed.osism.xyz
+192.168.16.13  testbed-node-3.testbed.osism.xyz
+192.168.16.14  testbed-node-4.testbed.osism.xyz
+192.168.16.15  testbed-node-5.testbed.osism.xyz
+192.168.16.16  testbed-node-6.testbed.osism.xyz
+192.168.16.17  testbed-node-7.testbed.osism.xyz
+192.168.16.18  testbed-node-8.testbed.osism.xyz
+192.168.16.19  testbed-node-9.testbed.osism.xyz
+192.168.16.100 keycloak.testbed.osism.xyz
+192.168.16.254 api.testbed.osism.xyz
+```
+
 ### Webinterfaces
 
 All SSL enabled services within the OSISM Testbed use certs which are signed by the self-signed
