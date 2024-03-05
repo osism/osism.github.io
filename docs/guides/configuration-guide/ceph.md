@@ -133,7 +133,7 @@ and instead use `lvm_volumes`. Details for this can be found on the
 [OSD Scenario](https://docs.ceph.com/projects/ceph-ansible/en/latest/osds/scenarios.html) documentation.
 
 In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
-OSISM has the two playbooks `ceph-configure-lvm-devices` and `ceph-create-lvm-devices` available.
+OSISM has the two playbooks `ceph-configure-lvm-volumes` and `ceph-create-lvm-devices` available.
 
 1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
    add a configuration like the following to it. Ensure that no `devices` parameter
