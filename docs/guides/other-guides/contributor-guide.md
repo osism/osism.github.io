@@ -1,6 +1,5 @@
 ---
 sidebar_label: Contributor Guide
-sidebar_position: 80
 ---
 
 # Contributor Guide

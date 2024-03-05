@@ -1,6 +1,5 @@
 ---
 sidebar_label: Zuul CI
-sidebar_position: 200
 ---
 
 # Zuul CI

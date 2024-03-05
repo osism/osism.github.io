@@ -1,6 +1,5 @@
 ---
 sidebar_label: Style Guide
-sidebar_position: 100
 ---
 
 # Style Guide
