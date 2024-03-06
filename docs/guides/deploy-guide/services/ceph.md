@@ -5,6 +5,10 @@ sidebar_position: 50
 
 # Ceph
 
+Before starting the Ceph deployment, the configuration and creation of the necessary LVM2
+volumes must be completed. The steps that are required for this can be found in the
+[Ceph Configuration Guide](../../configuration-guide/ceph#lvm-devices).
+
 1. Deploy base services.
 
    ```
