@@ -27,19 +27,19 @@ The image tags can be set in the `environments/kolla/images.yml` file.
 
 ## Network interfaces
 
-**Parameter**                  | **Default**                                                            | **Description**
--------------------------------|------------------------------------------------------------------------|----------------
-`network_interface`            | `eth0`                                                                 |
-`neutron_external_interface`   | `{{ network_interface }}`                                              |
-`kolla_external_vip_interface` | `{{ network_interface }}`                                              |
-`api_interface`                | `{{ network_interface }}`                                              |
-`migration_interface`          | `{{ api_interface }}`                                                  |
-`tunnel_interface`             | `{{ network_interface }}`                                              |
-`octavia_network_interface`    | `{{ 'o-hm0' if octavia_network_type == 'tenant' else api_interface }}` |
-`dns_interface`                | `{{ network_interface }}`                                              |
-`dpdk_tunnel_interface`        | `{{ neutron_external_interface }}`                                     |
-`ironic_http_interface`        | `{{ api_interface }}`                                                  |
-`ironic_tftp_interface`        | `{{ api_interface }}`                                                  |
+| Parameter                      | Default                                                                | Description    |
+|:-------------------------------|:-----------------------------------------------------------------------|:---------------|
+| `network_interface`            | `eth0`                                                                 |                |
+| `neutron_external_interface`   | `{{ network_interface }}`                                              |                |
+| `kolla_external_vip_interface` | `{{ network_interface }}`                                              |                |
+| `api_interface`                | `{{ network_interface }}`                                              |                |
+| `migration_interface`          | `{{ api_interface }}`                                                  |                |
+| `tunnel_interface`             | `{{ network_interface }}`                                              |                |
+| `octavia_network_interface`    | `{{ 'o-hm0' if octavia_network_type == 'tenant' else api_interface }}` |                |
+| `dns_interface`                | `{{ network_interface }}`                                              |                |
+| `dpdk_tunnel_interface`        | `{{ neutron_external_interface }}`                                     |                |
+| `ironic_http_interface`        | `{{ api_interface }}`                                                  |                |
+| `ironic_tftp_interface`        | `{{ api_interface }}`                                                  |                |
 
 ## Customization of the service configurations
 
