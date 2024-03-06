@@ -302,3 +302,59 @@ is created and gets into the container.
       ]
   }
   ```
+
+## Number of service workers
+
+The number of workers used for the individual services can generally be configured using two parameters.
+
+```yaml
+openstack_service_workers: "{{ [ansible_facts.processor_vcpus, 5] | min }}"
+openstack_service_rpc_workers: "{{ [ansible_facts.processor_vcpus, 3] | min }}“
+```
+
+The default for `openstack_service_workers` is set to `5` when using the cookiecutter for the initial creation
+of the configuration.
+
+This value can be overwritten for individual services. The default for all parameters in the following table is
+``{{ openstack_service_workers }}``. The parameter `aodh_api_workers` can then be used to explicitly set the
+number of workers for the AODH API, for example. A reconfigure must be made for the particular services in the
+case of a change. ``osism apply -a reconfigure aodh`` in this example.
+
+These parameters are all set in `environments/kolla/configuration.yml`.
+
+| Parameter                              |
+|:---------------------------------------|
+| aodh_api_workers                       |
+| barbican_api_workers                   |
+| cinder_api_workers                     |
+| designate_api_workers                  |
+| designate_worker_workers               |
+| designate_producer_workers             |
+| designate_central_workers              |
+| designate_sink_workers                 |
+| designate_mdns_workers                 |
+| glance_api_workers                     |
+| gnocchi_metricd_workers                |
+| gnocchi_api_workers                    |
+| heat_api_cfn_workers                   |
+| heat_api_workers                       |
+| heat_engine_workers                    |
+| horizon_wsgi_processes                 |
+| ironic_api_workers                     |
+| keystone_api_workers                   |
+| proxysql_workers                       |
+| magnum_api_workers                     |
+| magnum_conductor_workers               |
+| manila_api_workers                     |
+| neutron_api_workers                    |
+| neutron_metadata_workers               |
+| nova_api_workers                       |
+| nova_superconductor_workers            |
+| nova_metadata_api_workers              |
+| nova_scheduler_workers                 |
+| nova_cell_conductor_workers            |
+| octavia_api_workers                    |
+| octavia_healthmanager_health_workers   |
+| octavia_healthmanager_stats_workers    |
+| placement_api_workers                  |
+| skyline_gunicorn_workers               |
