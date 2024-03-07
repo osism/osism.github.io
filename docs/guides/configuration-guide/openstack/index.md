@@ -73,14 +73,20 @@ override `scheduler_max_attempts` in the Nova scheduler service, the operator co
 scheduler_max_attempts = 100
 ```
 
-If the operator wants to configure compute node cpu and ram allocation ratio on host com1, the operator needs to
-create the file  `environments/kolla/files/overlays/nova/com1/nova.conf` with this content:
+If the operator wants to configure the initial disk, cpu and ram allocation ratio on compute node `com1`,
+the operator needs to create the file  `environments/kolla/files/overlays/nova/com1/nova.conf` with this
+content:
 
 ```ini
 [DEFAULT]
-cpu_allocation_ratio = 16.0
-ram_allocation_ratio = 5.0
+initial_cpu_allocation_ratio = 3.0
+initial_ram_allocation_ratio = 1.0
+initial_disk_allocation_ratio = 1.0
 ```
+
+Note that the numbers shown here with an `initial_cpu_allocation_ratio` of 3.0 do match the requirements
+of the SCS-nV-* (moderate oversubscription) flavors. If you do not use SMT/hyperthreading, SCS would allow
+5.0 here (for the V flavors).
 
 This method of merging configuration sections is supported for all services using [oslo.config](https://docs.openstack.org/oslo.config/latest/),
 which includes the vast majority of OpenStack services, and in some cases for services using YAML configuration.
