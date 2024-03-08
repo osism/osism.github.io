@@ -166,108 +166,27 @@ For example, the inventory needs to be built. All further information can be fou
 
 ### Parameters
 
-<table>
-  <tr>
-    <th>Parameter</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><code>ceph_network_backend</code></td>
-    <td>Address range for ceph's backend network</td>
-    <td><code>192.168.80.0/20</code></td>
-  </tr>
-  <tr>
-    <td><code>ceph_network_frontend</code></td>
-    <td>Address range for ceph's frontend network</td>
-    <td><code>192.168.64.0/20</code></td>
-  </tr>
-  <tr>
-    <td><code>ceph_version</code></td>
-    <td>The version of Ceph. When using a stable OSISM release (<code>manager_version != latest</code>), this value is ignored.</td>
-    <td><code>quincy</code></td>
-  </tr>
-  <tr>
-    <td><code>domain</code></td>
-    <td>The domain used by hostnames</td>
-    <td><code>osism.xyz</code></td>
-  </tr>
-  <tr>
-    <td><code>fqdn_external</code></td>
-    <td>External API FQDN</td>
-    <td><code>api.osism.xyz</code></td>
-  </tr>
-  <tr>
-    <td><code>fqdn_internal</code></td>
-    <td>Internal API FQDN</td>
-    <td><code>api-int.osism.xyz</code></td>
-  </tr>
-  <tr>
-    <td><code>git_host</code></td>
-    <td>Address of the used Git server</td>
-    <td><code>github.com</code></td>
-  </tr>
-  <tr>
-    <td><code>git_port</code></td>
-    <td>Port of the used Git server</td>
-    <td><code>22</code></td>
-  </tr>
-  <tr>
-    <td><code>git_repository</code></td>
-    <td>Path to the git configuration repository</td>
-    <td><code>YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY</code></td>
-  </tr>
-  <tr>
-    <td><code>git_username</code></td>
-    <td>Username of the git repository</td>
-    <td><code>git</code></td>
-  </tr>
-  <tr>
-    <td><code>git_version</code></td>
-    <td>Git branch name</td>
-    <td><code>main</code></td>
-  </tr>
-  <tr>
-    <td><code>ip_external</code></td>
-    <td>The external IP address of the API (resolves to <code>fqdn_external</code>)</td>
-    <td><code>192.168.96.9</code></td>
-  </tr>
-  <tr>
-    <td><code>ip_internal</code></td>
-    <td>The internal IP address of the API (resolves to <code>fqdn_internal</code>)</td>
-    <td><code>192.168.32.9</code></td>
-  </tr>
-  <tr>
-    <td><code>manager_version</code></td>
-    <td>The version of OSISM. An overview of available OSISM releases can be found on <a href="https://release.osism.tech">release.osism.tech</a>.</td>
-    <td><code>6.0.2</code></td>
-  </tr>
-  <tr>
-    <td><code>name_server</code></td>
-    <td>Nameserver. Only one nameserver is set here because the query of multiple values in Cooiecutter is weird. Add more nameservers afterwards.</td>
-    <td><code>149.112.112.112</code></td>
-  </tr>
-  <tr>
-    <td><code>ntp_server</code></td>
-    <td>NTP server. Only one NTP server is set here because the query of multiple values in Cooiecutter is weird. Add more NTP servers afterwards.</td>
-    <td><code>de.pool.ntp.org</code></td>
-  </tr>
-  <tr>
-    <td><code>openstack_version</code></td>
-    <td>The version of OpenStack. When using a stable OSISM release (<code>manager_version != latest</code>), this value is ignored.</td>
-    <td><code>2023.1</code></td>
-  </tr>
-  <tr>
-    <td><code>project_name</code></td>
-    <td>Name of the configuration repository directory</td>
-    <td><code>configuration</code></td>
-  </tr>
-  <tr>
-    <td><code>with_ceph</code></td>
-    <td>1 to use Ceph, 0 to not use Ceph</td>
-    <td><code>1</code></td>
-  </tr>
-</table>
+| Parameter                  | Description                                                                                                                                | Default                                   |
+|:---------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------|
+| `ceph_network_backend`     | Address range for ceph's backend network                                                                                                   | `192.168.80.0/20`                         |
+| `ceph_network_frontend`    | Address range for ceph's frontend network                                                                                                  | `192.168.64.0/20`                         |
+| `ceph_version`             | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                  |
+| `domain`                   | The domain used by hostnames                                                                                                               | `osism.xyz`                               |
+| `fqdn_external`            | External API FQDN                                                                                                                          | `api.osism.xyz`                           |
+| `fqdn_internal`            | Internal API FQDN                                                                                                                          | `api-int.osism.xyz`                       |
+| `git_host`                 | Address of the used Git server                                                                                                             | `github.com`                              |
+| `git_port`                 | Port of the used Git server                                                                                                                | `22`                                      |
+| `git_repository`           | Path to the git configuration repository                                                                                                   | `YOUR_ORG/YOUR_CONFIGURATION_REPOSITORY`  |
+| `git_username`             | Username of the git repository                                                                                                             | `git`                                     |
+| `git_version`              | Git branch name                                                                                                                            | `main`                                    |
+| `ip_external`              | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.96.9`                            |
+| `ip_internal`              | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.32.9`                            |
+| `manager_version`          | The version of OSISM. An overview of available OSISM releases can be found on [release.osism.tech](https://release.osism.tech)             | `7.0.0`                                   |
+| `name_server`              | Nameserver. Only one nameserver is set here because the query of multiple values in Cooiecutter is weird. Add more nameservers afterwards. | `149.112.112.112`                         |
+| `ntp_server`               | NTP server. Only one NTP server is set here because the query of multiple values in Cooiecutter is weird. Add more NTP servers afterwards. | `de.pool.ntp.org`                         |
+| `openstack_version`        | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                  |
+| `project_name`             | Name of the configuration repository directory                                                                                             | `configuration`                           |
+| `with_ceph`                | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                       |
 
 ## Preparing a new configuration repository
 
