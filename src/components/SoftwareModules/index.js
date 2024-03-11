@@ -75,6 +75,15 @@ const FeatureList = [
       </>
     ),
   },
+  {
+    title: 'Protected access to all infrastructure with Teleport',
+    Svg: require('@site/static/img/logo-teleport.svg').default,
+    description: (
+      <>
+        Teleport provides connectivity, authentication, access controls and audit for infrastructure.
+      </>
+    ),
+  },
 ];
 
 function Feature({Svg, title, description}) {
