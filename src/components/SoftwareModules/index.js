@@ -80,7 +80,16 @@ const FeatureList = [
     Svg: require('@site/static/img/logo-teleport.svg').default,
     description: (
       <>
-        Teleport provides connectivity, authentication, access controls and audit for infrastructure.
+        Teleport is an innovative open-source software that redefines the way teams access their infrastructure. Designed with security and efficiency at its core, Teleport allows engineers and DevOps teams to seamlessly access servers, Kubernetes clusters, and internal applications, regardless of where they are located or what device they are using. It centralizes access control, providing a unified gateway to manage permissions and access rights across your entire infrastructure landscape.
+      </>
+    ),
+  },
+  {
+    title: 'Pure virtualization & containerization with Proxmox VE',
+    Svg: require('@site/static/img/logo-proxmox.svg').default,
+    description: (
+      <>
+        Proxmox VE is a comprehensive open-source platform designed for virtualization and container-based management. It seamlessly combines two virtualization technologies in one solution: KVM for virtual machines and LXC for containerized applications. This dual capability allows to manage VMs and containers through a single, intuitive web-based interface, enhancing operational efficiency and flexibility.
       </>
     ),
   },
