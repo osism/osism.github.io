@@ -591,11 +591,17 @@ The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ans
 
 * Ceph Pacific
 * Ceph Quincy (**default**)
+* Ceph Reef
 
 The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
 
 * OpenStack Zed
 * OpenStack 2023.1 (**default**)
+* OpenStack 2023.2
+
+The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
+
+* Kubernetes v1.29
 
 ### Included services
 
