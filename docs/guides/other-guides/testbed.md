@@ -223,6 +223,12 @@ This section describes step by step how to deploy the OSISM Testbed.
    how the instances are equipped, etc. 90-120 minutes is not unusual when Ceph and OpenStack
    are fully deployed.
 
+   In order not to prolong the deployments themselves images may optionally be pulled in advance:
+
+   ```sh
+   /opt/configuration/scripts/pull-images.sh
+   ```
+
    If you only want to install the monitoring services, a few dependencies must be installed first:
 
    ```sh
