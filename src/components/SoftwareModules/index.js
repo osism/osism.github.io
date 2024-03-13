@@ -124,6 +124,11 @@ export default function SoftwareModules () {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
+          <div className={clsx('col col--12')}>
+            <h1><Translate description="Software module title">module.title</Translate></h1>
+          </div>
+        </div>
+        <div className="row">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}

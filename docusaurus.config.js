@@ -56,10 +56,10 @@ const config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'usecases',
-        path: 'usecases',
-        routeBasePath: 'usecases',
-        sidebarPath: require.resolve('./sidebarUsecases.js')
+        id: 'users',
+        path: 'users',
+        routeBasePath: 'users',
+        sidebarPath: require.resolve('./sidebarUsers.js')
       }
     ],
   ],
@@ -79,9 +79,9 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Docs',
+            label: 'Documentation',
           },
-          { to: "/usecases", label: "Use Cases", position: "left" },
+          { to: "/users", label: "Users", position: "left" },
           { to: "/blog", label: "Blog", position: "left" },
           {
             href: 'https://regiocloud.github.io',
@@ -115,8 +115,8 @@ const config = {
                 href: '/docs/intro',
               },
               {
-                label: 'Use Cases',
-                href: '/usecases',
+                label: 'Users',
+                href: '/users',
               },
 	    ],
           },
@@ -153,12 +153,12 @@ const config = {
                 href: '/contact-us',
               },
               {
-                label: 'Partners',
-                href: '/partners',
+                label: 'Integration Partners',
+                href: '/integration-partners',
               },
               {
-                label: 'Careers',
-                href: '/careers',
+                label: 'Jobs',
+                href: '/jobs',
               },
               {
                 label: 'Legals',

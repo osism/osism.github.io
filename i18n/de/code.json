@@ -1,15 +1,35 @@
 {
   "homepage.title": {
-    "message": "Machen Sie Ihr Rechenzentrum fit für die Zeit der KI und Multi-Cloud",
+    "message": "Machen Sie Ihr Rechenzentrum fit für die Cloud",
     "description": "Homepage title"
   },
   "homepage.subtitle": {
-    "message": "OSISM bietet eine Cloud-Infrastruktur auf Basis von OpenStack für Unternehmen, Service Provider und ISVs",
+    "message": "OSISM bietet eine Cloud-Infrastruktur für Unternehmen, Service Provider und ISVs",
     "description": "Homepage subtitle"
   },
   "homepage.pagetitle": {
     "message": "OSISM – Open Cloud Infrastructure",
     "description": "Homepage pagetitle"
+  },
+  "services.title": {
+    "message": "Support & Dienstleitsungen von OSISM",
+    "description": "Services title"
+  },
+  "discover.title": {
+    "message": "Mehr über OSISM erfahren",
+    "description": "Discover title"
+  },
+  "users.title": {
+    "message": "Einige unserer zufriedenen OSISM Anwender",
+    "description": "Users title"
+  },
+  "partners.title": {
+    "message": "Unsere Integrationspartner",
+    "description": "Partners title"
+  },
+  "module.title": {
+    "message": "Unterstützte Komponenten",
+    "description": "Software module title"
   },
   "module.openstack.title": {
     "message": "Infrastructure as a Service (IaaS) mit OpenStack",

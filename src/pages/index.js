@@ -3,9 +3,11 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import Screenshots from '@site/src/components/Screenshots';
+import Discover from '@site/src/components/Discover';
+import Users from '@site/src/components/Users';
+import Partners from '@site/src/components/Partners';
+import Services from '@site/src/components/Services';
 import SoftwareModules from '@site/src/components/SoftwareModules';
-import Subscriptions from '@site/src/components/Subscriptions';
 import Translate from '@docusaurus/Translate';
 
 import styles from './index.module.css';
@@ -29,9 +31,11 @@ export default function Home() {
       description="<Translate description='Homepage pagetitle'>homepage.pagetitle</Translate>">
       <HomepageHeader />
       <main>
+        <Discover />
         <SoftwareModules />
-        <Screenshots />
-        <Subscriptions />
+        <Services />
+        <Users />
+        <Partners />
       </main>
     </Layout>
   );

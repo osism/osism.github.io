@@ -1,15 +1,39 @@
 {
+  "sidebar.documentation.title": {
+    "message": "Documentation",
+    "description": "Documentation title"
+  },
   "homepage.title": {
-    "message": "Get your data center ready for the AI & multi-cloud era",
+    "message": "Get your data center ready for the cloud",
     "description": "Homepage title"
   },
   "homepage.subtitle": {
-    "message": "OSISM provides cloud infrastructure based on OpenStack for enterprises, service providers & ISVs",
+    "message": "OSISM provides cloud infrastructure for enterprises, service providers & ISVs",
     "description": "Homepage subtitle"
   },
   "homepage.pagetitle": {
     "message": "OSISM – Open Cloud Infrastructure",
     "description": "Homepage pagetitle"
+  },
+  "services.title": {
+    "message": "Support & Services from OSISM",
+    "description": "Services title"
+  },
+  "discover.title": {
+    "message": "Discover more about OSISM",
+    "description": "Discover title"
+  },
+  "users.title": {
+    "message": "Some of our happy OSISM users",
+    "description": "Users title"
+  },
+  "partners.title": {
+    "message": "Our integration partners",
+    "description": "Partners title"
+  },
+  "module.title": {
+    "message": "Supported components",
+    "description": "Software module title"
   },
   "module.openstack.title": {
     "message": "Infrastructure as a Service (IaaS) with OpenStack",
