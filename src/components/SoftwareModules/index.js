@@ -41,7 +41,7 @@ const FeatureList = [
   },
   {
     title: 'Kubernetes as a Service (KaaS) with Gardener',
-    Svg: require('@site/static/img/logo-gardener.svg').default,
+    Svg: require('@site/static/img/logo-k8s.svg').default,
     description: (
       <>
         Kubernetes as a Service (KaaS) with Gardener offers a dynamic, scalable, and efficient solution for managing containerized applications across multiple cloud environments. Embrace the power of Kubernetes, optimized by Gardener's advanced automation and cluster management capabilities. With Gardener, you get seamless integration, simplified operations, and enhanced security for your Kubernetes clusters, whether on-premises, in the cloud, or in a hybrid setting.
