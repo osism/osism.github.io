@@ -49,6 +49,16 @@ const FeatureList = [
     ),
   },
   {
+    title: 'Kubernetes (K8s) with K3S',
+    Svg: require('@site/static/img/logo-k3s.svg').default,
+    description: (
+      <>
+        K3s is an innovative, lightweight Kubernetes distribution that simplifies the deployment and operation. One of the standout features of K3s is its minimal footprint, requiring only 512MB of RAM to run. K3s achieves its lightweight nature by removing legacy, alpha, and non-default features from Kubernetes, packaging all necessary components into a single binary less than 100MB in size. This all-in-one approach simplifies installation, updates, and operations, significantly reducing the overhead and expertise required to manage a Kubernetes cluster.
+
+      </>
+    ),
+  },
+  {
     title: 'Identity & Access Management with Keycloak',
     Svg: require('@site/static/img/logo-keycloak.svg').default,
     description: (
