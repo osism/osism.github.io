@@ -234,6 +234,18 @@ This section describes step by step how to deploy the OSISM Testbed.
 
    You can then use the monitoring services without having to install a complete Openstack environment.
 
+   You can install some basic OpenStack resources like public network, flavors and images by running
+
+   ```sh
+   /opt/configuration/scripts/bootstrap.sh
+   ```
+
+   If you want to verify the installation with [refstack](https://opendev.org/openinfra/refstack) run
+
+   ```sh
+   /opt/configuration/scripts/check.sh
+   ```
+
 8. After the deployment, you can log in to the manager via SSH and jump to the nodes of the cluster
 
    ```sh
