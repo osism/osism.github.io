@@ -59,7 +59,7 @@ service itself is then done as usual.
 # Section B: Domain Manager Extensions
 
 # classify domain managers with a special role
-"is_domain_manager": "role:domain-manager"
+"is_domain_manager": "role:manager"
 
 # specify a rule that whitelists roles which domain admins are permitted
 # to assign and revoke within their domain
@@ -131,7 +131,7 @@ service itself is then done as usual.
 "identity:add_user_to_group": "(rule:is_domain_manager and token.domain.id:%(target.group.domain_id)s and token.domain.id:%(target.user.domain_id)s) or rule:base_add_user_to_group or rule:admin_required"
 ```
 
-The role `domain-manager` is created using the OpenStack CLI. Alternatively, the role can
+The role `manager` is created using the OpenStack CLI. Alternatively, the role can
 be added using Ansible or other tools.
 
 ```
@@ -139,14 +139,14 @@ $ openstack --os-cloud admin \
     role create \
     --or-show \
     --description "Domain Manager Role" \
-    domain-manager
+    manager
 +-------------+----------------------------------+
 | Field       | Value                            |
 +-------------+----------------------------------+
 | description | Domain Manager Role              |
 | domain_id   | None                             |
 | id          | 9b7140bfe628468ab9b86b365f9ac4c2 |
-| name        | domain-manager                   |
+| name        | manager                          |
 | options     | {}                               |
 +-------------+----------------------------------+
 ```
@@ -158,7 +158,7 @@ $ openstack --os-cloud admin \
     role add \
     --user test \
     --domain test \
-    domain-manager
+    manager
 ```
 
 ## OIDC Federation
