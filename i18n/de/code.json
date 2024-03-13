@@ -1,4 +1,16 @@
 {
+  "homepage.title": {
+    "message": "Machen Sie Ihr Rechenzentrum fit für die Zeit der KI und Multi-Cloud",
+    "description": "Homepage title"
+  },
+  "homepage.subtitle": {
+    "message": "OSISM bietet eine Cloud-Infrastruktur auf Basis von OpenStack für Unternehmen, Service Provider und ISVs",
+    "description": "Homepage subtitle"
+  },
+  "homepage.pagetitle": {
+    "message": "OSISM – Open Cloud Infrastructure",
+    "description": "Homepage pagetitle"
+  },
   "module.openstack.title": {
     "message": "Infrastructure as a Service (IaaS) mit OpenStack",
     "description": "OpenStack title"
@@ -12,7 +24,7 @@
     "description": "SONiC title"
   },
   "module.sonic.description": {
-    "message": "With SONiC, experience unparalleled flexibility and scalability in your network operations. It enables you to control your network resources with software, simplifying complex tasks and providing a more efficient and adaptable network environment. This platform is not just about efficiency; it's about enabling rapid innovation and customization to meet the ever-evolving demands of cloud computing and data centers.",
+    "message": "Mit SONiC erleben Sie beispiellose Flexibilität und Skalierbarkeit in Ihrem Network Operations. Es ermöglicht Ihnen, Ihre Netzwerkressourcen mit Software zu steuern, komplexe Aufgaben zu vereinfachen und eine effizientere und anpassungsfähigere Netzwerkumgebung zu schaffen. Bei dieser Plattform geht es nicht nur um Effizienz, sondern auch darum, schnelle Innovationen und Anpassungen zu ermöglichen, um die sich ständig weiterentwickelnden Anforderungen von Cloud Computing und Rechenzentren zu erfüllen.",
     "description": "SONiC description"
   },
   "module.ceph.title": {

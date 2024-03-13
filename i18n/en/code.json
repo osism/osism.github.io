@@ -1,4 +1,16 @@
 {
+  "homepage.title": {
+    "message": "Get your data center ready for the AI & multi-cloud era",
+    "description": "Homepage title"
+  },
+  "homepage.subtitle": {
+    "message": "OSISM provides cloud infrastructure based on OpenStack for enterprises, service providers & ISVs",
+    "description": "Homepage subtitle"
+  },
+  "homepage.pagetitle": {
+    "message": "OSISM – Open Cloud Infrastructure",
+    "description": "Homepage pagetitle"
+  },
   "module.openstack.title": {
     "message": "Infrastructure as a Service (IaaS) with OpenStack",
     "description": "OpenStack title"

@@ -6,6 +6,7 @@ import Layout from '@theme/Layout';
 import Screenshots from '@site/src/components/Screenshots';
 import SoftwareModules from '@site/src/components/SoftwareModules';
 import Subscriptions from '@site/src/components/Subscriptions';
+import Translate from '@docusaurus/Translate';
 
 import styles from './index.module.css';
 
@@ -14,8 +15,8 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <h1 style={{"font-size": "3em"}}>Get your data center ready for the AI & multi-cloud era</h1>
-        <p style={{"font-size": "1.5em"}}>OSISM provides production-grade cloud infrastructure based on OpenStack for enterprises, service providers & ISVs</p>
+        <h1 style={{"font-size": "3em"}}><Translate description="Homepage title">homepage.title</Translate></h1>
+        <p style={{"font-size": "1.5em"}}><Translate description="Homepage subtitle">homepage.subtitle</Translate></p>
       </div>
     </header>
   );
@@ -25,7 +26,7 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      description="OSISM – Open Cloud Infrastructure">
+      description="<Translate description='Homepage pagetitle'>homepage.pagetitle</Translate>">
       <HomepageHeader />
       <main>
         <SoftwareModules />
