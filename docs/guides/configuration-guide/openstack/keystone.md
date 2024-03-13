@@ -4,10 +4,12 @@ sidebar_label: Keystone
 
 # Keystone
 
-## Domain manager role
+## Domain manager policy
+
+**This policy is currently still in draft status. Its use in production is currently not recommended.**
 
 | SCS Standard Track | SCS Standard | SCS Documentation |
-|--------------------|--------------|-------------------|
+|:-------------------|:-------------|:------------------|
 | [IAM](https://docs.scs.community/standards/iam/) | [scs-0302](https://github.com/SovereignCloudStack/standards/blob/main/Standards/scs-0302-v1-domain-manager-role.md) | [Domain Manager configuration for Keystone](https://docs.scs.community/standards/scs-0302-v1-domain-manager-role/) |
 
 To configure and use the domain manager role from the SCS project, the
