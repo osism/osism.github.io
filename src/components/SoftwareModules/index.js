@@ -1,4 +1,5 @@
 import React from 'react';
+import Translate from '@docusaurus/Translate';
 import clsx from 'clsx';
 import styles from './styles.module.css';
 
@@ -8,7 +9,7 @@ const FeatureList = [
     Svg: require('@site/static/img/logo-openstack.svg').default,
     description: (
       <>
-        Discover the Power of Flexibility and Scalability with OpenStack! In the dynamic world of cloud computing, OpenStack stands out as a comprehensive open-source solution, empowering businesses with robust Infrastructure as a Service (IaaS) capabilities. Embrace unparalleled flexibility as you deploy a variety of workloads, from virtual machines to container orchestration environments, all on a platform that seamlessly integrates with your existing systems.
+        <Translate description="OpenStack description">module.openstack.description</Translate>
       </>
     ),
   },
