@@ -429,13 +429,13 @@ The expiration time of the Single Sign On tokens can be controlled on multiple l
    It is recommended to keep the *Access Token Lifespan* on a relatively low value, with the trend of blocking third party
    cookies. For further information see the Keycloak documentation's [Browsers with Blocked Third-Party Cookies](https://www.keycloak.org/docs/latest/securing_apps/#browsers-with-blocked-third-party-cookies) section.
 
-#### Usage the Openstack CLI
+#### Usage of the Openstack CLI
 
-The `terraform` contains the needed files for the openstack client:
+The `environments/openstack` folder contains the needed files for the openstack client:
 
 ```bash
-cd terraform
-export OS_CLOUD=<the cloud environment>  # i.e. gc-scs
+cd environments/openstack
+export OS_CLOUD=<the cloud environment>  # i.e. admin
 openstack floating ip list
 ```
 
