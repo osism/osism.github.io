@@ -7,6 +7,7 @@ import Discover from '@site/src/components/Discover';
 import Users from '@site/src/components/Users';
 import Partners from '@site/src/components/Partners';
 import Services from '@site/src/components/Services';
+import Subscriptions from '@site/src/components/Subscriptions';
 import SoftwareModules from '@site/src/components/SoftwareModules';
 import Translate from '@docusaurus/Translate';
 
@@ -34,6 +35,7 @@ export default function Home() {
         <Discover />
         <SoftwareModules />
         <Services />
+        <Subscriptions />
         <Users />
         <Partners />
       </main>
