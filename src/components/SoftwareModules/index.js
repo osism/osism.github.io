@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Infrastructure as a Service (IaaS) with OpenStack',
+    title: (<Translate description="OpenStack title">module.openstack.title</Translate>),
     Svg: require('@site/static/img/logo-openstack.svg').default,
     description: (
       <>
@@ -14,93 +14,92 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Software Defined Networking (SDN) with SONiC & OVN',
+    title: (<Translate description="SONiC title">module.sonic.title</Translate>),
     Svg: require('@site/static/img/logo-sonic.svg').default,
     description: (
       <>
-        With SONiC, experience unparalleled flexibility and scalability in your network operations. It enables you to control your network resources with software, simplifying complex tasks and providing a more efficient and adaptable network environment. This platform is not just about efficiency; it's about enabling rapid innovation and customization to meet the ever-evolving demands of cloud computing and data centers.
+        <Translate description="SONiC description">module.sonic.description</Translate>
       </>
     ),
   },
   {
-    title: 'Software Defined Storage (SDS) with Ceph',
+    title: (<Translate description="Ceph title">module.ceph.title</Translate>),
     Svg: require('@site/static/img/logo-ceph.svg').default,
     description: (
       <>
-        In the dynamic world of digital data, Ceph stands out as a game-changer. This highly scalable, open-source software-defined storage solution is designed to address the growing demand for performance, reliability, and flexibility in data management. Whether it's for small projects or large-scale enterprise needs, Ceph seamlessly adapts to any environment.
+        <Translate description="Ceph description">module.ceph.description</Translate>
       </>
     ),
   },
   {
-    title: 'Bare Metal as a Service (BMaaS) with Ironic',
+    title: (<Translate description="Ironic title">module.ironic.title</Translate>),
     Svg: require('@site/static/img/logo-ironic.svg').default,
     description: (
       <>
-        With Ironic, you get direct access to bare-metal hardware, eliminating the overhead of virtualization and offering a level of performance that virtual environments can't match. Ideal for high-performance computing, large-scale data processing, and intensive workloads.
+        <Translate description="Ironic description">module.ironic.description</Translate>
       </>
     ),
   },
   {
-    title: 'Kubernetes as a Service (KaaS) with Gardener',
+    title: (<Translate description="Gardener title">module.gardener.title</Translate>),
     Svg: require('@site/static/img/logo-k8s.svg').default,
     description: (
       <>
-        Kubernetes as a Service (KaaS) with Gardener offers a dynamic, scalable, and efficient solution for managing containerized applications across multiple cloud environments. Embrace the power of Kubernetes, optimized by Gardener's advanced automation and cluster management capabilities. With Gardener, you get seamless integration, simplified operations, and enhanced security for your Kubernetes clusters, whether on-premises, in the cloud, or in a hybrid setting.
+        <Translate description="Gardener description">module.gardener.description</Translate>
       </>
     ),
   },
   {
-    title: 'Kubernetes (K8s) with K3S',
+    title: (<Translate description="K3s title">module.k3s.title</Translate>),
     Svg: require('@site/static/img/logo-k3s.svg').default,
     description: (
       <>
-        K3s is an innovative, lightweight Kubernetes distribution that simplifies the deployment and operation. One of the standout features of K3s is its minimal footprint, requiring only 512MB of RAM to run. K3s achieves its lightweight nature by removing legacy, alpha, and non-default features from Kubernetes, packaging all necessary components into a single binary less than 100MB in size. This all-in-one approach simplifies installation, updates, and operations, significantly reducing the overhead and expertise required to manage a Kubernetes cluster.
-
+        <Translate description="K3s description">module.k3s.description</Translate>
       </>
     ),
   },
   {
-    title: 'Identity & Access Management with Keycloak',
+    title: (<Translate description="Keycloak title">module.keycloak.title</Translate>),
     Svg: require('@site/static/img/logo-keycloak.svg').default,
     description: (
       <>
-        Unlock the full potential of your digital security with Keycloak, the cutting-edge solution for Identity and Access Management (IAM). Designed for modern enterprises, Keycloak offers a robust and flexible platform to manage user identities and control access to applications and services.
+        <Translate description="Keycloak description">module.keycloak.description</Translate>
       </>
     ),
   },
   {
-    title: 'Logging, Monitoring & Telemetry with Prometheus & Grafana',
+    title: (<Translate description="Prometheus title">module.prometheus.title</Translate>),
     Svg: require('@site/static/img/logo-grafana.svg').default,
     description: (
       <>
-        Integrating Prometheus with Grafana offers a seamless experience. Set up is straightforward, and the synergy between Prometheus's detailed data collection and Grafana's sophisticated visualization tools provides an unmatched monitoring solution. This powerful combination empowers your team to make data-driven decisions, ensuring your systems are not only performing optimally but also poised for future growth.
+        <Translate description="Prometheus description">module.prometheus.description</Translate>
       </>
     ),
   },
   {
-    title: 'Realtime insights with Netdata',
+    title: (<Translate description="Netdata title">module.netdata.title</Translate>),
     Svg: require('@site/static/img/logo-netdata.svg').default,
     description: (
       <>
-        Netdata is revolutionizing the world of realtime monitoring, offering an unparalleled experience in tracking system performance and health. This powerful tool provides instant insights, ensuring you're always one step ahead in identifying and resolving issues. With its user-friendly interface, Netdata makes monitoring accessible to everyone, regardless of technical expertise.
+        <Translate description="Netdata description">module.netdata.description</Translate>
       </>
     ),
   },
   {
-    title: 'Protected access to all infrastructure with Teleport',
+    title: (<Translate description="Teleport title">module.teleport.title</Translate>),
     Svg: require('@site/static/img/logo-teleport.svg').default,
     description: (
       <>
-        Teleport is an innovative open-source software that redefines the way teams access their infrastructure. Designed with security and efficiency at its core, Teleport allows engineers and DevOps teams to seamlessly access servers, Kubernetes clusters, and internal applications, regardless of where they are located or what device they are using. It centralizes access control, providing a unified gateway to manage permissions and access rights across your entire infrastructure landscape.
+        <Translate description="Teleport description">module.teleport.description</Translate>
       </>
     ),
   },
   {
-    title: 'Pure virtualization & containerization with Proxmox VE',
+    title: (<Translate description="Proxmox title">module.proxmox.title</Translate>),
     Svg: require('@site/static/img/logo-proxmox.svg').default,
     description: (
       <>
-        Proxmox VE is a comprehensive open-source platform designed for virtualization and container-based management. It seamlessly combines two virtualization technologies in one solution: KVM for virtual machines and LXC for containerized applications. This dual capability allows to manage VMs and containers through a single, intuitive web-based interface, enhancing operational efficiency and flexibility.
+        <Translate description="Proxmox description">module.proxmox.description</Translate>
       </>
     ),
   },
