@@ -104,7 +104,7 @@
     "description": "Netdata description"
   },
   "module.teleport.title": {
-    "message": "Geschützter Zugriff auf alle Infrastruktur mit Teleport",
+    "message": "Privileged Access Management (PAM) auf alle Infrastruktur mit Teleport",
     "description": "Teleport title"
   },
   "module.teleport.description": {
