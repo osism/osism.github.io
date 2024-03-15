@@ -298,7 +298,7 @@ The defaults for the OpenTofu variables are intended for REGIO.cloud.
 | network_availability_zone | `nova`                   |                                          |
 | number_of_nodes           | `3`                      |                                          |
 | number_of_volumes         | `3`                      |                                          |
-| openstack_version         | `2023.1`                 |                                          |
+| openstack_version         | `2023.2`                 |                                          |
 | prefix                    | `testbed`                |                                          |
 | public                    | `external`               |                                          |
 | refstack                  | `false`                  |                                          |
@@ -614,8 +614,8 @@ The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ans
 The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
 
 * OpenStack Zed
-* OpenStack 2023.1 (**default**)
-* OpenStack 2023.2
+* OpenStack 2023.1
+* OpenStack 2023.2 (**default**)
 
 The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
 
