@@ -34,9 +34,7 @@ export default function Home() {
       <main>
         <Discover />
         <SoftwareModules />
-        <Services />
         <Subscriptions />
-        <Users />
         <Partners />
       </main>
     </Layout>
