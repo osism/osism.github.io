@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Discover from '@site/src/components/Discover';
-import Users from '@site/src/components/Users';
+import Adaptors from '@site/src/components/Adaptors';
 import Partners from '@site/src/components/Partners';
 import Services from '@site/src/components/Services';
 import Subscriptions from '@site/src/components/Subscriptions';

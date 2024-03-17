@@ -56,10 +56,10 @@ const config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'users',
-        path: 'users',
-        routeBasePath: 'users',
-        sidebarPath: require.resolve('./sidebarUsers.js')
+        id: 'adaptors',
+        path: 'adaptors',
+        routeBasePath: 'adaptors',
+        sidebarPath: require.resolve('./sidebarAdaptors.js')
       }
     ],
   ],
@@ -81,7 +81,7 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
-          { to: "/users", label: "Users", position: "left" },
+          { to: "/adaptors", label: "Adaptors", position: "left" },
           { to: "/blog", label: "Blog", position: "left" },
           {
             href: 'https://regiocloud.github.io',
@@ -115,8 +115,8 @@ const config = {
                 href: '/docs/intro',
               },
               {
-                label: 'Users',
-                href: '/users',
+                label: 'Adaptors',
+                href: '/adaptors',
               },
 	    ],
           },

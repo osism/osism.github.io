@@ -1,10 +1,10 @@
 // @ts-check
 
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
-const sidebarUsecases = {
-  usecasesSidebar: [
+const sidebarAdaptors = {
+  adaptorsSidebar: [
     'index',
   ],
 };
 
-module.exports = sidebarUsecases;
+module.exports = sidebarAdaptors;

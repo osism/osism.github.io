@@ -19,9 +19,9 @@
     "message": "Mehr über OSISM erfahren",
     "description": "Discover title"
   },
-  "users.title": {
-    "message": "Einige unserer zufriedenen OSISM Anwender",
-    "description": "Users title"
+  "adaptors.title": {
+    "message": "Einige unserer zufriedenen OSISM Adaptoren",
+    "description": "Adaptors title"
   },
   "partners.title": {
     "message": "Unsere Integrationspartner",

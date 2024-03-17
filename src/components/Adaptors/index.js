@@ -5,13 +5,13 @@ import clsx from 'clsx';
 import styles from './styles.module.css';
 
 
-export default function Users() {
+export default function Adaptors() {
   return (
-    <section className={styles.users}>
+    <section className={styles.adaptors}>
       <div className="container" style={{"padding": "20px"}}>
         <div className="row">
 	  <div className={clsx('col col--12')}>
-	    <h1><Translate description="Users title">users.title</Translate></h1>
+	    <h1><Translate description="Adaptorstitle">adaptors.title</Translate></h1>
           </div>
         </div>
       </div>
