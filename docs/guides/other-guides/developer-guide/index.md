@@ -11,7 +11,7 @@ a container image. The following steps are necessary and are demonstrated using 
 of `osism.services.cgit`.
 
 | Description                                                                         | Example                                                                |
-|-------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+|:------------------------------------------------------------------------------------|:-----------------------------------------------------------------------|
 | Add the Ansible role in one of the Ansible collection repositories                  | https://github.com/osism/ansible-collection-services/pull/578/files    |
 | Add the Ansible playbook                                                            | https://github.com/osism/ansible-playbooks/pull/215/files              |
 | Add the Ansible inventory group                                                     | https://github.com/osism/cfg-generics/pull/225/files                   |
