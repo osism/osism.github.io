@@ -9,7 +9,7 @@ a little better for operators of the [Sovereign Cloud Stack](https://scs.communi
 
 Since we currently only do a major release every 6 months in which we write about these big
 and small features in the release notes, there will be this kind of blog posts from now on.
-In blog posts with the tag [Sneak Peak](https://osism.github.io/blog/tags/sneak-peak),
+In blog posts with the tag [Sneak Peak](https://osism.tech/blog/tags/sneak-peak),
 we will now write about new features before the next major release.
 
 This blog entry is specifically about the possibility of deploying services on the recently

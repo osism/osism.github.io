@@ -4,7 +4,7 @@ title: Switch to OpenTofu
 authors: [berendt]
 tags: [OSISM, News]
 ---
-In blog posts with the tag [News](https://osism.github.io/blog/tags/news),
+In blog posts with the tag [News](https://osism.tech/blog/tags/news),
 we will now write about news that are not directly related to a new
 feature or one of our managed infrastrucutre environments.
 

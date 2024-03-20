@@ -10,7 +10,7 @@ come across tasks in our day-to-day business that we can already solve
 with the help of OSISM. If not, we [open an issue](https://github.com/osism/issues/issues)
 for the task and build it in so that we can solve it directly in OSISM in the future.
 
-In blog posts with the tag [Machine Room](https://osism.github.io/blog/tags/machine-room),
+In blog posts with the tag [Machine Room](https://osism.tech/blog/tags/machine-room),
 we will now write about such tasks and how we were able to solve them with OSISM.
 
 Yesterday we had a hiccup in our RabbitMQ cluster. This has caused problems
