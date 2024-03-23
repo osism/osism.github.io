@@ -88,7 +88,11 @@ The cookiecutter is executed within a container. Docker must be usable on the sy
 on which the cookiecutter is to be used. It should also work with podman.
 
 ```
-docker run --rm -v $(pwd)/output:/output -it quay.io/osism/cookiecutter
+docker run \
+  -e TARGET_UID="$(id -u)" \
+  -e TARGET_GID="$(id -g)" \
+  -v $(pwd)/output:/output \
+  --rm -it quay.io/osism/cookiecutter
 [1/20] with_ceph (1):
 [2/20] ceph_network_backend (192.168.80.0/20):
 [3/20] ceph_network_frontend (192.168.64.0/20):
@@ -109,13 +113,6 @@ docker run --rm -v $(pwd)/output:/output -it quay.io/osism/cookiecutter
 [18/20] openstack_version (2023.1):
 [19/20] project_name (configuration):
 [...]
-```
-
-Since we run the cookiecutter inside a container, the user rights are not correct
-afterwards and have to be changed.
-
-```
-sudo chown -R $USER: output/
 ```
 
 ### Use of latest
