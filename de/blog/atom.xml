@@ -31,7 +31,7 @@ for the corresponding module is listed under <code>Module Release</code>.</p>
         <link href="https://your-docusaurus-test-site.com/de/blog/2024-01-16-switch-to-opentofu"/>
         <updated>2024-01-16T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[In blog posts with the tag News,]]></summary>
-        <content type="html"><![CDATA[<p>In blog posts with the tag <a href="https://osism.github.io/blog/tags/news" target="_blank" rel="noopener noreferrer">News</a>,
+        <content type="html"><![CDATA[<p>In blog posts with the tag <a href="https://osism.tech/blog/tags/news" target="_blank" rel="noopener noreferrer">News</a>,
 we will now write about news that are not directly related to a new
 feature or one of our managed infrastrucutre environments.</p>
 <p>Marc Schöchlin, Site Reliability Engineer at the <a href="https://scs.community/" target="_blank" rel="noopener noreferrer">Sovereign Cloud Stack</a>
@@ -100,7 +100,7 @@ infrastructure, the REGIO.cloud. When operating REGIO.cloud, we often
 come across tasks in our day-to-day business that we can already solve
 with the help of OSISM. If not, we <a href="https://github.com/osism/issues/issues" target="_blank" rel="noopener noreferrer">open an issue</a>
 for the task and build it in so that we can solve it directly in OSISM in the future.</p>
-<p>In blog posts with the tag <a href="https://osism.github.io/blog/tags/machine-room" target="_blank" rel="noopener noreferrer">Machine Room</a>,
+<p>In blog posts with the tag <a href="https://osism.tech/blog/tags/machine-room" target="_blank" rel="noopener noreferrer">Machine Room</a>,
 we will now write about such tasks and how we were able to solve them with OSISM.</p>
 <p>Yesterday we had a hiccup in our RabbitMQ cluster. This has caused problems
 with the attachment of volumes to instances during the night. After analyzing the
@@ -129,7 +129,7 @@ services one by one.</p>
 a little better for operators of the <a href="https://scs.community/" target="_blank" rel="noopener noreferrer">Sovereign Cloud Stack</a> every day.</p>
 <p>Since we currently only do a major release every 6 months in which we write about these big
 and small features in the release notes, there will be this kind of blog posts from now on.
-In blog posts with the tag <a href="https://osism.github.io/blog/tags/sneak-peak" target="_blank" rel="noopener noreferrer">Sneak Peak</a>,
+In blog posts with the tag <a href="https://osism.tech/blog/tags/sneak-peak" target="_blank" rel="noopener noreferrer">Sneak Peak</a>,
 we will now write about new features before the next major release.</p>
 <p>This blog entry is specifically about the possibility of deploying services on the recently
 integrated Kubernetes cluster.</p>
