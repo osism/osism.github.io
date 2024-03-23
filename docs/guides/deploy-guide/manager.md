@@ -5,6 +5,27 @@ sidebar_position: 30
 
 # Manager
 
+## Provision the operating system of the manager
+
+The Manager Node serves as the central administration instance for managing the cloud environment.
+With the help of Ansible and other OSISM-specific [components](../../intro/architecture.md), the entire life cycle of the
+system is coordinated from here (installation, customization, upgrades, etc.).
+
+Requirements for the manager node:
+
+- The system should have the following hardware features
+  - at least 64 GB RAM
+  - at least 256 GB hard disk space
+  - the system should be initially and permanently accessible independently of the cloud environment itself from the seed node
+  - the system should have direct access to the network areas of the individual server systems in the cloud environment
+- An Ubuntu version matching the OSISM version should be [provisioned](./provisioning.md) on the system
+  (typically the latest Ubuntu LTS version, a system based on one of the [OSISM node images](https://github.com/osism/node-image)
+  would be ideal)
+- No manual adjustments or installations should have been made on the system apart from the basic installation
+- The system should be accessible from the [seed node](./seed.md) via SSH
+
+## Install the manager
+
 Change into the `configuration/environments/manager` directory of the configuration repository.
 on the seed node.
 
@@ -14,7 +35,7 @@ The deployment of the seed node is documented in the [Deploy Guide for the seed 
 cd configuration/environments/manager
 ```
 
-## Create operator user
+### Create operator user
 
 The operator user is created on each node. It is used as a service account for OSISM. All
 containers run with this user. Ansible also uses this user to access the nodes. Commands
@@ -37,7 +58,7 @@ ANSIBLE_USER=osism \
 When the `./run.sh operator` is executed, the following prompts are displayed.
 
 | Prompt                                       | Value                                              | Comment                              |
-|----------------------------------------------|----------------------------------------------------|--------------------------------------|
+|:---------------------------------------------|:---------------------------------------------------|:-------------------------------------|
 | `SSH password:`                              | Password so that the `ANSIBLE_USER` can login      | Enabled by `ANSIBLE_ASK_PASS`        |
 | `BECOME password[defaults to SSH password]:` | Password so that the `ANSIBLE_USER` can use `sudo` | Enabled by `ANSIBLE_BECOME_ASK_PASS` |
 | `Vault password:`                            | Value of `secrets/vaultpass`                       | Enabled by `ANSIBLE_ASK_VAULT_PASS`  |
@@ -73,7 +94,7 @@ Details on all parameters can be found in
 in the Ansible documentation.
 
 | Environment variable      | Type    | Description                                                                                                                                                                   |
-|---------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:--------------------------|:--------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `ANSIBLE_ASK_PASS`        | Boolean | This controls whether an Ansible playbook should prompt for a login password. If using SSH keys for authentication, you probably do not need to change this setting.          |
 | `ANSIBLE_ASK_VAULT_PASS`  | Boolean | This controls whether an Ansible playbook should prompt for a vault password.                                                                                                 |
 | `ANSIBLE_BECOME_ASK_PASS` | Boolean | Toggle to prompt for privilege escalation password.                                                                                                                           |
@@ -88,7 +109,7 @@ ssh-add -D
 ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@testbed-manager
 ```
 
-## Apply the network configuration
+### Apply the network configuration
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
 in the previous step are no longer necessary. If Ansible Vault is used, however, `ANSIBLE_ASK_VAULT_PASS`
@@ -112,7 +133,7 @@ is functional and reboot safe. Since network services are not restarted automati
 network configuration are not effective without a manual apply of the network configuration or reboot of the
 nodes.
 
-## Bootstrap
+### Bootstrap
 
 Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE_ASK_PASS`, `ANSIBLE_USER`, ...)
 in the previous step are no longer necessary.
@@ -134,7 +155,7 @@ This is recommended.
    ./run.sh reboot
    ```
 
-## Deploy
+### Deploy
 
 1. Transfer the configuration repository.
 
