@@ -130,6 +130,8 @@ set the `openstack_version` and the `ceph_version`.
 ### Make commit
 
 The content is now committed to the previously created Git repository.
+How to add a deploy key on GitHub is documented in
+[Managing deploy keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys).
 
 ```
 $ git clone git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git YOUR_NEW_CONFIGURATION_REPOSITORY
@@ -140,6 +142,8 @@ $ git commit -m "Initial commit"
 $ git push
 ```
 
+:::warning
+
 The `secrets` directory is not stored in the Git repository. Its contents can be
 stored in a suitable location.
 
@@ -147,8 +151,7 @@ The `secrets` directory contains an SSH key pair which is used as a deploy key t
 make the configuration repository available on the manager node later. Write access
 is not required. The public SSH key is stored in the file `secrets/id_rsa.configuration.pub`.
 
-How to add a deploy key on GitHub is documented in
-[Managing deploy keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys).
+:::
 
 ### Post-processing
 
