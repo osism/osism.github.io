@@ -20,8 +20,17 @@ volumes must be completed. The steps that are required for this can be found in 
 
    It's all done here step by step. It is also possible to do this in a single step:
 
+   Up to OSISM version 6:
+
    ```
    osism apply ceph-base
+   ```
+
+   From OSISM version 7:
+
+   ```
+   osism apply ceph
+   osism apply ceph-pools
    ```
 
 2. Get ceph keys. This places the necessary keys in `/opt/configuration`.
