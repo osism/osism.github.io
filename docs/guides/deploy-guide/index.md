@@ -31,8 +31,8 @@ service.
 OSISM is deployed in a series of successive phases. The phases are documented in this guide.
 
 1. [Creation of a configuration repository](../configuration-guide/configuration-repository#creating-a-new-configuration-repository)
-2. [Provisioning of the bare-metal nodes](./provisioning)
-3. [Preparation of the seed node](./seed)
-4. [Preparation of the manager node](./manager)
-5. [Preparation of the bare-metal nodes](./bootstrap)
+2. [Preparation of the seed node](./seed)
+3. [Preparation of the manager node](./manager)
+4. [Provisioning of the bare-metal nodes](./provisioning)
+5. [Bootstrap of the bare-metal nodes](./bootstrap)
 6. [Deployment of the services](./services)

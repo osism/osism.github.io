@@ -1,11 +1,9 @@
 ---
-sidebar_label: Introduction
-sidebar_position: 1
+sidebar_label: Getting started
+sidebar_position: 10
 ---
 
-# Introduction
-
-![OSISM landing](./images/landing.drawio.png)
+# Getting started
 
 OSISM is developing a solution for the holistic management of sustainable, sovereign
 software-defined cloud infrastructures.
@@ -29,18 +27,30 @@ management of on-premise cloud infrastructures, for public cloud data centres an
 for distributed systems. OSISM is also suitable for building supercomputers and HPC
 environments.
 
-## OSISM Bare-metal
+## Overview
 
-## OSISM Ceph
+![OSISM overview](./images/overview.drawio.png)
 
-## OSISM Identity & Access Management
+## Components
 
-## OSISM Kubernetes
+### OSISM Bare-metal
 
-## OSISM Kubernetes as a Service
+### OSISM Ceph
 
-## OSISM Logging, Monitoring & Telemetry
+### OSISM Identity & Access Management
 
-## OSISM OpenStack
+### OSISM Kubernetes
 
-## OSISM SONiC
+### OSISM Kubernetes as a Service
+
+### OSISM Logging, Monitoring & Telemetry
+
+### OSISM Realtime Insights
+
+### OSISM OpenStack
+
+### OSISM SONiC & OVN
+
+### OSISM Privileged Access Management
+
+### OSISM Virtualization & Containerization
