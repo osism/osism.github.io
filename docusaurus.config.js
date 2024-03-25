@@ -112,7 +112,7 @@ const config = {
             items: [
               {
                 label: 'Documentation',
-                href: '/docs/getting-started',
+                href: '/docs',
               },
               {
                 label: 'Adaptors',
