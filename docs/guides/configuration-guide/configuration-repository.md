@@ -62,11 +62,11 @@ Host and path to the Git repository are specified via the `git_` parameters: The
 `git_` parameters do not specify the path to the cookiecutter to use.
 
 ```
-  [8/21] git_host (github.com):
-  [9/21] git_port (22):
-  [10/21] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY): regiocloud/configuration
-  [11/21] git_username (git):
-  [12/21] git_version (main):
+  [8/20] git_host (github.com):
+  [9/20] git_port (22):
+  [10/20] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY): regiocloud/configuration
+  [11/20] git_username (git):
+  [12/20] git_version (main):
 ```
 
 In this case, the generated configuration in the `output/configuration` directory is
@@ -93,26 +93,26 @@ docker run \
   -e TARGET_GID="$(id -g)" \
   -v $(pwd)/output:/output \
   --rm -it quay.io/osism/cookiecutter
-[1/21] with_ceph (1):
-[2/21] with_keycloak (0):
-[3/21] ceph_network_backend (192.168.80.0/20):
-[4/21] ceph_network_frontend (192.168.64.0/20):
-[5/21] ceph_version (quincy):
-[6/21] domain (osism.xyz):
-[7/21] fqdn_external (api.osism.xyz):
-[8/21] fqdn_internal (api-int.osism.xyz):
-[9/21] git_host (github.com):
-[10/21] git_port (22):
-[11/21] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
-[12/21] git_username (git):
-[13/21] git_version (main):
-[14/21] ip_external (192.168.96.9):
-[15/21] ip_internal (192.168.32.9):
-[16/21] manager_version (6.0.2):
-[17/21] name_server (149.112.112.112):
-[18/21] ntp_server (de.pool.ntp.org):
-[19/21] openstack_version (2023.1):
-[20/21] project_name (configuration):
+[1/20] with_ceph (1):
+[2/20] with_keycloak (0):
+[3/20] ceph_network_backend (192.168.80.0/20):
+[4/20] ceph_network_frontend (192.168.64.0/20):
+[5/20] ceph_version (quincy):
+[6/20] domain (osism.xyz):
+[7/20] fqdn_external (api.osism.xyz):
+[8/20] fqdn_internal (api-int.osism.xyz):
+[9/20] git_host (github.com):
+[10/20] git_port (22):
+[11/20] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
+[12/20] git_username (git):
+[13/20] git_version (main):
+[14/20] ip_external (192.168.96.9):
+[15/20] ip_internal (192.168.32.9):
+[16/20] manager_version (7.0.0):
+[17/20] name_server (149.112.112.112):
+[18/20] ntp_server (de.pool.ntp.org):
+[19/20] openstack_version (2023.2):
+[20/20] project_name (configuration):
 [...]
 ```
 
@@ -122,7 +122,7 @@ When you want to use latest this is done via the parameter `manager_version`.
 By default, this is always set to the current stable version.
 
 ```
-manager_version [6.0.2]: latest
+manager_version [7.0.0]: latest
 ```
 
 If the `manager_version` parameter is set to `latest` it is also possible to explicitly
