@@ -54,8 +54,15 @@ volumes must be completed. The steps that are required for this can be found in 
    environments/kolla/files/overlays/glance/ceph.client.glance.keyring
    ```
 
-   If the `osism apply copy-ceph-keys` fails and the keys are not found in the `/share`
-   directory, this can be solved with `osism apply ceph-fetch-keys`.
+   If the `osism apply copy-ceph-keys` fails because the keys are not found in the `/share`
+   directory, this can be ignored. The keys of the predefined keys (e.g. for Manila) were
+   then not created as they are not used. If you only use Ceph and do not need the predefined
+   keys for OpenStack at all, you can also overwrite the `ceph_kolla_keys` parameter to skip
+   these keys.
+
+   ```yaml title="environments/ceph/configuration.yml"
+   ceph_kolla_keys: []
+   ```
 
 3. After the Ceph keys have been persisted in the configuration repository, the Ceph
    client can be deployed.
