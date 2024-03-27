@@ -6,6 +6,7 @@ sidebar_label: Cinder
 
 * [Cinder admin guide](https://docs.openstack.org/cinder/latest/admin/index.html)
 * [Cinder configuration guide](https://docs.openstack.org/cinder/latest/configuration/index.html)
+* [Cinder configuration reference](https://docs.openstack.org/cinder/latest/configuration/block-storage/samples/cinder.conf.html)
 
 ## Pure Storage FlashArray
 

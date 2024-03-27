@@ -4,6 +4,9 @@ sidebar_label: Keystone
 
 # Keystone
 
+* [Keystone admin guide](https://docs.openstack.org/keystone/latest/admin/index.html)
+* [Keystone configuration reference](https://docs.openstack.org/keystone/latest/configuration/index.html)
+
 ## Domain manager policy
 
 **This policy is currently still in draft status. Its use in production is currently not recommended.**

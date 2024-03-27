@@ -4,6 +4,10 @@ sidebar_label: Horizon
 
 # Horizon
 
+* [Horizon admin guide](https://docs.openstack.org/horizon/latest/admin/index.html)
+* [Horizon configuration guide](https://docs.openstack.org/horizon/latest/configuration/index.html)
+* [Horizon configuration reference](https://docs.openstack.org/horizon/latest/configuration/settings.html)
+
 ## Problems uploading machine images larger than 1 GiB
 
 By default, the `LimitRequestBody` is set to `1073741824` (1 GiB).
