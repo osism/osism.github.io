@@ -3,35 +3,77 @@ sidebar_label: Ceph
 sidebar_position: 50
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Ceph
+
+:::warning
 
 Before starting the Ceph deployment, the configuration and creation of the necessary LVM2
 volumes must be completed. The steps that are required for this can be found in the
 [Ceph Configuration Guide](../../configuration-guide/ceph#lvm-devices).
 
-1. Deploy base services.
+:::
+
+1. Deploy services.
+
+   * Deploy [ceph-mon](https://docs.ceph.com/en/quincy/man/8/ceph-mon/) services
+
+     ```
+     osism apply ceph-mons
+     ```
+
+   * Deploy ceph-mgr services
+
+     ```
+     osism apply ceph-mgrs
+     ```
+
+   * Deploy [ceph-osd](https://docs.ceph.com/en/quincy/man/8/ceph-osd/) services
+
+     ```
+     osism apply ceph-osds
+     ```
+
+   * Generate pools and keys. This step is only necessary for OSISM >= 7.0.0.
+
+     ```
+     osism apply ceph-pools
+     ```
+
+   * Deploy ceph-crash services
+
+     ```
+     osism apply ceph-crash
+     ```
+
+   :::info
+
+   It's all done step by step here. It is also possible to do this in a single step.
+   This speeds up the entire process and avoids unnecessary restarts of individual
+   services.
+
+   <Tabs>
+   <TabItem value="osism-7" label="OSISM >= 7.0.0">
+   ```
+   osism apply ceph
+   ```
+
+   Generate pools and keys.
 
    ```
-   osism apply ceph-mons
-   osism apply ceph-mgrs
-   osism apply ceph-osds
-   osism apply ceph-crash
+   osism apply ceph-pools
    ```
-
-   It's all done here step by step. It is also possible to do this in a single step:
-
-   Up to OSISM version 6:
-
+   </TabItem>
+   <TabItem value="osism-6" label="OSISM < 7.0.0">
    ```
    osism apply ceph-base
    ```
+   </TabItem>
+   </Tabs>
 
-   From OSISM version 7:
-
-   ```
-   osism apply ceph
-   osism apply ceph-pools
-   ```
+   :::
 
 2. Get ceph keys. This places the necessary keys in `/opt/configuration`.
 
@@ -85,8 +127,9 @@ and integrated into OpenStack is described here.
 :::info
 
 If an initial deployment is performed and Ceph RGW is not added to an existing deployment,
-steps 4 and 5 are **not** required. Step 3 is then performed **later** after the OpenStack
-Keystone service has been deployed.
+steps 4 and 5 are **not** required.
+
+Step 3 is then performed **later after** the OpenStack Keystone service has been deployed.
 
 :::
 
