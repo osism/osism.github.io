@@ -96,26 +96,25 @@ docker run \
 After the call, a few parameters are asked for. The parameters are documented in detail in the [Parameters reference](#parameters-reference) section.
 
 ```
-[1/20] with_ceph (1):
-[2/20] with_keycloak (0):
-[3/20] ceph_network_backend (192.168.80.0/20):
-[4/20] ceph_network_frontend (192.168.64.0/20):
-[5/20] ceph_version (quincy):
-[6/20] domain (osism.xyz):
-[7/20] fqdn_external (api.osism.xyz):
-[8/20] fqdn_internal (api-int.osism.xyz):
-[9/20] git_host (github.com):
-[10/20] git_port (22):
-[11/20] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
-[12/20] git_username (git):
-[13/20] git_version (main):
-[14/20] ip_external (192.168.96.9):
-[15/20] ip_internal (192.168.32.9):
-[16/20] manager_version (7.0.0):
-[17/20] name_server (149.112.112.112):
-[18/20] ntp_server (de.pool.ntp.org):
-[19/20] openstack_version (2023.2):
-[20/20] project_name (configuration):
+[1/19] with_ceph (1):
+[2/19] with_keycloak (0):
+[3/19] ceph_network(192.168.64.0/19):
+[4/19] ceph_version (quincy):
+[5/19] domain (osism.xyz):
+[6/19] fqdn_external (api.osism.xyz):
+[7/19] fqdn_internal (api-int.osism.xyz):
+[8/19] git_host (github.com):
+[9/19] git_port (22):
+[10/19] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
+[11/19] git_username (git):
+[12/19] git_version (main):
+[13/19] ip_external (192.168.96.9):
+[14/19] ip_internal (192.168.32.9):
+[15/19] manager_version (7.0.0):
+[16/19] name_server (149.112.112.112):
+[17/19] ntp_server (de.pool.ntp.org):
+[18/19] openstack_version (2023.2):
+[19/19] project_name (configuration):
 [...]
 ```
 
@@ -162,8 +161,7 @@ Version all your configuration changes using git.
 
 | Parameter                  | Description                                                                                                                                | Default                                   |
 |:---------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------|
-| `ceph_network_backend`     | Address range for ceph's backend network                                                                                                   | `192.168.80.0/20`                         |
-| `ceph_network_frontend`    | Address range for ceph's frontend network                                                                                                  | `192.168.64.0/20`                         |
+| `ceph_network`             | Address range for Ceph's network                                                                                                           | `192.168.64.0/20`                         |
 | `ceph_version`             | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                  |
 | `domain`                   | The domain used by hostnames                                                                                                               | `osism.xyz`                               |
 | `fqdn_external`            | External API FQDN                                                                                                                          | `api.osism.xyz`                           |
