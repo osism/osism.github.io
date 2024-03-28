@@ -5,7 +5,7 @@ sidebar_label: Nova
 # Nova
 
 * [Nova admin guide](https://docs.openstack.org/nova/latest/admin/index.html)
-* [Nova configuration guide](https://docs.openstack.org/nova/latest/admin/configuration/index.html)
+* [Nova configuration guide](https://docs.openstack.org/nova/latest/configuration/index.html)
 * [Nova configuration reference](https://docs.openstack.org/nova/latest/configuration/config.html)
 
 ## Nested virtualisation
