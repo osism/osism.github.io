@@ -1,40 +1,44 @@
 ---
-sidebar_label: Migrate to OpenStack 
+sidebar_label: From VMware ESXi to OpenStack
 ---
 
-# Guide: Howto transfer a VMware Host to Sovereign Cloud Stack
+# From VMware ESXi to OpenStack
 
 ## Intro
 
-With this guide we want to give you a little insight on how to move a VMHost to Openstack,
+With this guide we want to give you a little insight on how to move a VMware ESXi host to OpenStack,
 what you need, what can happen, what to think about.
 
 ## The scenario
- - Source: esxi 7.0 Host
- - Destination: SCS Cloud
- - a security group (web_ssh) is already available at the destination 
- - a linux converter Host is installed and ready, we also have root access to it
- - an IPv4 address (10.50.40.230) will be given manually out of a preconfigured network
- - we migrate one Host with a kernel newer then 2.6.25 with 2 scsi harddrives attached and 1 networkcard
- - destination openstack using libvirt/qemu as virtualisation
- - the converter host has access to esxi and the SCS Cloud over IP network
+
+- Source: ESXi 7.0 host
+- Destination: OpenStack
+- a security group (`web_ssh`) is already available at the destination 
+- a Linux converter host is installed and ready, we also have root access to it
+- an IPv4 address (`10.50.40.230`) will be given manually out of a preconfigured network
+- we migrate one host with a kernel newer then 2.6.25 with two scsi harddrives attached and one networkcard
+- destination openstack using Libvirt/KVM as virtualisation
+- the converter host has access to ESXi and the OpenStack environment over IP network
 
 ## Things required for migration 
 
- - VMware credentials
-   - ssh enabled on esxi Host
-   - access to the webinterface of the esxi Host
- - Openstack credentials
+- VMware credentials
+  - SSH enabled on ESXi host
+  - access to the webinterface of the ESXi host
+- OpenStack credentials
  
- - linux packages installed on the coverter, in this case it is an Ubuntu 22.04
-   - `apt install qemu-utils python3-openstackclient`
+- Linux packages installed on the coverter, in this case it is an Ubuntu 22.04
+
+  ```
+  apt-get install qemu-utils python3-openstackclient
+  ```
  
- - twice the space of the largest vmdk disc image on the converter or nfs access to the image files with enough storage
+- twice the space of the largest vmdk disc image on the converter or nfs access to the image files with enough storage
 
 ## Pre Checks
-Check the fstab of your VMHost you want to move.
-See how all the discs or paritions are mounted: 
-if they are all mounted by LVM or UUID you do not need to change anything.
+
+Check the fstab file of your VMware ESXI hostyou want to move. See how all the discs or paritions are mounted.
+If they are all mounted by LVM or UUID you do not need to change anything.
 
 ```txt title="cat /etc/fstab"
 /dev/mapper/vg00-lvroot /               ext4    errors=remount-ro 0       1
@@ -45,15 +49,15 @@ if they are all mounted by LVM or UUID you do not need to change anything.
 /dev/mapper/vgdata-lvsrv /srv           ext4    defaults        0       2
 ```
 
-If they are mounted like `/dev/devicename` it is better to change the fstab to uuid mounting using blkid.
+If they are mounted like `/dev/sda` it is better to change the fstab to UUID mounting using `blkid`.
   
 Replace these entries with `UUID=filesystems_uuid` and add the rest of the line same as with the devicenames.
 
 Example:
 
 ```txt title="example devicename fstab"
-/dev/hda1 /boot     ext2  defaults          0       2
-/dev/hda2 /         ext4  errors=remount-ro 0       1
+/dev/sda1 /boot     ext2  defaults          0       2
+/dev/sda2 /         ext4  errors=remount-ro 0       1
 ```
 
 Change it to something like this:
@@ -65,7 +69,7 @@ UUID=93cc3b34-36c3-422e-b7a6-c80439e8f431 /         ext4  errors=remount-ro 0   
 
 :::caution
 
-When creating a new server, Openstack uses `/dev/vd*` or `/dev/sd*` as devices for volumes.
+When creating a new server, OpenStack uses `/dev/vd*` or `/dev/sd*` as devices for volumes.
 Using UUID/LVM mounts will ensure that the kernel will find your devices while booting.
 Using old device names may lead to the boot sequence to get stuck, due to missing devices.
 
@@ -81,29 +85,30 @@ It needs to be changed to either DCHP if you want to use floating IPs or static 
 
 :::note
 
-Shutdown the Host in VMware as the movement is only possible while the Host is offline.
-Otherwise you will get corrupted discfiles.
+Shutdown the host in VMware as the movement is only possible while the host is offline.
+Otherwise you will get corrupted disc files.
 
 :::
 
-You can use either the webinterface or ssh to identify and copy the *.vmdk files of your VMHost.
+You can use either the webinterface or SSH to identify and copy the `*.vmdk` files of your VMware ESXi host.
 
-While using the web interface you need to locate the datastore and the directoy where the Disc files are located and start downloading all vmdk files.
-You will always get 2 files for a disc, a smaller and a larger one, both are required.
+While using the web interface you need to locate the datastore and the directoy where the disc files are
+located and start downloading all vmdk files. You will always get files files for a disc, a smaller and a
+larger one, both are required.
 
-When using ssh, please also copy both vmdk files for the disc to the converter Host.
-Start looking up your files under /vmfs/volumes/.
+When using SSh, please also copy both vmdk files for the disc to the converter host. Start looking up your
+files under `/vmfs/volumes/`.
 
 ### How to copy vmdk images
 
-Example ssh copy and path of all vmdk files to the converter host using the scp command for our testing-host:
+Example SSH copy and path of all vmdk files to the converter host using the scp command for our testing-host:
 
 ```
 scp user@vmhost:/vmfs/volumes/datastore1/testing-host/*.vmdk .
 ```
 
 After copying is finished, we find several vmdk files in our directory.
-We copied 2 disc images:
+We copied two disc images:
 
 ```
 testing-host-disc0-flat.vmdk testing-host-disc1.vmdk
@@ -115,11 +120,14 @@ testing-host-disc0.vmdk      testing-host-disc1-flat.vmdk
 :::note
 
 Now convert those vmdk files into raw images with the following flags:  
+
+```
 -p show progress (optional)  
 -f Input Format  
 -O Output Format  
+```
 
-Raw files are required to import images into Openstack.
+Raw files are required to import images into OpenStack.
 
 :::
 
@@ -137,7 +145,7 @@ This step is completely optional and you should have some Linux knowledge to do 
 
 :::
 
-After converting the images of a Linux Host, you now have the possibilty to edit some settings offline before importing the images into Openstack.
+After converting the images of a Linux host, you now have the possibilty to edit some settings offline before importing the images into OpenStack.
 
 By mounting the raw image files you can edit the configuration files to, e.g.:
 - disable mountpoints at the fstab, like nfs server
@@ -158,13 +166,13 @@ lvscan and mount the lvm volume
 
 ### How to import Images
 
-First of all you need your Openstack credentials, having them in an `my-project-openrc.sh` file and source them to your shell. 
+First of all you need your OpenStack credentials, having them in an `my-project-openrc.sh` file and source them to your shell. 
 
 The openstack cli client is now able to connect to the cloud environment and do all the following steps.
 
-To get your credentials please check with your SCS Provider.
+To get your credentials please check with your OpenStack provider.
 
-If you want to preserve the `/dev/sd*` device names of the mountpoints, you must inject the new image and add some properties while uploading it into the SCS Cloud or add them later on to the images with Horzion web interface or openstack cli client.
+If you want to preserve the `/dev/sd*` device names of the mountpoints, you must inject the new image and add some properties while uploading it into the OpenStack environment or add them later on to the images with Horzion web interface or openstack cli client.
 
 ```
 openstack image create --progress --property hw_disk_bus=scsi --property hw_scsi_model=virtio-scsi --property hw_watchdog_action=reset --disk-format raw --private --file testing-host-disc0.raw  testing-host-image-disc0
@@ -183,14 +191,14 @@ openstack image list
 ## How to create your Server
 
 The previously imported images need to be copied to a volume so the server is also able to evict to other hosts in the cluster,
-so lets create and start our server in SCS.
+so lets create and start our server in OpenStack.
 
 Select one flavor for the host, in this case `SCS-8V-16`, which means 8 Virtual CPUs and 16GB of RAM, get a list of all your available flavors by executing
 `openstack flavor list` and select the best matching one.
 
 As the images are 20GB, you tell openstack that you need a boot volume with a size of 20 and a block-device for the additional device also with a size of 20GB.
 
-In this guide there is already a security group which fits our needs, if not, create one or you will not be able to communicate with your new Host.
+In this guide there is already a security group which fits our needs, if not, create one or you will not be able to communicate with your new host.
 
 ```
 openstack security group list
@@ -275,17 +283,19 @@ Now the server will boot and be available.
 
 Maybe you need to tweak the network setup if it is still not accessible.
 
-To do this, you could use the VNC console of the Openstack host:
+To do this, you could use the VNC console of the OpenStack host:
 
 Login and then setup the network card if you have not already done that before host had been shutdown.
 
-You now can remove the imported images, as they are no longer required - except you want to generate another Host with the same images.
+You now can remove the imported images, as they are no longer required - except you want to generate
+another host with the same images.
 
 
 ## Last words
 
-In this little guide, we only can give a sneak peak of what you need to do with a simple VMHost.
+In this little guide, we only can give a sneak peak of what you need to do with a simple VMware ESXi host.
 
-More complex setups needs consulting, planning and testing as there a several scenarios out there which cannot be handled like this.
+More complex setups needs consulting, planning and testing as there a several scenarios out there which
+cannot be handled like this.
 
-Especially if you have terrabytes of data to move or graphics- or AIcards in you VMware Hosts.
+Especially if you have terrabytes of data to move or graphics- or AIcards in you VMware ESXi hosts.
