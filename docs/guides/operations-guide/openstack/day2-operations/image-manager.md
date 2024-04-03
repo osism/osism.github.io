@@ -5,7 +5,8 @@ sidebar_position: 50
 
 # Image Manager
 
-The OpenStack Image Manager is a tool for managing all images on an OpenStack environment
+The [OpenStack Image Manager](https://pypi.org/project/openstack-image-manager/) is a tool for managing all
+images on an OpenStack environment
 
 ## Requirements
 
@@ -65,10 +66,38 @@ is optional and is not used by default.
 This **Getting started** will upload a private image to your OpenStack environment with
 the help of the OpenStack Image Manager.
 
-1. Install the `openstack-image-manager` package with `pip`.
+1. Install the [openstack-image-manager](https://pypi.org/project/openstack-image-manager/) package with
+   [pip](https://pypi.org/project/pip/).
 
    ```sh
    pip3 install openstack-image-manager
+   ```
+
+   The installation can also be done via [pipenv](https://pypi.org/project/pipenv/).
+
+   A `Pipefile` file is created with this content. The [latest version of openstack-image-manager](https://pypi.org/project/openstack-image-manager/#history)
+   is used.
+
+   ```ini
+   [[source]]
+   url = "https://pypi.org/simple"
+   verify_ssl = true
+   name = "pypi"
+
+   [packages]
+   openstack-image-manager = "==0.20240403.0"
+
+   [dev-packages]
+
+   [requires]
+   python_version = "3.10"
+   ```
+
+   The dependencies are then installed and the shell is prepared for use:
+
+   ```sh
+   pipenv install
+   pipenv shell
    ```
 
 2. Create a image definition in the file `getting-started.yml` in the local directory `images`.
