@@ -6,7 +6,7 @@ FILES = [
     {
         "source": "https://raw.githubusercontent.com/SovereignCloudStack/docs/main/docs/02-iaas/security-groups.md",
         "repository": "SovereignCloudStack/docs",
-        "target": "docs/guides/operations-guide/openstack/day2-operations/best-practises/security-groups.md",
+        "target": "docs/guides/user-guide/openstack/security-groups.md",
         "header": "---\nsidebar_label: Security groups\n---\n\n",
     },
     {
