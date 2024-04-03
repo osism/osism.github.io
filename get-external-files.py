@@ -8,7 +8,13 @@ FILES = [
         "repository": "SovereignCloudStack/docs",
         "target": "docs/guides/operations-guide/openstack/day2-operations/best-practises/security-groups.md",
         "header": "---\nsidebar_label: Security groups\n---\n\n",
-    }
+    },
+    {
+        "source": "https://raw.githubusercontent.com/SovereignCloudStack/openstack-health-monitor/main/docs/Debian12-Install.md",
+        "repository": "SovereignCloudStack/openstack-health-monitor",
+        "target": "docs/guides/other-guides/openstack-health-monitor.md",
+        "header": "---\nsidebar_label: OpenStack Health Monitor\n---\n\n",
+    },
 ]
 
 for file in FILES:
