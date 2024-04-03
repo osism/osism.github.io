@@ -2,12 +2,15 @@
 sidebar_label: Testbed Guide
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Testbed
 
 💡 With the OSISM Testbed, it is possible to run a full Sovereign Cloud Stack
 deployment on an existing OpenStack environment such as Cleura or REGIO.cloud.
 
-OSISM is the reference implementation for the infrastructure as a service layer in the
+OSISM is the reference implementation for the Infrastructure as a Service (IaaS) layer in the
 [Sovereign Cloud Stack](https://scs.community) (SCS) project. The OSISM Testbed is therefore
 used in the SCS project to test and work on the Instrastructure as a Service layer.
 
@@ -106,6 +109,7 @@ This section describes step by step how to deploy the OSISM Testbed.
 1. Request access from the administrator of the respective cloud or get access to an Openstack cloud.
 
 2. Clone the [osism/testbed](https://github.com/osism/testbed) repository.
+
    The repository can also be cloned to any other location.
 
    ```sh
@@ -115,22 +119,58 @@ This section describes step by step how to deploy the OSISM Testbed.
    ```
 
 3. Configure your cloud access profile
-   The access data for the cloud provider used is stored in `terraform/clouds.yaml` and optionally
+
+   The access data for the cloud provider used is stored in `terraform/clouds.yaml` and (optionally)
    in `terraform/secure.yaml` (same structure, if you want to store credentials on a separate place).
+
    In file [terraform/clouds.yaml.sample](https://github.com/osism/testbed/blob/main/terraform/clouds.yaml.sample)
    you will find examples of typical setups. Settings that are identical for all users of a cloud can be defined
    centrally via the profiles of the file
+
    [terraform/clouds-public.yaml](https://github.com/osism/testbed/blob/main/terraform/clouds-public.yaml).
    You can reference these settings by using the `profile` parameter in cloud-specific
    definition in `terraform/clouds.yaml`.
+
    The user specific settings of the `clouds.yaml` file are provided by the cloud provider. Please check the
    documentation  of the cloud provider you are using or their support for details.
 
-   REGIO.cloud is used as an example. The cloud name in `clouds.yaml`
+   REGIO.cloud is used as an example here. The cloud name in `clouds.yaml`
    and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. If another cloud
-   is used, replace `regiocloud` with the respective profile name from the table above.
+   is used, replace `regiocloud` with the respective profile name [from the table above](#cloud-access).
 
-   ```yaml
+   <Tabs>
+   <TabItem value="testbed-cloud-access-with-app-credentials" label="Application Credentials">
+   The use of application credentials is preferred. This way it is not necessary to store
+   details like username, project name or sensitive information like the password in the
+   `clouds.yaml` file.
+
+   The application credentials can be found in Horizon under **Identity**. Use `OSISM testbed` as
+   name and click `Create Application Credential`.
+
+   ```yaml title="terraform/clouds.yaml"
+   clouds:
+     regiocloud:
+       profile: regiocloud
+       auth:
+         application_credential_id: ID
+         application_credential_secret: SECRET
+       auth_type: "v3applicationcredential"
+   ```
+
+   If you want to make use of `terraform/secure.yaml` add your application credential secret there
+   instead of `terraform/clouds.yaml`.
+
+   ```yaml title="terraform/secure.yaml"
+   clouds:
+     regiocloud:
+       auth:
+         application_credential_secret: SECRET
+   ```
+
+
+   </TabItem>
+   <TabItem value="testbed-cloud-access-with-username-password" label="Username/Password">
+   ```yaml title="terraform/clouds.yaml"
    clouds:
      regiocloud:
        profile: regiocloud
@@ -141,46 +181,22 @@ This section describes step by step how to deploy the OSISM Testbed.
          user_domain_name: DOMAIN
    ```
 
-   The use of application credentials is preferred. This way it is not necessary to store
-   details like username or project name or sensitive information like the password in the
-   `clouds.yaml` file.
+   If you want to make use of `terraform/secure.yaml` add your password there instead of `terraform/clouds.yaml`.
 
-   The application credentials can be found in Horizon under **Identity**. Use `OSISM testbed` as
-   name and click `Create Application Credential`.
-
-   The `clouds.yaml` file of REGIO.cloud can be used as an example for the use of
-   application credentials. With another cloud provider, only the `auth_url` must then be changed
-   accordingly.
-
-   ```yaml
-   clouds:
-     regiocloud:
-       auth:
-         application_credential_id: ID
-         application_credential_secret: SECRET
-       auth_type: "v3applicationcredential"
-   ```
-
-   If you want to make use of `terraform/secure.yaml` add your secrets there instead of `clouds.yaml`, e.g:
-
-   ```yaml
+   ```yaml title="terraform/secure.yaml"
    clouds:
      regiocloud:
        auth:
          password: PASSWORD
    ```
 
-   or
+   </TabItem>
+   </Tabs>
 
-   ```yaml
-   clouds:
-     regiocloud:
-       auth:
-         application_credential_secret: SECRET
-   ```
+4. Prepare the deployment.
 
-4. Prepare the deployment. The versions of Ansible and OpenTofu are managed automatically and necessary
-   dependencies are cloned.
+   The versions of Ansible and [OpenTofu](https://opentofu.org) are managed
+   automatically and necessary dependencies are cloned.
 
    ```sh
    make prepare
@@ -198,21 +214,18 @@ This section describes step by step how to deploy the OSISM Testbed.
    make ENVIRONMENT=regiocloud manager
    ```
 
-7. Deploy all services. Depending on the cloud, the installation will take some time. Up
-   to two hours is not unusual. In this step, Ceph, OpenStack and all necessary
-   infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
+7. Deploy all services.
 
-   ```sh
-   make ENVIRONMENT=regiocloud deploy
-   ```
-
-   Alternatively, it is also possible to deploy the services step by step directly on the
+   <Tabs>
+   <TabItem value="testbed-deploy-multi-steps" label="Deployment in single steps">
+   It is also possible to deploy the services step by step on the
    manager. To do this, first log in to the manager with `make ENVIRONMENT=regiocloud login`
    and then execute the deploy scripts one after the other. It is recommended to do this
    within a screen session.
 
    ```sh
    /opt/configuration/scripts/deploy/001-helper-services.sh
+   /opt/configuration/scripts/deploy/005-kubernetes.sh
    /opt/configuration/scripts/deploy/100-ceph-services-basic.sh
    /opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh
    /opt/configuration/scripts/deploy/300-openstack-services-basic.sh
@@ -223,13 +236,20 @@ This section describes step by step how to deploy the OSISM Testbed.
    how the instances are equipped, etc. 90-120 minutes is not unusual when Ceph and OpenStack
    are fully deployed.
 
-   In order not to prolong the deployments themselves images may optionally be pulled in advance:
+   There is also the option of pre-population of images with `/opt/configuration/scripts/pull-images.sh`
+   so that deployments do not have to be lengthy. Run this script **before** the deploy scripts.
 
-   ```sh
-   /opt/configuration/scripts/pull-images.sh
-   ```
+   You can prepare some basic OpenStack resources like public network, flavors and images by running
+   `/opt/configuration/scripts/bootstrap.sh`.
 
-   If you only want to install the monitoring services, a few dependencies must be installed first:
+   If you want to verify the installation with [refstack](https://opendev.org/openinfra/refstack) run
+   `/opt/configuration/scripts/check.sh`. This step will take some time.
+
+   :::info
+
+   If you only want to deploy the monitoring services with `/opt/configuration/scripts/deploy/400-monitoring-services.sh`,
+   a few dependencies must be deployed first. You can then use the monitoring services without having to install a
+   complete OpenStack & Ceph environment.
 
    ```sh
    osism apply common
@@ -238,26 +258,29 @@ This section describes step by step how to deploy the OSISM Testbed.
    osism apply mariadb
    ```
 
-   You can then use the monitoring services without having to install a complete Openstack environment.
-
-   You can install some basic OpenStack resources like public network, flavors and images by running
+   :::
+   </TabItem>
+   <TabItem value="testbed-deploy-single-step" label="Deployment of all services">
+   In this single step deployment, Ceph, OpenStack and all necessary
+   infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
+   Depending on the cloud, the installation will take some time. Up to two hours is not unusual. 
 
    ```sh
-   /opt/configuration/scripts/bootstrap.sh
+   make ENVIRONMENT=regiocloud deploy
+   ```
+   </TabItem>
+   </Tabs>
+
+8. After the deployment, you can log in to the manager via SSH.
+
+   ```sh
+   make ENVIRONMENT=regiocloud
    ```
 
-   If you want to verify the installation with [refstack](https://opendev.org/openinfra/refstack) run
+   Yo can log in to the nodes of the cluster via the manager.
 
    ```sh
-   /opt/configuration/scripts/check.sh
-   ```
-
-8. After the deployment, you can log in to the manager via SSH and jump to the nodes of the cluster
-
-   ```sh
-   make ENVIRONMENT=regiocloud login
-   ssh testbed-node-0
-   ssh testbed-<TAB><TAB>
+   osism console testbed-node-0
    ```
 
 9. If you want you can create a test project with a test user after login. It also
@@ -269,9 +292,9 @@ This section describes step by step how to deploy the OSISM Testbed.
 
 10. When the OSISM Testbed is no longer needed, it can be deleted.
 
-   ```sh
-   make ENVIRONMENT=regiocloud clean
-   ```
+    ```sh
+    make ENVIRONMENT=regiocloud clean
+    ```
 
 ## Configuration
 
@@ -588,16 +611,13 @@ LC_ALL=
 
 * The configuration is intentionally kept quite static. Please create no PRs to make the configuration more flexible/dynamic.
 * The OSISM documentation uses hostnames, examples, addresses etc. from OSISM Testbed.
-* Even if all components (storage, network, compute, control) are operated on the same nodes, there are separate networks.
-  This is because in larger productive HCI environments, dedicated control nodes and network nodes are usually provided.
-  It is also common to place storage frontend and storage backend on an independent/additional network infrastructure.
 * The third volume (`/dev/sdd`) is not enabled for Ceph by default. This is to test the scaling of Ceph.
 * Ansible errors that have something to do with undefined variables (e.g. `AnsibleUndefined`) are most likely due to cached
   facts that are no longer valid. The facts can be updated by running `osism apply facts`.
 * The manager is used as pull through cache for Docker images and Ubuntu packages. This reduces the amount of traffic consumed.
 * To speed up the Ansible playbooks, [ARA](https://ara.recordsansible.org) can be disabled. This
   is done by executing `/opt/configuration/scripts/disable-ara.sh`. Afterwards no more logs are available in the ARA web
-  interface.
+  interface. To re-enable ARA use `/opt/configuration/scripts/enable-ara.sh`.
 
 ## Appendix
 
@@ -616,10 +636,11 @@ The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.o
 * OpenStack Zed
 * OpenStack 2023.1
 * OpenStack 2023.2 (**default**)
+* OpenStack 2024.1
 
 The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
 
-* Kubernetes v1.29
+* Kubernetes v1.29 (**default**)
 
 ### Included services
 
@@ -628,6 +649,7 @@ The following services can currently be used with this testbed without further a
 #### Infrastructure
 
 * Ceph
+* Cluster API Management Cluster
 * Fluentd
 * Gnocchi
 * Grafana
@@ -635,7 +657,7 @@ The following services can currently be used with this testbed without further a
 * Influxdb
 * Keepalived
 * Keycloak
-* Kubernetes CAPI Management Cluster
+* Kubernetes
 * Mariadb
 * Memcached
 * Netbox
@@ -699,14 +721,8 @@ You can inspect the [results of the daily zuul jobs](https://zuul.services.betac
 |:--------------------------|:------------|
 | testbed-deploy            |             |
 | testbed-deploy-ceph       |             |
-| testbed-deploy-cleura     |             |
-| testbed-deploy-pco        |             |
 | testbed-deploy-stable     |             |
-| testbed-deploy-wavestack  |             |
 | testbed-update-stable     |             |
 | testbed-upgrade           |             |
 | testbed-upgrade-ceph      |             |
-| testbed-upgrade-cleura    |             |
-| testbed-upgrade-pco       |             |
 | testbed-upgrade-stable    |             |
-| testbed-upgrade-wavestack |             |
