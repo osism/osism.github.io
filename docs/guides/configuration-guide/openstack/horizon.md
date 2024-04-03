@@ -21,3 +21,25 @@ This limit can be increased via the parameter `horizon_httpd_limitrequestbody`.
 ```yaml title="environments/kolla/configuration.yml"
 horizon_httpd_limitrequestbody: 2147483648  # 2 GiB
 ```
+
+## Make clouds.yml file downloadable as an alternative to the RC file
+
+By default, only the `openrc` file is offered for download in Horizon. It makes sense to also add the
+`clouds.yaml` as a download. To do this, the menu is customised in the `custom_local_settings`. The
+change can be deployed with `osism apply -a reconfigure horizon`.
+
+```yaml title="environments/kolla/files/overlays/horizon/custom_local_settings"
+SHOW_KEYSTONE_V2_RC = False
+USER_MENU_LINKS = [
+  {'name': _('OpenStack clouds.yml File'),
+   'icon_classes': ['fa-download', ],
+   'url': 'horizon:project:api_access:clouds.yaml',
+   'external': False,
+   },
+  {'name': _('OpenStack RC File v3'),
+   'icon_classes': ['fa-download', ],
+   'url': 'horizon:project:api_access:openrc',
+   'external': False,
+   }
+]
+```
