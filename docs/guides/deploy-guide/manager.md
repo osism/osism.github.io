@@ -48,6 +48,10 @@ and the password of this user is `password`. If you install Ubuntu manually the 
 is `ubuntu`. If you want to use any other user here, that's no problem. It is important that
 this user has sudo rights. The password according to what you have set yourself.
 
+The `ANSIBLE_USER` parameter is only required when executing `operator` play using the `run.sh`
+script. After this step, the `ANSIBLE_USER` is always set to `dragon` in the `run.sh` script.
+It is therefore important to only set this parameter for exactly this step.
+
 ```
 ANSIBLE_BECOME_ASK_PASS=True \
 ANSIBLE_ASK_VAULT_PASS=True \
