@@ -46,6 +46,9 @@ network:
 
   vlans:
     {{ network_vlans|to_nice_yaml(indent=4)|indent(4) }}
+
+  vrfs:
+    {{ network_vrfs|to_nice_yaml(indent=4)|indent(4) }}
 ```
 
 The parameters listed in the following table can be used in the template.
@@ -59,6 +62,7 @@ network_bridges   | `{}`        | https://netplan.readthedocs.io/en/stable/netpl
 network_ethernets | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-ethernets
 network_tunnels   | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-tunnels
 network_vlans     | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vlans
+network_vrfs      | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vrfs
 
 Changes to the configuration are currently not applied utomatically. This is done on
 purpose to enable a manual check in advance. Changes to the network configuration can
