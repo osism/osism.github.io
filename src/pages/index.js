@@ -13,6 +13,15 @@ import Translate from '@docusaurus/Translate';
 
 import styles from './index.module.css';
 
+function Announcements() {
+  const {siteConfig} = useDocusaurusContext();
+  return (
+    <div className="container" style={{"text-align": "center", "padding-top": "2em", "padding-bottom": "2em", "font-size": "1em"}}>
+      🎉️ <b><a target="_blank" href="https://www.openstack.org/software/openstack-caracal">OpenStack Caracal 2024.1</a> is out!</b> 🥳️
+    </div>
+  );
+}
+
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -30,6 +39,7 @@ export default function Home() {
   return (
     <Layout
       description="<Translate description='Homepage pagetitle'>homepage.pagetitle</Translate>">
+      <Announcements />
       <HomepageHeader />
       <main>
         <Discover />
