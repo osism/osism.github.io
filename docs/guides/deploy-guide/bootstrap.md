@@ -130,14 +130,14 @@ the nodes are already ready for use.
 
 11. Make all SSH public keys known.
 
-   ```
-   osism apply known-hosts
-   ```
+    ```
+    osism apply known-hosts
+    ```
 
 11. Check again if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
-   ```
-   osism apply ping
-   ```
+    ```
+    osism apply ping
+    ```
 
 Ready. All nodes are now bootstrapped and available to deploy services.
