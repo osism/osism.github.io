@@ -153,12 +153,8 @@ const config = {
                 href: '/contact-us',
               },
               {
-                label: 'Integration Partners',
-                href: '/integration-partners',
-              },
-              {
-                label: 'Solution Partners',
-                href: '/solution-partners',
+                label: 'Partners',
+                href: '/partners',
               },
               {
                 label: 'Jobs',
