@@ -44,9 +44,15 @@ export default function Partners() {
     <section className={styles.partners}>
       <div className="container" style={{"padding": "20px"}}>
         <div className="row">
-	      <div className={clsx('col col--12')}>
-	        <h1><Translate description="Partners title">partners.title</Translate></h1>
-          <p>Our integration partners have years of experience in building and operating cloud environments of all sizes. They have a wide range of skills and can ensure the smooth integration of customised private clouds. Some of our integration partners offer managed operations for private clouds as well as Kubernetes. Send us an email to <a href="mailto:info@osism.tech">info@osism.tech</a> for more information.</p>
+	  <div className={clsx('col col--12')}>
+	    <h1><Translate description="Partners title">partners.title</Translate></h1>
+            <p></p>
+          </div>
+        </div>
+        <div className="row">
+	  <div className={clsx('col col--12')}>
+	    <h1><Translate description="Integration partners title">integration_partners.title</Translate></h1>
+            <p>Our integration partners have years of experience in building and operating cloud environments of all sizes. They have a wide range of skills and can ensure the smooth integration of customised private clouds. Some of our integration partners offer managed operations for private clouds as well as Kubernetes. Send us an email to <a href="mailto:info@osism.tech">info@osism.tech</a> for more information.</p>
             <p></p>
           </div>
         </div>

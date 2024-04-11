@@ -28,8 +28,12 @@
     "description": "Adaptors title"
   },
   "partners.title": {
-    "message": "Our integration partners",
+    "message": "Our partners",
     "description": "Partners title"
+  },
+  "integration_partners.title": {
+    "message": "Our integration partners",
+    "description": "Integration partners title"
   },
   "module.title": {
     "message": "Supported components",

@@ -24,8 +24,12 @@
     "description": "Adaptors title"
   },
   "partners.title": {
-    "message": "Unsere Integrationspartner",
+    "message": "Unsere Partner",
     "description": "Partners title"
+  },
+  "integration_partners.title": {
+    "message": "Unsere Integrationspartner",
+    "description": "Integration partners title"
   },
   "module.title": {
     "message": "Unterstützte Komponenten",
