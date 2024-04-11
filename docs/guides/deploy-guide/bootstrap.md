@@ -122,22 +122,22 @@ the nodes are already ready for use.
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
-10. Prepare the SSH configuration of the manager node.
+10. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
+
+    ```
+    osism apply ping
+    ```
+
+11. Prepare the SSH configuration of the manager node.
 
     ```
     osism apply sshconfig
     ```
 
-11. Make all SSH public keys known.
+12. Make all SSH public keys known.
 
     ```
     osism apply known-hosts
-    ```
-
-11. Check again if all systems are reachable (you probably have to do this several times until all systems are accessible).
-
-    ```
-    osism apply ping
     ```
 
 Ready. All nodes are now bootstrapped and available to deploy services.
