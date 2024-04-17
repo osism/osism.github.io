@@ -1,6 +1,5 @@
 ---
 sidebar_label: Ceph
-sidebar_position: 50
 ---
 
 # Ceph
