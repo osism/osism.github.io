@@ -64,8 +64,8 @@ network_tunnels   | `{}`        | https://netplan.readthedocs.io/en/stable/netpl
 network_vlans     | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vlans
 network_vrfs      | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vrfs
 
-Changes to the configuration are currently not applied utomatically. This is done on
-purpose to enable a manual check in advance. Changes to the network configuration can
+By default changes to the network configuration are not applied automatically. This is done on
+purpose to allow a manual check in advance. Changes to the network configuration can
 be applied either by rebooting or by executing `netplan apply`.
 
 ```
@@ -73,6 +73,13 @@ $ osism console --type clush all
 Enter 'quit' to leave this interactive mode
 Working with nodes: testbed-manager.testbed.osism.xyz,testbed-node-[0-2].testbed.osism.xyz
 clush> sudo netplan apply
+```
+
+It is possible to execute the `netplan apply` automatically via a handler when changes are made.
+The parameter `network_allow_service_restart` is used for this.
+
+```yaml title="environments/configuration.yml"
+network_allow_service_restart: true
 ```
 
 ### Example
