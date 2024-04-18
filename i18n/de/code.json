@@ -4,11 +4,11 @@
     "description": "Homepage title"
   },
   "homepage.subtitle": {
-    "message": "OSISM bietet eine Cloud-Infrastruktur für Unternehmen, Service Provider und ISVs",
+    "message": "OSISM bietet souveräne Cloud-Infrastruktur für Unternehmen, Service Provider und ISVs",
     "description": "Homepage subtitle"
   },
   "homepage.pagetitle": {
-    "message": "OSISM – Open Cloud Infrastructure",
+    "message": "OSISM – Souveräne Cloud-Infrastruktur",
     "description": "Homepage pagetitle"
   },
   "services.title": {

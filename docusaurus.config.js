@@ -7,7 +7,7 @@ const darkCodeTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'OSISM – Open Cloud Infrastructure',
+  title: 'OSISM – Sovereign Cloud Infrastructure',
   tagline: 'Get your data center ready for the mulit-cloud era',
   favicon: 'img/favicon.ico',
 
