@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
-        <title>OSISM – Open Cloud Infrastructure Blog</title>
+        <title>OSISM – Sovereign Cloud Infrastructure Blog</title>
         <link>https://your-docusaurus-test-site.com/de/blog</link>
-        <description>OSISM – Open Cloud Infrastructure Blog</description>
+        <description>OSISM – Sovereign Cloud Infrastructure Blog</description>
         <lastBuildDate>Mon, 04 Mar 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
