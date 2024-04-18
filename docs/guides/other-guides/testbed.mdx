@@ -33,17 +33,18 @@ the capabilities for nested virtualization.
 It is not part of this guide to describe the registration with the individual cloud
 providers. Please contact the respective cloud provider for this.
 
-| Product             | Provider       | Profile name     |
-|:--------------------|:---------------|:-----------------|
-| Cleura              | Cleura         | `cleura`         |
-| Fuga Cloud          | FUGA           | `fuga`           |
-| HuaweiCloud         | HuaweiCloud    | `huaweicloud`    |
-| OVH                 | OVH            | `ovh`            |
-| OpenTelekomCloud    | T-Systems      | `otc`            |
-| pluscloud open      | plusserver     | `pluscloudopen`  |
-| pluscloud SCS Test  | plussserver    | `gx-scs`         |
-| REGIO.cloud         | OSISM          | `regiocloud`     |
-| Wavestack           | noris network  | `wavestack`      |
+| Product             | Provider       | Profile name     | Note                              |
+|:--------------------|:---------------|:-----------------|-----------------------------------|
+| Cleura              | Cleura         | `cleura`         |                                   |
+| Fuga Cloud          | FUGA           | `fuga`           |                                   |
+| HuaweiCloud         | HuaweiCloud    | `huaweicloud`    |                                   |
+| OVH                 | OVH            | `ovh`            |                                   |
+| OpenTelekomCloud    | T-Systems      | `otc`            |                                   |
+| pluscloud open      | plusserver     | `pluscloudopen`  |                                   |
+| pluscloud SCS Test  | plusserver     | `gx-scs`         |                                   |
+| REGIO.cloud         | OSISM          | `regiocloud`     |                                   |
+| REGIO.cloud         | OSISM          | `regio-fast`     | boot from NVMe SSD backed volumes |
+| Wavestack           | noris network  | `wavestack`      |                                   |
 
 For each provider listed in the table, a predefined profile is available in the
 `terraform/environments` directory. This profile contains the name of the public
