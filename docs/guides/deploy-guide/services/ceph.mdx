@@ -154,6 +154,9 @@ Step 3 is then performed **later after** the OpenStack Keystone service has been
    ```
 
 3. Apply role `kolla-ceph-rgw` to add the OpenStack endpoint.
+   If an initial deployment is performed and Ceph RGW is not added
+   to an existing deployment run this step later after the OpenStack
+   Keystone service has been deployed.
 
    ```
    osism apply kolla-ceph-rgw
