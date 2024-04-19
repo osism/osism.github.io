@@ -8,6 +8,18 @@ import TabItem from '@theme/TabItem';
 
 # Ceph
 
+In OSISM it is also possible to integrate and use existing Ceph clusters. It
+is not necessary to deploy Ceph with OSISM. If Ceph is deployed with OSISM, it
+should be noted that OSISM does not claim to provide all possible features of Ceph.
+Ceph provided with OSISM is intended to provide the storage for Glance, Nova, Cinder
+and Manila. In a specific way that has been implemented by OSISM for years. It
+should be checked in advance whether the way in OSISM the Ceph deployment and the
+provided features are sufficient. If this is not the case, it is recommended to
+deploy Ceph in a different way directly and independently of OSISM. For possible
+open source projects, please refer to
+[cephadm](https://docs.ceph.com/en/latest/cephadm/index.html) and
+[Rook](https://rook.io).
+
 :::warning
 
 Before starting the Ceph deployment, the configuration and creation of the necessary LVM2
