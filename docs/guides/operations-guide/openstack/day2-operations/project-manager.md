@@ -27,7 +27,7 @@ pipenv shell
 
 
 ### create.py 
-The OpenStack Project Manager has some defaults while executing `create.py` if you not set while executing.
+The `create.py` command and his default options while executing the command.
 
 ```
  --admin-domain              default
@@ -79,11 +79,11 @@ Default Openstack Roles to users are set to `member` and `load-balancer_member` 
 
 ## Usage
 
-There must be a `clouds.yml` and a `secure.yml` file in the directory where the OpenStack Project Manager will be executed, examples are provided with the git repository. 
+There must be a `clouds.yml` and a `secure.yml` file in the directory where the OpenStack Project Manager will be executed, examples are provided within the git repository. 
 
-The cloud profile to be used can be specified via the optional --cloud parameter. By default the cloud profile with the name admin is used. It must be and admin account create and modify domains, projects, users and quotas with the used cloud credentials. 
+The cloud profile to be used can be specified via the optional --cloud parameter. By default the cloud profile with the name admin is used. It has to be and admin account, to create and modify domains, projects, users and quotas.
 
-The Openstack Project Manager essentially consists of two parts, the create.py and the manage.py, there are more scripts for handling users using ldap which needs more configuration setup.
+The Openstack Project Manager essentially consists of two parts, the `create.py` and the `manage.py`, there are more scripts for handling users using ldap which needs more configuration setup.
 
 There is also a directory `etc` containing yaml Files for managing quotas and endpoints which can be modified for your needs.
 
@@ -167,7 +167,7 @@ options:
 
 #### Create a Domain and inital Project
 
-When executing the create.py command, the first time with --domain, it will create a domain if does not exist and an admin account for this domain. The admin account is create in the default Domain of Openstack and can be used for the ServiceProvider to manager the complete domain. With the same command we also create our first project webshop, the domain will always be used as prefix.
+When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project webshop. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
 
 ```
 $ python3 src/create.py --domain democompany --name demouser
@@ -200,7 +200,7 @@ $ python3 src/create.py --domain democompany --name webshopuser --create-user
 It is possible to set a quota multiplier for any project, if not set the `basic` quotas of `etc/classes.yml` will be applied.
 All quota information must be set as a property to the Openstack project within your Openstack Cluster.
 
-With the following command you set a multiplier of 256 of the basic quota:
+The following command you set a multiplier of 256 of the basic quota:
 ```
 $ openstack project set --property quotamultiplier=256 democompany-webshop
 ```
@@ -217,7 +217,8 @@ Other possible multiplier which can be set individually are: `quotamultiplier_co
 #### Special Project: images
 
 With this special Project you can share all images uploaded into this project to all other project in your domain which has set the property `has-shared-images`, which is by default set.
-Per default, only the domain admin user has access to this project, other domain users won't see this. If you want your domain users also have access to upload some images you need to give them access in Openstack.
+Alsoi only the domain-admin user has access to this project, other domain users won't see this, they will find the uploaded images in their projects. 
+If you want your grant other domain users also access to upload some images, you need to give them access to the images Project in Openstack.
 
 ```
 $ python3 src/create.py --domain democompany --name images
@@ -229,8 +230,7 @@ $ python3 src/create.py --domain democompany --name images
 +---------+---------------------+----------------------------------+
 ```
 
-Additionally you need to add the Domain and Domain Admin User to the `clouds.yaml` so the script can setup permissions to the projects and users to see these images.
-It will always looking for a Cloud name `opm-domainname-admin:` entry.
+Additionally you need to add the domain and domain-admin user to the `clouds.yaml`, it is always named `opm-domainname-admin:` so the manage.py can setup permissions to the projects later on and users are able to find the images.
 
 ```
   opm-democompany-admin:
@@ -258,12 +258,15 @@ $ python3 src/create.py --domain democompany --name service
 ```
 
 
-
 ### manage.py
 
-This command applies quotas, networks and routers to **all** project in the Openstack Cluster, not only to those have been setuped previously with the `create.py` or `openstack project set --property` commands.
+:::warning
 
-Best is to run this command by cron, every hour to apply all changes. It is also possible to run this at the command line to apply changes immediately.
+This command applies quotas, networks and routers to **all** projects in the Openstack Cluster, not only to those have been configured previously with the `create.py` or `openstack project set --property` commands.
+
+:::
+
+Best is to run this command by cron, every hour to apply all pending changes, it is also possible to run this at the command line to apply changes immediately.
 
 ```
 python src/manage.py -h
