@@ -88,7 +88,13 @@ The Openstack Project Manager essentially consists of two parts, the `create.py`
 
 ### create.py
 
-This command is used to create and modify domains, projects, users and quotas, by default the domain is used as prefix for all projects and users added later on to the domain for easy alloction later on.
+This command is used to create and modify domains, projects, users and quotas. As default the domain is used as prefix for all projects and users created for easy alloction in Openstack.
+
+:::note
+
+create.py can't delete once created objects, this must be done using Openstack commands to remove a project or domain.
+
+:::
 
 ```
 python src/create.py -h
