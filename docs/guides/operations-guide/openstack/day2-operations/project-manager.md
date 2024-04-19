@@ -85,7 +85,6 @@ The cloud profile to be used can be specified via the optional --cloud parameter
 
 The Openstack Project Manager essentially consists of two parts, the `create.py` and the `manage.py`, there are more scripts for handling users using ldap which needs more configuration setup.
 
-There is also a directory `etc` containing yaml Files for managing quotas and endpoints which can be modified for your needs.
 
 ### create.py
 
@@ -165,7 +164,7 @@ options:
                         Service network CIDR
 ```
 
-#### Create a Domain and inital Project
+#### Create a Domain and inital project
 
 When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project webshop. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
 
@@ -181,7 +180,7 @@ $ python3 src/create.py --domain democompany --name demouser
 +----------------+----------------------+----------------------------------+
 ```
 
-#### Create a User for a Project
+#### Create a User for a project
 
 ```
 $ python3 src/create.py --domain democompany --name webshopuser --create-user             
@@ -189,16 +188,29 @@ $ python3 src/create.py --domain democompany --name webshopuser --create-user
 | name     | value                   | id                               |
 |----------+-------------------------+----------------------------------|
 | domain   | democompany             | a8549ef5d3d14f938b127a1cdefe3788 |
-| project  | democompany-webshop     | 645538bf67664cfeaed32476d58f95fb |
+| project  | democompany-webshop     | 5752b6701026478f9cac122fc54eb9cb |
 | user     | democompany-webshopuser | ce213655559d47d7800501124fed4d02 |
 | password | vEvM9vgRESdffWE2        |                                  |
 +----------+-------------------------+----------------------------------+
 ```
 
-#### Set quotas for a Project
+#### Create additional project with unlimited quota
 
-It is possible to set a quota multiplier for any project, if not set the `basic` quotas of `etc/classes.yml` will be applied.
-All quota information must be set as a property to the Openstack project within your Openstack Cluster.
+```
+$ python3 src/create.py --domain democompany --name styles --quota-class unlimited
++----------+--------------------+----------------------------------+
+| name     | value              | id                               |
+|----------+--------------------+----------------------------------|
+| domain   | democompany        | a8549ef5d3d14f938b127a1cdefe3788 |
+| project  | democompany-styles | 666097e396fd4f9392d6aa55c76d8267 |
++----------+--------------------+----------------------------------+
+```
+
+
+#### Set quotas for a project
+
+All quota information must be set as a property to the Openstack project within your Openstack Cluster, if no property is set, the `basic` quotaclass of `etc/classes.yml` will be applied.
+It is possible to set a quota multiplier for any project.
 
 The following command you set a multiplier of 256 of the basic quota:
 ```
@@ -213,8 +225,12 @@ This will override the general quotamultiplier only for storage.
 
 Other possible multiplier which can be set individually are: `quotamultiplier_compute`, `quotamultiplier_network`, `quota_router`
 
+To change the quotaclass to unlimited from the `etc/classes.yaml`
+```
+$ openstack project set  --property quotaclass=unlimited democompany-webshop
+```
 
-#### Special Project: images
+#### Special project: images
 
 With this special Project you can share all images uploaded into this project to all other project in your domain which has set the property `has-shared-images`, which is by default set.
 Alsoi only the domain-admin user has access to this project, other domain users won't see this, they will find the uploaded images in their projects. 
@@ -226,7 +242,7 @@ $ python3 src/create.py --domain democompany --name images
 | name    | value               | id                               |
 |---------+---------------------+----------------------------------|
 | domain  | democompany         | a8549ef5d3d14f938b127a1cdefe3788 |
-| project | democompany-images  | 6aed2453c82ac8be2962382595dcc2d6 |
+| project | democompany-images  | 6d57f39aacbe485d87733865b1e79d03 |
 +---------+---------------------+----------------------------------+
 ```
 
@@ -253,7 +269,7 @@ $ python3 src/create.py --domain democompany --name service
 | name    | value               | id                               |
 |---------+---------------------+----------------------------------|
 | domain  | democompany         | a8549ef5d3d14f938b127a1cdefe3788 |
-| project | democompany-service | add6ca06f5afe4e37e3de05a614ee475 |
+| project | democompany-service | a5558f7338f94adea5f41858636256b5 |
 +---------+---------------------+----------------------------------+
 ```
 
@@ -269,7 +285,7 @@ This command applies quotas, networks and routers to **all** projects in the Ope
 Best is to run this command by cron, every hour to apply all pending changes, it is also possible to run this at the command line to apply changes immediately.
 
 ```
-python src/manage.py -h
+python3 src/manage.py -h
 usage: manage [-h] [--admin-domain ADMIN_DOMAIN] [--assign-admin-user] [--classes CLASSES] [--cloud CLOUD] [--config-dir DIR] [--config-file PATH] [--domain DOMAIN] [--dry-run]
               [--endpoints ENDPOINTS] [--manage-endpoints] [--manage-homeprojects] [--name NAME] [--noassign-admin-user] [--nodry-run] [--nomanage-endpoints] [--nomanage-homeprojects]
 
@@ -301,4 +317,52 @@ options:
                         The inverse of --manage-homeprojects
 ```
 
+#### Manage a specific domain only
 
+```
+$ python3 src/manage.py --domain democompany
+
+2024-04-19 14:24:02.873 | INFO     | democompany - domain_id = a8549ef5d3d14f938b127a1cdefe3788
+2024-04-19 14:24:04.886 | INFO     | democompany-images - project_id = 6d57f39aacbe485d87733865b1e79d03
+2024-04-19 14:24:04.886 | INFO     | democompany-images - project_id = 6d57f39aacbe485d87733865b1e79d03, domain_id = a8549ef5d3d14f938b127a1cdefe3788
+2024-04-19 14:24:04.953 | INFO     | democompany-images - quotaclass {'compute': {'cores': 0, 'injected_file_content_bytes': 10240, 'injected_file_path_bytes': 255, 'injected_files': 5, 'instances': 0, 'key_pairs': 0, 'metadata_items': 128, 'ram': 0, 'server_group_members': 0, 'server_groups': 0}, 'network': {'floatingip': 0, 'network': 0, 'port': 0, 'rbac_policy': 0, 'router': 0, 'security_group': 0, 'security_group_rule': 0, 'subnet': 0, 'subnetpool': 0}, 'volume': {'backup_gigabytes': 0, 'backups': 0, 'gigabytes': 1000, 'per_volume_gigabytes': 25, 'snapshots': 0, 'volumes': 100}, 'parent': 'default'}
+2024-04-19 14:24:04.953 | INFO     | democompany-images - check network quota
+2024-04-19 14:24:05.048 | INFO     | democompany-images - check compute quota
+2024-04-19 14:24:05.175 | INFO     | democompany-images - check volume quota
+2024-04-19 14:24:05.286 | INFO     | democompany-images - check if external rbac policy must be deleted (public)
+2024-04-19 14:24:05.349 | INFO     | democompany-images - check if service rbac policy must be deleted (democompany-service)
+2024-04-19 14:24:06.081 | INFO     | democompany-service - project_id = a5558f7338f94adea5f41858636256b5
+2024-04-19 14:24:06.081 | INFO     | democompany-service - project_id = a5558f7338f94adea5f41858636256b5, domain_id = a8549ef5d3d14f938b127a1cdefe3788
+2024-04-19 14:24:06.131 | INFO     | democompany-service - quotaclass {'compute': {'cores': 256, 'injected_file_content_bytes': 10240, 'injected_file_path_bytes': 255, 'injected_files': 5, 'instances': 256, 'key_pairs': 256, 'metadata_items': 128, 'ram': 262144, 'server_group_members': 256, 'server_groups': 256}, 'network': {'floatingip': 256, 'network': 256, 'port': 256, 'rbac_policy': 1024, 'router': 256, 'security_group': 256, 'security_group_rule': 1024, 'subnet': 256, 'subnetpool': 256}, 'volume': {'backup_gigabytes': 0, 'backups': 0, 'gigabytes': 0, 'per_volume_gigabytes': 0, 'snapshots': 0, 'volumes': 0}, 'parent': 'default'}
+2024-04-19 14:24:06.131 | INFO     | democompany-service - check network quota
+2024-04-19 14:24:06.212 | INFO     | democompany-service - check compute quota
+2024-04-19 14:24:06.330 | INFO     | democompany-service - check volume quota
+2024-04-19 14:24:06.467 | INFO     | democompany-service - check if external rbac policy must be created (public)
+2024-04-19 14:24:06.589 | INFO     | democompany-service - check if service rbac policy must be deleted (democompany-service)
+2024-04-19 14:24:06.840 | INFO     | democompany-webshop - project_id = 5752b6701026478f9cac122fc54eb9cb
+2024-04-19 14:24:06.840 | INFO     | democompany-webshop - project_id = 5752b6701026478f9cac122fc54eb9cb, domain_id = a8549ef5d3d14f938b127a1cdefe3788
+2024-04-19 14:24:06.915 | INFO     | democompany-webshop - quotaclass {'compute': {'cores': 4, 'injected_file_content_bytes': 10240, 'injected_file_path_bytes': 255, 'injected_files': 5, 'instances': -1, 'key_pairs': 4, 'metadata_items': 128, 'ram': 8192, 'server_group_members': 4, 'server_groups': 4}, 'network': {'floatingip': 4, 'network': 1, 'port': 20, 'rbac_policy': 10, 'router': 0, 'security_group': 5, 'security_group_rule': 20, 'subnet': 2, 'subnetpool': 1}, 'volume': {'backup_gigabytes': 40, 'backups': 8, 'gigabytes': 20, 'per_volume_gigabytes': 200, 'snapshots': 4, 'volumes': 4}, 'parent': 'default'}
+2024-04-19 14:24:06.915 | INFO     | democompany-webshop - check network quota
+2024-04-19 14:24:06.993 | INFO     | democompany-webshop - check compute quota
+2024-04-19 14:24:07.114 | INFO     | democompany-webshop - check volume quota
+2024-04-19 14:24:07.254 | INFO     | democompany-webshop - check if external rbac policy must be created (public)
+2024-04-19 14:24:07.334 | INFO     | democompany-webshop - check if service rbac policy must be deleted (democompany-service)
+```
+
+## Config files 
+
+The config files which can be used for `create.py` and `manage.py` are using the [oslo.config format](https://docs.openstack.org/oslo.config/latest/configuration/quickstart.html), you can set the command line options as `key = value pair` and create your own config files matching your setup.
+
+```yaml title="democompany.conf"
+[DEFAULT]
+cloud = admin
+domain = democompany
+```
+
+## Quota Templates 
+
+Edit the `etc/classes.yml` file if you want to change or add new quota templates
+
+## Setup Endpoints
+
+Edit the `etc/endpoints.yml` file to fit your available endpoints
