@@ -172,10 +172,10 @@ options:
 
 #### Create a Domain and inital project
 
-When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project webshop. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
+When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project `webshop`. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
 
 ```
-$ python3 src/create.py --domain democompany --name demouser
+$ python3 src/create.py --domain democompany --name webshop
 +----------------+----------------------+----------------------------------+
 | name           | value                | id                               |
 |----------------+----------------------+----------------------------------|
