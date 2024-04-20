@@ -190,7 +190,7 @@ The Ceph RGW services are deployed here without restarting the Ceph OSD services
 osism apply ceph-rgws -e ceph_handler_osds_restart=False
 ```
 
-The following parameters are available.
+The following parameters are available. Any number of parameters can be used with a single command.
 
 ```
 ceph_handler_crash_restart
@@ -221,10 +221,13 @@ same time. The OSD services themselves on a node are always restarted one after 
 and never all at the same time.
 
 ```
-osism apply ceph-rgws -e ceph_handler_osds_restart_throttle=2
+osism apply ceph-osds -e ceph_handler_osds_restart_throttle=2
 ```
 
-The following parameters are available.
+If the nodes are to be processed one after the other, `ceph_handler_osds_restart_throttle=1`
+can be used.
+
+The following parameters are available. Any number of parameters can be used with a single command.
 
 ```
 ceph_handler_crash_restart_throttle
