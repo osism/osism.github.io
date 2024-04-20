@@ -47,16 +47,53 @@ Shiny new features aren't worth the risk of total or partial data loss/corruptio
 
 The following commands can be used to quickly check the status of Ceph:
 
-```
-$ ceph -s # Print overall cluster status
-$ ceph health detail # Print detailed health information
-$ ceph osd tree # Display current OSD tree
-$ ceph df # Cluster storage usage by pool and storage class
-$ ceph osd pool ls detail # List pools with detailed configuration
-$ ceph osd df {plain|tree} {class e.g. hdd|ssd} # Get usage stats for OSDs
-$ ceph -w # Watch Ceph health messages sequentially
-$ ceph versions # List daemon versions running in the cluster
-``` 
+* Print overall cluster status
+
+  ```
+  ceph -s
+  ```
+
+* Print detailed health information
+
+  ```
+  ceph health detail
+  ```
+
+* Display current OSD tree
+
+  ```
+  ceph osd tree
+  ```
+
+* Cluster storage usage by pool and storage class
+
+  ```
+  ceph df
+  ```
+
+* List pools with detailed configuration
+
+  ```
+  ceph osd pool ls detail
+  ```
+
+* Get usage stats for OSDs
+
+  ```
+  ceph osd df {plain|tree} {class e.g. hdd|ssd}
+  ```
+
+* Watch Ceph health messages sequentially
+
+  ```
+  ceph -w
+  ```
+
+* List daemon versions running in the cluster
+
+  ```
+  ceph versions
+  ``` 
 
 Also you can run the following on each node running ceph-daemons,
 to provide further debug information about the environment:
