@@ -173,3 +173,65 @@ Step 3 is then performed **later after** the OpenStack Keystone service has been
    ```
    osism apply horizon
    ```
+
+## Avoiding service restarts
+
+:::info
+Usable from OSISM 7.0.3 onwards.
+:::
+
+If Ceph services are deployed sequentially, this can lead to unwanted service restarts.
+This can also happen if, for example, new OSDs are added later or a new control node is
+added.
+
+The Ceph RGW services are deployed here without restarting the Ceph OSD services.
+
+```
+osism apply ceph-rgws -e ceph_handler_osds_restart=False
+```
+
+The following parameters are available.
+
+```
+ceph_handler_crash_restart
+ceph_handler_mdss_restart
+ceph_handler_mgrs_restart
+ceph_handler_mons_restart
+ceph_handler_osds_restart
+ceph_handler_rbdmirrors_restart
+ceph_handler_rgws_restart
+```
+
+## Throttling service restarts
+
+:::info
+Usable from OSISM 7.0.3 onwards.
+:::
+
+Sometimes service restarts are required. For example, if the configuration has changed
+or if new OSDs have been added. It may be necessary and useful to only restart the
+services on a specific number of nodes at a specific time.
+
+Further information on throttling can be found in the
+[Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_strategies.html#restricting-execution-with-throttle).
+
+The Ceph OSD services are deployed here. If there is a restart required of other OSDs
+that are already running, these restarts are executed on a maximum of 2 nodes at the
+same time. The OSD services themselves on a node are always restarted one after the other
+and never all at the same time.
+
+```
+osism apply ceph-rgws -e ceph_handler_osds_restart_throttle=2
+```
+
+The following parameters are available.
+
+```
+ceph_handler_crash_restart_throttle
+ceph_handler_mdss_restart_throttle
+ceph_handler_mgrs_restart_throttle
+ceph_handler_mons_restart_throttle
+ceph_handler_osds_restart_throttle
+ceph_handler_rbdmirrors_restart_throttle
+ceph_handler_rgws_restart_throttle
+```
