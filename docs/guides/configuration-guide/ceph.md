@@ -96,6 +96,24 @@ vm.min_free_kbytes=4194303
    ceph_rgw_swift_compatibility: false
    ceph_rgw_swift_account_in_url: true
    ```
+4. On the nodes on which the RGW service is to be deployed, `radowsgw_interface` **or**
+   `radosgw_address` must be set in the host vars for the nodes in the inventory.
+   If `radowsgw_interface` is used, the first IPv4 address on this interface is used.
+
+   ```yaml title=inventory/host_vars/testbed-node-0.testbed.osism.xyz/vars.yml
+   ##########################################################
+   # ceph
+
+   radosgw_address: 192.168.16.10
+   ```
+
+5. The nodes on which the RGW service is to be deployed can be defined in inventory group
+   `ceph-rgw`. By default, the RGW services are deployed on the Ceph control nodes..
+
+   ```ini title="inventory/20-roles"
+   [ceph-rgw:children]
+   ceph-control
+   ```
 
 ## Extra pools
 
