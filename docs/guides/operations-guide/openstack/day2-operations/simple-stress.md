@@ -107,13 +107,6 @@ options:
 
 Running a small and simple test on your Openstack environment, using Ubuntu_22.04 image with the flavor of 2VCPUs and 8Gigabytes of RAM, starting 6 servers, 2 parallel each with a volume size of 20Gigabytes.
 
-:::note
-
-As the script tries to reach the started server via Network, be sure icmp ping is working between the Network the script is running and the Server Network.
-
-:::
-
-
 ```
 $ python src/main.py --network test-net --flavor SCS-2V-8 --image Ubuntu_22.04 --number 6 --parallel 2 --volume-size 20
 2024-04-23 11:47:16 | INFO     | Checking flavor SCS-2V-8
