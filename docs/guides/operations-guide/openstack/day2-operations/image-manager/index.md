@@ -126,10 +126,11 @@ the help of the OpenStack Image Manager.
 	 provided_until: none
        tags: []
        versions:
-	 - version: '0.6.0'
-	   url: https://github.com/cirros-dev/cirros/releases/download/0.6.0/cirros-0.6.0-x86_64-disk.img
-	   checksum: "sha256:94e1e2c94dbbae7d4bdc38e68590a1daf73c9de2d03dd693857b4b0a042548e8"
-	   build_date: 2022-09-28
+	 - version: '0.6.2'
+           url: https://github.com/cirros-dev/cirros/releases/download/0.6.2/cirros-0.6.2-x86_64-disk.img
+           checksum: "sha256:07e44a73e54c94d988028515403c1ed762055e01b83a767edf3c2b387f78ce00"
+           build_date: 2023-05-30
+
    ```
 
 3. Run the OpenStack Image Manager. It is assumed that a profile with the name `openstack` exists in the
@@ -169,7 +170,7 @@ in parentheses upon each rotation (except for the latest entry).
 
 ```yaml
 images:
-  - name: Ubuntu 16.04
+  - name: Ubuntu 24.04
     format: qcow2
     login: ubuntu
     min_disk: 8
@@ -183,25 +184,26 @@ images:
       hw_scsi_model: virtio-scsi
       hw_watchdog_action: reset
       os_distro: ubuntu
-      os_version: '16.04'
+      os_version: '24.04'
     tags: []
     versions:
-      - version: '20180928'
-        url: https://cloud-images.ubuntu.com/xenial/20180928/xenial-server-cloudimg-amd64-disk1.img
-      - version: '20181004'
-        url: https://cloud-images.ubuntu.com/xenial/20181004/xenial-server-cloudimg-amd64-disk1.img
+      - version: '20240416'
+        url: https://cloud-images.ubuntu.com/noble/20240416/noble-server-cloudimg-amd64.img
+      - version: '20240422'
+        url: https://cloud-images.ubuntu.com/noble/20240422/noble-server-cloudimg-amd64.img
 ```
+
 
 This configuration creates the following images:
 
-* **Ubuntu 16.04 (20180928)**
-* **Ubuntu 16.04**
+* **Ubuntu 24.04 (20240416)**
+* **Ubuntu 24.04**
 
 If a newer build is added, the following rotation takes place:
 
-* **Ubuntu 16.04 (20180928)** does not change
-* **Ubuntu 16.04** becomes **Ubuntu 16.04 (20181004)**
-* the new image becomes **Ubuntu 16.04**
+* **Ubuntu 24.04 (20240416)** does not change
+* **Ubuntu 24.04** becomes **Ubuntu 24.04 (20240422)**
+* the new image becomes **Ubuntu 24.04**
 
 By default the last three images will be visible. When a fourth image is added, the visibility of
 the last image in the list is changed to `community` and the image can be deleted in the future.
