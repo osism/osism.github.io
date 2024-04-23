@@ -84,7 +84,7 @@ openstack:
 ## Example migration
 
 ```shell
-(venv) conv-user@converter:~/vmware2scs$ python3 main.py -c etc/migrate-glados.yaml -n glados
+(venv) conv-user@converter:~/vmware2scs$ python3 vmware2scs.py -c etc/migrate-glados.yaml -n glados
 2024-04-23 13:25:48,808 - main:INFO - Starting
 2024-04-23 13:25:48,810 - migrator:INFO - Creating migration directory at /convert/vmware2scs/glados
 2024-04-23 13:25:48,992 - migrator:INFO - Found VM glados-42 on ESXI host esxi.example.com with id 42 and path /vmfs/volumes/13371337-1584da60-0d47-80c16e72faa0/glados-42
