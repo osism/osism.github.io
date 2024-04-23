@@ -105,7 +105,7 @@ options:
   --wait
 ```
 
-Running a simple test on your Openstack environment, using Ubuntu_22.04 image, starting 6 server 2 parallel each with a volume size of 20Gigabytes.
+Running a small and simple test on your Openstack environment, using Ubuntu_22.04 image with the flavor of 2VCPUs and 8Gigabytes of RAM, starting 6 servers, 2 parallel each with a volume size of 20Gigabytes.
 
 :::note
 
