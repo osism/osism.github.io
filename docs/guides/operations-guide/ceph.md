@@ -6,15 +6,13 @@ sidebar_label: Ceph
 
 ## Where to find docs
 
-The official Ceph documentation is located on https://docs.ceph.com/en/latest
+The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/operations/
 
 It is **strongly advised** to use the documentation for the version being used.
 
-* Pacific - https://docs.ceph.com/en/pacific
-* Quincy - https://docs.ceph.com/en/quincy
-* Reef - https://docs.ceph.com/en/reef
-
-ceph-ansible documentation is located on https://docs.ceph.com/projects/ceph-ansible/en/latest/
+* Pacific - https://docs.ceph.com/en/pacific/rados/operations/
+* Quincy - https://docs.ceph.com/en/quincy/rados/operations/
+* Reef - https://docs.ceph.com/en/reef/rados/operations/
 
 :::note
 

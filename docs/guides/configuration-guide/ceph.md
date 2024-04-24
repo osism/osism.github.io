@@ -5,6 +5,14 @@ sidebar_position: 40
 
 # Ceph
 
+The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/configuration/
+
+It is **strongly advised** to use the documentation for the version being used.
+
+* Pacific - https://docs.ceph.com/en/pacific/rados/configuration/
+* Quincy - https://docs.ceph.com/en/quincy/rados/configuration/
+* Reef - https://docs.ceph.com/en/reef/rados/configuration/
+
 ## Unique Identifier
 
 The File System ID is a unique identifier for the cluster.
