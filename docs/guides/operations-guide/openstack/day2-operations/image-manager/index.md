@@ -291,7 +291,7 @@ This makes us independent of the availability of the images in the individual up
 
 ### Updating images
 
-Some of the images are automatically updated by a CI job. The latest available build at the time of the CI job execution is mirrored and
+Some of the images are automatically updated by a [CI job](update). The latest available build at the time of the CI job execution is mirrored and
 made available as the current version.
 
 Currently, the following images are updated once a week (every Sunday at 0 am):

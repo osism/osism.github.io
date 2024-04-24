@@ -52,8 +52,8 @@ python contrib/update.py --help
 :::
 
 
-Best is to run this Script by cron, to update all Distribution Files periodically to the latest release and afterwards run Openstack Image Manager.
-The Distribution Images yaml files must exists before running the script, you can use the files from Github repo under `etc/images/` as template for your first run.
+Best is to run this Script by cron or a CI job, to update all Distribution Files periodically to the latest release and afterwards run [Openstack Image Manager](../image-manager/).
+The Distribution Image yaml files must exists before running the script, you can use the files from Github repo at `etc/images/` as template for your first run.
 
 
 ```
