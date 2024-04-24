@@ -427,7 +427,7 @@ Recovery might not start immediately and might take some time.
 You can query the status of the recovery through ``ceph pg <pgid> query``.
 Be sure to read the Ceph manual about this topic *thoroughly*:
 
-https://docs.ceph.com/en/latest/rados/operations/pg-repair/
+https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-pg/
 
 :::
 
