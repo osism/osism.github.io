@@ -1,0 +1,47 @@
+converter:
+  # path on converter host to store vmdk files
+  # and converted raw images
+  data_path: /convert/vmware2scs
+
+esxi:
+  # the ESXI host
+  host: vmhost05.example.com
+  
+  # ESXI password
+  password: nudelsuppe
+  
+  # ESXI ssh port
+  ssh-port: 22
+  
+  # Name of virtual machine to migrate
+  vm: glados-42
+
+openstack:
+  
+  target:
+    # Target flavor
+    flavor: SCS-8V-16
+    
+    # Target security group
+    security_group: 13371337-12f1-47e4-ac7a-e3a2a8813ca6
+    
+    # Target networks (name: <IP>)
+    networks:
+      - somenet: auto
+
+  env:
+    # Target openstack environment
+    OS_AUTH_TYPE: password
+    OS_AUTH_URL: https://your.keystone.example.com:32443/v3
+    OS_IDENTITY_API_VERSION: 3
+    OS_INTERFACE: public
+    OS_PASSWORD: 1337
+    OS_PROJECT_DOMAIN_NAME: Default
+    OS_PROJECT_NAME: someproject
+    OS_PROJECT_ID: 133713375cc54a1e8ea17dc27d77af2a
+    OS_USERNAME: chell
+    OS_USER_DOMAIN_NAME: Default
+    OS_VOLUME_API_VERSION: 3
+    OS_REGION_NAME: Testchamber23
+
+
