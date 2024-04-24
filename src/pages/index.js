@@ -5,7 +5,6 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Discover from '@site/src/components/Discover';
 import Adaptors from '@site/src/components/Adaptors';
-import Partners from '@site/src/components/Partners';
 import Services from '@site/src/components/Services';
 import Subscriptions from '@site/src/components/Subscriptions';
 import SoftwareModules from '@site/src/components/SoftwareModules';
@@ -45,7 +44,6 @@ export default function Home() {
         <Discover />
         <SoftwareModules />
         <Subscriptions />
-        <Partners />
       </main>
     </Layout>
   );
