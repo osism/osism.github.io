@@ -60,8 +60,8 @@ Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kom
 Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:
 
 OSISM GmbH<br/>
-Teckstraße 62<br/>
-70190 Stuttgart<br/>
+Talweg 8<br/>
+75417 Mühlacker<br/>
 Deutschland
 
 Telefon: +49 (0) 711-21957006<br/>
