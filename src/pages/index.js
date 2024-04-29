@@ -16,7 +16,7 @@ function Announcements() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <div className="container" style={{"text-align": "center", "padding-top": "2em", "padding-bottom": "2em", "font-size": "1em"}}>
-      🎉️ <b><a target="_blank" href="https://www.openstack.org/software/openstack-caracal">OpenStack Caracal 2024.1</a> is out!</b> 🥳️
+      🎉️ <b><a target="_blank" href="https://ubuntu.com/blog/canonical-releases-ubuntu-24-04-noble-numbat">Ubuntu 24.04 LTS (Noble Numbat)</a> is out!</b> 🥳️ Tests in progress, support in OSISM soon possible.
     </div>
   );
 }
