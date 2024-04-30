@@ -9,8 +9,8 @@ Teckstraße 62<br/>
 70190 Stuttgart<br/>
 Deutschland
 
-Handelsregister: HRB 756139<br/>
-Registergericht: Amtsgericht Stuttgart
+Handelsregister: HRB 750852<br/>
+Registergericht: Amtsgericht Mannheim
 
 Vertreten durch die Geschäftsführung:<br/>
 Christian Berendt
