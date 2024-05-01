@@ -9,6 +9,20 @@ sidebar_position: 10
 
 ![OSISM overview](./images/overview.drawio.png)
 
-## Archiecture
+## Architecture
 
 ![OSISM architecture ](./images/architecture.drawio.png)
+
+## Components
+
+###  Compute Plane
+
+### Control Plane
+
+### Data Plane
+
+### Management Plane
+
+### Monitoring Plane
+
+### Network Plane
