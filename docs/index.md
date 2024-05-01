@@ -5,52 +5,26 @@ sidebar_position: 10
 
 # Getting started
 
-OSISM is developing a solution for the holistic management of sustainable, sovereign
-software-defined cloud infrastructures.
+OSISM is a solution for the holistic management of sustainable, sovereign
+software-defined cloud infrastructures. It provides a solid and stable base
+for the deployment, operation and lifecycle management of on-premise cloud
+infrastructures, for public cloud data centres and, at the edge,
+for distributed systems. It is also suitable for building supercomputers and HPC
+environments. OSISM enables fast, easy and consistent management and provisioning
+of compute, storage and network resources to run cloud-native applications.
 
-OSISM is used by the [Sovereign Cloud Stack](https://scs.community/) (SCS) to manage
-the core infrastructure services.
+The documentation is organised into guides:
 
-As the basis for [pluscloud open](https://www.plusserver.com/produkte/pluscloud-open) from
-the German-based cloud service provider [PlusServer](https://www.plusserver.com) in Cologne,
-OSISM is an integral part of one of the first [Gaia-X](https://www.gaia-x.eu) compatible hosters.
-
-[Wavecon](https://www.wavecon.de/de/), owned by [noris network AG](https://www.noris.de),
-also relies on OSISM to set up and operate a completely open, standardised sovereign public
-cloud: the [Wavestack](https://www.noris.de/wavestack-cloud).
-
-We enable fast, easy and consistent management and provisioning of compute, storage and
-network resources to run cloud-native applications.
-
-Our solution provides a solid and stable base for the deployment, operation and lifecycle
-management of on-premise cloud infrastructures, for public cloud data centres and, at the edge,
-for distributed systems. OSISM is also suitable for building supercomputers and HPC
-environments.
-
-## Overview
-
-![OSISM overview](./images/overview.drawio.png)
-
-## Components
-
-### OSISM Bare-metal
-
-### OSISM Ceph
-
-### OSISM Identity & Access Management
-
-### OSISM Kubernetes
-
-### OSISM Kubernetes as a Service
-
-### OSISM Logging, Monitoring & Telemetry
-
-### OSISM Realtime Insights
-
-### OSISM OpenStack
-
-### OSISM SONiC & OVN
-
-### OSISM Privileged Access Management
-
-### OSISM Virtualization & Containerization
+* The [Concept Guide](./guides/concept-guide/) explains which components and modules make up OSISM. It also
+  explains the use cases.
+* The [Deploy Guide](./guides/deploy-guide/) explains how the nodes of a cluster are created and bootstrapped.
+  It also explains how the individual modules can be deployed.
+* The [Upgrade Guide](./guides/upgrade-guide/) explains how the individual modules can be upgraded.
+* The [Configuration Guide](./guides/configuration-guide/) explains how the individual modules can be
+  configured.
+* The [Operations Guide](./guides/operations-guide/) explains how individual tasks can be done in
+  day-to-day business in a running cluster.
+* The [Troubleshooting Guide](./guides/troubleshooting-guide/) explains how to resolve problems.
+  It is an extension of the Operations Guide.
+* The [User Guide](./guides/user-guide/) is intended for users of the individual components. It contains
+  best practices, as well as other information.
