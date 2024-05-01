@@ -589,3 +589,66 @@ The Ceph dashboard is bootstrapped with the `ceph-bootstrap-dashboard` play.
 ```
 $ osism apply ceph-bootstrap-dashboard
 ```
+
+## Second Ceph cluster
+
+With OSISM, it is possible to manage any number of independent Ceph clusters via an single OSISM
+manager using sub-environments. A sub environment is basically nothing more than another directory
+below the `environments` directory of the configuration repository with a special name.
+
+A sub-environment for Ceph always has the name `ceph.NAME`. The `ceph.NAME` directory in the
+configuration repository then contains the `configuration.yml`, `images.yml` and `secrets.yml`
+files as usual.
+
+In this example, a sub-environment `ceph.rgw` is created which is used for a Ceph cluster that
+will only be used as an RGW cluster.
+
+In comparison to the normal `ceph` environment, the groups to be used must be overwritten for a
+Ceph sub-environment. In this case, two groups are defined: `ceph.rgw` and `ceph.rgw.empty`.
+Any other groups can be used, e.g. `ceph.rgw.osd`. It is recommended to base the name of the
+groups on the name of the sub-environments.
+
+The `ceph.rgw.empty` group is important because there are plays in ceph-ansible that are executed
+when nodes are in a specific group. To explicitly avoid this, certain groups are set to the empty
+group.
+
+All available group name parameters are listed in the [[099-ceph.yml]](https://github.com/osism/defaults/blob/main/all/099-ceph.yml)
+file of the [osism/defaults](https://github.com/osism/defaults) repository.
+
+```yaml title="environments/ceph.rgw/configuration.yml"
+##########################
+# groups
+
+ceph_group_name: ceph.rgw
+
+client_group_name: ceph.rgw
+grafana_server_group_name: ceph.rgw
+iscsi_gw_group_name: ceph.rgw.empty
+mds_group_name: ceph.rgw.empty
+mgr_group_name: ceph.rgw
+mon_group_name: ceph.rgw
+nfs_group_name: ceph.rgw.empty
+osd_group_name: ceph.rgw
+rbdmirror_group_name: ceph.rgw.empty
+restapi_group_name: ceph.rgw.empty
+rgw_group_name: ceph.rgw
+rgwloadbalancer_group_name: ceph.rgw.empty
+```
+
+The groups used are then added in the inventory in the `10-custom` file.
+
+```ini title="inventory/10-custom"
+[ceph.rgw]
+testbed-node-3.testbed.osism.xyz
+testbed-node-4.testbed.osism.xyz
+testbed-node-5.testbed.osism.xyz
+
+[ceph.rgw.empty]
+```
+
+The sub environment can then be specified with all `apply` commands of the OSISM CLI. For example,
+to deploy the Ceph mon services of the `ceph.rgw` sub environment:
+
+```
+osism apply --sub rgw ceph-osds
+```
