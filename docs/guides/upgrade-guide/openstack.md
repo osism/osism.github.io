@@ -65,6 +65,15 @@ osism apply -a upgrade octavia
 This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
 this step is not necessary.
 
+We provide regularly updated images for Octavia in
+[osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
+The OSISM CLI can be used to upload the correct image depending on the OpenStack release
+used.
+
+```
+osism manage image octavia
+```
+
 ### Amphora rotation
 
 This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
