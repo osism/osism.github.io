@@ -5,13 +5,7 @@ sidebar_position: 30
 
 # Operations Guide
 
-## Node states
-
-:::note
-
-This feature is currently under development and it is only usable with latest.
-
-:::
+## Change Node states
 
 A node can be in different states. Depending on the state, different actions
 are possible or are triggered.
@@ -39,7 +33,7 @@ osism noset bootstrap NODE
 * Ansible fact: `ansible_local.osism.bootstrap`
 * State file: `/etc/osism/bootstrap`
 
-## Custom plays
+## Use of custom plays
 
 Custom Plays can be used in all environments in the configuration repository.
 
@@ -78,4 +72,29 @@ osism apply manage-service \
 osism apply manage-container \
   -e container_name=nova_compute \
   -e container_action=restart
+```
+
+## Reboot nodes
+
+When using reboot play, the node is rebooted directly. It is not ensured in
+advance that there is no more payload on the node and no services etc. are
+disabled.
+
+Reboot node `testbed-node-0.testbed.osism.xyz` and wait until the reboot has
+been completed and the system is accessible again.
+
+```
+osism apply reboot \
+  -e reboot_wait=True \
+  -e ireallymeanit=yes \
+  -l testbed-node-0.testbed.osism.xyz
+```
+
+Reboot node `testbed-node-0.testbed.osism.xyz` and do not wait for the reboot
+to complete.
+
+```
+osism apply reboot \
+  -e ireallymeanit=yes \
+  -l testbed-node-0.testbed.osism.xyz
 ```
