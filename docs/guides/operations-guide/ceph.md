@@ -499,6 +499,18 @@ See: https://docs.ceph.com/en/latest/rados/configuration/mon-config-ref
 
 ### Set number of PGs for a pool
 
+If no autoscaling of PGs is used, it is very important to adapt the PGs per pool to the
+real world when operating a Ceph cluster. If, for example, OSDs are exchanged, added, new
+nodes are added, etc., the number of PGs must also be taken into account.
+
+The [PG Calc Tool](https://docs.ceph.com/en/latest/rados/operations/pgcalc/) can be used
+to calculate a reasonable number of PGs per pool depending on all ODSs and pools.
+
+Further information on placement groups can be found in the
+[Ceph documentation](https://docs.ceph.com/en/latest/rados/operations/placement-groups/).
+You should definitely read *FACTORS RELEVANT TO SPECIFYING PG_NUM* and *CHOOSING THE NUMBER OF PGS*
+there.
+
 ```
 $ ceph osd pool set <poolname> pg_num <num_pgs>
 ```
