@@ -3,6 +3,22 @@ sidebar_label: Nova
 ---
 # Nova
 
+## Get all servers on a node
+
+```
+openstack --os-cloud admin server list --all-projects --host testbed-node-0
+```
+
+## Stop all servers running on a node
+
+```
+for server in $(openstack --os-cloud admin server list --all-projects --host testbed-node-0 --vm-state active -f value -c ID | tr -d '\r'); do
+    echo stopping server $server
+    openstack --os-cloud admin server stop $server
+    sleep 2
+done
+```
+
 ## Disable & enable a compute service
 
 ```
