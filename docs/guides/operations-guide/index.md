@@ -98,3 +98,13 @@ osism apply reboot \
   -e ireallymeanit=yes \
   -l testbed-node-0.testbed.osism.xyz
 ```
+
+## Working with the OOB Board via IPMI
+
+### Display the IP address
+
+```
+$ sudo ipmitool lan print | grep 'IP Address'
+IP Address Source       : DHCP Address
+IP Address              : 10.10.0.100
+```
