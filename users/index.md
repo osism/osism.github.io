@@ -6,13 +6,14 @@ sidebar_position: 10
 
 ## Public Clouds
 
-| Environment    | Operating company    | Short Description                                                                                         |
-|:---------------|:---------------------|:----------------------------------------------------------------------------------------------------------|
-| Betacloud      | OSISM GmbH           | Used for CI                                                                                               |
-| CNDS           | artcodix GmbH        |                                                                                                           |
-| REGIO.cloud    | OSISM GmbH           |                                                                                                           |
-| Wavestack      | Wavecon GmbH         |                                                                                                           |
-| pluscloud open | plusserver GmbH      | Currently 4 regions, used for example for the [BayernCloud School (ByCS)](https://www.bycs.de/index.html) |
+| Environment        | Operating company                  | Short Description                                                                                         |
+|:-------------------|:-----------------------------------|:----------------------------------------------------------------------------------------------------------|
+| Betacloud          | OSISM GmbH                         | Used for CI                                                                                               |
+| CNDS               | artcodix GmbH                      |                                                                                                           |
+| pluscloud open     | plusserver GmbH                    | Currently 4 regions, used for example for the [BayernCloud School (ByCS)](https://www.bycs.de/index.html) |
+| REGIO.cloud        | OSISM GmbH                         |                                                                                                           |
+| ScaleUp Open Cloud | ScaleUp Technologies GmbH & Co. KG |                                                                                                           |
+| Wavestack          | Wavecon GmbH                       |                                                                                                           |
 
 ## Private Clouds
 
