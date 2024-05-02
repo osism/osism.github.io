@@ -23,9 +23,9 @@
     "message": "Discover more about OSISM",
     "description": "Discover title"
   },
-  "adaptors.title": {
-    "message": "Some of our happy OSISM adaptors",
-    "description": "Adaptors title"
+  "users.title": {
+    "message": "Some of our happy OSISM users",
+    "description": "Users title"
   },
   "partners.title": {
     "message": "Our partners",

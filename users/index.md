@@ -1,14 +1,10 @@
 ---
-sidebar_label: Adaptors
+sidebar_label: Users
 sidebar_position: 10
 ---
-# Adaptors
+# Users
 
 ## Public Clouds
-
-In the context of the [Sovereign Cloud Stack](https://scs.community) project, a handful
-of public clouds have been established that use OSISM to operate the cloud infrastructure
-on the base of OpenStack and, in some cases, Kubernetes, Ceph and SONiC.
 
 | Environment    | Operating company    | Short Description                                                                                         |
 |:---------------|:---------------------|:----------------------------------------------------------------------------------------------------------|
