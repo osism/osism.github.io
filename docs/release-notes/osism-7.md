@@ -35,20 +35,26 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
   * The octavia images have been rebuilt to resolve an issue when creating a LB + a listener
     with an allowed_cidr with the fully-populated API ([osism/issues#980](https://github.com/osism/issues/issues/980>))
 
+  * When upgrading the Nova and Octavia API services, there is a short downtime of the APIs.
+    This downtime is usually less than 1 minute.
+
 * During the preparation of the upgrades of the regions of the PCO a bug ([osism/issues#937](https://github.com/osism/issues/issues/973>))
   has been noticed which leads to a delay of up to 2 minutes between the necessary container stops and starts.
   This is due to a bug in the service units of all Kolla services. The bug is fixed in the current release.
   **To avoid the delay during an upgrade, a fix must be applied in advance for all service units from
   Kolla.**
 
-
   ```
   osism apply fix-gh937
   ```
+* The Kubernetes Cluster API image for the Kubernetes (K8s) 1.30 series is available. The images are now provided directly with
+  `osism manage image clusterapi`. This means that K8s Cluster API images are now available
+  for K8s series 1.27, 1.28, 1.29 and 1.30.
 
-* Kubernetes Cluster API for the 1.30 series is available. They are now provided directly with
-  `osism manage image clusterapi`. This means that Kubernetes Cluster API images are now available
-  for series 1.27, 1.28, 1.29 and 1.30.
+* All Ansible collections have been prepared for use with Ubuntu 24.04. It is currently not recommended to
+  upgrade existing clusters to Ubuntu 24.04 or to install new clusters with Ubuntu 24.04. There will be a note
+  in future release notes that announces the full support of Ubuntu 24.04. At the moment everything related to Ubuntu
+  24.04 is a technical preview.
 
 * A new role `tempest` has been added to the Ansible collection `osism.validations`. This makes it possible
   to perform significantly more tests than with the previously used `osism.validations.refstack` role. The new
