@@ -19,7 +19,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 
 :::
 
-## 7.0.3
+## 7.0.3 (20240305)
 
 **Release date: 3. May 2024**
 
@@ -38,8 +38,8 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 * During the preparation of the upgrades of the regions of the PCO a bug ([osism/issues#937](https://github.com/osism/issues/issues/973>))
   has been noticed which leads to a delay of up to 2 minutes between the necessary container stops and starts.
   This is due to a bug in the service units of all Kolla services. The bug is fixed in the current release.
-  To avoid the delay during an upgrade, a fix must be applied in advance for all  srvice units from
-  Kolla.
+  **To avoid the delay during an upgrade, a fix must be applied in advance for all  srvice units from
+  Kolla.**
 
 
   ```
@@ -143,7 +143,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 * This has nothing to do with the release itself and is just a notice. The build of the OpenStack Zed images has been
   disabled.
 
-## 7.0.2
+## 7.0.2 (20240407)
 
 **Release date: 17. April 2024**
 
@@ -181,7 +181,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 * The stable repository is now used as the default for the Netdata service in the `osism.services.netdata` role. This avoids
   package conflicts in future.
 
-## 7.0.1
+## 7.0.1 (20240327)
 
 **Release date: 27. March 2024**
 
@@ -262,7 +262,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
       user session queries with the following PR:
       [osism/container-images-kolla#412](https://github.com/osism/container-images-kolla/pull/412)
 
-## 7.0.0
+## 7.0.0 (20240320)
 
 **Release date: 20. March 2024**
 
