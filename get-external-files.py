@@ -19,7 +19,7 @@ FILES = [
         "author": "SCS Community",
         "license": "CC by Attribution 4.0 International",
         "repository": "SovereignCloudStack/openstack-health-monitor",
-        "target": "docs/guides/other-guides/openstack-health-monitor.md",
+        "target": "docs/guides/operations-guide/openstack/day2-operations/openstack-health-monitor.md",
         "header": "---\nsidebar_label: OpenStack Health Monitor\n---\n\n",
         "title": "Setting up OpenStack health monitor on Debian",
     },
