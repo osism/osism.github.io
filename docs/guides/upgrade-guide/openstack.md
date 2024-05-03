@@ -5,6 +5,14 @@ sidebar_position: 40
 
 # OpenStack
 
+:::info
+
+When upgrade the different OpenStack services, all containers must be
+restarted. When restarting the API services, there is a short downtime
+of the APIs. This downtime is usually less than 1 minute.
+
+:::
+
 ## Keystone
 
 ```
