@@ -109,7 +109,13 @@ export default function Subscriptions() {
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
-                  <td colspan="4" style={{"text-align": "left", "font-weight": "bold"}}>Services</td>
+                  <td style={{"text-align": "left"}}>Support access via video conference</td>
+                  <td></td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td colspan="4" style={{"text-align": "left", "font-weight": "bold"}}>Services & Solutions</td>
                 </tr>
                 <tr>
                   <td style={{"text-align": "left"}}>Professional Services</td>
@@ -131,6 +137,12 @@ export default function Subscriptions() {
                 </tr>
                 <tr>
                   <td style={{"text-align": "left"}}>Regular Reviews</td>
+                  <td></td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Guided Upgrades</td>
                   <td></td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
@@ -162,13 +174,25 @@ export default function Subscriptions() {
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
-                  <td style={{"text-align": "left"}}>Signed & Trusted Images</td>
+                  <td style={{"text-align": "left"}}>Signed & Trusted Packages & Images</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
                   <td style={{"text-align": "left"}}>Security Updates</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Software Bill of Materials (SBOM)</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Audit Logging</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                   <td><Checkmark className={styles.checkmark} /></td>
@@ -203,12 +227,6 @@ export default function Subscriptions() {
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
-                <tr>
-                  <td style={{"text-align": "left"}}>Guided Upgrades</td>
-                  <td></td>
-                  <td></td>
-                  <td><Checkmark className={styles.checkmark} /></td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -216,7 +234,7 @@ export default function Subscriptions() {
         <div className="row" style={{"font-size": "0.7em"}}>
           <div className={clsx('col col--12')}>
             <ol>
-              <li>Services of the Enterprise edition are provided by integration partners</li>
+              <li>Services of the Enterprise edition are provided by solution partners</li>
               <li>OpenShift, Rancher, Gardener, Kubermatic, Cluster API, and many more are directly usable</li>
               <li>Red Hat Enterprise Linux, SUSE Linux Enterprise Server, Oracle Linux, Windows Server, Windows, Rockylinux, Almalinux</li>
             </ol>

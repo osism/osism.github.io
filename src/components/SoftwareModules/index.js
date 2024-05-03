@@ -14,15 +14,6 @@ const FeatureList = [
     ),
   },
   {
-    title: (<Translate description="SONiC title">module.sonic.title</Translate>),
-    Svg: require('@site/static/img/logo-sonic.svg').default,
-    description: (
-      <>
-        <Translate description="SONiC description">module.sonic.description</Translate>
-      </>
-    ),
-  },
-  {
     title: (<Translate description="Ceph title">module.ceph.title</Translate>),
     Svg: require('@site/static/img/logo-ceph.svg').default,
     description: (
@@ -41,11 +32,11 @@ const FeatureList = [
     ),
   },
   {
-    title: (<Translate description="Gardener title">module.gardener.title</Translate>),
-    Svg: require('@site/static/img/logo-k8s.svg').default,
+    title: (<Translate description="SONiC title">module.sonic.title</Translate>),
+    Svg: require('@site/static/img/logo-sonic.svg').default,
     description: (
       <>
-        <Translate description="Gardener description">module.gardener.description</Translate>
+        <Translate description="SONiC description">module.sonic.description</Translate>
       </>
     ),
   },
@@ -59,11 +50,29 @@ const FeatureList = [
     ),
   },
   {
+    title: (<Translate description="Gardener title">module.gardener.title</Translate>),
+    Svg: require('@site/static/img/logo-k8s.svg').default,
+    description: (
+      <>
+        <Translate description="Gardener description">module.gardener.description</Translate>
+      </>
+    ),
+  },
+  {
     title: (<Translate description="Keycloak title">module.keycloak.title</Translate>),
     Svg: require('@site/static/img/logo-keycloak.svg').default,
     description: (
       <>
         <Translate description="Keycloak description">module.keycloak.description</Translate>
+      </>
+    ),
+  },
+  {
+    title: (<Translate description="Teleport title">module.teleport.title</Translate>),
+    Svg: require('@site/static/img/logo-teleport.svg').default,
+    description: (
+      <>
+        <Translate description="Teleport description">module.teleport.description</Translate>
       </>
     ),
   },
@@ -82,15 +91,6 @@ const FeatureList = [
     description: (
       <>
         <Translate description="Netdata description">module.netdata.description</Translate>
-      </>
-    ),
-  },
-  {
-    title: (<Translate description="Teleport title">module.teleport.title</Translate>),
-    Svg: require('@site/static/img/logo-teleport.svg').default,
-    description: (
-      <>
-        <Translate description="Teleport description">module.teleport.description</Translate>
       </>
     ),
   },
