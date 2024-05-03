@@ -34,7 +34,7 @@ It is not part of this guide to describe the registration with the individual cl
 providers. Please contact the respective cloud provider for this.
 
 | Product             | Provider       | Profile name     | Note                              |
-|:--------------------|:---------------|:-----------------|-----------------------------------|
+|:--------------------|:---------------|:-----------------|:----------------------------------|
 | Cleura              | Cleura         | `cleura`         |                                   |
 | Fuga Cloud          | FUGA           | `fuga`           |                                   |
 | HuaweiCloud         | HuaweiCloud    | `huaweicloud`    |                                   |
@@ -211,9 +211,19 @@ This section describes step by step how to deploy the OSISM Testbed.
 
 6. Deploy the OSISM manager and bootstrap all nodes.
 
+   <Tabs>
+   <TabItem value="testbed-deploy-latst" label="Deploy latest manager version">
    ```sh
    make ENVIRONMENT=regiocloud manager
    ```
+   </TabItem>
+   <TabItem value="testbed-deploy-stable" label="Deploy a stable manager version">
+   ```sh
+   make ENVIRONMENT=regiocloud VERSION_MANAGER=7.0.3 manager
+   ```
+   </TabItem>
+   </Tabs>
+
 
 7. Deploy all services.
 
@@ -275,7 +285,7 @@ This section describes step by step how to deploy the OSISM Testbed.
 8. After the deployment, you can log in to the manager via SSH.
 
    ```sh
-   make ENVIRONMENT=regiocloud
+   make ENVIRONMENT=regiocloud login
    ```
 
    Yo can log in to the nodes of the cluster via the manager.
@@ -305,7 +315,7 @@ This section describes how to configure and customise the OSISM Testbed.
 
 The defaults for the OpenTofu variables are intended for REGIO.cloud.
 
-| Variable                  | Default                  | Description                              |
+| Variable                  | Default                  | Note                                     |
 |:--------------------------|:-------------------------|:-----------------------------------------|
 | availability_zone         | `nova`                   |                                          |
 | ceph_version              | `quincy`                 |                                          |
