@@ -7,6 +7,8 @@ import requests
 FILES = [
     {
         "source": "https://raw.githubusercontent.com/SovereignCloudStack/docs/main/docs/02-iaas/guides/user-guide/security-groups/security-groups.md",
+        "author": "SCS Community",
+        "license": "CC by Attribution 4.0 International",
         "repository": "SovereignCloudStack/docs",
         "target": "docs/guides/user-guide/openstack/security-groups.md",
         "header": "---\nsidebar_label: Security groups\n---\n\n",
@@ -14,6 +16,8 @@ FILES = [
     },
     {
         "source": "https://raw.githubusercontent.com/SovereignCloudStack/openstack-health-monitor/main/docs/Debian12-Install.md",
+        "author": "SCS Community",
+        "license": "CC by Attribution 4.0 International",
         "repository": "SovereignCloudStack/openstack-health-monitor",
         "target": "docs/guides/other-guides/openstack-health-monitor.md",
         "header": "---\nsidebar_label: OpenStack Health Monitor\n---\n\n",
@@ -21,6 +25,8 @@ FILES = [
     },
     {
         "source": "https://raw.githubusercontent.com/SovereignCloudStack/docs/main/docs/02-iaas/guides/user-guide/user-data-backups.md",
+        "author": "SCS Community",
+        "license": "CC by Attribution 4.0 International",
         "repository": "SovereignCloudStack/docs",
         "target": "docs/guides/user-guide/openstack/user-data-backups.md",
         "header": "---\nsidebar_label: User Data Backups\n---\n\n",
@@ -38,5 +44,5 @@ for file in FILES:
         else:
             fp.write(r.content)
 
-        footer = f"\n\n_The source of this document can be found in the [{file['repository']}]({file['source']}) repository._\n"
+        footer = f"\n\n_The source of this document can be found in the [{file['repository']}]({file['source']}) repository._\n\n_Author: {file['author']}, License: {file['license']}_\n"
         fp.write(str.encode(footer))
