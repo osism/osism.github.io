@@ -6,18 +6,18 @@ sidebar_label: OSISM 7
 
 Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.github.io/docs/guides/upgrade-guide/manager).
 
-:::warning
-
-7.0.0a, 7.0.0b, 7.0.0c, 7.0.0d are pre-releases. Do not use these releases.
-
-:::
-
 | Release         | Release Date   |
 |:----------------|:---------------|
 | [7.0.3](#703)   | 3. May 2024    |
 | [7.0.2](#702)   | 17. April 2024 |
 | [7.0.1](#701)   | 27. March 2024 |
 | [7.0.0](#700)   | 20. March 2024 |
+
+:::warning
+
+7.0.0a, 7.0.0b, 7.0.0c, 7.0.0d are pre-releases. Do not use these releases.
+
+:::
 
 ## 7.0.3
 
