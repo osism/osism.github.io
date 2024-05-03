@@ -1,4 +1,5 @@
 node_modules
 .docusaurus
-docs/guides/user-guide/openstack/security-groups.md
 docs/guides/other-guides/openstack-health-monitor.md
+docs/guides/user-guide/openstack/security-groups.md
+docs/guides/user-guide/openstack/user-data-backups.md

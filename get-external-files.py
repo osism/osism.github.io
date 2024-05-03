@@ -19,6 +19,12 @@ FILES = [
         "header": "---\nsidebar_label: OpenStack Health Monitor\n---\n\n",
         "title": "Setting up OpenStack health monitor on Debian",
     },
+    {
+        "source": "https://raw.githubusercontent.com/SovereignCloudStack/docs/main/docs/02-iaas/guides/user-guide/user-data-backups.md",
+        "repository": "SovereignCloudStack/docs",
+        "target": "docs/guides/user-guide/openstack/user-data-backups.md",
+        "header": "---\nsidebar_label: User Data Backups\n---\n\n",
+    },
 ]
 
 for file in FILES:
@@ -30,8 +36,7 @@ for file in FILES:
             text = re.sub("^# .*", f"# {file['title']}", r.text)
             fp.write(str.encode(text))
         else:
-            fp.write(r.rontent)
-
+            fp.write(r.content)
 
         footer = f"\n\n_The source of this document can be found in the [{file['repository']}]({file['source']}) repository._\n"
         fp.write(str.encode(footer))
