@@ -10,10 +10,28 @@ We use Zuul CI as a CI service for OSISM. The service is not required for
 the use of OSISM itself. However, as we deploy and provide Zuul CI ourselves,
 the documentation for this is also included in the OSISM deploy guide.
 
+Our Zuul CI instance is available at
+[zuul.services.betacloud.xyz](https://zuul.services.betacloud.xyz/t/osism/status).
+
 :::
 
 `osism.services.zuul` is the Ansible role to set up Zuul CI as a single-node
 installation with Docker Compose.
+
+## The `zuul` label
+
+On CI jobs that consume a lot of resources and have long runtimes we use a label
+`zuul` to run these jobs.
+
+These CI jobs run in the [label pipeline](https://zuul.services.betacloud.xyz/t/osism/buildsets?pipeline=label)
+and are only started once after the label has been assigned. If changes are made
+to a PR, the label must first be removed and then reassigned for a new run of the
+CI jobs.
+
+The `zuul` label is usable in the following repositories:
+
+* [osism/container-images-kolla](https://github.com/osism/container-images-kolla)
+* [osism/testbed](https://github.com/osism/testbed)
 
 ## Installation
 
