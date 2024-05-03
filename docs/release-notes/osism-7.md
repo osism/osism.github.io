@@ -38,7 +38,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 * During the preparation of the upgrades of the regions of the PCO a bug ([osism/issues#937](https://github.com/osism/issues/issues/973>))
   has been noticed which leads to a delay of up to 2 minutes between the necessary container stops and starts.
   This is due to a bug in the service units of all Kolla services. The bug is fixed in the current release.
-  **To avoid the delay during an upgrade, a fix must be applied in advance for all  srvice units from
+  **To avoid the delay during an upgrade, a fix must be applied in advance for all service units from
   Kolla.**
 
 
