@@ -12,6 +12,12 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 
 :::
 
+| Release | Release Date   |
+|:--------|:---------------|
+| 7.0.3   | 3. May 2024    |
+| 7.0.2   | 17. April 2024 |
+| 7.0.1   | 27. March 2024 |
+
 ## 7.0.3
 
 **Release date: 3. May 2024**
@@ -175,3 +181,82 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
   package conflicts in future.
 
 ## 7.0.1
+
+**Release date: 27. March 2024**
+
+* It's now possible to also use custom plays in the `kolla` and in the `ceph` environments.
+  As for the other environments, custom plays can now be stored there in a e.g. `playbook-hello-world.yml`
+  file and run by using e.g. `osism apply -e kolla hello-world`.
+
+* The version of k3s has been updated to `1.29.2`. If Kubernetes is used, upgrade with
+  `osism apply kubernetes`.
+
+* There is a new parameter `ceph_custom_keys` in the `copy-ceph-keys` play. This makes
+  it possible to copy the keys from custom Ceph pools.
+
+  ```yaml
+  ceph_custom_keys:
+    - src: ceph.client.manila1.keyring
+      dest: "{{ configuration_directory }}/environments/kolla/files/overlays/manila/ceph.client.manila1.keyring"
+  ```
+
+* There is a new parameter `with_keycloak` in the cookiecutter. This can now be used to
+  select whether the keycloak integration should be prepared or not.
+
+* An error in the `ceph-pools` play has been fixed that prevented the keys from being
+  created for the pools.
+
+* The `ceph-iscsigws` play has been removed. The iSCSI gateway is in maintenance as of
+  November 2022. This means that it is no longer in active development and will not be
+  updated to add new features.
+
+* With `ceph_serial` it is now possible to define how many hosts Ansible should manage at a single time
+  in the Ceph plays.
+
+  ```
+  osism apply ceph-mgrs -e ceph_serial=1
+  ```
+
+* With `ANSIBLE_VERSION` it's now possible to overwrite the use Ansible version when working with the `run.sh`
+  script inside the manager environment.
+
+* The `osism.commons.known_hosts` role has been completely revised.
+
+  * avoid duplicate entries in the destination file
+  * avoid comments in the destination file
+  * make use of static entries possible
+
+    It's now possible to add a `known_hosts` parameter to the host_vars to
+    set static known hosts entries for a specific host. When this parameter
+    is set `ssh-keygen` will not be used to generate the known hosts entries
+    on the fly.
+
+    ```yaml
+    known_hosts:
+      - ssh-rsa AAAAB3NzaC1y...
+      - ecdsa-sha2-nistp256 AAAAE2VjZHN...
+      - ssh-ed25519 AAAAC3NzaC1...
+    ```
+
+  * make use of extra entries possible
+
+    It's now possible to add a `known_hosts_extra` parameter to the configuration
+    repository to set extra known hosts entries.
+
+
+    ```yaml
+    known_hosts_extra:
+      - testbed-node-1.testbed.osism.xyz ssh-rsa AAAAB3Nza...
+      - testbed-node-2.testbed.osism.xyz ssh-rsa AAAAB3Nza...
+    ```
+
+  * The Octavia images have been updated. If Octavia is used, an upgrade must be done
+    with `osism apply -a upgrade octavia`. We addressed the following issues.
+
+    * Backport of [openstack/octavia#896995](https://review.opendev.org/c/openstack/octavia/+/896995) to fix errors
+      when deleting LB with broken amphorae.
+
+    * Bugfix for [osism/issues#890](https://github.com/osism/issues/issues/890) (Octavia (OVN) does
+      not find existing subnet) by enabling the use of the custom CA for octavia
+      user session queries with the following PR:
+      [osism/container-images-kolla#412](https://github.com/osism/container-images-kolla/pull/412)
