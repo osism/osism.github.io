@@ -24,7 +24,7 @@ Bei OSISM glauben wir daran, dass unsere Mitarbeiter unser größtes Kapital sin
 
 * **Arbeitsausstattung**: Bei uns können Sie sich Ihre Arbeitshardware und das Betriebssystem selbst aussuchen. Auch weitere Ausstattungen wie Monitor oder Dockingstation sind kein Problem.
 
-* **Eigene Hardware im RZ & moderne Technik**: Wir leben am Puls der Zeit und nutzen keine veraltete und verstaubte Technologie. Dafür haben wir eigene Hardware (die regelmäßig aktualisiert wird) in einem RZ und betreiben darauf alle Dienste, die wir im alltäglichen Berufsalltag so brauchen.
+* **Eigene Hardware im RZ & moderne offene Technik**: Wir leben am Puls der Zeit und nutzen keine veraltete und verstaubte Technologie. Dafür haben wir eigene Hardware (die regelmäßig aktualisiert wird) in einem RZ und betreiben darauf alle open source Dienste, die wir im alltäglichen Berufsalltag so brauchen.
 
 * **Erfahrene Kollegen**: Sie können sich mit Ihren erfahrenen Kollegen austauschen und im Pair Working komplexe Fragestellungen bearbeiten. Auch über berufliche Themen hinaus ist ein Austausch erwünscht (wenn man das möchte).
 
