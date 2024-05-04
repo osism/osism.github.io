@@ -1,6 +1,5 @@
 ---
 sidebar_label: Standards
-sidebar_position: 20
 ---
 
 # Standards

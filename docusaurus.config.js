@@ -115,19 +115,6 @@ const config = {
                 href: '/docs',
               },
               {
-                label: 'Users',
-                href: '/users',
-              },
-	    ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                href: 'https://scs.community',
-                label: 'Sovereign Cloud Stack',
-              },
-              {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
               },
@@ -135,15 +122,52 @@ const config = {
                 label: 'Zuul CI',
                 href: 'https://zuul.services.betacloud.xyz/t/osism/status',
               },
-            ],
+              {
+                label: 'Users',
+                href: '/users',
+              },
+              {
+                label: 'Partners',
+                href: '/partners',
+              },
+              {
+                href: 'https://scs.community',
+                label: 'Sovereign Cloud Stack',
+              },
+	    ],
+          },
+          {
+            title: 'Comparisons',
+            items: [
+              {
+                label: 'OSISM vs. FishOS',
+                href: '/docs/appendix/comparisons#osism-vs-fishos',
+              },
+              {
+                label: 'OSISM vs. Red Hat OpenStack Services on OpenShift',
+                href: '/docs/appendix/comparisons#osism-vs-red-hat-openstack-services-on-openshift',
+              },
+              {
+                label: 'OSISM vs. Canonical OpenStack',
+                href: '/docs/appendix/comparisons#osism-vs-canonical-openstack',
+              },
+              {
+                label: 'OSISM vs. SUSE OpenStack Cloud',
+                href: '/docs/appendix/comparisons#osism-vs-suse-openstack-cloud',
+              },
+              {
+                label: 'OSISM vs. Mirantis OpenStack for Kubernetes',
+                href: '/docs/appendix/comparisons#osism-vs-mirantis-openstack-for-kubernetes',
+              },
+              {
+                label: 'OSISM vs. OpenStack Ansible',
+                href: '/docs/appendix/comparisons#osism-vs-openstack-ansible',
+              },
+	    ],
           },
           {
             title: 'Company',
             items: [
-              {
-                label: 'About Us',
-                href: '/about-us',
-              },
               {
                 label: 'Blog',
                 href: '/blog',
@@ -153,16 +177,16 @@ const config = {
                 href: '/contact-us',
               },
               {
-                label: 'Partners',
-                href: '/partners',
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/company/osism/',
+              },
+              {
+                label: 'About Us',
+                href: '/about-us',
               },
               {
                 label: 'Jobs',
                 href: '/jobs',
-              },
-              {
-                label: 'Legals',
-                href: '/legals',
               },
               {
                 label: 'Privacy Policy',
@@ -171,6 +195,10 @@ const config = {
               {
                 label: 'Terms & Conditions',
                 href: '/terms',
+              },
+              {
+                label: 'Legals',
+                href: '/legals',
               },
             ],
           },

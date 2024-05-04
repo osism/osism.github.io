@@ -1,6 +1,5 @@
 ---
 sidebar_label: Glossary
-sidebar_position: 10
 ---
 
 # Glossary
