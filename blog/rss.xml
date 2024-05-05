@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>OSISM – Sovereign Cloud Infrastructure Blog</title>
-        <link>https://your-docusaurus-test-site.com/blog</link>
+        <link>https://osism.tech/blog</link>
         <description>OSISM – Sovereign Cloud Infrastructure Blog</description>
         <lastBuildDate>Mon, 04 Mar 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
@@ -10,8 +10,8 @@
         <language>en</language>
         <item>
             <title><![CDATA[Show versions used on the manager]]></title>
-            <link>https://your-docusaurus-test-site.com/blog/2024-03-04-show-versions-used-on-the-manager</link>
-            <guid>https://your-docusaurus-test-site.com/blog/2024-03-04-show-versions-used-on-the-manager</guid>
+            <link>https://osism.tech/blog/2024-03-04-show-versions-used-on-the-manager</link>
+            <guid>https://osism.tech/blog/2024-03-04-show-versions-used-on-the-manager</guid>
             <pubDate>Mon, 04 Mar 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[The osism get versions manager command can be used to display the]]></description>
             <content:encoded><![CDATA[<p>The <code>osism get versions manager</code> command can be used to display the
@@ -24,8 +24,8 @@ for the corresponding module is listed under <code>Module Release</code>.</p>
         </item>
         <item>
             <title><![CDATA[Switch to OpenTofu]]></title>
-            <link>https://your-docusaurus-test-site.com/blog/2024-01-16-switch-to-opentofu</link>
-            <guid>https://your-docusaurus-test-site.com/blog/2024-01-16-switch-to-opentofu</guid>
+            <link>https://osism.tech/blog/2024-01-16-switch-to-opentofu</link>
+            <guid>https://osism.tech/blog/2024-01-16-switch-to-opentofu</guid>
             <pubDate>Tue, 16 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[In blog posts with the tag News,]]></description>
             <content:encoded><![CDATA[<p>In blog posts with the tag <a href="https://osism.tech/blog/tags/news" target="_blank" rel="noopener noreferrer">News</a>,
@@ -43,8 +43,8 @@ article written by Marc.</p>]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[Use of the container shell]]></title>
-            <link>https://your-docusaurus-test-site.com/blog/2024-01-16-use-of-the-container-shell</link>
-            <guid>https://your-docusaurus-test-site.com/blog/2024-01-16-use-of-the-container-shell</guid>
+            <link>https://osism.tech/blog/2024-01-16-use-of-the-container-shell</link>
+            <guid>https://osism.tech/blog/2024-01-16-use-of-the-container-shell</guid>
             <pubDate>Tue, 16 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[With the OSISM CLI it is possible to enter a shell on a container running on a node.]]></description>
             <content:encoded><![CDATA[<p>With the OSISM CLI it is possible to enter a shell on a container running on a node.</p>
@@ -57,8 +57,8 @@ running on the <code>com1069</code> node.</p>
         </item>
         <item>
             <title><![CDATA[Use of the ClusterShell]]></title>
-            <link>https://your-docusaurus-test-site.com/blog/2024-01-14-use-of-the-clustershell</link>
-            <guid>https://your-docusaurus-test-site.com/blog/2024-01-14-use-of-the-clustershell</guid>
+            <link>https://osism.tech/blog/2024-01-14-use-of-the-clustershell</link>
+            <guid>https://osism.tech/blog/2024-01-14-use-of-the-clustershell</guid>
             <pubDate>Sun, 14 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[ClusterShell is an]]></description>
             <content:encoded><![CDATA[<p><a href="https://clustershell.readthedocs.io/en/latest/intro.html" target="_blank" rel="noopener noreferrer">ClusterShell</a> is an
@@ -76,8 +76,8 @@ generated and updated by the inventory reconciler.</p>
         </item>
         <item>
             <title><![CDATA[Restart of a container on a specific node]]></title>
-            <link>https://your-docusaurus-test-site.com/blog/2024-01-12-restart-of-a-container-on-a-specific-node</link>
-            <guid>https://your-docusaurus-test-site.com/blog/2024-01-12-restart-of-a-container-on-a-specific-node</guid>
+            <link>https://osism.tech/blog/2024-01-12-restart-of-a-container-on-a-specific-node</link>
+            <guid>https://osism.tech/blog/2024-01-12-restart-of-a-container-on-a-specific-node</guid>
             <pubDate>Fri, 12 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[We not only develop OSISM, we also use it to operate our own cloud]]></description>
             <content:encoded><![CDATA[<p>We not only develop OSISM, we also use it to operate our own cloud
@@ -102,8 +102,8 @@ services one by one.</p>
         </item>
         <item>
             <title><![CDATA[Kubernetes Service Deployments]]></title>
-            <link>https://your-docusaurus-test-site.com/blog/2024-01-11-kubernetes-service-deployment</link>
-            <guid>https://your-docusaurus-test-site.com/blog/2024-01-11-kubernetes-service-deployment</guid>
+            <link>https://osism.tech/blog/2024-01-11-kubernetes-service-deployment</link>
+            <guid>https://osism.tech/blog/2024-01-11-kubernetes-service-deployment</guid>
             <pubDate>Thu, 11 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[New big and small features are constantly being added to OSISM. This makes using OSISM]]></description>
             <content:encoded><![CDATA[<p>New big and small features are constantly being added to OSISM. This makes using OSISM
