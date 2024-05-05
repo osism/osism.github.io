@@ -210,6 +210,9 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  markdown: {
+    mermaid: true,
+  },
   themes: [
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
