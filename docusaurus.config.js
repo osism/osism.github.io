@@ -5,6 +5,8 @@ const themes = require('prism-react-renderer').themes;
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
+import {EnumChangefreq} from 'sitemap';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'OSISM – Sovereign Cloud Infrastructure',
@@ -47,6 +49,11 @@ const config = {
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
+        },
+        sitemap: {
+          changefreq: EnumChangefreq.DAILY,
+          priority: 1,
+          filename: 'sitemap.xml',
         },
       }),
     ],
