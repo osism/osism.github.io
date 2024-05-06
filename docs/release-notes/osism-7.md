@@ -38,14 +38,14 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
   * When upgrading the Nova and Octavia API services, there is a short downtime of the APIs.
     This downtime is usually less than 1 minute.
 
-* During the preparation of the upgrades of the regions of the PCO a bug ([osism/issues#937](https://github.com/osism/issues/issues/973))
+* During the preparation of the upgrades of the regions of the PCO a bug ([osism/issues#973](https://github.com/osism/issues/issues/973))
   has been noticed which leads to a delay of up to 2 minutes between the necessary container stops and starts.
   This is due to a bug in the service units of all Kolla services. The bug is fixed in the current release.
   **To avoid the delay during an upgrade, a fix must be applied in advance for all service units from
   Kolla.**
 
   ```
-  osism apply fix-gh937
+  osism apply fix-gh973
   ```
 * The Kubernetes Cluster API image for the Kubernetes (K8s) 1.30 series is available. The images are now provided directly with
   `osism manage image clusterapi`. This means that K8s Cluster API images are now available
