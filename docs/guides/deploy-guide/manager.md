@@ -5,6 +5,13 @@ sidebar_position: 20
 
 # Manager
 
+:::info
+
+The prerequisite for deploying the Manager node is a Seed node. What a Seed node is
+and how to prepare it is documented in the [Seed chapter of the Deploy Guide](./seed).
+
+:::
+
 The Manager node serves as the central administration instance for managing the cloud environment.
 With the help of Ansible and other OSISM-specific [components](../concept-guide/index.md), the entire
 life cycle of the system is coordinated from here (installation, customization, upgrades, etc.).
