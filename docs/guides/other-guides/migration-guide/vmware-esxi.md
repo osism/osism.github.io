@@ -4,8 +4,15 @@ sidebar_label: From VMware ESXi to OpenStack
 
 # From VMware ESXi to OpenStack
 
-With this guide we want to give you a little insight on how to move a VMware ESXi host to OpenStack,
-what you need, what can happen, what to think about.
+This guide is an example of how to perform a manual migration from a VMware ESXi host to OpenStack.
+Migration to OpenStack always depends very much on the use case. It is not possible to document an
+approach or to write a tool that works for all use cases. This guide shows one possible way. There are many ways to
+perform a migration. A migration must always be carefully prepared and tested in advance.
+
+At this point, we would also like to point out the open source project
+[cloudbase/coriolis](https://github.com/cloudbase/coriolis) from Cloudbase. There are also commercial
+providers that perform migration from VMware ESXi to OpenStack. One of the offerings is
+[Hystax Acura Live Cloud Migration](https://hystax.com/cloud-migration/).
 
 ## Scenario
 
