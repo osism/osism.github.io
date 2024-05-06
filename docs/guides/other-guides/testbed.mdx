@@ -78,26 +78,11 @@ The OSISM Testbed requires at least the following project quota when using the d
 | 6        | Ports                |                                               |
 | 1        | Router               |                                               |
 
-## Preparations
-
 ### Software
 
 * `make` must be installed on the system
 * `wireguard` or `sshuttle` must be installed on your system for vpn access
 * `virtualenv` must be installed for managing python dependencies like `ansible`
-
-### Custom CA
-
-The OSISM Testbed deployment currently uses hostnames in the domain `testbed.osism.xyz`. This is a real domain
-and we provide the DNS records matching the addresses used in the OSISM Testbed, so that once you connect to your testbed via a direct
-link or Wireguard, you can access hosts and servers by their hostname (e.g. `ssh testbed-manager.testbed.osism.xyz`).
-
-We also provide a wildcard TLS certificate signed by a custom CA for `testbed.osism.xyz` and `*.testbed.osism.xyz`.
-This CA is always used for each testbed. The CA is not regenerated and it is not planned to change this for the next 10 years.
-
-In order for these certificates to be recognized locally as valid, the CA
-[environments/kolla/certificates/ca/testbed.crt](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
-must be imported locally.
 
 ## Deployment
 
@@ -318,6 +303,19 @@ This section describes step by step how to deploy the OSISM Testbed.
 ## Usage
 
 Deployment must be completed at this point.
+
+### Custom CA
+
+The OSISM Testbed deployment currently uses hostnames in the domain `testbed.osism.xyz`. This is a real domain
+and we provide the DNS records matching the addresses used in the OSISM Testbed, so that once you connect to your testbed via a direct
+link or Wireguard, you can access hosts and servers by their hostname (e.g. `ssh testbed-manager.testbed.osism.xyz`).
+
+We also provide a wildcard TLS certificate signed by a custom CA for `testbed.osism.xyz` and `*.testbed.osism.xyz`.
+This CA is always used for each testbed. The CA is not regenerated and it is not planned to change this for the next 10 years.
+
+In order for these certificates to be recognized locally as valid, the CA
+[environments/kolla/certificates/ca/testbed.crt](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
+must be imported locally.
 
 ### VPN access
 
