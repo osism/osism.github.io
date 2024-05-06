@@ -1,9 +1,17 @@
 ---
 sidebar_label: Seed
-sidebar_position: 20
+sidebar_position: 10
 ---
 
 # Seed
+
+:::info
+
+The prerequisite for the deployment of a cluster is a configuration repository.
+What a configuration repository is and how it is created is described in the
+[Configuration Guide](../configuration-guide/configuration-repository#creating-a-new-configuration-repository).
+
+:::
 
 The seed node is used once for the initial bootstrap of the manager node. The seed node can
 also be used to initially create and prepare the configuration repository. The seed node is

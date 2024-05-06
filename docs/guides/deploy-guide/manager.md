@@ -1,13 +1,11 @@
 ---
 sidebar_label: Manager
-sidebar_position: 30
+sidebar_position: 20
 ---
 
 # Manager
 
-## Provision the operating system of the manager
-
-The Manager Node serves as the central administration instance for managing the cloud environment.
+The Manager node serves as the central administration instance for managing the cloud environment.
 With the help of Ansible and other OSISM-specific [components](../concept-guide/index.md), the entire
 life cycle of the system is coordinated from here (installation, customization, upgrades, etc.).
 
@@ -26,7 +24,7 @@ Requirements for the manager node:
 - No manual adjustments or installations should have been made on the system apart from the basic installation
 - The system has to be accessible from the [seed node](./seed.md) via SSH
 
-## Install the manager
+## Deploy the manager service
 
 Change into the `environments/manager` directory of the configuration repository
 on the seed node. The deployment of the seed node itself is documented in the

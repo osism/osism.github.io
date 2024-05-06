@@ -1,6 +1,6 @@
 ---
 sidebar_label: Provisioning
-sidebar_position: 10
+sidebar_position: 30
 ---
 
 # Provisioning of bare-metal nodes
