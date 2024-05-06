@@ -293,14 +293,23 @@ This section describes step by step how to deploy the OSISM Testbed.
 9. If you want to verify the deployment with [refstack](https://opendev.org/openinfra/refstack) run
    `/opt/configuration/scripts/check.sh`. This step will take some time and is optional.
 
-10. If you want you can create a test project with a test user after login. It also
+10. The machine images required for the use of Kubernetes Cluster API and the amphora driver of OpenStack Octavia
+    service are not provided by default to save resources on the OSISM Testbed and improve deployment time.
+    These can be provisioned if required.
+
+    ```sh
+    /opt/configuration/scripts/bootstrap/301-openstack-octavia-amhpora-image.sh
+    /opt/configuration/scripts/bootstrap/302-openstack-k8s-clusterapi-images.sh
+    ```
+
+11. If you want you can create a test project with a test user after login. It also
     creates an instance with a volume attached to a network with a router. This step is optional.
 
     ```sh
     osism apply --environment openstack test
     ```
 
-11. When the OSISM Testbed is no longer needed, it can be deleted.
+12. When the OSISM Testbed is no longer needed, it can be deleted.
 
     ```sh
     make ENVIRONMENT=regiocloud clean
