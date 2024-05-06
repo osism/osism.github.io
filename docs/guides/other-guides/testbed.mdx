@@ -140,7 +140,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    details like username, project name or sensitive information like the password in the
    `clouds.yaml` file.
 
-   The application credentials can be found in Horizon under **Identity**. Use `OSISM testbed` as
+   The application credentials can be found in Horizon under **Identity**. Use `OSISM Testbed` as
    name and click `Create Application Credential`.
 
    ```yaml title="terraform/clouds.yaml"
@@ -321,6 +321,8 @@ Deployment must be completed at this point.
 
 ### VPN access
 
+#### Wireguard
+
 Install wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
 wireguard documentation you will find [here](https://www.wireguard.com).
@@ -339,6 +341,8 @@ Copy the `/home/dragon/wireguard-client.conf` from the manager file to your work
 for using the web endpoints on your workstation. Rename the wireguard config file to something
 like `wg-testbed-regiocloud.conf`.
 
+#### sshuttle
+
 If you do not want to use Wireguard you can also work with [sshuttle](https://github.com/sshuttle/sshuttle).
 
 ```bash
@@ -346,31 +350,35 @@ make vpn-sshuttle ENVIRONMENT=regiocloud
 killall sshuttle
 ```
 
-If you are unable to access the following domains, you can customize your local `/etc/hosts` with the following entries:
+### Static entries in `/etc/hosts`
+
+If you are unable to access the following domains, you can customize your local `/etc/hosts`
+with the following static entries. This may be necessary, for example, if you use Pi-hole and
+all DNS entries from a public DNS with a non-public IP address are filtered.
 
 ```bash
-# OSISM testbed Hosts
-192.168.16.5   ara.testbed.osism.xyz ara
-192.168.16.5   cgit.testbed.osism.xyz cgit
-192.168.16.5   flower.testbed.osism.xyz flower
-192.168.16.5   homer.testbed.osism.xyz homer
-192.168.16.5   netbox.testbed.osism.xyz netbox
+# OSISM Testbed hosts
+192.168.16.5   ara.testbed.osism.xyz             ara
+192.168.16.5   cgit.testbed.osism.xyz            cgit
+192.168.16.5   flower.testbed.osism.xyz          flower
+192.168.16.5   homer.testbed.osism.xyz           homer
+192.168.16.5   netbox.testbed.osism.xyz          netbox
 192.168.16.5   testbed-manager.testbed.osism.xyz testbed-manager
-192.168.16.5   nexus.testbed.osism.xyz nexus
-192.168.16.5   phpmyadmin.testbed.osism.xyz phpmyadmin
-192.168.16.9   api-int.testbed.osism.xyz api-int
-192.168.16.10  testbed-node-0.testbed.osism.xyz testbed-node-0
-192.168.16.11  testbed-node-1.testbed.osism.xyz testbed-node-1
-192.168.16.12  testbed-node-2.testbed.osism.xyz testbed-node-2
-192.168.16.13  testbed-node-3.testbed.osism.xyz testbed-node-3
-192.168.16.14  testbed-node-4.testbed.osism.xyz testbed-node-4
-192.168.16.15  testbed-node-5.testbed.osism.xyz testbed-node-5
-192.168.16.16  testbed-node-6.testbed.osism.xyz testbed-node-6
-192.168.16.17  testbed-node-7.testbed.osism.xyz testbed-node-7
-192.168.16.18  testbed-node-8.testbed.osism.xyz testbed-node-8
-192.168.16.19  testbed-node-9.testbed.osism.xyz testbed-node-9
-192.168.16.100 keycloak.testbed.osism.xyz keycloak
-192.168.16.254 api.testbed.osism.xyz api
+192.168.16.5   nexus.testbed.osism.xyz           nexus
+192.168.16.5   phpmyadmin.testbed.osism.xyz      phpmyadmin
+192.168.16.9   api-int.testbed.osism.xyz         api-int
+192.168.16.10  testbed-node-0.testbed.osism.xyz  testbed-node-0
+192.168.16.11  testbed-node-1.testbed.osism.xyz  testbed-node-1
+192.168.16.12  testbed-node-2.testbed.osism.xyz  testbed-node-2
+192.168.16.13  testbed-node-3.testbed.osism.xyz  testbed-node-3
+192.168.16.14  testbed-node-4.testbed.osism.xyz  testbed-node-4
+192.168.16.15  testbed-node-5.testbed.osism.xyz  testbed-node-5
+192.168.16.16  testbed-node-6.testbed.osism.xyz  testbed-node-6
+192.168.16.17  testbed-node-7.testbed.osism.xyz  testbed-node-7
+192.168.16.18  testbed-node-8.testbed.osism.xyz  testbed-node-8
+192.168.16.19  testbed-node-9.testbed.osism.xyz  testbed-node-9
+192.168.16.100 keycloak.testbed.osism.xyz        keycloak
+192.168.16.254 api.testbed.osism.xyz             api
 ```
 
 ### Webinterfaces
