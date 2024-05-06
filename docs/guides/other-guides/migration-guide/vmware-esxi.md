@@ -4,40 +4,38 @@ sidebar_label: From VMware ESXi to OpenStack
 
 # From VMware ESXi to OpenStack
 
-## Intro
-
 With this guide we want to give you a little insight on how to move a VMware ESXi host to OpenStack,
 what you need, what can happen, what to think about.
 
-## The scenario
+## Scenario
 
-- Source: ESXi 7.0 host
-- Destination: OpenStack
-- a security group (`web_ssh`) is already available at the destination 
-- a Linux converter host is installed and ready, we also have root access to it
-- an IPv4 address (`10.50.40.230`) will be given manually out of a preconfigured network
-- we migrate one host with a kernel newer then 2.6.25 with two scsi harddrives attached and one networkcard
-- destination openstack using Libvirt/KVM as virtualisation
-- the converter host has access to ESXi and the OpenStack environment over IP network
+* Source: ESXi 7.0 host
+* Destination: OpenStack
+* a security group (`web_ssh`) is already available at the destination
+* a Linux converter host is installed and ready, we also have root access to it
+* an IPv4 address (`10.50.40.230`) will be given manually out of a preconfigured network
+* we migrate one host with a kernel newer then 2.6.25 with two scsi harddrives attached and one networkcard
+* destination openstack using Libvirt/KVM as virtualisation
+* the converter host has access to ESXi and the OpenStack environment over IP network
 
-## Things required for migration 
+## Requirements
 
-- VMware credentials
-  - SSH enabled on ESXi host
-  - access to the webinterface of the ESXi host
-- OpenStack credentials
+* VMware credentials
+  * SSH enabled on ESXi host
+  * access to the webinterface of the ESXi host
+* OpenStack credentials
  
-- Linux packages installed on the coverter, in this case it is an Ubuntu 22.04
+* Linux packages installed on the coverter, in this case it is an Ubuntu 22.04
 
-  ```
+  ```sh
   apt-get install qemu-utils python3-openstackclient
   ```
  
-- twice the space of the largest vmdk disc image on the converter or nfs access to the image files with enough storage
+* twice the space of the largest vmdk disc image on the converter or nfs access to the image files with enough storage
 
-## Pre Checks
+## Prechecks
 
-Check the fstab file of your VMware ESXI hostyou want to move. See how all the discs or paritions are mounted.
+Check the `/etc/fstab` file of your VMware ESXi host you want to move. See how all the discs or paritions are mounted.
 If they are all mounted by LVM or UUID you do not need to change anything.
 
 ```txt title="cat /etc/fstab"
@@ -49,7 +47,7 @@ If they are all mounted by LVM or UUID you do not need to change anything.
 /dev/mapper/vgdata-lvsrv /srv           ext4    defaults        0       2
 ```
 
-If they are mounted like `/dev/sda` it is better to change the fstab to UUID mounting using `blkid`.
+If they are mounted like `/dev/sda` it is better to change the `/etc/fstab` to UUID mounting using `blkid`.
   
 Replace these entries with `UUID=filesystems_uuid` and add the rest of the line same as with the devicenames.
 
@@ -81,7 +79,7 @@ This depends on the udev or systemd setup of your specific system.
 
 It needs to be changed to either DCHP if you want to use floating IPs or static IP of the new network.
 
-## Lets start migrating 
+## Migration
 
 :::note
 
@@ -188,7 +186,7 @@ openstack image list
 +--------------------------------------+------------------------------+--------+
 ```
 
-## How to create your Server
+### How to create your server
 
 The previously imported images need to be copied to a volume so the server is also able to evict to other hosts in the cluster,
 so lets create and start our server in OpenStack.
@@ -240,7 +238,7 @@ openstack server create --flavor SCS-8V-16 \
  --os-compute-api-version 2.90 testing-host
 ```
 
-### Show your new Server
+### Show your new server
 
 ```
 openstack server list
@@ -262,9 +260,9 @@ openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc
 +----------+--------------------------------------+--------------------------------------+------+------------------------+--------------------------------------+--------------------------------------+
 ```
 
-### Howto access the VNC console
+### How to access the VNC console
 
-To get the VNC URL for console Login use:
+To get the VNC URL for console login use:
 
 ```
 openstack console url show 71a8b930-4212-434a-8891-afdeeb1802dc
@@ -282,7 +280,6 @@ This will print out the VNC URL for the videoconsole connection to your host.
 Now the server will boot and be available. 
 
 Maybe you need to tweak the network setup if it is still not accessible.
-
 To do this, you could use the VNC console of the OpenStack host:
 
 Login and then setup the network card if you have not already done that before host had been shutdown.
@@ -294,8 +291,6 @@ another host with the same images.
 ## Last words
 
 In this little guide, we only can give a sneak peak of what you need to do with a simple VMware ESXi host.
-
 More complex setups needs consulting, planning and testing as there a several scenarios out there which
 cannot be handled like this.
-
 Especially if you have terrabytes of data to move or graphics- or AIcards in you VMware ESXi hosts.
