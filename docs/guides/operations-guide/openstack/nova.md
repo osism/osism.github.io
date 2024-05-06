@@ -128,3 +128,7 @@ libhugetlbfs: ERROR: Line too long when parsing mounts
    2097152        0        0        0        *
 1073741824      512      512      512
 ```
+
+## Quality of Service (QoS)
+
+* https://docs.openstack.org/nova/latest/admin/resource-limits.html

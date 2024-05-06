@@ -57,7 +57,9 @@ Only for a specific project:
 $ docker exec -it cinder_api cinder-manage quota sync --project-id PROJECT_ID
 ```
 
-## QoS policies
+## Quality of Service (QoS)
+
+* https://docs.openstack.org/cinder/latest/admin/basic-volume-qos.html
 
 Create `default` volume QoS policy that allows 1000 read IOPS and 1000 write IOPS.
 
