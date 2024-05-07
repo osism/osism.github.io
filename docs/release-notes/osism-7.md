@@ -6,12 +6,13 @@ sidebar_label: OSISM 7
 
 Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.github.io/docs/guides/upgrade-guide/manager).
 
-| Release         | Release Date   |
-|:----------------|:---------------|
-| [7.0.3](#703)   | 3. May 2024    |
-| [7.0.2](#702)   | 17. April 2024 |
-| [7.0.1](#701)   | 27. March 2024 |
-| [7.0.0](#700)   | 20. March 2024 |
+| Release                  | Release Date   |
+|:-------------------------|:---------------|
+| [7.0.4](#704-20240507)   | 7. May 2024    |
+| [7.0.3](#703-20240503)   | 3. May 2024    |
+| [7.0.2](#702-20240407)   | 17. April 2024 |
+| [7.0.1](#701-20240327)   | 27. March 2024 |
+| [7.0.0](#700-20240320)   | 20. March 2024 |
 
 :::warning
 
@@ -19,11 +20,17 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 
 :::
 
-## 7.0.3 (20240503)
+## 7.0.4 (20240507)
 
-**Release date: 3. May 2024**
+Release date: 7. May 2024
 
-* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+Due to an error in `osism/sbom` repository, the Nova and Octavia images were not updated as
+originally stated in the release notes for OSISM 7.0.3. Therefore it was unfortunately necessary
+to release a 7.0.4 which contains the correct SBOM. In 7.0.4 nothing has changed except the SBOM.
+The correct images for Nova and Octavia are now included in 7.0.4 and the bugs listed below have
+been fixed. An update of the Manager Service must be done and then, if required, an update of Nova
+and Octavia can be updated as originally planned for OSISM 7.0.3. We apologise for the mistake and
+the resulting effort.
 
 * The OpenStack service images for Octavia and Nova have been rebuilt. Upgrades of the Octavia
   and Nova services are recommended. No upgrades of other OpenStack and associated
@@ -37,6 +44,15 @@ Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.g
 
   * When upgrading the Nova and Octavia API services, there is a short downtime of the APIs.
     This downtime is usually less than 1 minute.
+
+
+## 7.0.3 (20240503)
+
+**Release date: 3. May 2024**
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images have not been rebuilt. No upgrade of OpenStack is required.
 
 * During the preparation of the upgrades of the regions of the PCO a bug ([osism/issues#973](https://github.com/osism/issues/issues/973))
   has been noticed which leads to a delay of up to 2 minutes between the necessary container stops and starts.
