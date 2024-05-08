@@ -590,6 +590,43 @@ The Ceph dashboard is bootstrapped with the `ceph-bootstrap-dashboard` play.
 $ osism apply ceph-bootstrap-dashboard
 ```
 
+### Configuring the openstack loadbalancer to expose the ceph dashboard
+
+The ceph dashboard runs in an active/standby configuration. In its default standby instances will
+redirect to the active instance. Most deployments will want to use the openstack loadbalancer to
+expose the ceph dashboard on the internal network and direct traffic directly to the active
+instance.
+
+In this scenario the dashboard should be configured to return an http error with status `404` on
+standby instances.
+
+```yaml title="environments/ceph/configuration.yml"
+ceph_dashboard_standby_behaviour: error
+ceph_dashboard_standby_error_status_code: 404
+```
+
+Create a loadbalancer configuration
+
+```jinja2 title="environments/kolla/files/overlays/haproxy/services.d/ceph_dashboard.cfg"
+
+{%- set internal_tls_bind_info = 'ssl crt /etc/haproxy/certificates/haproxy-internal.pem' if kolla_enable_tls_internal|bool else '' %}
+
+listen ceph_dashboard
+  option httpchk
+  http-check expect status 200,404
+  http-check disable-on-404
+  {{ "bind %s:%s %s"|e|format(kolla_internal_vip_address, 8140, internal_tls_bind_info)|trim() }}
+{% for host in groups['ceph-mgr'] %}
+  server {{ hostvars[host]['ansible_facts']['hostname'] }} {{ hostvars[host]['monitor_address'] }}:7000 check inter 2000 rise 2 fall 5
+{% endfor %}
+```
+
+and apply it.
+
+```
+$ osism apply -a reconfigure loadbalancer
+```
+
 ## Second Ceph cluster
 
 With OSISM, it is possible to manage any number of independent Ceph clusters via an single OSISM
