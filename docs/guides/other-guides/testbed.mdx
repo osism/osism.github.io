@@ -187,6 +187,11 @@ This section describes step by step how to deploy the OSISM Testbed.
    make prepare
    ```
 
+   If any error occurs during preparation and you want to run the preparation
+   again, it is important to run `make wipe-local-install` first. Otherwise the
+   preparation will not be redone completely and necessary parts will be missing
+   later on.
+
 5. Create the infrastructure with OpenTofu.
 
    ```sh
