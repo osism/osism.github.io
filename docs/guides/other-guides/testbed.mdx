@@ -116,8 +116,12 @@ This section describes step by step how to deploy the OSISM Testbed.
    documentation  of the cloud provider you are using or their support for details.
 
    [REGIO.cloud](https://regio.digital) is used as an example here. The cloud name in `clouds.yaml`
-   and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. If another cloud
-   is used, replace `regiocloud` with the respective profile name [from the table above](#cloud-access).
+   and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. It is important that
+   the name of the cloud in `clouds.yaml` matches the name of the environment to be used. The names must
+   be identical. It is currently not possible to name the cloud `regiocloud-123` in `clouds.yaml` if the
+   environment is `regiocloud`.
+
+   If another cloud is used, replace `regiocloud` with the respective profile name [from the table above](#cloud-access).
 
    <Tabs>
    <TabItem value="testbed-cloud-access-with-app-credentials" label="Application Credentials">
