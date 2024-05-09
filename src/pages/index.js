@@ -16,7 +16,7 @@ function Announcements() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <div className="container" style={{"text-align": "center", "padding-top": "2em", "padding-bottom": "2em", "font-size": "1em"}}>
-      🎉️ <b><a href="https://osism.tech/docs/release-notes/osism-7#703-20240503">OSISM 7.0.3 (20240503)</a> is out!</b> 🥳️
+      🎉️ <b><a href="https://osism.tech/docs/release-notes/osism-7#704-20240507">OSISM 7.0.4 (20240507)</a> is out!</b> 🥳️
     </div>
   );
 }
@@ -26,8 +26,9 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <h1 style={{"font-size": "3em"}}><Translate description="Homepage title">homepage.title</Translate></h1>
-        <p style={{"font-size": "1.5em"}}><Translate description="Homepage subtitle">homepage.subtitle</Translate></p>
+        <h1 style={{"font-size": "3em", "text-justify": "auto"}}><Translate description="Homepage title">homepage.title</Translate></h1>
+        <p style={{"font-size": "1.5em", "text-justify": "auto"}}><Translate description="Homepage subtitle">homepage.subtitle</Translate></p>
+        <p style={{"font-size": "1.5em", "text-justify": "auto"}}>Get your own private cloud now and save up to 90% compared to the public cloud</p>
       </div>
     </header>
   );
