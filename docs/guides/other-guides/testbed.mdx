@@ -347,9 +347,12 @@ make vpn-wireguard ENVIRONMENT=regiocloud
 If you want to connect to the OSISM Testbed from multiple clients, change the client IP
 address in the downloaded configuration file to be different on each client.
 
-Copy the `/home/dragon/wireguard-client.conf` from the manager file to your workstation. This is necessary
-for using the web endpoints on your workstation. Rename the wireguard config file to something
-like `wg-testbed-regiocloud.conf`.
+If you only want to download the Wireguard configuration, you can use the `vpn-wireguard-config`
+target. The configuration is then available in the file `wg-testbed-regiocloud.conf`, for example.
+
+```bash
+make vpn-wireguard-config ENVIRONMENT=regiocloud
+```
 
 #### sshuttle
 
