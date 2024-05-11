@@ -5,11 +5,11 @@ sidebar_position: 10
 
 # Concept Guide
 
-## Overview
+## Highlevel Overview
 
 ![OSISM overview](./images/overview.drawio.png)
 
-## Architecture
+## Logical Process Architecture
 
 ![OSISM architecture ](./images/architecture.drawio.png)
 
