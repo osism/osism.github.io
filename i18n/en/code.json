@@ -11,9 +11,13 @@
     "message": "Get your data center ready for the cloud",
     "description": "Homepage title"
   },
-  "homepage.subtitle": {
+  "homepage.subtitle1": {
     "message": "We provide sovereign cloud infrastructure for enterprises, service providers & ISVs",
-    "description": "Homepage subtitle"
+    "description": "Homepage subtitle1"
+  },
+  "homepage.subtitle2": {
+    "message": "Get your own private cloud now and save up to 90% compared to the public cloud",
+    "description": "Homepage subtitle2"
   },
   "homepage.pagetitle": {
     "message": "OSISM – Sovereign Cloud Infrastructure",

@@ -11,9 +11,13 @@
     "message": "Machen Sie Ihr Rechenzentrum fit für die Cloud",
     "description": "Homepage title"
   },
-  "homepage.subtitle": {
+  "homepage.subtitle1": {
     "message": "Wir bieten souveräne Cloud-Infrastruktur für Unternehmen, Service Provider und ISVs",
-    "description": "Homepage subtitle"
+    "description": "Homepage subtitle1"
+  },
+  "homepage.subtitle2": {
+    "message": "Sparen Sie mit Ihrer eigenen Private Cloud bis zu 90% im Vergleich zur Public Cloud",
+    "description": "Homepage subtitle2"
   },
   "homepage.pagetitle": {
     "message": "OSISM – Souveräne Cloud-Infrastruktur",

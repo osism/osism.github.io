@@ -27,8 +27,8 @@ function HomepageHeader() {
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <h1 style={{"font-size": "3em", "text-justify": "auto"}}><Translate description="Homepage title">homepage.title</Translate></h1>
-        <p style={{"font-size": "1.5em", "text-justify": "auto"}}><Translate description="Homepage subtitle">homepage.subtitle</Translate></p>
-        <p style={{"font-size": "1.5em", "text-justify": "auto"}}>Get your own private cloud now and save up to 90% compared to the public cloud</p>
+        <p style={{"font-size": "1.5em", "text-justify": "auto"}}><Translate description="Homepage subtitle1">homepage.subtitle1</Translate></p>
+        <p style={{"font-size": "1.5em", "text-justify": "auto"}}><Translate description="Homepage subtitle2">homepage.subtitle2</Translate></p>
         <div className="button button--secondary button--lg">
           <a href="mailto:info@osism.tech?subject=OSISM Demo"><Translate description="Homepage CTA1">homepage.cta1</Translate></a>
         </div>
