@@ -44,3 +44,8 @@
   margin: 0 auto;
   max-width: 1360px;
 }
+
+.button {
+    white-space:normal !important;
+    word-wrap: break-word;
+}
