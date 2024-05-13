@@ -30,3 +30,17 @@
   --ifm-color-primary-lightest: #f3de95;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* https://github.com/facebook/docusaurus/issues/7562#issuecomment-1176697127 */
+@media (min-width: 1416px) {
+  .main-wrapper {
+    align-self: center;
+    max-width: 1400px;
+    width: 1400px;
+  }
+}
+
+.navbar .navbar__inner {
+  margin: 0 auto;
+  max-width: 1360px;
+}
