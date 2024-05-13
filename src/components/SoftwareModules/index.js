@@ -6,6 +6,8 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: (<Translate description="OpenStack title">module.openstack.title</Translate>),
+    name: (<>OpenStack</>),
+    linktarget: "/docs/guides/concept-guide/components/openstack",
     Svg: require('@site/static/img/logo-openstack.svg').default,
     description: (
       <>
@@ -15,6 +17,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Ceph title">module.ceph.title</Translate>),
+    name: (<>Ceph</>),
+    linktarget: "/docs/guides/concept-guide/components/ceph",
     Svg: require('@site/static/img/logo-ceph.svg').default,
     description: (
       <>
@@ -24,6 +28,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Ironic title">module.ironic.title</Translate>),
+    name: (<>Ironic</>),
+    linktarget: "/docs/guides/concept-guide/components/ironic",
     Svg: require('@site/static/img/logo-ironic.svg').default,
     description: (
       <>
@@ -33,6 +39,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="SONiC title">module.sonic.title</Translate>),
+    name: (<>SONiC</>),
+    linktarget: "/docs/guides/concept-guide/components/sonic",
     Svg: require('@site/static/img/logo-sonic.svg').default,
     description: (
       <>
@@ -42,6 +50,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="K3s title">module.k3s.title</Translate>),
+    name: (<>K3S</>),
+    linktarget: "/docs/guides/concept-guide/components/k3s",
     Svg: require('@site/static/img/logo-k3s.svg').default,
     description: (
       <>
@@ -51,6 +61,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Gardener title">module.gardener.title</Translate>),
+    name: (<>Gardener</>),
+    linktarget: "/docs/guides/concept-guide/components/gardener",
     Svg: require('@site/static/img/logo-k8s.svg').default,
     description: (
       <>
@@ -60,6 +72,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Cluster APItitle">module.cluster_api.title</Translate>),
+    name: (<>Cluster API</>),
+    linktarget: "/docs/guides/concept-guide/components/clusterapi",
     Svg: require('@site/static/img/logo-cluster-api.svg').default,
     description: (
       <>
@@ -69,6 +83,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Keycloak title">module.keycloak.title</Translate>),
+    name: (<>Keycloak</>),
+    linktarget: "/docs/guides/concept-guide/components/keycloak",
     Svg: require('@site/static/img/logo-keycloak.svg').default,
     description: (
       <>
@@ -78,6 +94,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Teleport title">module.teleport.title</Translate>),
+    name: (<>Teleport</>),
+    linktarget: "/docs/guides/concept-guide/components/teleport",
     Svg: require('@site/static/img/logo-teleport.svg').default,
     description: (
       <>
@@ -87,6 +105,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Prometheus title">module.prometheus.title</Translate>),
+    name: (<>Prometheus & Grafana</>),
+    linktarget: "/docs/guides/concept-guide/components/prometheus",
     Svg: require('@site/static/img/logo-grafana.svg').default,
     description: (
       <>
@@ -96,6 +116,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Netdata title">module.netdata.title</Translate>),
+    name: (<>Netdata</>),
+    linktarget: "/docs/guides/concept-guide/components/netdata",
     Svg: require('@site/static/img/logo-netdata.svg').default,
     description: (
       <>
@@ -105,6 +127,8 @@ const FeatureList = [
   },
   {
     title: (<Translate description="Proxmox title">module.proxmox.title</Translate>),
+    name: (<>Proxmox VE</>),
+    linktarget: "/docs/guides/concept-guide/components/proxmox",
     Svg: require('@site/static/img/logo-proxmox.svg').default,
     description: (
       <>
@@ -114,7 +138,7 @@ const FeatureList = [
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({Svg, title, description, name, linktarget}) {
   return (
     <div className={clsx('col col--6')}>
       <div className="text--left">
@@ -123,6 +147,7 @@ function Feature({Svg, title, description}) {
       <div className="text--left">
         <h3>{title}</h3>
         <p>{description}</p>
+        <p><a style={{"margin-top": "20px", "width": "100%"}} className="button button--secondary button--lg" href={linktarget}>More information on {name}</a></p>
       </div>
     </div>
   );
