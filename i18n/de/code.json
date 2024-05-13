@@ -31,6 +31,10 @@
     "message": "Mehr über OSISM erfahren",
     "description": "Discover title"
   },
+  "discover.cta1": {
+    "message": "Senden Sie uns eine E-Mail an info@osism.tech, um weitere Informationen zu erhalten oder eine Demo zu vereinbaren.",
+    "description": "Discover CTA1"
+  },
   "users.title": {
     "message": "Einige unserer zufriedenen OSISM Anwender",
     "description": "Users title"
