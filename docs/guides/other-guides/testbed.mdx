@@ -528,6 +528,38 @@ Cl7E7XvvUoFr1N8Gh09vaYLvRvYgCGV05xBUSs76qCHa0qElPUsk56s5ft4ALrSrzD
 
 ## Advanced Usage
 
+### External API
+
+It is possible to provide the OpenStack APIs and the OpenStack Dashboard via the manager's public IP address.
+This is not enabled by default, with the exception of the OTC profile. To provide the OpenStack APIs and the
+OpenStack dashboard via the public IP address of the manager, the following changes are necessary in the
+`terraform/environments/regiocloud.tfvars` file. If a cloud other than the REGIO.cloud is used, the profile
+of the other cloud is changed accordingly.
+
+1. Add the customisation `external_api`. This customisation makes sure that the required security group rules
+   are created for the various OpenStack APIs and the OpenStack dashboard.
+
+   ```
+   # customisation:external_api
+   ```
+
+2. Set parameter `external_api` to `true`. This makes sure that all necessary changes are made in the configuration
+   repository when the Manager service is deployed. It is correct that this is added as a comment.
+
+   ```
+   external_api = true
+   ```
+
+3. After the deployment of the Manager service and the OpenStack services, the OpenStack APIs and the OpenStack
+   dashboard can be reached via a DNS name. The service [traefik.me](https://traefik.me) is used for the DNS record.
+   Run the following two commands on the manager node to get the DNS record.
+
+   ```
+   $ source /opt/manager-vars.sh
+   $ echo "api-${MANAGER_PUBLIC_IP_ADDRESS//./-}.traefik.me"
+   api-80-158-46-219.traefik.me
+   ```
+
 ### Change versions
 
 1. Go to `/opt/configuration` on `testbed-manager`
