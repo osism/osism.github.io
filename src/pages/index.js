@@ -29,6 +29,12 @@ function HomepageHeader() {
         <h1 style={{"font-size": "3em", "text-justify": "auto"}}><Translate description="Homepage title">homepage.title</Translate></h1>
         <p style={{"font-size": "1.5em", "text-justify": "auto"}}><Translate description="Homepage subtitle">homepage.subtitle</Translate></p>
         <p style={{"font-size": "1.5em", "text-justify": "auto"}}>Get your own private cloud now and save up to 90% compared to the public cloud</p>
+        <div className="button button--secondary button--lg">
+          <a href="mailto:info@osism.tech?subject=OSISM Demo"><Translate description="Homepage CTA1">homepage.cta1</Translate></a>
+        </div>
+        <div className="button button--secondary button--lg" style={{"margin-left": "20px"}}>
+          <a href="#supported-components"><Translate description="Software module title">module.title</Translate></a>
+        </div>
       </div>
     </header>
   );

@@ -1,4 +1,12 @@
 {
+  "sidebar.documentation.title": {
+    "message": "Dokumentation",
+    "description": "Documentation title"
+  },
+  "homepage.cta1": {
+    "message": "Jetzt eine Demo vereinbaren",
+    "description": "Homepage CTA1"
+  },
   "homepage.title": {
     "message": "Machen Sie Ihr Rechenzentrum fit für die Cloud",
     "description": "Homepage title"

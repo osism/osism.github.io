@@ -3,6 +3,10 @@
     "message": "Documentation",
     "description": "Documentation title"
   },
+  "homepage.cta1": {
+    "message": "Schedule a demo now",
+    "description": "Homepage CTA1"
+  },
   "homepage.title": {
     "message": "Get your data center ready for the cloud",
     "description": "Homepage title"

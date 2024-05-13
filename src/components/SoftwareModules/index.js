@@ -125,7 +125,7 @@ export default function SoftwareModules () {
       <div className="container">
         <div className="row">
           <div className={clsx('col col--12')}>
-            <h1><Translate description="Software module title">module.title</Translate></h1>
+            <h1 id="supported-components"><Translate description="Software module title">module.title</Translate></h1>
           </div>
         </div>
         <div className="row">
