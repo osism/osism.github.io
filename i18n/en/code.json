@@ -91,6 +91,14 @@
     "message": "Kubernetes as a Service (KaaS) with Gardener offers a dynamic, scalable, and efficient solution for managing containerized applications across multiple cloud environments. Embrace the power of Kubernetes, optimized by Gardener's advanced automation and cluster management capabilities. With Gardener, you get seamless integration, simplified operations, and enhanced security for your Kubernetes clusters, whether on-premises, in the cloud, or in a hybrid setting.",
     "description": "Gardener description"
   },
+  "module.cluster_api.title": {
+    "message": "Kubernetes as a Service (KaaS) mit Cluster API",
+    "description": "Cluster API title"
+  },
+  "module.cluster_api.description": {
+    "message": "Cluster API is a Kubernetes sub-project focused on providing declarative APIs and tooling to simplify provisioning, upgrading, and operating multiple Kubernetes clusters.",
+    "description": "Cluster API description"
+  },
   "module.k3s.title": {
     "message": "Kubernetes (K8s) with K3S",
     "description": "K3S title"

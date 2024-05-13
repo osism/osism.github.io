@@ -9,37 +9,33 @@ sidebar_position: 10
 
 ![OSISM overview](./images/overview.drawio.png)
 
-## Logical Process Architecture
+### Infrastructure as a Service (IaaS) with OpenStack
 
-![OSISM architecture ](./images/architecture.drawio.png)
+### Software Defined Storage (SDS) with Ceph
 
-## Modules
+### Bare Metal as a Service (BMaaS) with Ironic
 
-### OSISM Bare-metal
+### Software Defined Networking (SDN) with SONiC & OVN
 
-### OSISM Ceph
+### Kubernetes (K8s) with K3S
 
-### OSISM Identity & Access Management
+### Kubernetes as a Service (KaaS) with Gardener
 
-### OSISM Kubernetes
+### Kubernetes as a Service (KaaS) with Cluster API
 
-### OSISM Kubernetes as a Service
+### Identity & Access Management with Keycloak
 
-### OSISM Logging, Monitoring & Telemetry
+### Privileged Access Management (PAM) to all infrastructure with Teleport
 
-### OSISM Realtime Insights
+### Logging, Monitoring & Telemetry with Prometheus & Grafana
 
-### OSISM OpenStack
+### Realtime insights with Netdata
 
-### OSISM SONiC & OVN
+### Simple virtualization & containerization with Proxmox VE
 
-### OSISM Privileged Access Management
+## Layered view
 
-### OSISM Virtualization & Containerization
-
-## Components
-
-###  Compute Plane
+### Compute Plane
 
 ### Control Plane
 
@@ -50,3 +46,7 @@ sidebar_position: 10
 ### Monitoring Plane
 
 ### Network Plane
+
+## Logical Process Architecture
+
+![OSISM architecture](./images/architecture.drawio.png)
