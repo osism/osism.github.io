@@ -7,7 +7,7 @@ sidebar_label: OpenStack
 ## Reboot a compute node
 
 1. Live migrate all instances running on the compute node
-   with the help of the [OpenStack Resource Manager](./day2-operations/resource-manager#live-migration)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager#live-migration)
 
 2. Ensure that no more instances are running on the compute node
 
@@ -115,10 +115,10 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    with `osism apply configuration`
 
 2. Live migrate all instances running on the compute node
-   with the help of the [OpenStack Resource Manager](./day2-operations/resource-manager#live-migration)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager#live-migration)
 
 3. Evacuate all instances on the compute node
-   with the help of the [OpenStack Resource Manager](./day2-operations/resource-manager#evacutation)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager#evacutation)
 
 4. Ensure that no more instances are running on the compute node
 
