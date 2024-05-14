@@ -4,13 +4,13 @@ sidebar_label: Keystone
 
 # Keystone
 
-* List all users of a project
+* List all users of a project who have been assigned the `member` role
 
   ```
-  $ openstack --os-cloud admin user list --project test --domain test
-  +----------------------------------+------+
-  | ID                               | Name |
-  +----------------------------------+------+
-  | 0c1afedc7f674c7f901cdf2775a5dd06 | test |
-  +----------------------------------+------+
+  $ openstack --os-cloud admin role assignment list --names --role member --project test
+  +--------+-----------+-------+-----------+--------+--------+-----------+
+  | Role   | User      | Group | Project   | Domain | System | Inherited |
+  +--------+-----------+-------+-----------+--------+--------+-----------+
+  | member | test@test |       | test@test |        |        | False     |
+  +--------+-----------+-------+-----------+--------+--------+-----------+
   ```
