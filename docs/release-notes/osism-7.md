@@ -76,8 +76,8 @@ the resulting effort.
   to perform significantly more tests than with the previously used `osism.validations.refstack` role. The new
   role will be used in the testbed in future to significantly increase the number of tests performed in the CI.
 
-* New documentation for the [project manager](https://osism.tech/docs/guides/operations-guide/openstack/day2-operations/project-manager)
-  and the [simple stress](https://osism.tech/docs/guides/operations-guide/openstack/day2-operations/simple-stress).
+* New documentation for the [project manager](https://osism.tech/docs/guides/operations-guide/openstack/tools/project-manager)
+  and the [simple stress](https://osism.tech/docs/guides/operations-guide/openstack/tools/simple-stress).
 
 * When using the reboot play, it is now possible to wait for the reboot to be completed ([osism/issues#758](https://github.com/osism/issues/issues/758)).
 
