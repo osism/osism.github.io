@@ -1,8 +1,8 @@
 ---
-sidebar_label: From VMware ESXi to OpenStack
+sidebar_label: Migrate from VMware ESXi to OpenStack
 ---
 
-# From VMware ESXi to OpenStack
+# Migrate from VMware ESXi to OpenStack
 
 This guide is an example of how to perform a manual migration from a VMware ESXi host to OpenStack.
 Migration to OpenStack always depends very much on the use case. It is not possible to document an
