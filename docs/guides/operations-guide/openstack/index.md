@@ -21,13 +21,15 @@ sidebar_label: OpenStack
    osism apply reboot -l NODE -e ireallymeanit=yes
    ```
 
-4. Re-enable the compute service
+4. Wait for the compute node to reboot
+
+5. Re-enable the compute service
 
    ```
    openstack --os-cloud admin compute service set --enable --disable-reason "" NODE nova-compute
    ```
 
-5. Check compute service
+6. Check compute service
 
    ```
    openstack --os-cloud admin compute service list --host NODE --service nova-compute
@@ -35,59 +37,86 @@ sidebar_label: OpenStack
 
 ## Add a new compute node
 
-```
-osism apply operator -u osism -l NODE
-osism apply bootstrap -l NODE
-```
+1. Add the operater user
 
-If FRR is used:
+   ```
+   osism apply operator -u osism -l NODE
+   ```
 
-```
-osism apply frr -l NODE
-```
+2. Run the bootstrap
 
-```
-osism apply common -l NODE
-osism apply openvswitch -l NODE
-osism apply ovn -l NODE
-osism apply prometheus -l NODE
-osism apply prometheus -l control
-osism apply ceilometer -l NODE
-osism apply neutron -l NODE
-osism apply nova -l NODE
-```
+   ```
+   osism apply bootstrap -l NODE
+   ```
 
-If Scaphandre is used:
+3. When a routed network fabric is used deploy the FRR service (optional)
 
-```
-osism apply scaphandre -l NODE
-```
+   ```
+   osism apply frr -l NODE
+   ```
 
-If Netdata is used:
+4. Deploy logging service and Prometheus exporters
 
-```
-osism apply netdata -l NODE
-```
+   ```
+   osism apply common -l NODE
+   osism apply prometheus -l NODE
+   osism apply scaphandre -l NODE
+   ```
 
-Refresh the `/etc/hosts` file:
+5. Deploy network services
 
-```
-osism apply hosts
-```
+   ```
+   osism apply openvswitch -l NODE
+   osism apply ovn -l NODE
+   osism apply neutron -l NODE
+   ```
 
-Refresh the SSH client configuration file:
+   If you do not use the OVN SDN skip `osism apply ovn -l NODE`.
 
-```
-osism apply sshconfig
-```
+6. Deploy compute services
 
-Add compute node to the known hosts file:
+   ```
+   osism apply nova -l NODE
+   ```
 
-```
-osism apply known-hosts
-```
+7. Deploy telemetry services (optional)
 
-Containers that run on a compute node. Versions may differ.
+   ```
+   osism apply ceilometer -l NODE
+   ```
+
+8. Deploy Netdata service (optional)
+
+   ```
+   osism apply netdata -l NODE
+   ```
+
+9. Add compute node to Prometheus monitoring
+
+   ```
+   osism apply prometheus -l monitoring
+   ```
+
+10. Refresh the `/etc/hosts` file
+
+    ```
+    osism apply hosts
+    ```
+
+11. Refresh the SSH client configuration file
+
+    ```
+    osism apply sshconfig
+    ```
+
+12. Add compute node to the known hosts file
+
+    ```
+    osism apply known-hosts
+    ```
+
+Containers that run on a compute node. Versions may differ. There is no `ceilometer_compute` container
+if you have not deployed the optional OpenStack telemetry service.
 
 ```
 $ docker ps
@@ -193,4 +222,10 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
 
     ```
     osism apply prometheus -l monitoring
+    ```
+
+13. Remove compute node from the known hosts file
+
+    ```
+    osism apply known-hosts
     ```
