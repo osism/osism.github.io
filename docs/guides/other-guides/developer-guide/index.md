@@ -27,3 +27,13 @@ repository. The example here is from the `osism.services.keycloak` role: https:/
 
 Whenever possible, upstream container images should be used. If only minor customizations are necessary,
 always work with overlay container images based on upstream container images.
+
+## How service deployment works
+
+### Docker
+
+![Service deployment with Docker](./images/service-with-docker.drawio.png)
+
+### Kubernetes
+
+![Service deployment with Kubernetes](./images/service-with-kubernetes.drawio.png)
