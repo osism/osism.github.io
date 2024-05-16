@@ -111,8 +111,8 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
 
 ## Remove a compute node
 
-1. In the configuration repository remove the compute node everywhere. Then update the configuration repository on the manager
-   with `osism apply configuration`
+1. In the configuration repository remove the compute node everywhere. Then update the configuration
+   repository on the manager with `osism apply configuration`
 
 2. Live migrate all instances running on the compute node
    with the help of the [OpenStack Resource Manager](./tools/resource-manager#live-migration)
@@ -126,23 +126,22 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    ps ax | grep qemu
    ```
 
-5. Stop all OpenStack Nova services on the compute node
+5. Stop all OpenStack compute services on the compute node
 
    ```
    systemctl stop kolla-nova_ssh-container.service
    systemctl stop kolla-nova_libvirt-container.service
    systemctl stop kolla-nova_compute-container.service
+   ```
 
 6. Delete the compute service
 
    ```
-   $ openstack --os-cloud admin compute service list
+   $ openstack --os-cloud admin compute service list --host NODE
    +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
    | ID                                   | Binary         | Host    | Zone     | Status   | State | Updated At                 |
    +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
-   | f161d739-21de-4cb0-a5d3-d21cff652697 | nova-scheduler | manager | internal | enabled  | up    | 2023-12-21T11:52:59.000000 |
-   | 646d16db-acd9-486c-bd16-8fe2c13bf198 | nova-conductor | manager | internal | enabled  | up    | 2023-12-21T11:53:04.000000 |
-   | 90345eb5-cf2f-47ef-becc-758ee36fb132 | nova-compute   | manager | nova     | disabled | down  | 2023-12-21T11:53:00.000000 |
+   | 90345eb5-cf2f-47ef-becc-758ee36fb132 | nova-compute   | NODE    | nova     | enabled  | down  | 2023-12-21T11:53:00.000000 |
    +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
    ```
 
@@ -150,26 +149,48 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    $ openstack --os-cloud admin compute service delete 90345eb5-cf2f-47ef-becc-758ee36fb132
    ```
 
-7. Refresh the facts
+7. Stop all OpenStack network services on the compute node
+
+   ```
+   systemctl stop kolla-neutron_ovn_metadata_agent-container.service
+   systemctl stop kolla-ovn_controller-container.service
+   ```
+
+8. Delete the network services
+
+   ```
+   $ openstack --os-cloud admin network agent list --host NODE
+   +--------------------------------------+----------------------+---------+-------------------+-------+-------+----------------------------+
+   | ID                                   | Agent Type           | Host    | Availability Zone | Alive | State | Binary                     |
+   +--------------------------------------+----------------------+---------+-------------------+-------+-------+----------------------------+
+   | 0a5708ea-ba8b-5fde-8187-c6b24d3cf5ed | OVN Metadata agent   | NODE    |                   | :-)   | UP    | neutron-ovn-metadata-agent |
+   | NODE                                 | OVN Controller agent | NODE    |                   | :-)   | UP    | ovn-controller             |
+   +--------------------------------------+----------------------+---------+-------------------+-------+-------+----------------------------+
+
+   $ openstack --os-cloud admin network agent delete 0a5708ea-ba8b-5fde-8187-c6b24d3cf5ed
+   $ openstack --os-cloud admin network agent delete NODE
+   ```
+
+9. Refresh the facts
 
    ```
    osism apply facts
    ```
 
-8. Refresh the `/etc/hosts` file
+10. Refresh the `/etc/hosts` file
 
-   ```
-   osism apply hosts
-   ```
+    ```
+    osism apply hosts
+    ```
 
-9. Refresh the SSH client configuration file
+11. Refresh the SSH client configuration file
 
-   ```
-   osism apply sshconfig
-   ```
+    ```
+    osism apply sshconfig
+    ```
 
-9. Remove compute node from Prometheus monitoring
+12. Remove compute node from Prometheus monitoring
 
-   ```
-   osism apply prometheus -l monitoring
-   ```
+    ```
+    osism apply prometheus -l monitoring
+    ```
