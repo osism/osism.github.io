@@ -27,11 +27,3 @@ repository. The example here is from the `osism.services.keycloak` role: https:/
 
 Whenever possible, upstream container images should be used. If only minor customizations are necessary,
 always work with overlay container images based on upstream container images.
-
-## Important daily CI jobs
-
-* [osism/container-image-ceph-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-ceph-ansible&pipeline=periodic-daily&skip=0)
-* [osism/container-image-kolla-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-kolla-ansible&pipeline=periodic-daily&skip=0)
-* [osism/container-image-osism-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-osism-ansible&pipeline=periodic-daily&skip=0)
-* [osism/container-images-kolla](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-images-kolla&pipeline=periodic-midnight&skip=0)
-* [osism/testbed](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&pipeline=periodic-daily&skip=0)

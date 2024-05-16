@@ -8,7 +8,7 @@ sidebar_label: Zuul CI
 
 We use Zuul CI as a CI service for OSISM. The service is not required for
 the use of OSISM itself. However, as we deploy and provide Zuul CI ourselves,
-the documentation for this is also included in the OSISM deploy guide.
+the documentation for this is also included in the OSISM Developer Guide.
 
 Our Zuul CI instance is available at
 [zuul.services.betacloud.xyz](https://zuul.services.betacloud.xyz/t/osism/status).
@@ -330,3 +330,11 @@ Each `project` section needs to have the `default-branch` stanza.
 Check, if the IP of the logfile server is really correct. In combination with GitHub there is a
 bug which keeps the GitHub App posting to the old IP even if the webhook IP was changed. Current
 workaround: Delete the old GitHub App and create a new one.
+
+## Important daily CI jobs
+
+* [osism/container-image-ceph-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-ceph-ansible&pipeline=periodic-daily&skip=0)
+* [osism/container-image-kolla-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-kolla-ansible&pipeline=periodic-daily&skip=0)
+* [osism/container-image-osism-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-osism-ansible&pipeline=periodic-daily&skip=0)
+* [osism/container-images-kolla](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-images-kolla&pipeline=periodic-midnight&skip=0)
+* [osism/testbed](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&pipeline=periodic-daily&skip=0)
