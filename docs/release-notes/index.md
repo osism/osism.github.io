@@ -11,15 +11,15 @@ The old release notes (before OSISM 7) can be found on the page
 There is the possibility to subscribe to the GitHub releases for
 final releases via an [Atom feed](https://github.com/osism/release/releases.atom).
 
-| Series  | Status               | Initial Release Date | Next Phase           | EOL Date     |
-|:--------|:---------------------|:---------------------|:---------------------|:-------------|
-| OSISM 7 | Maintained           | 20. March 2024       | Extended Maintenance |              |
-| OSISM 6 | Extended Maintenance | 20. September 2023   | End of life          | 20. May 2024 |
-| OSISM 5 | End of life          |                      |                      |              |
-| OSISM 4 | End of life          |                      |                      |              |
-| OSISM 3 | End of life          |                      |                      |              |
-| OSISM 2 | End of life          |                      |                      |              |
-| OSISM 1 | End of life          |                      |                      |              |
+| Series               | Status               | Initial Release Date | Next Phase           | EOL Date     |
+|:---------------------|:---------------------|:---------------------|:---------------------|:-------------|
+| [OSISM 7](./osism-7) | Maintained           | 20. March 2024       | Extended Maintenance |              |
+| OSISM 6              | Extended Maintenance | 20. September 2023   | End of life          | 20. May 2024 |
+| OSISM 5              | End of life          |                      |                      |              |
+| OSISM 4              | End of life          |                      |                      |              |
+| OSISM 3              | End of life          |                      |                      |              |
+| OSISM 2              | End of life          |                      |                      |              |
+| OSISM 1              | End of life          |                      |                      |              |
 
 Further information:
 
