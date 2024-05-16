@@ -48,11 +48,8 @@ listed there will be queried during the execution of Cookiecutter.
 
 ### Step 2: Run Cookiecutter
 
-In this example a new configuration repository is created with the default settings. The latest stable
-version of OSISM is used. The use of latest is described in the section [Using latest](#using-latest).
-
 1. The directory `output` is created and used as output volume. It is only necessary to create the empty
-   directory.
+   directory here.
 
    ```
    mkdir output
@@ -70,6 +67,16 @@ version of OSISM is used. The use of latest is described in the section [Using l
    ```
 
 3. A few parameters are requested. The parameters are documented in detail in the [Parameters reference](#parameters-reference).
+
+   If you want to use the `latest` version, this is done using the `manager_version` parameter. By default,
+   this is always set to the latest stable version.
+
+   ```
+   manager_version [7.0.4]: latest
+   ```
+
+   If the `manager_version` parameter is set to `latest` it is also possible to explicitly
+   set the `openstack_version` and the `ceph_version` explicitly.
 
    ```
    [1/19] with_ceph (1):
@@ -125,12 +132,248 @@ is not required. The public SSH key is stored in the `secrets/id_rsa.configurati
 
 The configuration repository that is initially created with the Cookiecutter is not immediately usable.
 For example, the inventory needs to be built. All other information can be found in the
-[Configuration Guide](../configuration-guide/).
+[Configuration Guide](../configuration-guide/). Use `git` to version all your configuration changes.
 
-The password for Ansible Vault encrypted files, is stored in `secrets/vaultpass`.
+The following 6 points must be changed after the initial creation of the configuration repository.
+
+1. [Secrets](#secrets)
+2. [Manager inventory](#manager-inventory)
+3. [Global inventory](#global-inventory)
+4. [DNS servers](#dns-servers)
+5. [NTP servers](#ntp-servers)
+6. [SSL certificates](#ssl-certificates)
+
+#### Secrets
+
+The password for Ansible Vault encrypted files, is stored in `secrets/vaultpass`. Since the `secrets` directory
+is not added to the configuration repository, it is important to store it in a password vault of your choice.
+
 The password of the generated Keepass file is `password`. This should be changed when using the Keepass file.
+If possible, an existing password vault should be used.
 
-Use git to version all your configuration changes.
+#### Manager inventory
+
+**Roles**
+
+* Manager role
+
+  ```ini title="environments/manager/hosts"
+  [manager]
+  manager01
+  ```
+
+**Host vars**
+
+* Ansible section
+
+  ```yaml title="environments/manager/host_vars/manager01.yml"
+  ansible_host: 192.168.16.5
+  ```
+
+* Generic section
+
+  ```yaml title="environments/manager/host_vars/manager01.yml"
+  internal_interface: eno1
+  ```
+
+* Network section
+
+  ```yaml title="environments/manager/host_vars/manager01.yml"
+  network_type: netplan
+  network_ethernets:
+    eno1:
+      addresses:
+        - "192.168.16.10/20"
+      gateway4: "192.168.16.1"
+      mtu: 1500
+  ```
+
+#### Global inventory
+
+**Roles**
+
+* Generic role
+
+  ```ini title="inventory/20-roles"
+  # The "all" group is not used in OSISM. Therefore it is important
+  # that all nodes are explicitly listed here.
+  [generic]
+  node01
+  ```
+
+* Manager role
+
+  ```ini title="inventory/20-roles"
+  # Nodes that act as manager (sometimes called deployment node)
+  # are included in this group.
+  [manager]
+  node01
+  ```
+
+* Monitoring role
+
+  ```ini title="inventory/20-roles"
+  # Nodes which are intended for monitoring services belong to
+  # this group
+  [monitoring]
+  ```
+
+* Control role
+
+  ```ini title="inventory/20-roles"
+  # Nodes that serve as controllers, so things like scheduler,
+  # API or database run there, of the environment.
+  [control]
+  ```
+
+* Compute role
+
+  ```ini title="inventory/20-roles"
+  # Virtual systems managed by OpenStack Nova are placed on
+  # nodes in this group.
+  [compute]
+  ```
+
+* Network role
+
+  ```ini title="inventory/20-roles"
+  # Network resources managed by OpenStack Neutron, such as
+  # L3 routers, are placed on these nodes. This group has nothing
+  # to do with the general network configuration.
+  [network]
+  ```
+
+* Ceph control role
+
+  ```ini title="inventory/20-roles"
+  # Nodes that serve as controllers for Ceph, so things like the
+  # Ceph Monitor service run here.
+  [ceph-control]
+  ````
+
+* Ceph resource role
+
+  ```ini title="inventory/20-roles"
+  # The storage available in these systems is provided in the
+  # form of OSDs for Ceph.
+  [ceph-resource]
+  ```
+
+* Ceph rgw role
+
+  ```ini title="inventory/20-roles"
+  [ceph-rgw:children]
+  ceph-control
+  ```
+
+**Host vars**
+
+* Ansible section
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  # NOTE: Address where the node can be reached via SSH.
+  ansible_host: 192.168.16.10
+  ```
+
+* Generic section
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  internal_interface: eno1
+
+  # NOTE: The address of the internal interface.
+  internal_address: 192.168.16.10
+  ```
+
+* Netdata section
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  netdata_host_type: client
+
+  # NOTE: Uncomment this when this node should be a Netdata server.
+  # netdata_host_type: server
+  ```
+
+* Network section
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  # NOTE: This is the initial management interface. Further interfaces can be added.
+  # DOCS: https://osism.tech/docs/guides/configuration-guide/network
+
+  network_ethernets:
+    eno1:
+      addresses:
+        - "192.168.16.10/20"
+      gateway4: "192.168.16.1"
+      mtu: 1500
+  ```
+
+* Kolla section
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  network_interface: eno1
+
+  # api_interface:
+  # bifrost_network_interface:
+  # dns_interface:
+  # kolla_external_vip_interface:
+  # migration_interface:
+  # neutron_external_interface:
+  # octavia_network_interface:
+  # storage_interface:
+  # tunnel_interface:
+  ```
+
+* Ceph section
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  # NOTE: Uncomment this when this node is a part of the Ceph cluster.
+  # monitor_address:
+  # radosgw_address:
+  ```
+
+  ```yaml title="inventory/host_vars/node01.yml"
+  # NOTE: Uncomment this when this node should be a OSD node.
+  # DOCS: https://osism.tech/docs/guides/configuration-guide/ceph#lvm-devices
+
+  # ceph_osd_devices:
+  #   sdb:
+  #   sdc:
+  #   sdd:
+  #   sde:
+  ```
+
+#### DNS servers
+
+```yaml title="environments/configuration.yml"
+resolvconf_nameserver:
+  - 8.8.8.8
+  - 9.9.9.9
+```
+
+#### NTP servers
+
+```yaml title="environments/configuration.yml"
+chrony_servers:
+  - 1.de.pool.ntp.org
+  - 2.de.pool.ntp.org
+  - 3.de.pool.ntp.org
+  - 4.de.pool.ntp.org
+```
+
+#### SSL certificates
+
+
+## Using latest
+
+If you want to use the latest version, this is done using the `manager_version` parameter. By default,
+this is always set to the latest stable version.
+
+```
+manager_version [7.0.0]: latest
+```
+
+If the `manager_version` parameter is set to `latest` it is also possible to explicitly
+set the `openstack_version` and the `ceph_version` explicitly.
 
 ## Parameter reference
 
@@ -148,7 +391,7 @@ Use git to version all your configuration changes.
 | `git_version`              | Git branch name                                                                                                                            | `main`                                    |
 | `ip_external`              | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.96.9`                            |
 | `ip_internal`              | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.32.9`                            |
-| `manager_version`          | The version of OSISM. An overview of available OSISM releases can be found on [release.osism.tech](https://release.osism.tech)             | `7.0.4`                                   |
+| `manager_version`          | The version of OSISM. An overview of available OSISM releases can be found [here](https://osism.tech/docs/release-notes/)                  | `7.0.4`                                   |
 | `name_server`              | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                         |
 | `ntp_server`               | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                         |
 | `openstack_version`        | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                  |
@@ -156,242 +399,19 @@ Use git to version all your configuration changes.
 | `with_ceph`                | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                       |
 | `with_keycloak`            | `1` to prepare Keycloak integration , `0` to not prepare Keycloak integration                                                              | `0`                                       |
 
-### Using latest
-
-If you want to use the latest version, this is done using the `manager_version` parameter. By default,
-this is always set to the latest stable version.
-
-```
-manager_version [7.0.0]: latest
-```
-
-If the `manager_version` parameter is set to `latest` it is also possible to explicitly
-set the `openstack_version` and the `ceph_version` explicitly..
-
 ## Configuration repository layout
 
-A configuration repository always has the same basic layout. This section describes
+A configuration repository always has the same layout. This section describes
 the content available in a configuration repository. In the section
 [Creating a new configuration repository](#creating-a-new-configuration-repository) is the creation
 of a new configuration repository documented.
 
-* `environments` directory
-* `inventory` directory
-* `netbox` directory (optional)
-* `requirements.txt` file
-
-  In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.
-
-* `gilt.yml` file
-
-  [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions,
-  Ansible configuration and scripts within the `environments/manager` directory.
-
-  The [current gilt.yml](https://github.com/osism/cfg-generics/blob/main/gilt.yml) file is always
-  located in the [osism/cfg-generics](https://github.com/osism/cfg-generics) repository.
-
-* `Makefile` file
-
-## Preparing a new configuration repository
-
-### Manager environment
-
-```none title="environments/manager/hosts"
-[manager]
-manager01
-```
-
-```yaml title="environments/manager/host_vars/manager01.yml"
----
-##########################################################
-# ansible
-
-ansible_host: 192.168.16.5
-
-##########################################################
-# generic
-
-internal_interface: eno1
-
-##########################################################
-# network
-
-network_type: netplan
-network_ethernets:
-  eno1:
-    addresses:
-      - "192.168.16.10/20"
-    gateway4: "192.168.16.1"
-    mtu: 1500
-```
-
-### Inventory
-
-#### Roles
-
-```none title="inventory/20-roles"
-##########################################################
-# roles
-
-# NOTE: If netbox is not used, nothing needs to be changed here. In
-#       this case this inventory is used as before. The hosts are
-#       then managed here as normal.
-#
-#       If netbox is used this file is only used to store the hosts
-#       for the initial import into the netbox.
-#
-#       After the initial import of the inventory in the netbox,
-#       the groups in this file can be emptied. The systems are
-#       then assigned to their roles via tags in the netbox.
-
-# The "all" group is not used in OSISM. Therefore it is important
-# that all nodes are explicitly listed here.
-[generic]
-node01
-
-# Nodes that act as manager (sometimes called deployment node)
-# are included in this group.
-[manager]
-node01
-
-# Nodes which are intended for monitoring services belong to
-# this group
-[monitoring]
-
-# Nodes that serve as controllers, so things like scheduler,
-# API or database run there, of the environment.
-[control]
-
-# Virtual systems managed by OpenStack Nova are placed on
-# nodes in this group.
-[compute]
-
-# Network resources managed by OpenStack Neutron, such as
-# L3 routers, are placed on these nodes. This group has nothing
-# to do with the general network configuration.
-[network]
-
-# Nodes that serve as controllers for Ceph, so things like the
-# Ceph Monitor service run here.
-[ceph-control]
-
-# The storage available in these systems is provided in the
-# form of OSDs for Ceph.
-[ceph-resource]
-
-[ceph-rgw:children]
-ceph-control
-
-# NOTE: These empty groups are only necessary if netbox is used. After
-#       the initial import of the hosts these groups can be commented
-#       out. The groups above with the initial hosts can be commented.
-#
-# [generic]
-#
-# [manager]
-#
-# [monitoring]
-#
-# [control]
-#
-# [compute]
-#
-# [network]
-#
-# [ceph-control]
-#
-# [ceph-resource]
-```
-
-### Host vars
-
-```yaml title="inventory/host_vars/node01.yml"
----
-##########################################################
-# ansible
-
-# NOTE: Address where the node can be reached via SSH.
-ansible_host: 192.168.16.10
-
-##########################################################
-# generic
-
-internal_interface: eno1
-
-# NOTE: The address of the internal interface.
-internal_address: 192.168.16.10
-
-##########################################################
-# netdata
-
-netdata_host_type: client
-
-# NOTE: Uncomment this when this node should be a Netdata server.
-
-# netdata_host_type: server
-
-##########################################################
-# network
-
-# NOTE: This is the initial management interface. Further interfaces can be added.
-# DOCS: https://osism.tech/docs/guides/configuration-guide/network
-
-network_ethernets:
-  eno1:
-    addresses:
-      - "192.168.16.10/20"
-    gateway4: "192.168.16.1"
-    mtu: 1500
-
-##########################################################
-# kolla
-
-network_interface: eno1
-
-# api_interface:
-# bifrost_network_interface:
-# dns_interface:
-# kolla_external_vip_interface:
-# migration_interface:
-# neutron_external_interface:
-# octavia_network_interface:
-# storage_interface:
-# tunnel_interface:
-
-##########################################################
-# ceph
-
-# NOTE: Uncomment this when this node is a part of the Ceph cluster.
-
-# monitor_address:
-# radosgw_address:
-
-# NOTE: Uncomment this when this node should be a OSD node.
-# DOCS: https://osism.tech/docs/guides/configuration-guide/ceph#lvm-devices
-
-# ceph_osd_devices:
-#   sdb:
-#   sdc:
-#   sdd:
-#   sde:
-```
-
-### DNS servers
-
-```yaml title="environments/configuration.yml"
-resolvconf_nameserver:
-  - 8.8.8.8
-  - 9.9.9.9
-```
-
-### NTP servers
-
-```yaml title="environments/configuration.yml"
-chrony_servers:
-  - 1.de.pool.ntp.org
-  - 2.de.pool.ntp.org
-  - 3.de.pool.ntp.org
-  - 4.de.pool.ntp.org
-```
-
-### SSL certificates
+| Directory/File                   | Description                                                                                                                                                                            |
+|:---------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `environments`                   |                                                                                                                                                                                        |
+| `inventory`                      |                                                                                                                                                                                        |
+| `netbox`                         | optional                                                                                                                                                                               |
+| `requirements.txt`               | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                            |
+| `gilt.yml`                       |                                                                                                                                                                                        |
+| `Makefile`                       |                                                                                                                                                                                        |
+| `gilt.yaml`                      | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
