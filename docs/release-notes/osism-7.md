@@ -469,6 +469,15 @@ the resulting effort.
   `/var/run/fluentd` (check [osism/issues#864](https://github.com/osism/issues/issues/864)
   for details).  We assume that other directory names have changed similarly.
 
+* If a Keystone domain with LDAP backend is used, it is important to add the `tls_cacertfile`
+  parameter in the `[ldap]` section of the corresponding domain configuration.
+
+  ```ini
+  [ldap]
+  ...
+  tls_cacertfile = /etc/ssl/certs/ca-certificates.crt
+  ```
+
 ### Known issues
 
 * If error `Couldn't fetch the key client.bootstrap-rbd at /var/lib/ceph/bootstrap-rbd/."`
