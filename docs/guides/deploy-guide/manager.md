@@ -19,7 +19,9 @@ life cycle of the system is coordinated from here (installation, customization, 
 Requirements for the manager node:
 
 - The system should have the following hardware features
-  - at least 64 GB RAM
+  - at least 64 GB RAM (We assume here that the monitoring services are also run on the manager.
+    If the manager node is only used for the sanager Service, 32 GByte is sufficient and
+    with 16 GByte it will probably also work.
   - at least 256 GB hard disk space
   - the system should be initially and permanently accessible independently of the cloud environment
     itself from the seed node
