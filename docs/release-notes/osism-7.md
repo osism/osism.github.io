@@ -6,6 +6,11 @@ sidebar_label: OSISM 7
 
 Instructions for the upgrade can be found in the [Upgrade Guide](https://osism.github.io/docs/guides/upgrade-guide/manager).
 
+The release notes build on each other. When upgrading from 6.0.2 to 7.0.4, you should
+therefore not only read and take into account the release notes for 7.0.4 but also the
+previous release notes. The same applies to an update from, for example, 7.0.2 to 7.0.4.
+The release notes for 7.0.3 must then also be taken into account.
+
 | Release                  | Release Date   |
 |:-------------------------|:---------------|
 | [7.0.4](#704-20240507)   | 7. May 2024    |
