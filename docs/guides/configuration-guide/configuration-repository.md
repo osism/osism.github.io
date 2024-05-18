@@ -159,26 +159,26 @@ If possible, an existing password vault should be used.
 
   ```ini title="environments/manager/hosts"
   [manager]
-  manager01
+  node01
   ```
 
 **Host vars**
 
 * Ansible section
 
-  ```yaml title="environments/manager/host_vars/manager01.yml"
-  ansible_host: 192.168.16.5
+  ```yaml title="environments/manager/host_vars/node01.yml"
+  ansible_host: 192.168.16.10
   ```
 
 * Generic section
 
-  ```yaml title="environments/manager/host_vars/manager01.yml"
+  ```yaml title="environments/manager/host_vars/node01.yml"
   internal_interface: eno1
   ```
 
 * Network section
 
-  ```yaml title="environments/manager/host_vars/manager01.yml"
+  ```yaml title="environments/manager/host_vars/node01.yml"
   network_type: netplan
   network_ethernets:
     eno1:
