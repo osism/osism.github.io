@@ -13,28 +13,29 @@ to deploy this Kubernetes cluster.
 
 :::
 
-Deploy the [K3s](https://k3s.io) cluster:
+1. Deploy the [K3s](https://k3s.io) cluster.
 
-```
-osism apply kubernetes
-```
+   ```
+   osism apply kubernetes
+   ```
 
-Deploy the [Kubernetes dashboard](https://github.com/kubernetes/dashboard):
+2. Deploy the [Kubernetes dashboard](https://github.com/kubernetes/dashboard):
 
-```
-osism apply kubernetes-dashboard
-```
+   ```
+   osism apply kubernetes-dashboard
+   ```
 
 ## Cluster API
 
-Deploy the [Cluster API](https://cluster-api.sigs.k8s.io) management cluster on the K3s cluster:
+1. Deploy the [Cluster API](https://cluster-api.sigs.k8s.io) management cluster on the K3s cluster:
 
-```
-osism apply clusterapi
-```
+   ```
+   osism apply clusterapi
+   ```
 
-Add the `kubeconfig` file to the configuration repository (required later by OpenStack Magnum Service):
+2. Add the `kubeconfig` file to the configuration repository (required later by OpenStack
+   Magnum Service):
 
-```
-osism apply copy-kubeconfig
-```
+   ```
+   osism apply copy-kubeconfig
+   ```

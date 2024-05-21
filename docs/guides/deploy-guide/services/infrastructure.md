@@ -8,51 +8,51 @@ sidebar_position: 10
 Common issues with deploying infrastructure services required by OpenStack
 are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
 
-## Cron, Fluentd & Kolla Toolbox
+1. Cron, Fluentd & Kolla Toolbox
 
-The common role of Kolla is used to manage the services `cron`, `fluentd`
-and `kolla-toolbox`.
+   The common role of Kolla is used to manage the services `cron`, `fluentd`
+   and `kolla-toolbox`.
 
-It is important to do this deployment before any other deployements in the Kolla
-environment, as parts of the other deployments depend on the `kolla-toolbox`
-service.
+   It is important to do this deployment before any other deployements in the Kolla
+   environment, as parts of the other deployments depend on the `kolla-toolbox`
+   service.
 
-```
-osism apply -a pull common
-osism apply common
-```
+   ```
+   osism apply -a pull common
+   osism apply common
+   ```
 
-## Loadbalancer
+2. Loadbalancer
 
-```
-osism apply -a pull loadbalancer
-osism apply loadbalancer
-```
+   ```
+   osism apply -a pull loadbalancer
+   osism apply loadbalancer
+   ```
 
-## Redis
+3. Redis
 
-```
-osism apply -a pull redis
-osism apply redis
-```
+   ```
+   osism apply -a pull redis
+   osism apply redis
+   ```
 
-## Memcached
+4. Memcached
 
-```
-osism apply -a pull memcached
-osism apply memcached
-```
+   ```
+   osism apply -a pull memcached
+   osism apply memcached
+   ```
 
-## RabbitMQ
+5. RabbitMQ
 
-```
-osism apply -a pull rabbitmq
-osism apply rabbitmq
-```
+   ```
+   osism apply -a pull rabbitmq
+   osism apply rabbitmq
+   ```
 
-## MariaDB
+6. MariaDB
 
-```
-osism apply -a pull mariadb
-osism apply mariadb
-```
+   ```
+   osism apply -a pull mariadb
+   osism apply mariadb
+   ```

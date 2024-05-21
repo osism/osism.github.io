@@ -18,85 +18,85 @@ Not all of the services listed there are supported by OSISM.
 
 :::
 
-## OpenStack client
+1. OpenStack client
 
-```
-osism apply openstackclient
-```
+   ```
+   osism apply openstackclient
+   ```
 
-## Keystone
+2. Keystone
 
-```
-osism apply -a pull keystone
-osism apply keystone
-```
+   ```
+   osism apply -a pull keystone
+   osism apply keystone
+   ```
 
-## Glance
+3. Glance
 
-```
-osism apply -a pull glance
-osism apply glance
-```
+   ```
+   osism apply -a pull glance
+   osism apply glance
+   ```
 
-## Designate
+4. Designate
 
-```
-osism apply -a pull designate
-osism apply designate
-```
+   ```
+   osism apply -a pull designate
+   osism apply designate
+   ```
 
-## Placement
+5. Placement
 
-```
-osism apply -a pull placement
-osism apply placement
-```
+   ```
+   osism apply -a pull placement
+   osism apply placement
+   ```
 
-## Cinder
+6. Cinder
 
-```
-osism apply -a pull cinder
-osism apply cinder
-```
+   ```
+   osism apply -a pull cinder
+   osism apply cinder
+   ```
 
-## Neutron
+7. Neutron
 
-```
-osism apply -a pull neutron
-osism apply neutron
-```
+   ```
+   osism apply -a pull neutron
+   osism apply neutron
+   ```
 
-## Nova
+8. Nova
 
-```
-osism apply -a pull nova
-osism apply nova
-```
+   ```
+   osism apply -a pull nova
+   osism apply nova
+   ```
 
-## Octavia
+9. Octavia
 
-```
-osism apply -a pull octavia
-osism apply octavia
-```
+   ```
+   osism apply -a pull octavia
+   osism apply octavia
+   ```
 
-### Create amphora image
+   9.1. Manage amphora image
 
-This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
-this step is not necessary.
+   This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
+   this step is not necessary.
 
-We provide regularly updated images for Octavia in
-[osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
-The OSISM CLI can be used to upload the correct image depending on the OpenStack release
-used.
+   We provide regularly updated images for Octavia in
+   [osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
+   The OSISM CLI can be used to upload the correct image depending on the OpenStack release
+   used.
 
-```
-osism manage image octavia
-```
+   ```
+   osism manage image octavia
+   ```
 
-## Horizon
+10. Horizon
 
-```
-osism apply -a pull horizon
-osism apply horizon
-```
+    ```
+    osism apply -a pull horizon
+    osism apply horizon
+    ```
