@@ -331,6 +331,21 @@ Check, if the IP of the logfile server is really correct. In combination with Gi
 bug which keeps the GitHub App posting to the old IP even if the webhook IP was changed. Current
 workaround: Delete the old GitHub App and create a new one.
 
+### Hanging jobs in a pipeline?
+
+Sometimes jobs get stuck in a pipeline and are never scheduled. They must then be removed manually
+so that they do not block other jobs.
+
+![Hanging jobs in a pipeline](./images/zuul-hanging-jobs-in-a-pipeline.png)
+
+The removal can be done with the [zuul-client](https://zuul-ci.org/docs/zuul-client/index.html).
+The two commands remove the two hanging jobs from the screenshot.
+
+```
+zuul-client dequeue --tenant osism --pipeline periodic-daily --project k8s-capi-images --ref refs/heads/main
+zuul-client dequeue --tenant osism --pipeline periodic-daily --project cfg-generics --ref refs/heads/main
+```
+
 ## Important daily CI jobs
 
 * [osism/container-image-ceph-ansible](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Fcontainer-image-ceph-ansible&pipeline=periodic-daily&skip=0)
