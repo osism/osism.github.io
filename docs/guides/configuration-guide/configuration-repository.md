@@ -153,9 +153,23 @@ If possible, an existing password vault should be used.
 
 #### Manager inventory
 
+The information required to perform the initial bootstrap of the manager node and the initial
+deployment of the manager service from the seed Node is provided in the inventory of the manager
+environment.
+
+In the Cookiecutter, a node `node01` is defined as an example in the manager inventory as well as
+in the global inventory. The name of this node must be changed to match the name of the node used
+as manager in your own cluster.
+
 **Roles**
 
 * Manager role
+
+  The name of the node on which the manager service is to be deployed is
+  added to inventory group `manager` in file `environments/manager/hosts`.
+
+  Only the `manager` inventory group is available in `environments/manager/hosts`. There are no
+  other groups there.
 
   ```ini title="environments/manager/hosts"
   [manager]
@@ -166,11 +180,20 @@ If possible, an existing password vault should be used.
 
 * Ansible section
 
+  The IP address where the node can be reached via SSH from the manager node. If DHCP is used after the
+  initial provisioning to assign an initial IP address to the nodes, the address assigned via DHCP is
+  initially used here and later changed to the static IP address.
+
   ```yaml title="environments/manager/host_vars/node01.yml"
   ansible_host: 192.168.16.10
   ```
 
 * Generic section
+
+  The network interface on which the internal communication of the cluster will take place. If the
+  internal interface does not yet exist at the time the configuration is created, e.g. because it is a
+  bond interface or VLAN interface that is only created by the static network configuration, it can be
+  already used here.
 
   ```yaml title="environments/manager/host_vars/node01.yml"
   internal_interface: eno1
@@ -178,8 +201,10 @@ If possible, an existing password vault should be used.
 
 * Network section
 
+  The static and complete network configuration of the node. Further details on creating the
+  network configuration in the [network configuration guide](/docs/guides/configuration-guide/network).
+
   ```yaml title="environments/manager/host_vars/node01.yml"
-  network_type: netplan
   network_ethernets:
     eno1:
       addresses:
@@ -189,6 +214,10 @@ If possible, an existing password vault should be used.
   ```
 
 #### Global inventory
+
+In the Cookiecutter, a node `node01` is defined as an example in the manager inventory as well as
+in the global inventory. The name of this node must be changed to match the name of the node used
+as manager in your own cluster.
 
 **Roles**
 
