@@ -5,7 +5,7 @@ sidebar_label: Packages
 # Packages
 
 With the `osism.commons.packages` role, it is possible to add packages on a node
-in a general form. The parameters should be used in the inventory or in the
+The parameters should be used in the inventory or in the
 `environments/configuration.yml` file.
 
 The role is applied during the bootstrap. The role can be applied manually using
