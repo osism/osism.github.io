@@ -1,6 +1,5 @@
 ---
 sidebar_label: Console
-sidebar_position: 15
 ---
 
 # Console

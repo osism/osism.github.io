@@ -1,6 +1,5 @@
 ---
 sidebar_label: Task
-sidebar_position: 20
 ---
 
 # Task
