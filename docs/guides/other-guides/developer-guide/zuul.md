@@ -338,12 +338,28 @@ so that they do not block other jobs.
 
 ![Hanging jobs in a pipeline](./images/zuul-hanging-jobs-in-a-pipeline.png)
 
-The removal can be done with the [zuul-client](https://zuul-ci.org/docs/zuul-client/index.html).
-The two commands remove the two hanging jobs from the screenshot.
+First create a local `.zuul.conf` configuration file in your home directory.
+
+```ini title="$HOME/.zuul.conf"
+```
+[osism]
+url=https://zuul.services.betacloud.xyz/
+auth_token=TOKEN
+tenant=osism
+```
+
+The required auth token can be generated on the Zuul control node with the `zuul-admin` client.
 
 ```
-zuul-client dequeue --tenant osism --pipeline periodic-daily --project k8s-capi-images --ref refs/heads/main
-zuul-client dequeue --tenant osism --pipeline periodic-daily --project cfg-generics --ref refs/heads/main
+docker exec -it zuul_scheduler zuul-admin create-auth-token --user USER --tenant osism --expires-in 3600 --auth-config zuul_operator
+```
+
+With the [zuul-client](https://zuul-ci.org/docs/zuul-client/index.html) it is possible to
+remove the two hanging jobs from the screenshot.
+
+```
+zuul-client --use-config osism dequeue --pipeline periodic-daily --project osism/k8s-capi-images --ref refs/heads/main
+zuul-client --use-config osism dequeue --pipeline periodic-daily --project osism/cfg-generics --ref refs/heads/main
 ```
 
 ## Important daily CI jobs
