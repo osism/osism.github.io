@@ -7,9 +7,9 @@ sidebar_position: 15
 
 ## Stable release
 
-It is recommended to use a stable release of OSISM. All available releases are listed on
-[release.osism.tech](https://release.osism.tech). Always check there in advance and do not copy
-the stable release used here as an example.
+It is recommended to use a stable release of OSISM. All available releases are listed in the
+[release notes](https://osism.tech/docs/release-notes/). Always check there in advance and do
+not copy the stable release used here as an example.
 
 In the example, OSISM release 6.0.0 is used.
 

@@ -5,8 +5,12 @@ sidebar_position: 95
 
 # Release Notes
 
-The old release notes (before OSISM 7) can be found on the page
+:::info
+
+The old release notes (before OSISM 7) can be found on the archived page
 [release.osism.tech](https://release.osism.tech).
+
+:::
 
 There is the possibility to subscribe to the GitHub releases for
 final releases via an [Atom feed](https://github.com/osism/release/releases.atom).
