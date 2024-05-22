@@ -1,6 +1,6 @@
 ---
 sidebar_label: Proxy
-sidebar_position: 99
+sidebar_position: 15
 ---
 
 # Proxy

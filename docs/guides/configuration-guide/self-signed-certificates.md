@@ -1,6 +1,6 @@
 ---
 sidebar_label: Self-signed certificates
-sidebar_position: 100
+sidebar_position: 20
 ---
 
 # Self-signed certificates

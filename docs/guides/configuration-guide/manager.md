@@ -1,6 +1,6 @@
 ---
 sidebar_label: Manager
-sidebar_position: 20
+sidebar_position: 15
 ---
 
 # Manager

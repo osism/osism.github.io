@@ -1,6 +1,6 @@
 ---
 sidebar_label: Ceph
-sidebar_position: 40
+sidebar_position: 30
 ---
 
 # Ceph
@@ -629,8 +629,8 @@ $ osism apply -a reconfigure loadbalancer
 
 ## Second Ceph cluster
 
-With OSISM, it is possible to manage any number of independent Ceph clusters via an single OSISM
-manager using sub-environments. A sub environment is basically nothing more than another directory
+With OSISM, it is possible to manage any number of independent Ceph clusters via a single OSISM
+manager service using sub-environments. A sub environment is basically nothing more than another directory
 below the `environments` directory of the configuration repository with a special name.
 
 A sub-environment for Ceph always has the name `ceph.NAME`. The `ceph.NAME` directory in the
