@@ -13,6 +13,7 @@ The release notes for 7.0.3 must then also be taken into account.
 
 | Release                  | Release Date   |
 |:-------------------------|:---------------|
+| [7.0.5](#705-20240524)   | 24. May 2024   |
 | [7.0.4](#704-20240507)   | 7. May 2024    |
 | [7.0.3](#703-20240503)   | 3. May 2024    |
 | [7.0.2](#702-20240407)   | 17. April 2024 |
@@ -24,6 +25,149 @@ The release notes for 7.0.3 must then also be taken into account.
 7.0.0a, 7.0.0b, 7.0.0c, 7.0.0d are pre-releases. Do not use these releases.
 
 :::
+
+## 7.0.5 (20240524)
+
+Release date: 24. May 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images have not been rebuilt. No upgrade of OpenStack is required.
+
+* Bugfixes in the osism.commons.network role.
+
+  * When extending the role for CentOS and RHEL, a bug was introduced that prevented existing
+    Netplan files from being deleted on Ubuntu. This has been fixed.
+
+* Bugfixes in the osism.services.netdata role.
+
+  * The repositories used were changed from Packagecloud to the repositories offered by the
+    Netdata project itself. In this way, unresolvable package dependencies on Ubuntu 22.04 are
+    now resolved.
+
+* New features in the osism.services.manager role.
+
+  * The use of the Netbox as the primary inventory is now optional, even with existing Netbox
+    integration. It is therefore important to set the parameter `manager_inventory_from_netbox`
+    to `true` before updating the manager service if the Netbox was previously used as the
+    primary inventory. By default, the Netbox is not longer used as the primary inventory.
+
+    ```yaml title="environments/manager/configuration.yml
+    manager_inventory_from_netbox: true
+    ```
+
+* New features in the osism.services.docker role.
+
+  * With the `docker_throttle_restart` parameter it's possible to throttle the service restarts.
+    By default service restarts will not be throttled.
+
+  * With the `docker_wait_after_restart` it is possible to wait `docker_wait_after_restart_seconds`
+    seconds (60 seconds by default) after the restart of the Docker service. By default it will
+    not be waited after the restart of the Docker service.
+
+* New features in the osism.services.traefik role.
+
+  * With the `traefik_configuration_extra` parameter it's possible to add
+    extra configuration to the Traefik service.
+
+  * With the `traefik_extra_ports` parameter it's possible to manage additional
+    ports with traefik. E.g. to manage port 5000 and port 8774:
+
+    ```yaml
+    traefik_extra_ports:
+      - 5000
+      - 8774
+    ```
+
+  * With the `traefik_configuration_dynamic` parameter it's possible to
+    define additional services via the file provider.
+
+    This will add a router that routes all requests on
+    `api-81-163-192-117.traefik.me` to the service-horizon service.
+
+    ```yaml
+    traefik_configuration_dyanmic:
+      tcp:
+        services:
+          service-horizon:
+            loadBalancer:
+              servers:
+                - address: "192.168.16.254:443"
+        routers:
+          router-horizon:
+            rule: "HostSNI(`api-81-163-192-117.traefik.me`)"
+            service: service-horizon
+            entryPoints:
+              - https
+            tls:
+              passthrough: true
+    ```
+
+* New features in the osism.commons.operator role.
+
+  * With the `operator_authorized_keys_delete` parameter it's possible to delete authorized keys
+    from the authorized key files of the operator user account. This is the counterpart to
+    the `operator_authorized_keys` parameter.
+
+  * With the `operator_authorized_github_accounts_delete` parameter it's possible to delete
+    all authorized keys from a list of GitHub accounts from the authorized key files of the operator
+    user account.  This is the counterpart to the `operator_authorized_github_accounts` parameter.
+
+* New features in the osism.commons.known_hosts role.
+
+  * With the `known_hosts_delete` parameter it's possible to delete known hosts entries from the
+    known hosts file of the operator user account. This is the counterpart to the `known_hosts`
+    and `known_hosts_extra` parameters.
+
+* New features in the osism.commons.user role.
+
+  * With the `user_sudoers` parameter it's possible to change the content of the user sudoers file.
+    The default is `ALL=(ALL:ALL) NOPASSWD: ALL`.
+
+* New features in the osism.commons.proxy role.
+
+  * Proxy settings are now removed when no proxy setings are set with the `proxy_proxies` parameter.
+
+* New playbooks and changes in the existing playbooks.
+
+  * The `ensure-no-instances` ensures that no instances are defined in Libvirt and that no qemu
+    processes are running. This can be used in preparation for maintenance work on compute nodes.
+    In the future, the play will also take care of moving running or assigned instances from a
+    compute node with the help of the OSISM Resource Manager.
+
+  * With the `loadbalancer-without-service-config` play it's possible to manage the loadbalancer service
+    without including all the OpenStack service roles. This makes it possible to do a loadbalancer container image upgrade pretty fast and also enables the deployment of multiple loadbalancers with separate configurations by using the sub environments.
+
+  * The `osism.commons.sshconfig` role and the `osism.commons.certificates` role are now also run in
+    the bootstrap play of the Manager.
+
+  * WIth the `k3s-upgrade` play it is possible to upgrade the internal K3s Kubernetes cluster.
+
+* New documentation.
+
+  * The documentation for the
+    [initial creation of a configuration repository using Cookiecutter](https://osism.tech/docs/guides/configuration-guide/configuration-repository)
+    has been completely revised. In the Cookiecutter itself, notes have been added in many places to simplify
+    the initial reworking of the created configuration repository.
+
+  * Documentation for the [deployment of a second loadbalancer](https://osism.tech/docs/guides/configuration-guide/loadbalancer#second-loadbalancer) has been added.
+
+* Changes in the testbed.
+
+  * It is now possible to provide the OpenStack APIs and the OpenStack Dashboard via a public IP address
+    with a public DNS record including Letsencrypt certificate via a customisation external-api via the
+    manager node.
+
+  * Ansible, which is required to initially deploy the Manager, is now installed in a virtual environment.
+    This means that it is now also possible to use Ubuntu 24.04 as the operating system for the nodes.
+
+* The CLI of the [Simple Stress tool](https://github.com/osism/openstack-simple-stress) has been changed
+  to [Typer](https://typer.tiangolo.com). Units tests for improving code quality have been added.
+
+* New Kubernetes CAPI images for the Kubernetes serias 1.27, 1.28, 1.29, and 1.30 are available.
+
+* To avoid confusion, `rolling-upgrade` has been removed as a supported action for the `osism apply`
+  command. The `upgrade` action should always and exclusively be used.
 
 ## 7.0.4 (20240507)
 
