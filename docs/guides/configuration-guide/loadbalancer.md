@@ -40,7 +40,7 @@ The group `kolla.external.loadbalancer` is added to the global inventory in the 
 In this example, `testbed-node-2.testbed.osism.xyz` is used for the second loadbalancer.
 
 ```ini title="inventory/10-custom"
-[kolla.loadbalancer.external]
+[kolla.external.loadbalancer]
 testbed-node-2.testbed.osism.xyz
 ```
 
@@ -95,5 +95,5 @@ not possible to use the integrated service configurations of Kolla itself (Nova,
 loadbalancer. This will be possible in the future.
 
 ```
-osism apply --sub test loadbalancer-without-service-config
+osism apply --sub external loadbalancer-without-service-config
 ```
