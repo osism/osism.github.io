@@ -106,6 +106,11 @@ const config = {
             position: 'right',
           },
           {
+	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
+            label: 'Schedule a demo',
+            position: 'right',
+          },
+          {
             type: 'localeDropdown',
             position: 'left',
           },

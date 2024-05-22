@@ -147,7 +147,10 @@ function Feature({Svg, title, description, name, linktarget}) {
       <div className="text--left">
         <h3>{title}</h3>
         <p>{description}</p>
-        <p><a style={{"margin-top": "20px", "width": "100%"}} className="button button--secondary button--lg" href={linktarget}>More information on {name}</a></p>
+        <p>
+	  <a style={{"margin-top": "20px", "width": "45%"}} className="button button--secondary button--lg" href={linktarget}><Translate description="More information">generic.more_information</Translate></a>
+	  <a className="button button--secondary button--lg" style={{"margin-top": "20px", "width": "45%", "margin-left": "10px"}} href="mailto:info@osism.tech?subject=OSISM Demo"><Translate description="Homepage CTA1">homepage.cta1</Translate></a>
+	</p>
       </div>
     </div>
   );

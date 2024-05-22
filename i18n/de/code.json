@@ -1,10 +1,14 @@
 {
+  "generic.more_information": {
+    "message": "Weitere Informationen",
+    "description": "More information"
+  },
   "sidebar.documentation.title": {
     "message": "Dokumentation",
     "description": "Documentation title"
   },
   "homepage.cta1": {
-    "message": "Jetzt eine Demo vereinbaren",
+    "message": "Demo vereinbaren",
     "description": "Homepage CTA1"
   },
   "homepage.title": {
@@ -32,7 +36,7 @@
     "description": "Discover title"
   },
   "discover.cta1": {
-    "message": "Senden Sie uns eine E-Mail an info@osism.tech, um weitere Informationen zu erhalten oder eine Demo zu vereinbaren.",
+    "message": "Weitere Informationen anfragen",
     "description": "Discover CTA1"
   },
   "users.title": {
