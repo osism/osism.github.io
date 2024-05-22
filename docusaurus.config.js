@@ -134,7 +134,7 @@ const config = {
                 href: '/users',
               },
               {
-                label: 'Partners',
+                label: 'Partner Network',
                 href: '/partners',
               },
               {
