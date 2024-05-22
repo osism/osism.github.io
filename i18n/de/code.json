@@ -16,12 +16,8 @@
     "description": "Homepage title"
   },
   "homepage.subtitle1": {
-    "message": "Wir bieten souveräne Cloud-Infrastruktur für Unternehmen, Service Provider und ISVs",
+    "message": "Verwalten Sie Ihre eigene Cloud-Infrastruktur und sparen Sie bis zu 90% im Vergleich zur öffentlichen Cloud",
     "description": "Homepage subtitle1"
-  },
-  "homepage.subtitle2": {
-    "message": "Sparen Sie mit Ihrer eigenen Private Cloud bis zu 90% im Vergleich zur Public Cloud",
-    "description": "Homepage subtitle2"
   },
   "homepage.pagetitle": {
     "message": "OSISM – Souveräne Cloud-Infrastruktur",
