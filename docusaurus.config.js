@@ -143,8 +143,8 @@ const config = {
                 href: '/partners',
               },
               {
-                href: 'https://scs.community',
-                label: 'Sovereign Cloud Stack',
+                label: 'Support',
+                href: '/support',
               },
 	    ],
           },
