@@ -5,53 +5,60 @@ sidebar_position: 30
 
 # Infrastructure
 
-## Kubernetes
+1. Kubernetes
 
-## Cron, Fluentd & Kolla Toolbox
+   This is only necessary if the internal Kubernetes cluster has also been deployed.
+   This can be checked by executing `kubectl get nodes` on the manager node.
 
-The common role of Kolla is used to manage the services `cron`, `fluentd`
-and `kolla-toolbox`.
+   ```
+   osism apply k3s-upgrade
+   ```
 
-It is important to do this upgrade before any other upgrades in the Kolla
-environment, as parts of the other upgrades depend on the `kolla-toolbox`
-service.
+2. Cron, Fluentd & Kolla Toolbox
 
-```
-osism apply -a pull common
-osism apply -a upgrade common
-```
+   The common role of Kolla is used to manage the services `cron`, `fluentd`
+   and `kolla-toolbox`.
 
-## Loadbalancer
+   It is important to do this upgrade before any other upgrades in the Kolla
+   environment, as parts of the other upgrades depend on the `kolla-toolbox`
+   service.
 
-```
-osism apply -a pull loadbalancer
-osism apply -a upgrade loadbalancer
-```
+   ```
+   osism apply -a pull common
+   osism apply -a upgrade common
+   ```
 
-## Redis
+3. Loadbalancer
 
-```
-osism apply -a pull redis
-osism apply -a upgrade redis
-```
+   ```
+   osism apply -a pull loadbalancer
+   osism apply -a upgrade loadbalancer
+   ```
 
-## Memcached
+4. Redis
 
-```
-osism apply -a pull memcached
-osism apply -a upgrade memcached
-```
+   ```
+   osism apply -a pull redis
+   osism apply -a upgrade redis
+   ```
 
-## RabbitMQ
+5. Memcached
 
-```
-osism apply -a pull rabbitmq
-osism apply -a upgrade rabbitmq
-```
+   ```
+   osism apply -a pull memcached
+   osism apply -a upgrade memcached
+   ```
 
-## MariaDB
+6. RabbitMQ
 
-```
-osism apply -a pull mariadb
-osism apply -a upgrade mariadb
-```
+   ```
+   osism apply -a pull rabbitmq
+   osism apply -a upgrade rabbitmq
+   ```
+
+7. MariaDB
+
+   ```
+   osism apply -a pull mariadb
+   osism apply -a upgrade mariadb
+   ```
