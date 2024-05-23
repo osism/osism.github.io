@@ -101,11 +101,6 @@ const config = {
             position: 'right',
           },
           {
-            href: 'https://github.com/osism',
-            label: 'GitHub',
-            position: 'right',
-          },
-          {
 	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
             label: 'Schedule a demo',
             position: 'right',
