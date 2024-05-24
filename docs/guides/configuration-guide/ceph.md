@@ -689,3 +689,30 @@ to deploy the Ceph mon services of the `ceph.rgw` sub environment:
 ```
 osism apply --sub rgw ceph-osds
 ```
+
+## Resource limits
+
+Resource limits for the individual Ceph services can be set via `environments/ceph/configuration.yml`.
+The possible parameters and their defaults for memory limits and CPU limits are listed below.
+
+* Memory limits
+
+  ```yaml
+  ceph_mds_docker_memory_limit: "{{ ansible_facts['memtotal_mb'] }}m"
+  ceph_mgr_docker_memory_limit: "{{ ansible_facts['memtotal_mb'] }}m"
+  ceph_mon_docker_memory_limit: "{{ ansible_facts['memtotal_mb'] }}m"
+  ceph_osd_docker_memory_limit: "{{ ansible_facts['memtotal_mb'] }}m"
+  ceph_rbd_mirror_docker_memory_limit: "{{ ansible_facts['memtotal_mb'] }}m"
+  ceph_rgw_docker_memory_limit: "4096m"
+  ```
+
+* CPU limits
+
+  ```yaml
+  ceph_mds_docker_cpu_limit: 4
+  ceph_mgr_docker_cpu_limit: 1
+  ceph_mon_docker_cpu_limit: 1
+  ceph_osd_docker_cpu_limit: 4
+  ceph_rbd_mirror_docker_cpu_limit: 1
+  ceph_rgw_docker_cpu_limit: 8
+  ```
