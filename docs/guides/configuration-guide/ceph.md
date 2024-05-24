@@ -716,3 +716,46 @@ The possible parameters and their defaults for memory limits and CPU limits are 
   ceph_rbd_mirror_docker_cpu_limit: 1
   ceph_rgw_docker_cpu_limit: 8
   ```
+
+## CPU Pinning
+
+CPU pinning and specifying the NUMA nodes to be used for the Ceph OSD and RGW services can be
+set via `environments/ceph/configuration.yml`.
+The possible parameters and possible values are listed below. The parameters are not enabled
+by default.
+
+* Limit the specific CPUs or cores a container can use. A comma-separated list or
+  hyphen-separated range of CPUs a container can use, if you have more than one CPU.
+  The first CPU is numbered 0. A valid value might be 0-3 (to use the first, second,
+  third, and fourth CPU) or 1,3 (to use the second and fourth CPU).
+
+  ```yaml
+  # ceph_osd_docker_cpuset_cpus: "0,2,4,6,8,10,12,14,16"
+  # ceph_rgw_docker_cpuset_cpus: "0,2,4,6,8,10,12,14,16"
+  ```
+
+* Memory nodes in which to allow execution (e.g. 0-3, 0,1). Only effective on NUMA systems.
+
+  ```yaml
+  # ceph_osd_docker_cpuset_mems: "0"
+  # ceph_rgw_docker_cpuset_mems: "0"
+  ```
+
+  Available NUMA nodes on a node can be displayed with [numactl](https://github.com/numactl/numactl).
+  In this example, there are 2 NUMA nodes. The pinned CPUs should all be assigned to the
+  specified NUMA node.
+
+  ```
+  # numactl --hardware
+  available: 2 nodes (0-1)
+  node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
+  node 0 size: 515581 MB
+  node 0 free: 511680 MB
+  node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+  node 1 size: 516078 MB
+  node 1 free: 511865 MB
+  node distances:
+  node   0   1
+    0:  10  20
+    1:  20  10
+  ```
