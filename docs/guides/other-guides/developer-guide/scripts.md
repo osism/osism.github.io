@@ -48,3 +48,12 @@ The respective container should always be restarted after a change.
 ```
 docker restart osism-ansible
 ```
+
+If something has been changed in the defaults and is to be tested, this must be
+changed in the inventory reconciler service. Regardless of which of the Ansible services
+the customised defaults are intended for.
+
+```
+docker exec -u root -it manager-inventory_reconciler-1 /change.sh defaults main
+docker restart manager-inventory_reconciler-1
+```
