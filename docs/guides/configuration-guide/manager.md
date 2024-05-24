@@ -16,7 +16,8 @@ In the example, OSISM release 6.0.0 is used.
 1. Set the new manager version in the configuration repository.
 
    ```
-   yq -i '.manager_version = "6.0.0"' environments/manager/configuration.yml
+   MANAGER_VERSION=6.0.0
+   sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION}/g" environments/manager/configuration.yml
    ```
 
 2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`

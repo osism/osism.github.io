@@ -21,9 +21,10 @@ The update of a manager service with a stable release of OSISM is described here
 
     1.1. Set the new OSISM version in the configuration repository.
 
-       ```
-       yq -i '.manager_version = "7.0.5"' environments/manager/configuration.yml
-       ```
+         ```
+         MANAGER_VERSION=7.0.5
+         sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION}/g" environments/manager/configuration.yml
+         ```
 
     1.2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
          (or anywhere else), they must be removed. If these are set, the stable release is not used for
@@ -43,7 +44,7 @@ The update of a manager service with a stable release of OSISM is described here
          important to use a version smaller v2. The v2 of Gilt is not yet usable.
 
          ```
-         gilt overlay  # you have to do this 2x
+         gilt overlay  # you have to do this 2x, this is not a copy & paste error
          gilt overlay
          ```
 
