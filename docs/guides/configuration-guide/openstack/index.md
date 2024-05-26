@@ -25,6 +25,49 @@ The image tags can be set in the `environments/kolla/images.yml` file.
   barbican_worker_tag: "2023.1"
   ```
 
+## Endpoints
+
+### Public endpoints
+
+The public endpoints used for the individual OpenStack services can be configured via the `public_endpoint` parameters.
+These are defined as follows.
+
+| Parameter                                  | Default value                                                                                       |
+|:-------------------------------------------|:----------------------------------------------------------------------------------------------------|
+| aodh_public_endpoint                       | `aodh_external_fqdn | kolla_url(public_protocol, aodh_api_public_port)`                             |
+| blazar_public_endpoint                     | `blazar_external_fqdn | kolla_url(public_protocol, blazar_api_public_port, '/v1')`                  |
+| ceph_rgw_public_endpoint                   | `ceph_rgw_external_fqdn | kolla_url(public_protocol, ceph_rgw_public_port, ceph_rgw_endpoint_path)` |
+| cinder_v3_public_endpoint                  | `cinder_public_base_endpoint }}/v3/%(tenant_id)s`                                                   |
+| cloudkitty_public_endpoint                 | `cloudkitty_external_fqdn | kolla_url(public_protocol, cloudkitty_api_public_port)`                 |
+| cyborg_public_endpoint                     | `cyborg_external_fqdn | kolla_url(public_protocol, cyborg_api_port, '/v2')`                         |
+| gnocchi_public_endpoint                    | `gnocchi_external_fqdn | kolla_url(public_protocol, gnocchi_api_public_port)`                       |
+| heat_cfn_public_endpoint                   | `heat_cfn_public_base_endpoint }}/v1`                                                               |
+| heat_public_endpoint                       | `heat_external_fqdn | kolla_url(public_protocol, heat_api_public_port, '/v1/%(tenant_id)s')`        |
+| ironic_inspector_public_endpoint           | `ironic_inspector_external_fqdn | kolla_url(public_protocol, ironic_inspector_public_port)`         |
+| magnum_public_endpoint                     | `magnum_external_fqdn | kolla_url(public_protocol, magnum_api_public_port, '/v1')`                  |
+| manila_public_endpoint                     | `manila_public_base_endpoint }}/v1/%(tenant_id)s`                                                   |
+| manila_v2_public_endpoint                  | `manila_public_base_endpoint }}/v2`                                                                 |
+| masakari_public_endpoint                   | `masakari_external_fqdn | kolla_url(public_protocol, masakari_api_public_port)`                     |
+| mistral_public_endpoint                    | `mistral_external_fqdn | kolla_url(public_protocol, mistral_api_public_port, '/v2')`                |
+| nova_legacy_public_endpoint                | `nova_public_base_endpoint }}/v2/%(tenant_id)s`                                                     |
+| nova_public_endpoint                       | `nova_public_base_endpoint }}/v2.1`                                                                 |
+| placement_public_endpoint                  | `placement_external_fqdn | kolla_url(public_protocol, placement_api_public_port)`                   |
+| tacker_public_endpoint                     | `tacker_external_fqdn | kolla_url(public_protocol, tacker_server_public_port)`                      |
+| trove_public_endpoint                      | `trove_external_fqdn | kolla_url(public_protocol, trove_api_public_port, '/v1.0/%(tenant_id)s')`    |
+| venus_public_endpoint                      | `venus_external_fqdn | kolla_url(public_protocol, venus_api_port)`                                  |
+| watcher_public_endpoint                    | `watcher_external_fqdn | kolla_url(public_protocol, watcher_api_public_port)`                       |
+| zun_public_endpoint                        | `zun_external_fqdn | kolla_url(public_protocol, zun_api_public_port, '/v1/')`                       |
+
+Some of the previous default values refer to a `public_base_endpoint parameter`. These are defined as follows.
+
+| Parameter                                 | Default value                                                                                 |
+|:------------------------------------------|:----------------------------------------------------------------------------------------------|
+| cinder_public_base_endpoint               | `cinder_external_fqdn | kolla_url(public_protocol, cinder_api_public_port)`                   |
+| heat_cfn_public_base_endpoint             | `heat_cfn_external_fqdn | kolla_url(public_protocol, heat_api_cfn_public_port)`               |
+| manila_public_base_endpoint               | `manila_external_fqdn | kolla_url(public_protocol, manila_api_public_port)`                   |
+| nova_public_base_endpoint                 | `nova_external_fqdn | kolla_url(public_protocol, nova_api_public_port)`                       |
+| skyline_apiserver_public_base_endpoint    | `skyline_apiserver_external_fqdn | kolla_url(public_protocol, skyline_apiserver_public_port)` |
+
 ## Network interfaces
 
 | Parameter                      | Default                                                                | Description    |
