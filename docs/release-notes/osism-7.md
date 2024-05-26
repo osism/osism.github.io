@@ -58,11 +58,12 @@ Release date: 24. May 2024
 
 * New features in the osism.services.docker role.
 
-  * With the `docker_throttle_restart` parameter it's possible to throttle the service restarts.
+  * With the `docker_throttle_restart` parameter it's possible to
+    [throttle the service restarts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_strategies.html#restricting-execution-with-throttle).
     By default service restarts will not be throttled.
 
     ```yaml title="environments/configuration.yml
-    docker_throttle_restart: true
+    docker_throttle_restart: 1
     ```
 
   * With the `docker_wait_after_restart` it is possible to wait `docker_wait_after_restart_seconds`
