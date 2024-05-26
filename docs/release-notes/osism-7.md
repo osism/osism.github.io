@@ -61,9 +61,18 @@ Release date: 24. May 2024
   * With the `docker_throttle_restart` parameter it's possible to throttle the service restarts.
     By default service restarts will not be throttled.
 
+    ```yaml title="environments/configuration.yml
+    docker_throttle_restart: true
+    ```
+
   * With the `docker_wait_after_restart` it is possible to wait `docker_wait_after_restart_seconds`
     seconds (60 seconds by default) after the restart of the Docker service. By default it will
     not be waited after the restart of the Docker service.
+
+    ```yaml title="environments/configuration.yml
+    docker_wait_after_restart: true
+    docker_wait_after_restart_seconds: 60
+    ```
 
 * New features in the osism.services.traefik role.
 
@@ -136,12 +145,14 @@ Release date: 24. May 2024
     compute node with the help of the OSISM Resource Manager.
 
   * With the `loadbalancer-without-service-config` play it's possible to manage the loadbalancer service
-    without including all the OpenStack service roles. This makes it possible to do a loadbalancer container image upgrade pretty fast and also enables the deployment of multiple loadbalancers with separate configurations by using the sub environments.
+    without including all the OpenStack service roles. This makes it possible to do a loadbalancer container
+    image upgrade pretty fast and also enables the deployment of multiple loadbalancers with separate
+    configurations by using the sub environments.
 
   * The `osism.commons.sshconfig` role and the `osism.commons.certificates` role are now also run in
     the bootstrap play of the Manager.
 
-  * WIth the `k3s-upgrade` play it is possible to upgrade the internal K3s Kubernetes cluster.
+  * With the `k3s-upgrade` play it is possible to upgrade the internal K3s Kubernetes cluster.
 
 * New documentation.
 
@@ -152,7 +163,7 @@ Release date: 24. May 2024
 
   * Documentation for the [deployment of a second loadbalancer](https://osism.tech/docs/guides/configuration-guide/loadbalancer#second-loadbalancer) has been added.
 
-* Changes in the testbed.
+* Changes in the Testbed.
 
   * It is now possible to provide the OpenStack APIs and the OpenStack Dashboard via a public IP address
     with a public DNS record including Letsencrypt certificate via a customisation external-api via the
