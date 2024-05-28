@@ -15,8 +15,8 @@ the nodes. How to bootstrap the nodes is documented in the
 
 When setting up a new cluster, the services are deployed in a specific order.
 
-1. [Infrastructure](./infrastructure)
-2. [Network](./network)
-3. [Logging & Monitoring](./logging-monitoring)
-4. [Ceph](./ceph)
-5. [OpenStack](./openstack)
+1. [Infrastructure](./infrastructure.md)
+2. [Network](./network.md)
+3. [Logging & Monitoring](./logging-monitoring.md)
+4. [Ceph](./ceph.mdx) or [Ceph via Rook (technical preview)](./rook.md)
+5. [OpenStack](./openstack.md)
