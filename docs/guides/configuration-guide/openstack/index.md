@@ -73,7 +73,9 @@ Some of the previous default values refer to a `public_base_endpoint parameter`.
 DNS records pointing to the `kolla_external_vip_address` are created in advance.
 
 Additional configuration parameters to overwrite the public endpoints
-are added in the `environments/kolla/configuration.yml` file.
+are added in the `environments/kolla/configuration.yml` file. If certain services
+are not used, they are removed. If other services are used, these are added (see the
+table above).
 
 ```yaml title="environments/kolla/configuration.yml"
 barbican_public_endpoint: https://barbican.services.a.regiocloud.tech
@@ -89,74 +91,28 @@ octavia_public_endpoint: https://octavia.services.a.regiocloud.tech
 placement_public_endpoint: https://placement.services.a.regiocloud.tech
 ```
 
-Customised HAProxy configuration in `haproxy_main.cfg` is required to map the DNS records
-to the correct backends (based on the
-[default haproxy_main.cfg configuration file](https://github.com/openstack/kolla-ansible/blob/master/ansible/roles/loadbalancer/templates/haproxy/haproxy_main.cfg.j2).
+Since we bind the `name_based_external_front` frontend to the same ports as the
+`horizon_external_front`, the external Horizon frontend must be disabled. This is
+only possible as of OSISM 7.0.6.
 
-```none title="environments/kolla/files/overlays/haproxy/haproxy_main.cfg"
-#jinja2: lstrip_blocks: True
-global
-    chroot /var/lib/haproxy
-    user haproxy
-    group haproxy
-    daemon
-    log {{ syslog_server }}:{{ syslog_udp_port }} {{ syslog_haproxy_facility }}
-    maxconn {{ haproxy_max_connections }}
-    nbproc {{ haproxy_processes }}
-    {% if (haproxy_processes | int > 1) and (haproxy_process_cpu_map | bool) %}
-        {% for cpu_idx in range(0, haproxy_processes) %}
-    cpu-map {{ cpu_idx + 1 }} {{ cpu_idx }}
-        {% endfor %}
-    {% endif %}
-    stats socket /var/lib/kolla/haproxy/haproxy.sock group kolla mode 660{% if haproxy_socket_level_admin | bool %} level admin{% endif %}
+```yaml title="environments/kolla/configuration.yml"
+haproxy_enable_horizon_external: false
+```
 
-    {% if kolla_enable_tls_external | bool or kolla_enable_tls_internal | bool %}
-    ssl-default-bind-ciphers DEFAULT:!MEDIUM:!3DES
-    ssl-default-bind-options no-sslv3 no-tlsv10 no-tlsv11
-    tune.ssl.default-dh-param 4096
-    ca-base {{ haproxy_backend_cacert_dir }}
-    {% endif %}
+Additional HAProxy configuration in `haproxy/services.d/haproxy.cfg` is required to map
+the DNS records to the correct backends. Here too, unused services are removed or
+additional services are added.
 
-defaults
-    log global
-    option redispatch
-    retries 3
-    timeout http-request {{ haproxy_http_request_timeout }}
-    timeout http-keep-alive {{ haproxy_http_keep_alive_timeout }}
-    timeout queue {{ haproxy_queue_timeout }}
-    timeout connect {{ haproxy_connect_timeout }}
-    timeout client {{ haproxy_client_timeout }}
-    timeout server {{ haproxy_server_timeout }}
-    timeout check {{ haproxy_check_timeout }}
-    balance {{ haproxy_defaults_balance }}
-    maxconn {{ haproxy_defaults_max_connections }}
-
-listen stats
-   bind {{ api_interface_address }}:{{ haproxy_stats_port }}
-   mode http
-   stats enable
-   stats uri /
-   stats refresh 15s
-   stats realm Haproxy\ Stats
-   stats auth {{ haproxy_user }}:{{ haproxy_password }}
-
-frontend status
-    bind {{ api_interface_address }}:{{ haproxy_monitor_port }}
-    {% if api_interface_address != kolla_internal_vip_address %}
-    bind {{ kolla_internal_vip_address }}:{{ haproxy_monitor_port }}
-    {% endif %}
-    mode http
-    monitor-uri /
-
-frontend regiocloud_external_front
+```none title="environments/kolla/files/overlays/haproxy/services.d/haproxy.cfg"
+frontend name_based_external_front
     mode http
     http-request del-header X-Forwarded-Proto
     option httplog
     option forwardfor
     http-request set-header X-Forwarded-Proto https if { ssl_fc }
     bind {{ kolla_external_vip_address }}:80
-    bind {{ kolla_external_vip_address }}:443 ssl crt /etc/haproxy/haproxy.pem
-    default_backend horizon_external_back
+    bind {{ kolla_external_vip_address }}:443 ssl crt /etc/haproxy/certificates/haproxy.pem
+    default_backend horizon_back
 
     acl ACL_keystone.services.a.regiocloud.tech hdr(host) -i keystone.services.a.regiocloud.tech
     use_backend keystone_external_back if ACL_keystone.services.a.regiocloud.tech
