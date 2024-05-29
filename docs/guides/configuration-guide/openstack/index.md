@@ -68,6 +68,130 @@ Some of the previous default values refer to a `public_base_endpoint parameter`.
 | nova_public_base_endpoint                 | `nova_external_fqdn \| kolla_url(public_protocol, nova_api_public_port)`                       |
 | skyline_apiserver_public_base_endpoint    | `skyline_apiserver_external_fqdn \| kolla_url(public_protocol, skyline_apiserver_public_port)` |
 
+### Example for the use of name-based endpoints
+
+DNS records pointing to the `kolla_external_vip_address` are created in advance.
+
+Additional configuration parameters to overwrite the public endpoints
+are added in the `environments/kolla/configuration.yml` file.
+
+```yaml title="environments/kolla/configuration.yml"
+barbican_public_endpoint: https://barbican.services.a.regiocloud.tech
+cinder_public_base_endpoint: https://cinder.services.a.regiocloud.tech
+designate_public_endpoint: https://designate.services.a.regiocloud.tech
+glance_public_endpoint: https://glance.services.a.regiocloud.tech
+ironic_public_endpoint: https://ironic.services.a.regiocloud.tech
+keystone_public_url: https://keystone.services.a.regiocloud.tech
+manila_public_endpoint: https://manila.services.a.regiocloud.tech
+neutron_public_endpoint: https://neutron.services.a.regiocloud.tech
+nova_public_base_endpoint: https://nova.services.a.regiocloud.tech
+octavia_public_endpoint: https://octavia.services.a.regiocloud.tech
+placement_public_endpoint: https://placement.services.a.regiocloud.tech
+```
+
+Customised HAProxy configuration in `haproxy_main.cfg` is required to map the DNS records
+to the correct backends (based on the
+[default haproxy_main.cfg configuration file](https://github.com/openstack/kolla-ansible/blob/master/ansible/roles/loadbalancer/templates/haproxy/haproxy_main.cfg.j2).
+
+```none title="environments/kolla/files/overlays/haproxy/haproxy_main.cfg"
+#jinja2: lstrip_blocks: True
+global
+    chroot /var/lib/haproxy
+    user haproxy
+    group haproxy
+    daemon
+    log {{ syslog_server }}:{{ syslog_udp_port }} {{ syslog_haproxy_facility }}
+    maxconn {{ haproxy_max_connections }}
+    nbproc {{ haproxy_processes }}
+    {% if (haproxy_processes | int > 1) and (haproxy_process_cpu_map | bool) %}
+        {% for cpu_idx in range(0, haproxy_processes) %}
+    cpu-map {{ cpu_idx + 1 }} {{ cpu_idx }}
+        {% endfor %}
+    {% endif %}
+    stats socket /var/lib/kolla/haproxy/haproxy.sock group kolla mode 660{% if haproxy_socket_level_admin | bool %} level admin{% endif %}
+
+    {% if kolla_enable_tls_external | bool or kolla_enable_tls_internal | bool %}
+    ssl-default-bind-ciphers DEFAULT:!MEDIUM:!3DES
+    ssl-default-bind-options no-sslv3 no-tlsv10 no-tlsv11
+    tune.ssl.default-dh-param 4096
+    ca-base {{ haproxy_backend_cacert_dir }}
+    {% endif %}
+
+defaults
+    log global
+    option redispatch
+    retries 3
+    timeout http-request {{ haproxy_http_request_timeout }}
+    timeout http-keep-alive {{ haproxy_http_keep_alive_timeout }}
+    timeout queue {{ haproxy_queue_timeout }}
+    timeout connect {{ haproxy_connect_timeout }}
+    timeout client {{ haproxy_client_timeout }}
+    timeout server {{ haproxy_server_timeout }}
+    timeout check {{ haproxy_check_timeout }}
+    balance {{ haproxy_defaults_balance }}
+    maxconn {{ haproxy_defaults_max_connections }}
+
+listen stats
+   bind {{ api_interface_address }}:{{ haproxy_stats_port }}
+   mode http
+   stats enable
+   stats uri /
+   stats refresh 15s
+   stats realm Haproxy\ Stats
+   stats auth {{ haproxy_user }}:{{ haproxy_password }}
+
+frontend status
+    bind {{ api_interface_address }}:{{ haproxy_monitor_port }}
+    {% if api_interface_address != kolla_internal_vip_address %}
+    bind {{ kolla_internal_vip_address }}:{{ haproxy_monitor_port }}
+    {% endif %}
+    mode http
+    monitor-uri /
+
+frontend regiocloud_external_front
+    mode http
+    http-request del-header X-Forwarded-Proto
+    option httplog
+    option forwardfor
+    http-request set-header X-Forwarded-Proto https if { ssl_fc }
+    bind {{ kolla_external_vip_address }}:80
+    bind {{ kolla_external_vip_address }}:443 ssl crt /etc/haproxy/haproxy.pem
+    default_backend horizon_external_back
+
+    acl ACL_keystone.services.a.regiocloud.tech hdr(host) -i keystone.services.a.regiocloud.tech
+    use_backend keystone_external_back if ACL_keystone.services.a.regiocloud.tech
+
+    acl ACL_glance.services.a.regiocloud.tech hdr(host) -i glance.services.a.regiocloud.tech
+    use_backend glance_api_external_back if ACL_glance.services.a.regiocloud.tech
+
+    acl ACL_neutron.services.a.regiocloud.tech hdr(host) -i neutron.services.a.regiocloud.tech
+    use_backend neutron_server_external_back if ACL_neutron.services.a.regiocloud.tech
+
+    acl ACL_placement.services.a.regiocloud.tech hdr(host) -i placement.services.a.regiocloud.tech
+    use_backend placement_api_external_back if ACL_placement.services.a.regiocloud.tech
+
+    acl ACL_nova.services.a.regiocloud.tech hdr(host) -i nova.services.a.regiocloud.tech
+    use_backend nova_api_external_back if ACL_nova.services.a.regiocloud.tech
+
+    acl ACL_console.services.a.regiocloud.tech hdr(host) -i console.services.a.regiocloud.tech
+    use_backend nova_novncproxy_external_back if ACL_console.services.a.regiocloud.tech
+
+    acl ACL_designate.services.a.regiocloud.tech hdr(host) -i designate.services.a.regiocloud.tech
+    use_backend designate_api_external_back if ACL_designate.services.a.regiocloud.tech
+
+    acl ACL_cinder.services.a.regiocloud.tech hdr(host) -i cinder.services.a.regiocloud.tech
+    use_backend cinder_api_external_back if ACL_cinder.services.a.regiocloud.tech
+
+    acl ACL_octavia.services.a.regiocloud.tech hdr(host) -i octavia.services.a.regiocloud.tech
+    use_backend octavia_api_external_back if ACL_octavia.services.a.regiocloud.tech
+
+    acl ACL_swift.services.a.regiocloud.tech hdr(host) -i swift.services.a.regiocloud.tech
+    use_backend swift_api_external_back if ACL_swift.services.a.regiocloud.tech
+
+    acl ACL_ironic.services.a.regiocloud.tech hdr(host) -i ironic.services.a.regiocloud.tech
+    use_backend ironic_api_external_back if ACL_ironic.services.a.regiocloud.tech
+```
+
 ## Network interfaces
 
 | Parameter                      | Default                                                                | Description    |
