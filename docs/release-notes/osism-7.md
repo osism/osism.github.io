@@ -671,6 +671,10 @@ the resulting effort.
   tls_cacertfile = /etc/ssl/certs/ca-certificates.crt
   ```
 
+* The management of Ceph pools and Ceph clients/keys has been moved to a separate play
+  `ceph-pools`. It is important to set the `openstack_config` parameter in `environments/ceph/configuration.yml`
+  to `false` or remove it completely if it still exists or is not yet set to `false`.
+
 ### Known issues
 
 * If error `Couldn't fetch the key client.bootstrap-rbd at /var/lib/ceph/bootstrap-rbd/."`
