@@ -304,34 +304,124 @@ $ ceph osd metadata
 $ ceph osd metadata osd.<ID>
 ```
 
-:::note
+Interesting fields:
 
-      Interesting fields:
-      osd_objectstore, rotational, hostname, devices, device_ids, device_paths,
-      bluefs_db_rotational, bluefs_wal_rotational,
-      bluefs_dedicated_db, bluefs_dedicated_wal,
-      bluestore_bdev_rotational
-
-:::
+* bluefs_db_rotational
+* bluefs_dedicated_db
+* bluefs_dedicated_wal
+* bluefs_wal_rotational
+* bluestore_bdev_rotational
+* device_ids
+* device_paths
+* devices
+* hostname
+* osd_objectstore
+* rotational
 
 ### Add a new OSD
 
-### Remove a OSD
-
 ### Replace a defect OSD
 
-### Remove a single OSD node
+### Remove a OSD
 
-### Remove an OSD (removing it completely, not reprovisioning it again) without double rebalance
+As with ‘Remove a single OSD node’. Except that the steps are only executed
+for a single OSD and the node is not removed from the CRUSH map and the inventory.
+Only the entries relating to the removed OSD are removed from the host vars.
+
+#### Manual way
 
 ```
 $ ceph osd crush reweight osd.<ID> 0.0
-... Wait for rebalance to complete, then mark it OUT:
+# Wait for rebalance to complete...
 $ ceph osd out osd.<ID>
 # systemctl stop ceph-osd@<ID>
 # systemctl disable ceph-osd@<ID>
 $ ceph osd purge osd.<ID> --yes-i-really-mean-it
 ```
+
+The LV and VG defined in the inventory for this OSD must also be removed. The
+OSD itself should be wiped.
+
+### Remove a single OSD node
+
+1. Get all OSDs  of the node
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.11691  root default
+   -3         0.03897      host testbed-node-0
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   -7         0.03897      host testbed-node-2
+    2    hdd  0.01949          osd.2                up   1.00000  1.00000
+    5    hdd  0.01949          osd.5                up   1.00000  1.00000
+   ```
+
+2. Reduce the weighting of all OSDs on the node to 0. Do this for each OSD
+   in a row and wait after each adjustment until the Ceph cluster is balanced.
+   Depending on how large the Ceph cluster and the individual OSDs are, this
+   may take some time.
+
+   ```
+   $ ceph osd crush reweight osd.2 0.0
+   $ ceph osd crush reweight osd.5 0.0
+   ```
+
+   The Ceph OSDs that are to be removed then have a weight of 0.
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.07794  root default
+   -3         0.03897      host testbed-node-0
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   -7               0      host testbed-node-2
+    2    hdd        0          osd.2                up   1.00000  1.00000
+    5    hdd        0          osd.5                up   1.00000  1.00000
+   ```
+
+3. Remove the OSDs and everything that belongs to them from the node.
+   This is a disruptive action that cannot be undone. The devices used
+   are also reset.
+
+   ```
+   $ osism apply ceph-shrink-osd -e ireallymeanit=yes -e osd_to_kill=2,5
+   ```
+
+   All OSDs were removed.
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.07794  root default
+   -3         0.03897      host testbed-node-0
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   -7               0      host testbed-node-2
+   ```
+
+4. Remove the node from the CRUSH map.
+
+   ```
+   $ ceph osd crush remove testbed-node-2
+   removed item id -7 name 'testbed-node-2' from crush map
+   ```
+
+5. Remove the node from all Ceph groups in the inventory.
+
+6. Remove all Ceph-specific parameters from the host vars of the node from the
+   inventory
 
 ### Remove an OSD (temporarily e.g. when replacing a broken disk)
 
