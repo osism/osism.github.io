@@ -148,6 +148,13 @@ frontend name_based_external_front
     use_backend ironic_api_external_back if ACL_ironic.services.a.regiocloud.tech
 ```
 
+Additional Nova configuration in `nova.conf` is required to use the URL for the NoVNC service.
+
+```ini title="environments/kolla/files/overlays/nova.conf"
+[vnc]
+novncproxy_base_url = https://console.services.a.regiocloud.tech/vnc_lite.html
+```
+
 ## Network interfaces
 
 | Parameter                      | Default                                                                | Description    |
