@@ -453,3 +453,32 @@ transferred to the manager node, the configuration repository can be updated usi
 
 If local changes were made directly in the configuration repository on the manager node,
 these are overwritten.
+
+## Locks
+
+It is possible to lock parts of the configuration repository or the complete configuration
+repository. It is then no longer possible to execute plays assigned to these parts in the
+locked parts. This makes it possible to prevent the execution of plays in specific areas.
+
+To lock an environment, a .lock file is created in the corresponding directory of the environment.
+For example, the file `environments/kolla/.lock` locks the Kolla environment.
+
+If you try to execute a play in the Kolla environment, an error message is displayed.
+
+```
+$ osism apply common
+2024-06-02 10:52:44 | INFO     | Task 2f25f55f-96ae-4a6c-aeb4-c1c01e716d91 (common) was prepared for execution.
+2024-06-02 10:52:44 | INFO     | It takes a moment until task 2f25f55f-96ae-4a6c-aeb4-c1c01e716d91 (common) has been started and output is visible here.
+ERROR: The environment kolla is locked via the configuration repository.
+```
+
+File `environments/.lock` is created to lock everything.
+
+If you try to execute a play, an error message is displayed.
+
+```
+$ osism apply facts
+2024-06-02 10:53:08 | INFO     | Task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) was prepared for execution.
+2024-06-02 10:53:08 | INFO     | It takes a moment until task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) has been started and output is visible here.
+ERROR: The configuration repository is locked.
+```
