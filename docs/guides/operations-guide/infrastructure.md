@@ -4,6 +4,48 @@ sidebar_label: Infrastructure
 
 # Infrastructure
 
+## MariaDB
+
+### Backup
+
+[Mariabackup](https://mariadb.com/kb/en/mariabackup-overview/)  is used to create backups
+of MariaDB.
+
+* Full backup
+
+  ```
+  osism apply mariadb_backup
+  ```
+
+* Incremental backup (supported as of OSISM 7.0.6)
+
+  ```
+  osism apply mariadb_backup -e mariadb_backup_type=incremental
+  ```
+
+There is a Docker volume `mariadb_backup` on the 1st control node. The backups
+are stored in this volume.
+
+```
+$ docker run --rm -v mariadb_backup:/backup -it ubuntu:22.04 bash -c 'ls -la /backup'
+total 9728
+drwxr-xr-x 2 42434 42434    4096 Jun  3 18:46 .
+drwxr-xr-x 1 root  root     4096 Jun  3 18:47 ..
+-rw-r--r-- 1 42434 42434 4530618 Jun  3 18:46 incremental-18-mysqlbackup-03-06-2024-1717440409.qp.xbc.xbs.gz
+-rw-r--r-- 1 42434 42434      11 Jun  3 18:45 last_full_date
+-rw-r--r-- 1 42434 42434 5411763 Jun  3 18:45 mysqlbackup-03-06-2024-1717440342.qp.xbc.xbs.gz
+```
+
+### Restore
+
+https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html#restoring-backups
+
+### Recovery
+
+```
+osism apply mariadb_recovery
+```
+
 ## Open Search
 
 ### Get all indices
