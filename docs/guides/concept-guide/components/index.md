@@ -1,3 +1,8 @@
+---
+sidebar_label: Components
+sidebar_position: 10
+---
+
 # Components
 
 * [Infrastructure as a Service (IaaS) with OpenStack](./openstack)

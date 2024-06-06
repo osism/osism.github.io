@@ -9,6 +9,8 @@ sidebar_position: 10
 
 ![OSISM overview](./images/overview.drawio.png)
 
+## Components in a cluster
+
 * [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack)
 * [Software Defined Storage (SDS) with Ceph](./components/ceph)
 * [Bare Metal as a Service (BMaaS) with Ironic](./components/ironic)
@@ -22,20 +24,33 @@ sidebar_position: 10
 * [Realtime insights with Netdata](./components/netdata)
 * [Simple virtualization & containerization with Proxmox VE](./components/proxmox)
 
-## Layered view
+## Requirements
 
-### Compute Plane
+## Layers in a cluster
 
-### Control Plane
+* [Compute Plane](./layers#compute-plane)
+* [Control Plane](./layers#control-plane)
+* [Data Plane](./layers#data-plane)
+* [Management Plane](./layers#management-plane)
+* [Monitoring Plane](./layers#monitoring-plane)
+* [Network Plane](./layers#network-plane)
 
-### Data Plane
+## Cluster design
 
-### Management Plane
+* [Compute architecture](./design#compute-architecture)
+* [Storage architecture](./design#storage-architecture)
+* [Network architecture](./design#network-architecture)
+* [Identity architecture](./design#identity-architecture)
+* [Control plane architecture](./design#control-plane-architecture)
 
-### Monitoring Plane
+## Use cases
 
-### Network Plane
+* [Hyper-converged infrastructure (HCI)](./use-cases#hyper-converged-infrastructure-hci)
 
-## Logical Process Architecture
+## Hardware Bill of Materials
 
-![OSISM architecture](./images/architecture.drawio.png)
+* [Compute nodes](./hardware-bom#compute-nodes)
+* [Storage nodes](./hardware-bom#storage-nodes)
+* [Network nodes](./hardware-bom#network-nodes)
+* [Manager nodes](./hardware-bom#manager-nodes)
+* [Switches](./hardware-bom#switches)
