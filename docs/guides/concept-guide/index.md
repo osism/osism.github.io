@@ -49,6 +49,7 @@ sidebar_position: 10
 
 ## Hardware Bill of Materials
 
+* [Control nodes](./hardware-bom#control-nodes)
 * [Compute nodes](./hardware-bom#compute-nodes)
 * [Storage nodes](./hardware-bom#storage-nodes)
 * [Network nodes](./hardware-bom#network-nodes)
