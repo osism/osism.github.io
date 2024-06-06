@@ -55,3 +55,4 @@ sidebar_position: 10
 * [Network nodes](./hardware-bom#network-nodes)
 * [Manager nodes](./hardware-bom#manager-nodes)
 * [Switches](./hardware-bom#switches)
+* [Network interface cards](./hardware-bom#network-interface-cards)

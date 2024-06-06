@@ -5,6 +5,14 @@ sidebar_position: 50
 
 # Hardware Bill of Materials
 
+:::info
+
+The brands, models and configurations listed are examples. There is no
+single best specification for building a cluster. It always depends very
+much on the requirements of the cluster and the situation.
+
+:::
+
 ## Control nodes
 
 A control node is responsible for running all or most of the OpenStack
@@ -43,3 +51,20 @@ components of the monitoring services. It serves as the operator's entry point i
 the cluster for operations.
 
 ## Switches
+
+### Management switches
+
+* 1G: [Edgecore AS4610-54T](https://www.edge-core.com/product/as4610-54t/)
+* 10G: [Edgecore DCS202 - AS5835-54T](https://www.edge-core.com/product/dcs202/)
+
+### Leaf switches
+
+* 25G: [Edgecore DCS203 - AS7326-56X](https://www.edge-core.com/product/dcs203/)
+* 100G: [Edgecore DCS204 - AS7726-32X](https://www.edge-core.com/product/dcs204/)
+
+### Spine switches
+
+* 100G: [Edgecore DCS204 - AS7726-32X](https://www.edge-core.com/product/dcs204/)
+* 400G: [Edgecore DCS510 - AS9716-32D](https://www.edge-core.com/product/dcs510/)
+
+## Network interface cards
