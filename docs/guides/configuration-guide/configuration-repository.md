@@ -482,3 +482,23 @@ $ osism apply facts
 2024-06-02 10:53:08 | INFO     | It takes a moment until task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) has been started and output is visible here.
 ERROR: The configuration repository is locked.
 ```
+
+## Working with encrypted secrets
+
+To make it easier to work with secrets, the Configuration Repository has several make targets that can be used to display and change them.
+
+* Show all encrypted secrets
+  (This opens a "less" pager, you can search with `/` for files, keys and passwords
+  ```
+  make ansible_vault_show
+  ```
+* Change or add secrets secrets
+  (your $EDITOR is opened
+  ```
+  make ansible_vault_edit FILE=environments/secrets.yml EDITOR=nano
+  ```
+* Re-encrypt all data with a new secret
+  ```
+  make ansible_vault_rekey
+  ```
+  This creates a new `secrets/vaultpass` and creates backups of the old to `secrets/vaultpass_backup_<timestamp>`.
