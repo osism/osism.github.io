@@ -4,7 +4,7 @@ sidebar_label: Octavia
 
 # Octavia
 
-## Cleanup of amphora missing from the DB
+## Cleanup of amphorae missing from the DB
 
 ```none title="/var/log/kolla/octavia/octavia-health-manager.log"
 2023-10-25 16:43:52.547 22 WARNING octavia.amphorae.drivers.health.heartbeat_udp [-]
@@ -12,3 +12,19 @@ The amphora 2a33a889-4f9a-4340-84a5-e58a7a8af17e with IP 10.1.0.79 is missing fr
 DB, so it cannot be automatically deleted (the compute_id is unknown). An operator must
 manually delete it from the compute service.
 ```
+
+## SSH access to amphorae
+
+1. Get the local IP address (`lb_network_ip`) of the amphora you want to access via
+   `openstack --os-cloud admin loadbalancer amphora list`.
+
+2. Connect to one of the nodes that you use for Octavia. Normally the control-
+   or network nodes.
+
+3. You can now use SSH to access the amphora. The use of sudo is required here because
+   you cannot access `/etc/kolla/octavia-worker/octavia_ssh_key` with the operator user
+   account. Replace `lb_network_ip` with the local IP address of the amphora.
+
+   ```
+   sudo ssh -i /etc/kolla/octavia-worker/octavia_ssh_key ubuntu@lb_network_ip
+   ```
