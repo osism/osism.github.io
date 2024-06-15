@@ -5,6 +5,95 @@ sidebar_position: 20
 
 # Loadbalancer
 
+## IP addresses & FQDNs
+
+```yaml title="environments/kolla/configuration.yml"
+kolla_internal_vip_address: 192.168.16.9
+kolla_external_vip_address: 192.168.16.254
+```
+
+```yaml title="environments/kolla/configuration.yml"
+kolla_internal_fqdn: api-int.testbed.osism.xyz
+kolla_external_fqdn: api.testbed.osism.xyz
+```
+
+```yaml title="environments/configuration.yml"
+hosts_additional_entries:
+  api-int.testbed.osism.xyz: 192.168.16.9
+  api.testbed.osism.xyz: 192.168.16.254
+```
+
+## TLS certificates
+
+To enable external TLS encryption:
+
+```yaml title="environments/kolla/configuration.yml"
+kolla_enable_tls_external: "yes"
+```
+
+To enable internal TLS encryption:
+
+```yaml title="environments/kolla/configuration.yml"
+kolla_enable_tls_internal: "yes"
+```
+
+Two certificate files are required to use TLS securely with authentication,
+which will be provided by your Certificate Authority:
+
+* the server certificate with private key
+* the CA certificate with any intermediate certificates
+
+The combined server certificate and private key needs to be provided at
+the following locations in the configuration repository:
+
+* private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
+* private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`
+
+## Generating TLS certificates with Let’s Encrypt
+
+## Self-signed certificates
+
+The use of self-signed certificates with a custom CA is possible. However, a few
+additional parameters are then required in the configuration so that the custom CA
+is known everywhere and the self-signed certificates are accepted as valid.
+
+1. Import custom CA
+
+   Any custom CA can be added via the `certificates_ca` parameter.
+   The import on the nodes is done via `osism apply certificates`.
+   This is already done in the bootstrap of the nodes.
+
+   ```yaml title="environments/configuration.yml"
+   certificates_ca:
+     - name: custom.crt
+       certificate: |
+         -----BEGIN CERTIFICATE-----
+         [...]
+         -----END CERTIFICATE-----
+   ```
+
+2. Manager service
+
+   The local environment variable `REQUESTS_CA_BUNDLE` must be set explicitly so that
+   the manager service knows the custom CA in all necessary places.
+
+   ```yaml title="environments/manager/configuration.yml"
+   manager_environment_extra:
+     REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+   ```
+
+3. Use in OpenStack
+
+   The custom CA must also be copied into the OpenStack containers. To do this, the custom
+   CA is first added in a file in the `environments/kolla/certificates/ca` of the configuration
+   repository.  It makes sense to use the same filename like in step 1.
+
+   The import of the custom CA must then be explicitly enabled.
+
+   ```yaml title="environments/kolla/configuration.yml"
+   kolla_copy_ca_into_containers: "yes"
+   openstack_cacert: /etc/ssl/certs/ca-certificates.crt
+
 ## Second Loadbalancer
 
 :::info
@@ -96,4 +185,10 @@ loadbalancer. This will be possible in the future.
 
 ```
 osism apply --sub external loadbalancer-without-service-config
+```
+
+## ProxySQL
+
+```yaml title="environments/kolla/configuration.yml"
+enable_proxysql: "yes"
 ```
