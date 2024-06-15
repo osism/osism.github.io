@@ -7,7 +7,8 @@ sidebar_position: 15
 
 In the following examples, it is assumed that the Squid proxy integrated by OSISM
 is used on the first manager node. Any other proxy accessible from the nodes can
-also be used here.
+also be used here. `http://{{ groups['manager'][0] }}:3128` which is used here as an
+example is then replaced accordingly with the address of the proxy.
 
 The Squid service can be deployed on the first manager. This is useful if no proxy
 can be used in the environment. The first manager node is then used by all other nodes
@@ -44,9 +45,9 @@ proxy_proxies:
   https: "http://{{ groups['manager'][0] }}:3128"
 ```
 
-## Kolla
+## OpenStack
 
-Proxy settings for containers such as magnum that need internet access.
+Proxy settings for containers such as Magnum that need internet access.
 
 ```yaml title="environments/kolla/configuration.yml"
 ##########################################################
