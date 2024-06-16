@@ -19,7 +19,7 @@ you for the basic details of the new cluster.
 The configuration repository is not created on the future Manager node. It is created on a
 local workstation. If the local workstation cannot be used for this purpose, a dedicated
 virtual system can be used. For more information on this topic, refer to the
-[Seed Deploy Guide](../deploy-guide/seed.md)..
+[Seed Deploy Guide](../deploy-guide/seed.md).
 
 ### Step 1: Preparation
 
@@ -66,7 +66,7 @@ listed there will be queried during the execution of Cookiecutter.
      --rm -it quay.io/osism/cookiecutter
    ```
 
-3. A few parameters are requested. The parameters are documented in detail in the [Parameters reference](#parameters-reference).
+3. A few parameters are requested. The parameters are documented in detail in the [parameter reference](#parameter-reference).
 
    If you want to use the `latest` version, this is done using the `manager_version` parameter. By default,
    this is always set to the latest stable version.
@@ -141,7 +141,7 @@ The following 6 points must be changed after the initial creation of the configu
 3. [Global inventory](#global-inventory)
 4. [DNS servers](#dns-servers)
 5. [NTP servers](#ntp-servers)
-6. [SSL certificates](#ssl-certificates)
+6. [Certificates](#certificates)
 
 #### Secrets
 
@@ -389,8 +389,18 @@ chrony_servers:
   - 4.de.pool.ntp.org
 ```
 
-#### SSL certificates
+#### Certificates
 
+The certificates must be created and added in the configuration repository in the files
+`environments/kolla/certificates/haproxy.pem` and `environments/kolla/certificates/haproxy-internal.pem`. Further information in the [Loadbalancer Configuration Guide](./loadbalancer.md).
+
+If no certificates are to be used, the encryption must be deactivated. This is not
+recommended.
+
+```yaml title="environments/kolla/configuration.yml"
+kolla_enable_tls_external: "yes"
+kolla_enable_tls_internal: "yes"
+```
 
 ## Using latest
 
