@@ -142,7 +142,7 @@ To prevent recurring installation of Ansible Collections, `export INSTALL_ANSIBL
 The network configuration, already present on a node should be backuped before this step.
 Then you can deploy the network configuration with the network role.
 
-Have a look to the [network documentation](../../configuration-guide/network.md) and configure it before running this playbook.
+Have a look to the [network documentation](../configuration-guide/network.md) and configure it before running this playbook.
 
 ```
 ./run.sh network
@@ -196,6 +196,7 @@ This is recommended.
    ```
 
 4. Deploy the manager service.
+   Have a look to the [manager documentation](../configuration-guide/manager.mdx) and configure it before running this playbook.
 
    ```
    ./run.sh manager
