@@ -35,7 +35,7 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
 
 3. Loadbalancer
 
-   Have a look to the [loadbalancer documentation](../../configuration-guide/loadbalancer.md) and conifigure it before deploying the service.
+   Have a look to the [loadbalancer documentation](../../configuration-guide/loadbalancer.md) and configure it before deploying the service.
    ```
    osism apply loadbalancer
    ```
