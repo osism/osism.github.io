@@ -483,22 +483,30 @@ $ osism apply facts
 ERROR: The configuration repository is locked.
 ```
 
-## Working with encrypted secrets
+## Working with encrypted files
 
-To make it easier to work with secrets, the Configuration Repository has several make targets that can be used to display and change them.
+To make it easier to work with encrypted files, the configuration repository has several make
+targets that can be used to view encrypted files and to edit encrypted files.
 
-* Show all encrypted secrets
-  (This opens a "less" pager, you can search with `/` for files, keys and passwords
+* Show secrets in all encrypted files.
+
+  This opens a pager, e.g. less, and you can search with `/` for specific files, keys and passwords.
+
   ```
   make ansible_vault_show
   ```
-* Change or add secrets secrets
-  (your $EDITOR is opened
+
+* Change or add secrets in an encrypted file with the editor set in ` $EDITOR`.
+
   ```
   make ansible_vault_edit FILE=environments/secrets.yml EDITOR=nano
   ```
-* Re-encrypt all data with a new secret
+
+* Re-encrypt all encrypted files with a new key.
+
+  This creates a new `secrets/vaultpass` and creates backups of the old to
+  `secrets/vaultpass_backup_<timestamp>`.
+
   ```
   make ansible_vault_rekey
   ```
-  This creates a new `secrets/vaultpass` and creates backups of the old to `secrets/vaultpass_backup_<timestamp>`.
