@@ -116,19 +116,18 @@ osism apply operator -u osism \
 
 ## Optional: Using a proxy with your environment
 
-The proxy deployment is optional. This is only necessary if you use the proxy on the manager to enable external access of
-the nodes to the internet.
 
-Deploy squid proxy on the manager:
-```
-osism apply squid
-```
+1. Optional: Deploy squid proxy on the manager:
+   ```
+   osism apply squid
+   ```
+   This is only necessary if you use the proxy on the manager to enable external access of the nodes to the internet.
 
-Configure the proxy values unter `proxy_proxies` and `docker_configure_proxy`.
-This is only necessary if you use the proxy on the manager to enable external access to the nodes.
-```
-osism apply proxy
-```
+2. Have a look to the [proxy documentation](../configuration-guide/proxy.md) and configure it before running this playbook.
+3. Apply proxy settings to the nodes
+   ```
+   osism apply proxy
+   ```
 
 ## Network configuration. It is recommended to backup the existing network configuration.
 
