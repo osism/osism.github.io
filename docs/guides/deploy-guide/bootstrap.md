@@ -153,7 +153,7 @@ osism apply operator -u osism \
 
      ```
      fatal: [net003]: UNREACHABLE! =>
-      {"changed": false, "msg": "Connection timed out.", "unreachable": true}``
+      {"changed": false, "msg": "Connection timed out.", "unreachable": true}
      ```
 
    * System has already been rebooted and is not accessible via the network.
