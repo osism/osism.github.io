@@ -1,8 +1,8 @@
 ---
-sidebar_label: Reconceiler
+sidebar_label: Reconciler
 ---
 
-# Reconceiler
+# Reconciler
 
 TODOs:
 
