@@ -42,28 +42,22 @@ $ osism apply
 ## Apply a role
 
 ```
-$ osism apply operator -l st01-mgmt-r01-u30
+$ osism apply operator -l node01
 2024-06-14 09:33:10 | INFO     | Task f94a2e6f-d199-421c-b7b7-743db4661305 (operator) was prepared for execution.
 2024-06-14 09:33:10 | INFO     | It takes a moment until task f94a2e6f-d199-421c-b7b7-743db4661305 (operator) has been started and output is visible here.
 
 PLAY [Make ssh pipelining working] *********************************************
 
 TASK [Do not require tty for all users] ****************************************
-ok: [st01-mgmt-r01-u30]
+ok: [node01]
 
 ...
 ...
-
-TASK [osism.commons.operator : Set password of operator user] ******************
-ok: [st01-mgmt-r01-u30]
-
-TASK [osism.commons.operator : Set root password like operator password] *******
-ok: [st01-mgmt-r01-u30]
 
 PLAY RECAP *********************************************************************
 2024-06-14 09:34:14 | INFO     | Play has been completed. There may now be a delay until all logs have been written.
 2024-06-14 09:34:14 | INFO     | Please wait and do not abort execution.
-st01-mgmt-r01-u30          : ok=11   changed=0    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0
+node01          : ok=11   changed=0    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0
 ```
 
 ## Use of custom plays
