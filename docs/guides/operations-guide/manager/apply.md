@@ -69,6 +69,14 @@ resource node. It is saved in the configuration repository in the file
 `environments/ceph/playbook-wipe-partitions.yml`. It is run with
 `osism apply -e ceph wipe-parititons`.
 
+
+:::warning
+
+Just to be on the safe side: The following example can be useful, but it can also cause a lot of damage. Be warned!
+
+:::
+
+
 ```yaml title="environments/ceph/playbook-wipe-partitions.yml
 ---
 - name: Wipe partitions
@@ -76,12 +84,30 @@ resource node. It is saved in the configuration repository in the file
   gather_facts: false
 
   tasks:
-    - name: Wipe partitions
+    - name: Find all logical devices with prefix ceph
+      ansible.builtin.find:
+        paths: /dev/mapper
+        recurse: false
+        file_type: link
+        patterns: "ceph*"
+      register: result
+
+    - name: Remove all ceph related logical devices
       become: true
-      ansible.builtin.shell: |
-        wipefs --all "{{ item }}"
-        dd if=/dev/zero of="{{ item }}" bs=1 count=4096
-      changed_when: false
-      with_items: "{{ devices }}"
+      ansible.builtin.command: "dmsetup remove {{ item.path }}"
+      loop: "{{ result.files }}"
+      changed_when: true
+
+    - name: Wipe partitions with wipefs
+      become: true
+      ansible.builtin.command: "wipefs --all {{ item }}"
+      changed_when: true
+      loop: "{{ ansible_local.testbed_ceph_devices_all }}"
+
+    - name: Overwrite first 32M with zeros
+      become: true
+      ansible.builtin.command: "dd if=/dev/zero of={{ item }} bs=1M count=32 oflag=direct,dsync"
+      changed_when: true
+      loop: "{{ ansible_local.testbed_ceph_devices_all }}"
 ```
 
