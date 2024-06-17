@@ -174,7 +174,7 @@ fatal: [net003]: UNREACHABLE! =>
 2. Bootstrap nodes
 
    ```
-   osism apply bootstrap -l 'all:!manager'
+   osism apply bootstrap
    ```
 
 3. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
