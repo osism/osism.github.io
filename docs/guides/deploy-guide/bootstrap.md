@@ -152,15 +152,16 @@ osism apply operator -u osism \
    * System is currently rebooting and is not yet accessible via network.
 
      ```
-fatal: [net003]: UNREACHABLE! =>
-{"changed": false, "msg": "Connection timed out.", "unreachable": true}
+     fatal: [net003]: UNREACHABLE! => {"changed": false, "msg": "Connection timed
+     out.", "unreachable": true}``
      ```
 
    * System has already been rebooted and is not accessible via the network.
 
      ```
-fatal: [net003]: UNREACHABLE! =>
-{"changed": false, "msg": "EOF on stream; last 100 lines received:\nssh: connect to host 10.15.0.33 port 22: No route to host\r", "unreachable": true}
+     fatal: [net003]: UNREACHABLE! => {"changed": false, "msg": "EOF on stream;
+     last 100 lines received:\nssh: connect to host 10.15.0.33 port 22: No route
+     to host\r", "unreachable": true}
      ```
 
 ## Bootstrap the nodes
