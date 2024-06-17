@@ -124,7 +124,7 @@ using `ssh-add -l`. The list should be empty.
 
 ```
 ssh-add -D
-ssh -o IdentitiesOnly=yes -i  PATH_TO_YOUR_SECRETS/id_rsa.operator dragon@YOUR_MANAGER_NODE
+ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 ```
 
 ### Step 2: Apply the network configuration
@@ -208,7 +208,7 @@ Finally, the Ansible Vault password is made known on the manager node. Before th
 with the `dragon` user.
 
 ```
-ssh -o IdentitiesOnly=yes -i  PATH_TO_YOUR_SECRETS/id_rsa.operator dragon@YOUR_MANAGER_NODE
+ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 osism set vault password
 ```
 
