@@ -22,8 +22,8 @@ In the example, OSISM release 7.0.5 is used.
 1. Set the new manager version in the configuration repository.
 
    ```
-   UPGRADE_RELEASE="7.0.5"
-   sed -i "~s,^manager_version:.*\$,manager_version: ${UPGRADE_RELEASE}," environments/manager/configuration.yml
+   MANAGER_VERSION="7.0.5"
+   sed -i "~s,^manager_version:.*\$,manager_version: ${MANAGER_VERSION}," environments/manager/configuration.yml
    ```
 
 2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
@@ -64,7 +64,7 @@ In the example, OSISM release 7.0.5 is used.
    workflows for changes to the configuration repository, only a generic example for Git.
 
    ```
-   git commit -a -s -m "manager: use OSISM version ${UPGRADE_RELEASE?}"
+   git commit -a -s -m "manager: use OSISM version ${MANAGER_VERSION?}"
    git push
    ```
 
