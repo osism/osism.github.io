@@ -7,6 +7,9 @@ sidebar_position: 10
 
 The inventory used for the environment is located in the `inventory` directory.
 
+How an inventory works is described in detail in the [Ansible documentation](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html).
+In this chapter, we only deal with special features in the context of OSISM.
+
 ## Manager
 
 The manager has his own inventory which is used exclusively for the seed phase of the manager.
