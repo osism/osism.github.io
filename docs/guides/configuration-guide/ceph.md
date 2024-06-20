@@ -32,9 +32,11 @@ The `client.admin` keyring is placed in the file `environments/infrastructure/fi
 The swappiness is set via the `os_tuning_params` dictionary. The dictionary can
 only be completely overwritten via an entry in the file `environments/ceph/configuration.yml`.
 
-By default, the dictionary looks like this:
+By default, the dictionary looks like this. If the swappiness of `10` is to be used, it is not
+necessary to add the `os_tuning_params` dictionary to the configuration repository. This is only
+necessary if the swappiness is to be customised.
 
-```
+```yaml title="environments/ceph/configuration.yml"
 os_tuning_params:
   - { name: fs.file-max, value: 26234859 }
   - { name: vm.zone_reclaim_mode, value: 0 }
