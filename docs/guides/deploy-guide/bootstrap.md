@@ -138,7 +138,7 @@ osism apply operator -u osism \
 ## Network configuration. It is recommended to backup the existing network configuration.
 
 1. Configure the network setup
-   Have a look to the [network documentation](../../configuration-guide/network.md) and configure it before running this playbook
+   Have a look to the [network documentation](../configuration-guide/network) and configure it before running this playbook
 
    ```
    osism apply network
