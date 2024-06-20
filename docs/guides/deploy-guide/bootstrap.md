@@ -53,7 +53,7 @@ Ansible must be given access to the systems so that OSISM can orchestrate the sy
 In principle, this is achieved by the operator role. The basic command for this is as follows:
 ```
 osism apply operator -u osism
-``
+```
 
 Initial access to set up access can either be via a known password or an SSH public key already stored on the system can be used for this.
 
@@ -121,13 +121,16 @@ osism apply operator -u osism \
 
 
 1. Optional: Deploy squid proxy on the manager:
+
    ```
    osism apply squid
    ```
+
    This is only necessary if you use the proxy on the manager to enable external access of the nodes to the internet.
 
 2. Have a look to the [proxy documentation](../configuration-guide/proxy.md) and configure it before running this playbook.
 3. Apply proxy settings to the nodes
+
    ```
    osism apply proxy
    ```
@@ -136,6 +139,7 @@ osism apply operator -u osism \
 
 1. Configure the network setup
    Have a look to the [network documentation](../../configuration-guide/network.md) and configure it before running this playbook
+
    ```
    osism apply network
    ```
@@ -156,7 +160,7 @@ osism apply operator -u osism \
 
      ```
      fatal: [net003]: UNREACHABLE! => {"changed": false, "msg": "Connection timed
-     out.", "unreachable": true}``
+     out.", "unreachable": true}
      ```
 
    * System has already been rebooted and is not accessible via the network.
