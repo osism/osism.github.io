@@ -11,6 +11,7 @@ import TabItem from '@theme/TabItem';
 In OSISM it is also possible to integrate and use existing Ceph clusters. It
 is not necessary to deploy Ceph with OSISM. If Ceph is deployed with OSISM, it
 should be noted that OSISM does not claim to provide all possible features of Ceph.
+
 Ceph provided with OSISM is intended to provide the storage for Glance, Nova, Cinder
 and Manila. In a specific way that has been implemented by OSISM for years. It
 should be checked in advance whether the way in OSISM the Ceph deployment and the
@@ -22,11 +23,13 @@ open source projects, please refer to
 
 :::warning
 
-Before starting the Ceph deployment, the configuration and preparation of the
-OSD devices must be completed. The steps that are required for this can be found in the
-[Ceph Configuration Guide](../../configuration-guide/ceph.md#osd-devices).
+Before starting the Ceph deployment, the it is recommended to perform the general ceph configuration.
+All the preparing steps are listed in the [Ceph Configuration Guide](../../configuration-guide/ceph).
+
+At least the [preparation](../../configuration-guide/ceph.md#osd-devices) of the necessary LVM2 volumes for the osd devices must be completed.
 
 :::
+
 
 1. Deploy services.
 
@@ -41,6 +44,8 @@ OSD devices must be completed. The steps that are required for this can be found
      ```
      osism apply ceph-mgrs
      ```
+
+   * Prepare OSD devices [as described](../../configuration-guide/ceph#osd-devices) in the configuration guide
 
    * Deploy [ceph-osd](https://docs.ceph.com/en/quincy/man/8/ceph-osd/) services
 

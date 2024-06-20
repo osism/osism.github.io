@@ -13,6 +13,9 @@ It is **strongly advised** to use the documentation for the version being used.
 * Quincy - https://docs.ceph.com/en/quincy/rados/configuration/
 * Reef - https://docs.ceph.com/en/reef/rados/configuration/
 
+Its a good idea to review all options in the follwing list.
+
+
 ## Unique Identifier
 
 The File System ID is a unique identifier for the cluster.
@@ -22,6 +25,12 @@ and must be unique. It can be generated with `uuidgen`.
 ```yaml title="environments/ceph/configuration.yml"
 fsid: c2120a4a-669c-4769-a32c-b7e9d7b848f4
 ```
+
+## Configure the mon address on the mon nodes
+
+Set the variable `monitor_address` in the inventory files of the mon hosts to give ceph-ansible the
+advise which ip adress should be used to reach the monitor instances.
+(`inventory/host_vars/<HOSTNAME>.yml`).
 
 ## Client
 
@@ -125,7 +134,7 @@ vm.min_free_kbytes=4194303
    ceph-control
    ```
 
-## Extra pools
+## Configuration of custom ceph pools
 
 Extra pools can be defined via the `openstack_pools_extra` parameter.
 
@@ -156,29 +165,41 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 
 ## OSD devices
 
-1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
-   add a configuration like the following to it. Ensure that no `devices` parameter
-   is present in the file.
+For more advanced OSD layout requirements leave out the `devices` key
+and instead use `lvm_volumes`. Details for this can be found on the
+[OSD Scenario](https://docs.ceph.com/projects/ceph-ansible/en/latest/osds/scenarios.html) documentation.
 
-   1. Parameters
+In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
+OSISM has the two playbooks `ceph-configure-lvm-volumes` and `ceph-create-lvm-devices` available.
+TODO: add reference to https://docs.ceph.com/en/latest/rados/operations/pgcalc/ and PG autocaler dryrun
 
-      * With the optional parmaeter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
-        set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
-        for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
+### Configure the device layout
 
-        ```yaml
-        ceph_osd_db_wal_devices_buffer_space_percent: 10
-        ```
-      * It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
-        `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
-      * It is always possible to use device names such as `sda` or device IDs such as
-        `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`. `/dev/` is not
-        prefixed and is added automatically.
-      * The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
-      * The `wal_size` parameter is optional and defaults to `2 GB`.
-      * The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
-      * The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
-      * The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
+For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
+add a configuration like the following to it. Ensure that no `devices` parameter
+is present in the file.
+
+**General information about the parameters**
+
+* With the optional parmaeter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
+  set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
+  for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
+
+  ```yaml
+  ceph_osd_db_wal_devices_buffer_space_percent: 10
+  ```
+* It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
+  `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
+* It is always possible to use device names such as `sda` or device IDs such as
+  `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`.
+  The top level dierectory `/dev/` is not prefixed and is added automatically.
+* The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
+* The `wal_size` parameter is optional and defaults to `2 GB`.
+* The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
+* The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
+* The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
+
+**Layout variants**
 
    2. OSD only
 
@@ -282,7 +303,9 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
             wal_pv: nvme1n1
        ```
 
-2. Push the configuration to your configuration repository and after that do the following
+### Rollout the configured layout
+
+1. Push the configuration to your configuration repository and after that do the following
 
    ```
    $ osism apply configuration
@@ -290,7 +313,7 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
    $ osism apply facts
    ```
 
-3. After the configuration has been pulled and facts updated,
+2. After the configuration has been pulled and facts updated,
    you can run the LVM configuration playbook:
 
    ```
@@ -300,7 +323,7 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
    This will generate a new configuration file for each node in `/tmp` 
    on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
 
-4. Take the generated configuration file from `/tmp` and **replace the previously
+3. Take the generated configuration file from `/tmp` and **replace the previously
    configuration** for each node.
 
    In this example, the following content was in the host vars file before
@@ -331,14 +354,14 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
    This content from the file in the `/tmp` directory is added in the host vars file.
    The previous `ceph_osd_devices` is replaced with the new content.
 
-5. Push the updated configuration **again** to your configuration repository and re-run:
+4. Push the updated configuration **again** to your configuration repository and re-run:
 
    ```
    $ osism apply configuration
    $ osism reconciler sync
    ```
 
-6. Finally create the LVM devices.
+5. Finally create the LVM devices.
 
    ```
    $ osism apply ceph-create-lvm-devices
@@ -363,7 +386,7 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
      osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
    ```
 
-7. Everything is now ready for the deployment of the OSDs.
+6. Everything is now ready for the deployment of the OSDs.
    Details on deploying Ceph in the [Ceph deploy guide](../deploy-guide/services/ceph).
 
 ### Full examples
