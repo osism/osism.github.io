@@ -11,10 +11,13 @@ As a prerequisite for the bootstraping the nodes of a cluster, the manager node 
 prepared. What a Manager node is and how to prepare it is documented in the
 [Manager chapter of the deploy guide](./manager.md).
 
-All the nodes must also have already been provisioned. How provisioning is done
-is documented in the [provisioning chapter of the deploy guide](./provisioning.md).
+All the nodes must also have already been provisioned. How manual provisioning is done
+is documented in the [Provisioning chapter of the Deploy Guide](./provisioning).
 
 :::
+
+Before the nodes can be bootstrapped, they must all have already been provisioned.
+The guide for this can be found in the section [Provisioning of bare-metal nodes](./provisioning).
 
 The following steps are applied to bootstrap all nodes. After the completion of the bootstrap,
 the nodes are ready for the deployment of the services.

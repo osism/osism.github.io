@@ -32,9 +32,11 @@ The `client.admin` keyring is placed in the file `environments/infrastructure/fi
 The swappiness is set via the `os_tuning_params` dictionary. The dictionary can
 only be completely overwritten via an entry in the file `environments/ceph/configuration.yml`.
 
-By default, the dictionary looks like this:
+By default, the dictionary looks like this. If the swappiness of `10` is to be used, it is not
+necessary to add the `os_tuning_params` dictionary to the configuration repository. This is only
+necessary if the swappiness is to be customised.
 
-```
+```yaml title="environments/ceph/configuration.yml"
 os_tuning_params:
   - { name: fs.file-max, value: 26234859 }
   - { name: vm.zone_reclaim_mode, value: 0 }
@@ -152,14 +154,7 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 | `openstack_pool_default_pg_num`   | 64            |
 | `openstack_pool_default_min_size` | 0             |
 
-## LVM devices
-
-For more advanced OSD layout requirements leave out the `devices` key
-and instead use `lvm_volumes`. Details for this can be found on the
-[OSD Scenario](https://docs.ceph.com/projects/ceph-ansible/en/latest/osds/scenarios.html) documentation.
-
-In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
-OSISM has the two playbooks `ceph-configure-lvm-volumes` and `ceph-create-lvm-devices` available.
+## OSD devices
 
 1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
    add a configuration like the following to it. Ensure that no `devices` parameter

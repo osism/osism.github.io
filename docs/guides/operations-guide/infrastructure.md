@@ -4,6 +4,64 @@ sidebar_label: Infrastructure
 
 # Infrastructure
 
+## Loadbalancer
+
+For the `manage-loadbalancer` play to work, the internal control socket
+of the HAProxy service must be set to admin level. As of OSISM 7.0.6 this
+is the default. Before this, the parameter `haproxy_socket_level_admin` must
+be added to the configuration repository and then a reconfigure
+(`osism apply -a reconfigure loadbalancer`) must be done for the loadbalancer
+service.
+
+```yaml title="environments/kolla/configuration.yml"
+haproxy_socket_level_admin: "yes"
+```
+
+You can check in the HAProxy configuration whether the control socket is
+configured correctly.
+
+```ini title="/etc/kolla/haproxy/haproxy.cfg"
+global
+    [...]
+    stats socket /var/lib/kolla/haproxy/haproxy.sock group kolla mode 660 level admin
+```
+
+* Disable the host `testbed-node-0` in all backends of the service `keystone `
+
+  ```
+  osism apply manage-loadbalancer \
+    -e manage_loadbalancer_action=disable \
+    -e manage_loadbalancer_service=keystone \
+    -e manage_loadbalancer_host=testbed-node-0
+  ```
+
+* Enable the host `testbed-node-0` in all backends of the service `keystone `
+
+  ```
+  osism apply manage-loadbalancer \
+    -e manage_loadbalancer_action=enable \
+    -e manage_loadbalancer_service=keystone \
+    -e manage_loadbalancer_host=testbed-node-0
+  ```
+
+* Disable the host `testbed-node-0` in all backends
+
+  ```
+  osism apply manage-loadbalancer \
+    -e manage_loadbalancer_action=disable \
+    -e manage_loadbalancer_service=all \
+    -e manage_loadbalancer_host=testbed-node-0
+  ```
+
+* Enable the host `testbed-node-0` in all backends
+
+  ```
+  osism apply manage-loadbalancer \
+    -e manage_loadbalancer_action=enable \
+    -e manage_loadbalancer_service=all \
+    -e manage_loadbalancer_host=testbed-node-0
+  ```
+
 ## MariaDB
 
 ### Backup

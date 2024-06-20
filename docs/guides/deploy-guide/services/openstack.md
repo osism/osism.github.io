@@ -6,7 +6,7 @@ sidebar_position: 60
 # OpenStack
 
 Common issues with deploying OpenStack services are documented in the
-[OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
+[OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack.md).
 
 :::info
 
@@ -92,6 +92,24 @@ Not all of the services listed there are supported by OSISM.
 
    ```
    osism manage image octavia
+   ```
+
+   For the command to be usable, a cloud profile for cctavia must currently be added in the
+   clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
+   The secret is added to the secure.yml file.
+
+   ```yaml title="environments/openstack/clouds.yml"
+   clouds:
+     [...]
+     octavia:
+       auth:
+         username: octavia
+         project_name: service
+         auth_url: https://api.testbed.osism.xyz:5000/v3
+         project_domain_name: default
+         user_domain_name: default
+       cacert: /etc/ssl/certs/ca-certificates.crt
+       identity_api_version: 3
    ```
 
 10. Horizon

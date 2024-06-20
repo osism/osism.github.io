@@ -9,7 +9,7 @@ sidebar_position: 10
 
 The prerequisite for the deployment of a cluster is a configuration repository.
 What a configuration repository is and how it is created is described in the
-[Configuration Guide](../configuration-guide/configuration-repository#creating-a-new-configuration-repository).
+[Configuration Guide](../configuration-guide/configuration-repository.md#creating-a-new-configuration-repository).
 
 :::
 
@@ -38,8 +38,8 @@ previously created with Cookiecutter and the [osism/cfg-cookiecutter](https://gi
 repository.
 
 The creation of the configuration repository is covered in chapter
-[Creation of a configuration repository](../configuration-guide/configuration-repository#creating-a-new-configuration-repository)
-of the [Configuration Guide](../configuration-guide).
+[Creation of a configuration repository](../configuration-guide/configuration-repository.md#creating-a-new-configuration-repository)
+of the [Configuration Guide](../configuration-guide/index.md).
 
 A configuration repository is stored on a Git server (e.g. GitHub, Gitlab, ...). The
 configuration repository is individual for each environment and is therefore not provided

@@ -11,7 +11,7 @@ OSISM is deployed in a series of successive steps. The steps are documented in t
 
 The prerequisite for the deployment of a cluster is a configuration repository.
 What a configuration repository is and how it is created is described in the
-[Configuration Guide](../configuration-guide/configuration-repository#creating-a-new-configuration-repository).
+[Configuration Guide](../configuration-guide/configuration-repository.md#creating-a-new-configuration-repository).
 
 :::
 
