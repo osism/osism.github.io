@@ -15,10 +15,10 @@ and have been published under the Apache Licence 2.0.
 
 ## Compute architecture
 
+## Control plane architecture
+
 ## Storage architecture
 
 ## Network architecture
 
 ## Identity architecture
-
-## Control plane architecture

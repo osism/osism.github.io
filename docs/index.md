@@ -28,3 +28,23 @@ The documentation is organised into guides:
   It is an extension of the Operations Guide.
 * The [User Guide](./guides/user-guide/) is intended for users of the individual components. It contains
   best practices, as well as other information.
+
+## Required knowledge
+
+OSISM is a life cycle management framework for managing complex modules such as Ceph,
+OpenStack or Kubernetes. We try to make deployment, upgrade, day2 operations etc. as
+easy as possible for everyone to use. However, knowledge is still required that we do
+not cover in our documentation. Wherever possible, we try to refer to existing documentation
+from e.g. Ansible or Docker.
+
+If you are not sure whether you already have the required knowledge, need support in
+gaining the knowledge or would like a guided introduction, you are welcome to contact
+us at [info@osism.tech](mailto:info@osism.tech). We are happy to help.
+
+* We assume that the reader is well familiar with Linux (LPIC2 level).
+* We assume that the reader has understood the basic concepts of Ansible
+  and can use Ansible in a basic way.
+* We assume that the reader has understood the basic concepts of Docker
+  and can use Docker in a basic way.
+* We assume that the reader has understood the basic concepts of Kubernetes
+  and can use Kubernetes in a basic way.

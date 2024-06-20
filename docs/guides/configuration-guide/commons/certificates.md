@@ -20,5 +20,5 @@ The role is part of the bootstrap of a node. CA certificates can be added at a l
 point in time via `osism apply certificates` on a node.
 
 Further details on the use of self-signed certificates can be found in chapter
-[Self-signed certificates](../self-signed-certificates)
+[Self-signed certificates](../loadbalancer#self-signed-certificates)
 of the configuration guide.
