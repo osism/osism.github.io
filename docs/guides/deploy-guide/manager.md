@@ -8,7 +8,7 @@ sidebar_position: 20
 :::info
 
 The prerequisite for deploying the Manager node is a Seed node. What a Seed node is
-and how to prepare it is documented in the [Seed chapter of the Deploy Guide](./seed).
+and how to prepare it is documented in the [Seed chapter of the Deploy Guide](./seed.md).
 
 :::
 
@@ -37,7 +37,7 @@ Requirements for the manager node:
 
 Change into the `environments/manager` directory of the configuration repository
 on the seed node. The deployment of the seed node itself is documented in the
-[Deploy Guide for the seed node](../deploy-guide/seed).
+[Deploy Guide for the seed node](../deploy-guide/seed.md).
 
 ```
 cd environments/manager
