@@ -201,109 +201,138 @@ is present in the file.
 
 **Layout variants**
 
-   2. OSD only
+OSISM basically utilizes LVM volumes for all OSD setup variants.
 
-      The `sda` device will be used as an OSD device without WAL and DB device.
+<Tabs>
 
-      ```yaml
-      ceph_osd_devices:
-        sda:
-      ```
+<TabItem value="osd_only" label="OSD only">
 
-    3. OSD + DB device
+This variant does not use a dedicated wal- or db-device.
+This is the most simple variant and this variant can be used if you use a all-flash setup with NVMes.
 
-       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
-       OSD is provided with 30 GB.
+The `sda` device will be used as an OSD device without WAL and DB volume device.
 
-       ```yaml
-       ceph_db_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-       ```
+```yaml
+ceph_osd_devices:
+  sda:
+```
+</TabItem>
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device.
+<TabItem value="osd_and_db" label="OSD + DB device">
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-       ```
+The `nvme0n1` device will be used as an source for DB device volumes.
+With the configured values the provisioning mechanism creates 6 logical volumes of 30GB size each on the nvme which can
+be used for 6 OSD instances.
 
-    4. OSD + WAL device
+ ```yaml
+ ceph_db_devices:
+   nvme0n1:
+     num_osds: 6
+     db_size: 30 GB
+ ```
 
-       The `nvme0n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
-       OSD is provided with 2 GB.
+The devices `sda` up to `sdf` will use the previously defined DB volumes from `nvme0n1` for the listed OSD instances.
 
-       ```yaml
-       ceph_wal_devices:
-         nvme0n1:
-           num_osds: 6
-           wal_size: 2 GB
-       ```
+ ```yaml
+ ceph_osd_devices:
+    sda:
+      db_pv: nvme0n1
+    ...
+    sdf:
+      db_pv: nvme0n1
+ ```
+</TabItem>
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as WAL device.
+<TabItem value="osd_and_wal" label="OSD + WAL device">
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            wal_pv: nvme0n1
-       ```
+The `nvme0n1` device will be used as an source for WAL device volumes.
+With the configured values the provisioning mechanism creates 6 logical volumes of 2B size each on `nvme0n1` which can
+be used for 6 OSD instances.
 
-    5. OSD + DB device + WAL device (same device for DB + WAL)
 
-       The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
-       to 6 OSDs.
+```yaml
+ceph_wal_devices:
+  nvme0n1:
+    num_osds: 6
+    wal_size: 2 GB
+```
 
-       ```yaml
-       ceph_db_wal_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-           wal_size: 2 GB
-       ```
+The devices `sda` up to `sdf` will use the previously defined WAL volumes from `nvme0n1` for the listed OSD instances.
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
+```yaml
+ceph_osd_devices:
+   sda:
+     wal_pv: nvme0n1
+```
+</TabItem>
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-            wal_pv: nvme0n1
-       ```
+<TabItem value="osd_and_wal" label="OSD and DB + WAL on same device">
 
-    6. OSD + DB device + WAL device (different device for DB + WAL)
+The `nvme0n1` device will be used as an source for WAL and DB device volumes.
+With the configured values the provisioning mechanism creates 6 logical DB volumes of 30GB and 6 logical WAL volumes of 2B size each
+on `nvme0n1` which can be used for 6 OSD instances.
 
-       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
-       OSD is provided with 30 GB.
 
-       ```yaml
-       ceph_db_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-       ```
+The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
+to 6 OSDs.
 
-       The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
-       OSD is provided with 2 GB.
+```yaml
+ceph_db_wal_devices:
+  nvme0n1:
+    num_osds: 6
+    db_size: 30 GB
+    wal_size: 2 GB
+```
 
-       ```yaml
-       ceph_wal_devices:
-         nvme1n1:
-           num_osds: 6
-           wal_size: 2 GB
-       ```
+The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
+```yaml
+ceph_osd_devices:
+   sda:
+     db_pv: nvme0n1
+     wal_pv: nvme0n1
+```
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-            wal_pv: nvme1n1
-       ```
+In the example shown here, both the data structures for the RocksDB and for the write-ahead log are placed on the faster NVMe device.
+(This is described in the [Ceph documentation](https://docs.ceph.com/en/latest/rados/configuration/bluestore-config-ref/) as "...whenever a DB device is specified but an explicit WAL device is not, the WAL will be implicitly colocated with the DB on the faster device...").
 
-### Rollout the configured layout
+</TabItem>
+
+<TabItem value="osd_and_wal" label="OSD and DB + WAL different device">
+
+The `nvme0n1` device will be used as an source for WAL and `nvme1n1` for DB device volumes.
+With the configured values the provisioning mechanism creates 6 logical volumes of 30 GB and 6 logical WAL volumes of 2B size each.
+
+```yaml
+ceph_db_devices:
+  nvme0n1:
+    num_osds: 6
+    db_size: 30 GB
+```
+
+The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
+OSD is provided with 2 GB.
+
+```yaml
+ceph_wal_devices:
+  nvme1n1:
+    num_osds: 6
+    wal_size: 2 GB
+```
+
+The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
+
+```yaml
+ceph_osd_devices:
+   sda:
+     db_pv: nvme0n1
+     wal_pv: nvme1n1
+```
+</TabItem>
+
+</Tabs>
+
+### Provision the configured layout
 
 1. Commit and push the configuration to your configuration repository
 2. Establish the changed configuration
