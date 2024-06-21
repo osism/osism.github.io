@@ -373,13 +373,13 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 The `ceph_osd_devices` and `ceph_db_devices` parameters with the following content are initially added
 in the host vars of the node. Devices `/dev/sda` and `/dev/sdb` are used as OSD devices. The device `/dev/sdd`
 is used as a DB device for up to 2 OSDs. For each OSD that uses `/dev/sdd` as DB device, an LV volume of
-(in this case) 5 GByte is created Please note that at least 30 GByte must be used for a DB device in production.
+(in this case) 30 GByte is created. Please note that at least 30 GByte must be used for a DB device in production.
 
 ```yaml
 ceph_db_devices:
   sdd:
     num_osds: 2
-    db_size: 5 GB
+    db_size: 30 GB
 
 ceph_osd_devices:
   sdb:
@@ -407,7 +407,7 @@ Add this content to the host vars of the correspondingnode. The existing `ceph_o
 #
 ceph_db_devices:
   sdd:
-    db_size: 5 GB
+    db_size: 30 GB
     num_osds: 2
     vg_name: ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb
 ceph_osd_devices:
