@@ -36,7 +36,7 @@ advise which ip adress should be used to reach the monitor instances.
 
 The `client.admin` keyring is placed in the file `environments/infrastructure/files/ceph/ceph.client.admin.keyring`.
 
-## Swappiness
+## Systemctl Parameters, Swappiness and Friends
 
 The swappiness is set via the `os_tuning_params` dictionary. The dictionary can
 only be completely overwritten via an entry in the file `environments/ceph/configuration.yml`.
@@ -305,15 +305,16 @@ is present in the file.
 
 ### Rollout the configured layout
 
-1. Push the configuration to your configuration repository and after that do the following
-
+1. Commit and push the configuration to your configuration repository
+2. Establish the changed configuration
+   Make sure that you do not have any open changes on the manager node either, as these will be discarded during this step.
    ```
    $ osism apply configuration
    $ osism reconciler sync
    $ osism apply facts
    ```
 
-2. After the configuration has been pulled and facts updated,
+3. After the configuration has been pulled and facts updated,
    you can run the LVM configuration playbook:
 
    ```
@@ -323,7 +324,7 @@ is present in the file.
    This will generate a new configuration file for each node in `/tmp` 
    on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
 
-3. Take the generated configuration file from `/tmp` and **replace the previously
+4. Take the generated configuration file from `/tmp` and **replace the previously
    configuration** for each node.
 
    In this example, the following content was in the host vars file before
@@ -354,14 +355,15 @@ is present in the file.
    This content from the file in the `/tmp` directory is added in the host vars file.
    The previous `ceph_osd_devices` is replaced with the new content.
 
-4. Push the updated configuration **again** to your configuration repository and re-run:
-
+5. Commit and push the configuration to your configuration repository **again**
+6. Establish the changed configuration
+   Make sure that you do not have any open changes on the manager node either, as these will be discarded during this step.
    ```
    $ osism apply configuration
    $ osism reconciler sync
    ```
 
-5. Finally create the LVM devices.
+7. Finally create the LVM devices.
 
    ```
    $ osism apply ceph-create-lvm-devices
@@ -386,7 +388,7 @@ is present in the file.
      osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
    ```
 
-6. Everything is now ready for the deployment of the OSDs.
+7. Everything is now ready for the deployment of the OSDs.
    Details on deploying Ceph in the [Ceph deploy guide](../deploy-guide/services/ceph).
 
 ### Full examples
