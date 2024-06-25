@@ -31,76 +31,92 @@ At least the [preparation](../../configuration-guide/ceph.md#osd-devices) of the
 :::
 
 
-1. Deploy services.
+## Deploy ceph services.
 
-   * Deploy [ceph-mon](https://docs.ceph.com/en/quincy/man/8/ceph-mon/) services
+* Deploy [ceph-mon](https://docs.ceph.com/en/quincy/man/8/ceph-mon/) services
 
-     ```
-     osism apply ceph-mons
-     ```
+  ```
+  osism apply ceph-mons
+  ```
 
-   * Deploy ceph-mgr services
+* Deploy ceph-mgr services
 
-     ```
-     osism apply ceph-mgrs
-     ```
+  ```
+  osism apply ceph-mgrs
+  ```
 
-   * Prepare OSD devices [as described](../../configuration-guide/ceph#osd-devices) in the configuration guide
+* Prepare OSD devices [as described](../../configuration-guide/ceph#osd-devices) in the configuration guide
 
-   * Deploy [ceph-osd](https://docs.ceph.com/en/quincy/man/8/ceph-osd/) services
+* Deploy [ceph-osd](https://docs.ceph.com/en/quincy/man/8/ceph-osd/) services
 
-     ```
-     osism apply ceph-osds
-     ```
+  ```
+  osism apply ceph-osds
+  ```
 
-   * Generate pools and keys. This step is only necessary for OSISM >= 7.0.0.
+* Configure custom pools [as described](../../configuration-guide/ceph#extra-pools) in the configuration guide
 
-     ```
-     osism apply ceph-pools
-     ```
+* Generate pools and the related keys. This step is only necessary for OSISM >= 7.0.0.
 
-   * Deploy ceph-crash services
+  ```
+  osism apply ceph-pools
+  ```
 
-     ```
-     osism apply ceph-crash
-     ```
+* Deploy ceph-crash services
 
-   :::info
+  ```
+  osism apply ceph-crash
+  ```
 
-   It's all done step by step here. It is also possible to do this in a single step.
-   This speeds up the entire process and avoids unnecessary restarts of individual
-   services.
+:::info
 
-   <Tabs>
-   <TabItem value="osism-7" label="OSISM >= 7.0.0">
-   ```
-   osism apply ceph
-   ```
+It's all done step by step here. It is also possible to do this in a single step.
+This speeds up the entire process and avoids unnecessary restarts of individual
+services.
 
-   Generate pools and keys.
+<Tabs>
+<TabItem value="osism-7" label="OSISM >= 7.0.0">
+```
+osism apply ceph
+```
 
-   ```
-   osism apply ceph-pools
-   ```
-   </TabItem>
-   <TabItem value="osism-6" label="OSISM < 7.0.0">
-   ```
-   osism apply ceph-base
-   ```
-   </TabItem>
-   </Tabs>
+Generate pools and keys.
 
-   :::
+```
+osism apply ceph-pools
+```
+</TabItem>
+<TabItem value="osism-6" label="OSISM < 7.0.0">
+```
+osism apply ceph-base
+```
+</TabItem>
+</Tabs>
 
-2. Get ceph keys. This places the necessary keys in `/opt/configuration`.
+:::
+
+## Install Ceph Clients
+
+1. Get ceph keys. This places the necessary keys in `/opt/configuration`.
 
    ```
    osism apply copy-ceph-keys
    ```
 
-   After run, these keys must be permanently added to the configuration repository
-   via Git.
+2. Encrypt the fetched keys
+   It is highly recommended to store the Ceph keys encrypted in the Git repository.
+   ```
+   cd /opt/configuration
+   make ansible_vault_encrypt_ceph_keys
+   ```
 
+3. Add the keys permanently to the repository
+
+   ```
+   git add **/ceph.*.keyring
+   git commit -m "Add the downloaded Keyes to the repository"
+   ```
+
+   Here is an overview of the individual keys:
    ```
    environments/infrastructure/files/ceph/ceph.client.admin.keyring
    environments/kolla/files/overlays/gnocchi/ceph.client.gnocchi.keyring
@@ -113,6 +129,8 @@ At least the [preparation](../../configuration-guide/ceph.md#osd-devices) of the
    environments/kolla/files/overlays/glance/ceph.client.glance.keyring
    ```
 
+   :::info
+
    If the `osism apply copy-ceph-keys` fails because the keys are not found in the `/share`
    directory, this can be ignored. The keys of the predefined keys (e.g. for Manila) were
    then not created as they are not used. If you only use Ceph and do not need the predefined
@@ -122,19 +140,22 @@ At least the [preparation](../../configuration-guide/ceph.md#osd-devices) of the
    ```yaml title="environments/ceph/configuration.yml"
    ceph_kolla_keys: []
    ```
+   :::
 
-3. After the Ceph keys have been persisted in the configuration repository, the Ceph
+2. After the Ceph keys have been persisted in the configuration repository, the Ceph
    client can be deployed.
 
    ```
    osism apply cephclient
    ```
 
-4. Enable and prepare the use of the Ceph dashboard.
+## Enable Ceph Dashboard
 
-   ```
-   osism apply ceph-bootstrap-dashboard
-   ```
+Enable and prepare the use of the Ceph dashboard.
+
+```
+osism apply ceph-bootstrap-dashboard
+```
 
 ## RGW service
 
