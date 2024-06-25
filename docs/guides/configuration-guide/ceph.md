@@ -3,6 +3,9 @@ sidebar_label: Ceph
 sidebar_position: 30
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem
+
 # Ceph
 
 The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/configuration/
