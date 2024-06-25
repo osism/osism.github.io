@@ -4,7 +4,7 @@ sidebar_position: 30
 ---
 
 import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem
+import TabItem from '@theme/TabItem';
 
 # Ceph
 
