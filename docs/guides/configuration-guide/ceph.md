@@ -269,7 +269,7 @@ ceph_osd_devices:
 ```
 </TabItem>
 
-<TabItem value="osd_and_wal" label="OSD and DB + WAL on same device">
+<TabItem value="osd_and_wal_same" label="OSD and DB + WAL on same device">
 
 The `nvme0n1` device will be used as an source for WAL and DB device volumes.
 With the configured values the provisioning mechanism creates 6 logical DB volumes of 30GB and 6 logical WAL volumes of 2B size each
@@ -301,7 +301,7 @@ In the example shown here, both the data structures for the RocksDB and for the 
 
 </TabItem>
 
-<TabItem value="osd_and_wal" label="OSD and DB + WAL different device">
+<TabItem value="osd_and_wal_different" label="OSD and DB + WAL different device">
 
 The `nvme0n1` device will be used as an source for WAL and `nvme1n1` for DB device volumes.
 With the configured values the provisioning mechanism creates 6 logical volumes of 30 GB and 6 logical WAL volumes of 2B size each.
