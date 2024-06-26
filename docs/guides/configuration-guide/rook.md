@@ -17,7 +17,7 @@ It is **strongly advised** to use the documentation for the version being used.
 
 The File System ID is a unique identifier for the cluster.
 
-~The identifier is set via the parameter `fsid` in `environments/ceph/configuration.yml`~
+~The identifier is set via the parameter `fsid` in `environments/rook/configuration.yml`~
 ~and must be unique. It can be generated with `uuidgen`.~
 
 It is generated automatically by the [Rook Deployment](../deploy-guide/services/rook.md).
@@ -31,9 +31,22 @@ TODO: To evaluate if we want and can pass a `fsid`. This is no out-of-the-box Ro
 
 There is no real Ceph client installed on the manager node, but a wrapper to enter the Rook Toolbox can be installed.
 
+If the namespace of the rook cluster was changed this needs to be reflected as well as the install type of the client.
+
+```yaml title="environments/infrastructure/configuration.yml"
+cephclient_install_type: rook
+
+cephclient_rook_namespace: rook-ceph
 ```
-osism apply rook-cephclient
+
+After successfully configuring the environment for the client, run the installation:
+
+```bash
+osism apply cephclient
 ```
+
+TODO: This will try to detect a prior installation of a Ceph client with the install type `container` or `package` and cleanup that.
+
 
 
 ## Network configuration
@@ -43,14 +56,14 @@ If you want complete flexibility, you can also use the `rook_network` variable w
 
 ### Configuring `addressRanges`
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_network_public: "192.168.16.0/24"
 rook_network_cluster: "192.168.17.0/24"
 ```
 
 ### Configuring encryption, compression, msgr2
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_network_encryption: true
 rook_network_compression: true
 rook_network_require_msgr2: false
@@ -58,7 +71,7 @@ rook_network_require_msgr2: false
 
 ### Flexible approach using `rook_network`
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_network_encryption: true
 rook_network_compression: true
 rook_network_require_msgr2: false
@@ -413,7 +426,7 @@ Some useful ansible variables for the options from the [Rook Ceph Dashboard Docu
 
 The Ceph dashboard is deployed by default and also an LoadBalancer Service is created in Kubernetes.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_dashboard_enabled: true
 rook_dashboard_ssl: true
 rook_dashboard_port: 7000
@@ -424,7 +437,7 @@ rook_dashboard_port_external: 443
 
 The name that will be used internally for the Ceph cluster can be changed. Most commonly the name is the same as the namespace since multiple clusters are not supported in the same namespace.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_cluster_name: rook-ceph
 ```
 
@@ -434,7 +447,7 @@ The Kubernetes namespace that will be created for the Rook cluster can be change
 
 By default, both for the operator and the rook cluster, the namespace `rook-ceph` is used.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_operator_namespace: rook-ceph
 rook_namespace: rook-ceph
 ```
@@ -443,7 +456,7 @@ rook_namespace: rook-ceph
 
 The number and placement of Ceph daemons can be changed.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_mon_count: 3
 rook_mds_count: 3
 rook_mgr_count: 3
@@ -451,28 +464,54 @@ rook_mgr_count: 3
 
 Please read [Rook MON Settings](https://rook.io/docs/rook/latest-release/CRDs/Cluster/ceph-cluster-crd/#mon-settings), [Rook MGR Settings](https://rook.io/docs/rook/latest-release/CRDs/Cluster/ceph-cluster-crd/#mgr-settings) and [Rook MDS Settings](https://rook.io/docs/rook/latest-release/CRDs/Shared-Filesystem/ceph-filesystem-crd/#metadata-server-settings) to understand which configurations make sense.
 
-TODO: Placement of daemons via labels is being worked on and will follow shortly. The current idea is something like this:
+The following inventory groups are defined with defaults and can be used to control the node affinity regarding the indicated Ceph components:
 
-```yaml title="environments/ceph/configuration.yml"
-rook_mon_nodes:
-  - testbed-node-0
-  - testbed-node-1
-  - testbed-node-2
-rook_mds_nodes:
-  - testbed-node-0
-  - testbed-node-1
-  - testbed-node-2
-rook_mgr_nodes:
-  - testbed-node-0
-  - testbed-node-1
-  - testbed-node-2
+* `rook-mds`
+* `rook-mgr`
+* `rook-mon`
+* `rook-osd`
+* `rook-rgw`
+
+To customise those inventory groups it is possible to do so in the following format:
+
+```ini title="inventory/20-roles"
+[rook-mds:children]
+ceph-control
+
+[rook-mgr:children]
+ceph-control
+
+[rook-mon:children]
+ceph-control
+
+[rook-osd:children]
+ceph-resource
+
+[rook-rgw:children]
+ceph-control
 ```
+
+Nodes assigned to those groups will be labeled and then be utilised during the scheduling of the pods with a configuration like the following for each component:
+
+```yaml title="environments/rook/configuration.yml"
+nodeAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms:
+    - matchExpressions:
+      - key: "node-role.osism.tech/{{ rook_placement_label_mon }}"
+        operator: In
+        values:
+        - "true"
+```
+
+TODO: Implement a way to cleanly relabel nodes.
+TODO: Implement reschedule after changing labels
 
 ## Crash Collector
 
 The [Ceph Crash Module](https://docs.ceph.com/en/quincy/mgr/crash/) is enabled by default. You can also configure how long to retain the crash reports.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_crashcollector:
   disable: false
   daysToRetrain: 7
@@ -482,7 +521,7 @@ rook_crashcollector:
 
 The [Ceph Crash Module](https://docs.ceph.com/en/quincy/mgr/crash/) is enabled by default. You can also configure how long to retain the crash reports.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_crashcollector:
   disable: false
   daysToRetrain: 7
@@ -498,7 +537,7 @@ The Ceph Config feature is currently in an experimental state in the Rook projec
 
 Please read [Ceph Config](https://rook.github.io/docs/rook/latest-release/CRDs/Cluster/ceph-cluster-crd/#ceph-config) for details on how to use and what to expect from this feature.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_cephconfig:
   global:
     # All values must be quoted so they are considered a string in YAML
@@ -520,7 +559,7 @@ The [OSISM Rook role](https://github.com/osism/ansible-collection-services/tree/
 
 Just overwrite `rook_configuration_directory` and place any `*.yml.j2` files that you want to apply there.
 
-```yaml title="environments/ceph/configuration.yml"
+```yaml title="environments/rook/configuration.yml"
 rook_template_directory: "{{ configuration_directory }}/environments/rook/files"
 ```
 
