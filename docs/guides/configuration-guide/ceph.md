@@ -166,6 +166,10 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 | `openstack_pool_default_pg_num`   | 64            |
 | `openstack_pool_default_min_size` | 0             |
 
+It is important to set up the [placement groups](https://docs.ceph.com/en/nautilus/rados/operations/placement-groups/) appropriately so that
+Ceph does not fall short of its potential in terms of performance, for example.
+Dabei können Werkzeuge wie [PG Calc ](https://docs.ceph.com/en/latest/rados/operations/pgcalc/) helfen.
+
 ## OSD devices
 
 For more advanced OSD layout requirements leave out the `devices` key
@@ -174,7 +178,6 @@ and instead use `lvm_volumes`. Details for this can be found on the
 
 In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
 OSISM has the two playbooks `ceph-configure-lvm-volumes` and `ceph-create-lvm-devices` available.
-TODO: add reference to https://docs.ceph.com/en/latest/rados/operations/pgcalc/ and PG autocaler dryrun
 
 ### Configure the device layout
 
