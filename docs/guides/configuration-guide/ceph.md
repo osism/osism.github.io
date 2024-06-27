@@ -39,7 +39,7 @@ advise which ip adress should be used to reach the monitor instances.
 
 The `client.admin` keyring is placed in the file `environments/infrastructure/files/ceph/ceph.client.admin.keyring`.
 
-## Systemctl Parameters, Swappiness and Friends
+## SysCtl Parameters, Swappiness and Friends
 
 The swappiness is set via the `os_tuning_params` dictionary. The dictionary can
 only be completely overwritten via an entry in the file `environments/ceph/configuration.yml`.
