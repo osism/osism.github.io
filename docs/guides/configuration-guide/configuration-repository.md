@@ -19,7 +19,7 @@ you for the basic details of the new cluster.
 The configuration repository is not created on the future Manager node. It is created on a
 local workstation. If the local workstation cannot be used for this purpose, a dedicated
 virtual system can be used. For more information on this topic, refer to the
-[Seed Deploy Guide](../deploy-guide/seed.md)..
+[Seed Deploy Guide](../deploy-guide/seed.md).
 
 ### Step 1: Preparation
 
@@ -66,7 +66,7 @@ listed there will be queried during the execution of Cookiecutter.
      --rm -it quay.io/osism/cookiecutter
    ```
 
-3. A few parameters are requested. The parameters are documented in detail in the [Parameters reference](#parameters-reference).
+3. A few parameters are requested. The parameters are documented in detail in the [parameter reference](#parameter-reference).
 
    If you want to use the `latest` version, this is done using the `manager_version` parameter. By default,
    this is always set to the latest stable version.
@@ -141,7 +141,7 @@ The following 6 points must be changed after the initial creation of the configu
 3. [Global inventory](#global-inventory)
 4. [DNS servers](#dns-servers)
 5. [NTP servers](#ntp-servers)
-6. [SSL certificates](#ssl-certificates)
+6. [Certificates](#certificates)
 
 #### Secrets
 
@@ -202,7 +202,7 @@ as manager in your own cluster.
 * Network section
 
   The static and complete network configuration of the node. Further details on creating the
-  network configuration in the [network configuration guide](/docs/guides/configuration-guide/network).
+  network configuration in the [network configuration guide](../configuration-guide/network).
 
   ```yaml title="environments/manager/host_vars/node01.yml"
   network_ethernets:
@@ -389,8 +389,18 @@ chrony_servers:
   - 4.de.pool.ntp.org
 ```
 
-#### SSL certificates
+#### Certificates
 
+The certificates must be created and added in the configuration repository in the files
+`environments/kolla/certificates/haproxy.pem` and `environments/kolla/certificates/haproxy-internal.pem`. Further information in the [Loadbalancer Configuration Guide](./loadbalancer.md).
+
+If no certificates are to be used, the encryption must be deactivated. This is not
+recommended.
+
+```yaml title="environments/kolla/configuration.yml"
+kolla_enable_tls_external: "yes"
+kolla_enable_tls_internal: "yes"
+```
 
 ## Using latest
 
@@ -453,3 +463,60 @@ transferred to the manager node, the configuration repository can be updated usi
 
 If local changes were made directly in the configuration repository on the manager node,
 these are overwritten.
+
+## Locks
+
+It is possible to lock parts of the configuration repository or the complete configuration
+repository. It is then no longer possible to execute plays assigned to these parts in the
+locked parts. This makes it possible to prevent the execution of plays in specific areas.
+
+To lock an environment, a .lock file is created in the corresponding directory of the environment.
+For example, the file `environments/kolla/.lock` locks the Kolla environment.
+
+If you try to execute a play in the Kolla environment, an error message is displayed.
+
+```
+$ osism apply common
+2024-06-02 10:52:44 | INFO     | Task 2f25f55f-96ae-4a6c-aeb4-c1c01e716d91 (common) was prepared for execution.
+2024-06-02 10:52:44 | INFO     | It takes a moment until task 2f25f55f-96ae-4a6c-aeb4-c1c01e716d91 (common) has been started and output is visible here.
+ERROR: The environment kolla is locked via the configuration repository.
+```
+
+File `environments/.lock` is created to lock everything.
+
+If you try to execute a play, an error message is displayed.
+
+```
+$ osism apply facts
+2024-06-02 10:53:08 | INFO     | Task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) was prepared for execution.
+2024-06-02 10:53:08 | INFO     | It takes a moment until task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) has been started and output is visible here.
+ERROR: The configuration repository is locked.
+```
+
+## Working with encrypted files
+
+To make it easier to work with encrypted files, the configuration repository has several make
+targets that can be used to view encrypted files and to edit encrypted files.
+
+* Show secrets in all encrypted files.
+
+  This opens a pager, e.g. less, and you can search with `/` for specific files, keys and passwords.
+
+  ```
+  make ansible_vault_show
+  ```
+
+* Change or add secrets in an encrypted file with the editor set in ` $EDITOR`.
+
+  ```
+  make ansible_vault_edit FILE=environments/secrets.yml EDITOR=nano
+  ```
+
+* Re-encrypt all encrypted files with a new key.
+
+  This creates a new `secrets/vaultpass` and creates backups of the old to
+  `secrets/vaultpass_backup_<timestamp>`.
+
+  ```
+  make ansible_vault_rekey
+  ```

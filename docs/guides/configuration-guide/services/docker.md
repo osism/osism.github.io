@@ -21,7 +21,8 @@ docker_log_opts:
 ```
 
 The log driver to be used can be configured with `docker_log_driver`. By default,
-`json-file` is used. The log driver writes all logs of a container to a JSON file
+[json-file](https://docs.docker.com/config/containers/logging/json-file/) is used.
+The log driver writes all logs of a container to a JSON file
 in `/var/lib/docker/containers`. All supported log drivers can be found in the
 [Docker documentation](https://docs.docker.com/config/containers/logging/configure/#supported-logging-drivers).
 
@@ -32,3 +33,5 @@ By default, the maximum size of a JSON file is set to 10 MByte with `max-size: 1
 If it contains more, the file is rotated.
 
 Furthermore, `max-file: 3` specifies that up to 3 files should be available.
+
+Existing containers don't use the new logging configuration automatically.

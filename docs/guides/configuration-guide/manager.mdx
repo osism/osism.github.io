@@ -3,31 +3,47 @@ sidebar_label: Manager
 sidebar_position: 15
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Manager
 
 ## Stable release
 
-It is recommended to use a stable release of OSISM. All available releases are listed on
-[release.osism.tech](https://release.osism.tech). Always check there in advance and do not copy
-the stable release used here as an example.
+:::warning
 
-In the example, OSISM release 6.0.0 is used.
+Always read the [release notes](https://osism.tech/docs/release-notes/) first to learn what has changed and what
+adjustments are necessary. Read the release notes even if you are only updating from e.g. 7.0.2 to 7.0.5.
+
+:::
+
+In the example, OSISM release 7.0.5 is used.
 
 1. Set the new manager version in the configuration repository.
 
    ```
-   yq -i '.manager_version = "6.0.0"' environments/manager/configuration.yml
+   MANAGER_VERSION=7.0.5
+   sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION}/g" environments/manager/configuration.yml
    ```
 
 2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
    (or anywhere else), they must be removed. If these are set, the stable release is not used for
    these components.
 
-3. Sync the image versions in the configuration repository. It is important to do this so
-   that the correct versions are available in `environments/manager/images.yml`.
+3. Sync the image versions in the configuration repository.
+
+   <Tabs>
+   <TabItem value="osism-7" label="OSISM >= 7.0.0">
+   ```
+   make sync
+   ```
+   </TabItem>
+   <TabItem value="osism-6" label="OSISM < 7.0.0">
+   If Gilt is not installed via the `requirements.txt` of the manager environment it is
+   important to use a version smaller v2. The v2 of Gilt is not yet usable.
 
    ```
-   gilt overlay  # you have to do this 2x
+   gilt overlay  # you have to do this 2x, this is not a copy & paste error
    gilt overlay
    ```
 
@@ -40,14 +56,18 @@ In the example, OSISM release 6.0.0 is used.
    `main` at `version`. This change must be made again after each execution of `gilt overlay` as
    it is overwritten by the call of `gilt overlay`. This cannot be realized differently in the
    current implementation of [Gilt](https://github.com/retr0h/gilt).
+   </TabItem>
+   </Tabs>
 
 4. Commit and push changes in the configuration repository. Since everyone here has their own
    workflows for changes to the configuration repository, only a generic example for Git.
 
    ```
-   git commit -a -s -m "manager: use OSISM version 6.0.0"
+   git commit -a -s -m "manager: use OSISM version 7.0.5"
    git push
    ```
+
+5. The upgrade is described in the [Manager Upgrade Guide](../upgrade-guide/manager).
 
 ## OpenSearch integration
 

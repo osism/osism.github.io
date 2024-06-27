@@ -25,6 +25,136 @@ The image tags can be set in the `environments/kolla/images.yml` file.
   barbican_worker_tag: "2023.1"
   ```
 
+## Endpoints
+
+### Public endpoints
+
+The public endpoints used for the individual OpenStack services can be configured via the `public_endpoint` parameters.
+These are defined as follows.
+
+| Parameter                                  | Default value                                                                                        |
+|:-------------------------------------------|:-----------------------------------------------------------------------------------------------------|
+| aodh_public_endpoint                       | `aodh_external_fqdn \| kolla_url(public_protocol, aodh_api_public_port)`                             |
+| blazar_public_endpoint                     | `blazar_external_fqdn \| kolla_url(public_protocol, blazar_api_public_port, '/v1')`                  |
+| ceph_rgw_public_endpoint                   | `ceph_rgw_external_fqdn \| kolla_url(public_protocol, ceph_rgw_public_port, ceph_rgw_endpoint_path)` |
+| cinder_v3_public_endpoint                  | `{{ cinder_public_base_endpoint }}/v3/%(tenant_id)s`                                                 |
+| cloudkitty_public_endpoint                 | `cloudkitty_external_fqdn \| kolla_url(public_protocol, cloudkitty_api_public_port)`                 |
+| cyborg_public_endpoint                     | `cyborg_external_fqdn \| kolla_url(public_protocol, cyborg_api_port, '/v2')`                         |
+| gnocchi_public_endpoint                    | `gnocchi_external_fqdn \| kolla_url(public_protocol, gnocchi_api_public_port)`                       |
+| heat_cfn_public_endpoint                   | `{{ heat_cfn_public_base_endpoint }}/v1`                                                             |
+| heat_public_endpoint                       | `heat_external_fqdn \| kolla_url(public_protocol, heat_api_public_port, '/v1/%(tenant_id)s')`        |
+| ironic_inspector_public_endpoint           | `ironic_inspector_external_fqdn \| kolla_url(public_protocol, ironic_inspector_public_port)`         |
+| magnum_public_endpoint                     | `magnum_external_fqdn \| kolla_url(public_protocol, magnum_api_public_port, '/v1')`                  |
+| manila_public_endpoint                     | `{{ manila_public_base_endpoint }}/v1/%(tenant_id)s`                                                 |
+| manila_v2_public_endpoint                  | `{{ manila_public_base_endpoint }}/v2`                                                               |
+| masakari_public_endpoint                   | `masakari_external_fqdn \| kolla_url(public_protocol, masakari_api_public_port)`                     |
+| mistral_public_endpoint                    | `mistral_external_fqdn \| kolla_url(public_protocol, mistral_api_public_port, '/v2')`                |
+| nova_legacy_public_endpoint                | `{{ nova_public_base_endpoint }}/v2/%(tenant_id)s`                                                   |
+| nova_public_endpoint                       | `{{ nova_public_base_endpoint }}/v2.1`                                                               |
+| placement_public_endpoint                  | `placement_external_fqdn \| kolla_url(public_protocol, placement_api_public_port)`                   |
+| tacker_public_endpoint                     | `tacker_external_fqdn \| kolla_url(public_protocol, tacker_server_public_port)`                      |
+| trove_public_endpoint                      | `trove_external_fqdn \| kolla_url(public_protocol, trove_api_public_port, '/v1.0/%(tenant_id)s')`    |
+| venus_public_endpoint                      | `venus_external_fqdn \| kolla_url(public_protocol, venus_api_port)`                                  |
+| watcher_public_endpoint                    | `watcher_external_fqdn \| kolla_url(public_protocol, watcher_api_public_port)`                       |
+| zun_public_endpoint                        | `zun_external_fqdn \| kolla_url(public_protocol, zun_api_public_port, '/v1/')`                       |
+
+Some of the previous default values refer to a `public_base_endpoint parameter`. These are defined as follows.
+
+| Parameter                                 | Default value                                                                                  |
+|:------------------------------------------|:-----------------------------------------------------------------------------------------------|
+| cinder_public_base_endpoint               | `cinder_external_fqdn \| kolla_url(public_protocol, cinder_api_public_port)`                   |
+| heat_cfn_public_base_endpoint             | `heat_cfn_external_fqdn \| kolla_url(public_protocol, heat_api_cfn_public_port)`               |
+| manila_public_base_endpoint               | `manila_external_fqdn \| kolla_url(public_protocol, manila_api_public_port)`                   |
+| nova_public_base_endpoint                 | `nova_external_fqdn \| kolla_url(public_protocol, nova_api_public_port)`                       |
+| skyline_apiserver_public_base_endpoint    | `skyline_apiserver_external_fqdn \| kolla_url(public_protocol, skyline_apiserver_public_port)` |
+
+### Example for the use of name-based endpoints
+
+DNS records pointing to the `kolla_external_vip_address` are created in advance.
+
+Additional configuration parameters to overwrite the public endpoints
+are added in the `environments/kolla/configuration.yml` file. If certain services
+are not used, they are removed. If other services are used, these are added (see the
+table above).
+
+```yaml title="environments/kolla/configuration.yml"
+barbican_public_endpoint: https://barbican.services.a.regiocloud.tech
+cinder_public_base_endpoint: https://cinder.services.a.regiocloud.tech
+designate_public_endpoint: https://designate.services.a.regiocloud.tech
+glance_public_endpoint: https://glance.services.a.regiocloud.tech
+ironic_public_endpoint: https://ironic.services.a.regiocloud.tech
+keystone_public_url: https://keystone.services.a.regiocloud.tech
+manila_public_endpoint: https://manila.services.a.regiocloud.tech
+neutron_public_endpoint: https://neutron.services.a.regiocloud.tech
+nova_public_base_endpoint: https://nova.services.a.regiocloud.tech
+octavia_public_endpoint: https://octavia.services.a.regiocloud.tech
+placement_public_endpoint: https://placement.services.a.regiocloud.tech
+```
+
+Since we bind the `name_based_external_front` frontend to the same ports as the
+`horizon_external_front`, the external Horizon frontend must be disabled. This is
+only possible as of OSISM 7.0.6.
+
+```yaml title="environments/kolla/configuration.yml"
+haproxy_enable_horizon_external: false
+```
+
+Additional HAProxy configuration in `haproxy/services.d/haproxy.cfg` is required to map
+the DNS records to the correct backends. Here too, unused services are removed or
+additional services are added.
+
+```none title="environments/kolla/files/overlays/haproxy/services.d/haproxy.cfg"
+frontend name_based_external_front
+    mode http
+    http-request del-header X-Forwarded-Proto
+    option httplog
+    option forwardfor
+    http-request set-header X-Forwarded-Proto https if { ssl_fc }
+    bind {{ kolla_external_vip_address }}:80
+    bind {{ kolla_external_vip_address }}:443 ssl crt /etc/haproxy/certificates/haproxy.pem
+    default_backend horizon_back
+
+    acl ACL_keystone.services.a.regiocloud.tech hdr(host) -i keystone.services.a.regiocloud.tech
+    use_backend keystone_external_back if ACL_keystone.services.a.regiocloud.tech
+
+    acl ACL_glance.services.a.regiocloud.tech hdr(host) -i glance.services.a.regiocloud.tech
+    use_backend glance_api_external_back if ACL_glance.services.a.regiocloud.tech
+
+    acl ACL_neutron.services.a.regiocloud.tech hdr(host) -i neutron.services.a.regiocloud.tech
+    use_backend neutron_server_external_back if ACL_neutron.services.a.regiocloud.tech
+
+    acl ACL_placement.services.a.regiocloud.tech hdr(host) -i placement.services.a.regiocloud.tech
+    use_backend placement_api_external_back if ACL_placement.services.a.regiocloud.tech
+
+    acl ACL_nova.services.a.regiocloud.tech hdr(host) -i nova.services.a.regiocloud.tech
+    use_backend nova_api_external_back if ACL_nova.services.a.regiocloud.tech
+
+    acl ACL_console.services.a.regiocloud.tech hdr(host) -i console.services.a.regiocloud.tech
+    use_backend nova_novncproxy_external_back if ACL_console.services.a.regiocloud.tech
+
+    acl ACL_designate.services.a.regiocloud.tech hdr(host) -i designate.services.a.regiocloud.tech
+    use_backend designate_api_external_back if ACL_designate.services.a.regiocloud.tech
+
+    acl ACL_cinder.services.a.regiocloud.tech hdr(host) -i cinder.services.a.regiocloud.tech
+    use_backend cinder_api_external_back if ACL_cinder.services.a.regiocloud.tech
+
+    acl ACL_octavia.services.a.regiocloud.tech hdr(host) -i octavia.services.a.regiocloud.tech
+    use_backend octavia_api_external_back if ACL_octavia.services.a.regiocloud.tech
+
+    acl ACL_swift.services.a.regiocloud.tech hdr(host) -i swift.services.a.regiocloud.tech
+    use_backend swift_api_external_back if ACL_swift.services.a.regiocloud.tech
+
+    acl ACL_ironic.services.a.regiocloud.tech hdr(host) -i ironic.services.a.regiocloud.tech
+    use_backend ironic_api_external_back if ACL_ironic.services.a.regiocloud.tech
+```
+
+Additional Nova configuration in `nova.conf` is required to use the URL for the NoVNC service.
+
+```ini title="environments/kolla/files/overlays/nova.conf"
+[vnc]
+novncproxy_base_url = https://console.services.a.regiocloud.tech/vnc_lite.html
+```
+
 ## Network interfaces
 
 | Parameter                      | Default                                                                | Description    |
@@ -364,3 +494,5 @@ These parameters are all set in `environments/kolla/configuration.yml`.
 | octavia_healthmanager_stats_workers    |
 | placement_api_workers                  |
 | skyline_gunicorn_workers               |
+
+## Back-end TLS configuration

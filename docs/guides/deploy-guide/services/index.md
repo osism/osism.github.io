@@ -9,7 +9,7 @@ sidebar_position: 100
 
 The prerequisite for depoying the services of a cluster is the bootstrap of
 the nodes. How to bootstrap the nodes is documented in the
-[Bootstrap chapter of the Deploy Guide](../bootstrap).
+[Bootstrap chapter of the Deploy Guide](../bootstrap.md).
 
 :::
 

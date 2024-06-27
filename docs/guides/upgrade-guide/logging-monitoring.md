@@ -5,25 +5,25 @@ sidebar_position: 40
 
 # Logging & Monitoring
 
-## OpenSearch
+1. OpenSearch
 
-OpenSearch dashboards is also upgraded with the `opensearch` role.
+   OpenSearch dashboards is also upgraded with the `opensearch` role.
 
-```
-osism apply -a pull opensearch
-osism apply -a upgrade opensearch
-```
+   ```
+   osism apply -a pull opensearch
+   osism apply -a upgrade opensearch
+   ```
 
-## Prometheus
+2. Prometheus
 
-```
-osism apply -a pull prometheus
-osism apply prometheus
-```
+   ```
+   osism apply -a pull prometheus
+   osism apply prometheus
+   ```
 
-## Grafana
+3. Grafana
 
-```
-osism apply -a pull grafana
-osism apply -a upgrade grafana
-```
+   ```
+   osism apply -a pull grafana
+   osism apply -a upgrade grafana
+   ```
