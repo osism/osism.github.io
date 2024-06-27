@@ -25,8 +25,6 @@ adjustments are necessary. Read the release notes even if you are only updating 
 
 :::
 
-TODO: validate order
-
 * Step 1: [Upgrade the Manager](./manager)
 * Step 2: [Upgrade Logging & Monitoring](./logging-monitoring)
 * Step 3: [Upgrade the Infrastructure](./infrastructure)
