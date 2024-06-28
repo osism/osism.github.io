@@ -104,6 +104,8 @@ Not all of the services listed there are supported by OSISM.
        auth:
          username: octavia
          project_name: service
+         # use this url, when using kolla_enable_tls_external=no
+         #auth_url: http://api.testbed.osism.xyz:5000/v3
          auth_url: https://api.testbed.osism.xyz:5000/v3
          project_domain_name: default
          user_domain_name: default
