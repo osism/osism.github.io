@@ -94,9 +94,8 @@ Not all of the services listed there are supported by OSISM.
    osism manage image octavia
    ```
 
-   For the command to be usable, a cloud profile for cctavia must currently be added in the
+   For the command to be usable, a cloud profile for octavia must currently be added in the
    clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
-   The secret is added to the secure.yml file.
 
    ```yaml title="environments/openstack/clouds.yml"
    clouds:
@@ -110,6 +109,17 @@ Not all of the services listed there are supported by OSISM.
          user_domain_name: default
        cacert: /etc/ssl/certs/ca-certificates.crt
        identity_api_version: 3
+   ```
+
+   The secret is added to the secure.yml file. The password is set in the parameter
+   `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
+
+   ```yaml title="environments/openstack/secure.yml"
+   clouds:
+     [...]
+     octavia:
+       auth:
+         password: VALUE_OF_octavia_keystone_password
    ```
 
 10. Horizon
