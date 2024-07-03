@@ -17,9 +17,34 @@ control plane manually. An ISO image is provided for this purpose which automati
 provisions a node. The ISO images are available for download in the
 [osism/node-image](https://github.com/osism/node-image) repository.
 
+## Automated Installation using Node Images
+
 There are different variants of the ISO image. The variants differ in the disc layout.
-The available variants are described in the README file of the [osism/node-image](https://github.com/osism/node-image)
-repository.
+
+The pre-build variants are described in the [osism/node-image](https://github.com/osism/node-image/blob/main/README.md) repository.
+
+A good way to provision the nodes is to use virtual media mounts via the usually available Redfish
+functionality of the BMC of the servers used. In this way, the basic installation can be carried
+out without external dependencies such as adapting the switch configuration, DHCP, upstream connectivity, etc.
+In many cases, this simplifies the process, makes it more automation-friendly and avoids potential sources of error.
+
+OSISM also provides a tool to generate node images specific for you needs.
+
+This makes particular sense for the node-provisioning in the following situations:
+
+* Make complex configurations like layer3 underlay
+* Add your SSH keys to the image
+* Configure a specific root password
+* Change other characteristics of the setup
+  * Templates
+  * Partitioning
+  * Packages
+  * ...
+* Develop new standard images
+
+The procedures for building custom images are described in the
+[osism/node-image](https://github.com/osism/node-image/blob/main/README.md) repository.
+
 
 ## Manual provisioning
 
