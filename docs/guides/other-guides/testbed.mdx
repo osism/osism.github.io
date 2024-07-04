@@ -573,7 +573,8 @@ of the other cloud is changed accordingly.
 |:----------------------------------------------------------------------------|:------------|
 | `/opt/configuration/scripts/deploy/000-manager-service.sh`                  |             |
 | `/opt/configuration/scripts/deploy/001-helper-services.sh`                  |             |
-| `/opt/configuration/scripts/deploy/100-ceph-services-basic.sh`              |             |
+| `/opt/configuration/scripts/deploy/100-ceph-services-basic.sh`              | alternative to ceph |
+| `/opt/configuration/scripts/deploy/100-rook-services-basic.sh`              |             |
 | `/opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh`    |             |
 | `/opt/configuration/scripts/deploy/210-infrastructure-services-extended.sh` |             |
 | `/opt/configuration/scripts/deploy/300-openstack-services-basic.sh`         |             |
@@ -587,11 +588,31 @@ of the other cloud is changed accordingly.
 | Script                                                                    | Description |
 |:--------------------------------------------------------------------------|:------------|
 | `/opt/configuration/scripts/upgrade/100-ceph-services.sh`                 |             |
+| `/opt/configuration/scripts/upgrade/100-rook-services.sh`                 | alternative to ceph |
 | `/opt/configuration/scripts/upgrade/200-infrastructure-services-basic.sh` |             |
 | `/opt/configuration/scripts/upgrade/300-openstack-services-basic.sh`      |             |
 | `/opt/configuration/scripts/upgrade/310-openstack-services-extended.sh`   |             |
 | `/opt/configuration/scripts/upgrade/320-openstack-services-baremetal.sh`  |             |
 | `/opt/configuration/scripts/upgrade/330-openstack-services-additional.sh` |             |
+
+### Ceph via Rook (technical preview)
+
+Please have a look at [Deploy Guide - Services - Rook](../deploy-guide/services/rook.md) and [Configuration Guide - Rook](../configuration-guide/rook.md) for details on how to configure Rook.
+
+To deploy this in the testbed, you can use an environment variable in your make target.
+
+```
+make CEPH_STACK=rook manager
+make CEPH_STACK=rook ceph
+```
+
+This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is later being used by:
+
+```
+/opt/configuration/scripts/deploy-services.sh
+/opt/configuration/scripts/deploy-ceph-services.sh
+/opt/configuration/scripts/upgrade/100-rook-services.sh
+```
 
 ## Troubleshooting
 
