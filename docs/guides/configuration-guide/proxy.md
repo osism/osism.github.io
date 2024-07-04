@@ -57,3 +57,21 @@ container_http_proxy: "http://{{ groups['manager'][0] }}:3128"
 container_https_proxy: "http://{{ groups['manager'][0] }}:3128"
 container_no_proxy: "localhost,127.0.0.1"
 ```
+
+## Kubernetes / K3s
+
+Proxy settings für k3s.
+These settings affect all http and https requests of the K3s installation as they are passed as environment variables via the systemd unit.
+For this reason, `NO_PROXY` must be configured so that the network between the K8S nodes is explicitly excluded.
+
+An example:
+```yaml title="environments/configuration.yml"
+##########################################################
+# proxy
+
+proxy_env:
+  HTTP_PROXY: "http://{{ groups['manager'][0] }}:3128"
+  HTTPS_PROXY: "http://{{ groups['manager'][0] }}:3128"
+  NO_PROXY: "*.landscape.example.com,198.51.100.0/24"
+
+```
