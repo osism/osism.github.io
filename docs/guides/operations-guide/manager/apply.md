@@ -87,7 +87,7 @@ Some facts about custom plays and roles:
   osism apply -e ceph wipe-parititons
   ```
 * Custom roles that are used for a specific environment must be stored under the following path so that they can be found by plays.
-  ```environments/<environment>/roles/<role>/`
+  `environments/<environment>/roles/<role>/`
 
 ### Example play with roles: Manage the infrastructure of the SCS testing environment
 
