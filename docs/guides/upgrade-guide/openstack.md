@@ -13,6 +13,20 @@ of the APIs. This downtime is usually less than 1 minute.
 
 :::
 
+1. Pull containers
+
+   ```
+   osism apply -a pull keystone
+   osism apply -a pull glance
+   osism apply -a pull designate
+   osism apply -a pull placement
+   osism apply -a pull cinder
+   osism apply -a pull neutron
+   osism apply -a pull nova
+   osism apply -a pull octavia
+   osism apply -a pull horizon
+   ```
+
 1. OpenStack client
 
    ```
@@ -22,56 +36,48 @@ of the APIs. This downtime is usually less than 1 minute.
 2. Keystone
 
    ```
-   osism apply -a pull keystone
    osism apply -a upgrade keystone
    ```
 
 3. Glance
 
    ```
-   osism apply -a pull glance
    osism apply -a upgrade glance
    ```
 
 4. Designate
 
    ```
-   osism apply -a pull designate
    osism apply -a upgrade designate
    ```
 
 5. Placement
 
    ```
-   osism apply -a pull placement
    osism apply -a upgrade placement
    ```
 
 6. Cinder
 
    ```
-   osism apply -a pull cinder
    osism apply -a upgrade cinder
    ```
 
 7. Neutron
 
    ```
-   osism apply -a pull neutron
    osism apply -a upgrade neutron
    ```
 
 8. Nova
 
    ```
-   osism apply -a pull nova
    osism apply -a upgrade nova
    ```
 
 9. Octavia
 
    ```
-   osism apply -a pull octavia
    osism apply -a upgrade octavia
    ```
 
@@ -97,6 +103,5 @@ of the APIs. This downtime is usually less than 1 minute.
 10. Horizon
 
     ```
-    osism apply -a pull horizon
     osism apply -a upgrade horizon
     ```

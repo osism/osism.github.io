@@ -24,7 +24,7 @@ In the example, OSISM release 7.0.5 is used.
 
          ```
          MANAGER_VERSION=7.0.5
-         sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION}/g" environments/manager/configuration.yml
+         sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION:?}/g" environments/manager/configuration.yml
          ```
 
     1.2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
@@ -65,13 +65,15 @@ In the example, OSISM release 7.0.5 is used.
          workflows for changes to the configuration repository, only a generic example for Git.
 
          ```
-         git commit -a -s -m "manager: use OSISM version 7.0.5"
+         git commit -a -s -m "manager: use OSISM version ${MANAGER_VERSION:?}"
          git push
          ```
 
 2. Update the configuration repository on the manager node.
 
    ```
+   git pull
+   git checkout <BRANCH>
    osism apply configuration
    ```
 
@@ -103,4 +105,9 @@ In the example, OSISM release 7.0.5 is used.
 
    ```
    osism set vault password
+   ```
+7. Optional: Tag the upgrade in Git
+   ```
+   git tag ${MANAGER_VERSION:?}
+   git push --tags
    ```
