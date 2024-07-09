@@ -503,7 +503,8 @@ targets that can be used to view encrypted files and to edit encrypted files.
   This opens a pager, e.g. less, and you can search with `/` for specific files, keys and passwords.
 
   ```
-  make ansible_vault_show
+  make ansible_vault_show FILE=all
+  make ansible_vault_show FILE=environments/secrets.yml
   ```
 
 * Change or add secrets in an encrypted file with the editor set in ` $EDITOR`.
