@@ -517,14 +517,17 @@ rook_crashcollector:
   daysToRetrain: 7
 ```
 
-## Crash Collector
+## Log Collector
 
-The [Ceph Crash Module](https://docs.ceph.com/en/quincy/mgr/crash/) is enabled by default. You can also configure how long to retain the crash reports.
+The log collector will run as a side-car next to each Ceph daemon. The Ceph configuration option log_to_file will be turned on, meaning Ceph daemons will log on files in addition to still logging to container's stdout. These logs will be rotated.
+
+See [Rook Cluster Settings](https://rook.io/docs/rook/latest-release/CRDs/Cluster/ceph-cluster-crd/#cluster-settings) for more details.
 
 ```yaml title="environments/rook/configuration.yml"
-rook_crashcollector:
-  disable: false
-  daysToRetrain: 7
+rook_logcollector:
+  enabled: true
+  periodicity: daily  # one of: hourly, daily, weekly, monthly
+  maxLogSize: 500M    # SUFFIX may be 'M' or 'G'. Must be at least 1M.
 ```
 
 ## Ceph Config
@@ -555,7 +558,7 @@ In theory, this is completely customizable by deploying multiple helm releases. 
 
 ## Helm Value File
 
-The [OSISM Rook role](https://github.com/osism/ansible-collection-services/tree/main/roles/rook) is an opinionated and sane default configuration. If you reach the limits of what is customizable via ansible variables or have a very custom setup, you can pass a custom or additional [`values.yml`](https://github.com/osism/ansible-collection-services/blob/main/roles/rook/templates/01-helm-values-all.yml.j2 files or even any [Rook CRD](https://rook.io/docs/rook/latest-release/CRDs/specification/) to the role and it will be jinja2 templated and roled out to the kubernetes cluster.
+The [OSISM Rook role](https://github.com/osism/ansible-collection-services/tree/main/roles/rook) is an opinionated and sane default configuration. If you reach the limits of what is customizable via ansible variables or have a very custom setup, you can pass a custom or additional [`values.yml`](https://github.com/osism/ansible-collection-services/blob/main/roles/rook/templates/01-helm-values-all.yml.j2) files or even any [Rook CRD](https://rook.io/docs/rook/latest-release/CRDs/specification/) to the role and it will be jinja2 templated and roled out to the kubernetes cluster.
 
 Just overwrite `rook_configuration_directory` and place any `*.yml.j2` files that you want to apply there.
 
