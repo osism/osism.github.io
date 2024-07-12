@@ -76,6 +76,11 @@ Not all of the services listed there are supported by OSISM.
 9. Octavia
 
    ```
+   osism apply octavia-certificates
+   osism apply copy-octavia-certificates
+   ```
+
+   ```
    osism apply -a pull octavia
    osism apply octavia
    ```
