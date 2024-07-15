@@ -126,11 +126,6 @@ Not all of the services listed there are supported by OSISM.
     make ansible_vault_show FILE=environments/kolla/secrets.yml |grep octavia_keystone_password
     ```
 
-    Create new secret file with
-    ```
-    make ansible_vault_edit FILE=environments/openstack/secure.yml
-    ```
-
     ```yaml title="environments/openstack/secure.yml"
     ---
     clouds:
@@ -138,12 +133,6 @@ Not all of the services listed there are supported by OSISM.
       octavia:
         auth:
           password: VALUE_OF_octavia_keystone_password
-    ```
-
-    Add secrets to git
-    ```
-    git add -f  environments/openstack/secure.yml
-    git commit -m "Add octavia secret" -a -s
     ```
 
   * Upload the correct and current image depending on the current Openstack release:
