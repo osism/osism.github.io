@@ -116,10 +116,6 @@ Not all of the services listed there are supported by OSISM.
 
     The secret is added to the secure.yml file. The password is set in the parameter
     `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
-    ```
-    make ansible_vault_edit FILE=/opt/configuration/environments/openstack/secure.yml
-    git add -f /opt/configuration/environments/openstack/secure.yml
-    ```
 
     Get the secret with
     ```
