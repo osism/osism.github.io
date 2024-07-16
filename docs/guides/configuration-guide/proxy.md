@@ -10,6 +10,8 @@ is used on the first manager node. Any other proxy accessible from the nodes can
 also be used here. `http://{{ groups['manager'][0] }}:3128` which is used here as an
 example is then replaced accordingly with the address of the proxy.
 
+## Deployment of a Squid Proxy Server
+
 The Squid service can be deployed on the first manager. This is useful if no proxy
 can be used in the environment. The first manager node is then used by all other nodes
 as a pass-through node. Please note that this is not a caching proxy or even an air gap.
@@ -19,7 +21,9 @@ This is also possible with OSISM, but not with the help of the Squid service.
 osism apply squid
 ```
 
-## Docker
+## Configurations
+
+### Docker
 
 This allows Docker images to be pulled via a proxy.
 
@@ -34,7 +38,7 @@ docker_proxy_https: "{{ docker_proxy_http }}"
 #  - *.landscape.example.com
 ```
 
-## APT
+### APT
 
 This allows APT packages to be downloaded via a proxy.
 
@@ -49,7 +53,7 @@ proxy_proxies:
 #  - api-internal.landscape.example.com
 ```
 
-## OpenStack
+### OpenStack
 
 Proxy settings for containers such as Magnum that need internet access.
 
@@ -64,9 +68,9 @@ container_https_proxy: "http://{{ groups['manager'][0] }}:3128"
 container_no_proxy: "localhost,127.0.0.1,api-internal.landscape.example.com"
 ```
 
-## Kubernetes / K3s
+### Kubernetes / K3s
 
-Proxy settings für k3s.
+Settings for the OSISM Kubernetes cluster, which is operated independently of Openstack.
 These settings affect all http and https requests of the K3s installation as they are passed as environment variables via the systemd unit.
 For this reason, `NO_PROXY` must be configured so that the network between the K8S nodes is explicitly excluded.
 
