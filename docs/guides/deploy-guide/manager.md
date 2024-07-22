@@ -67,13 +67,15 @@ ANSIBLE_USER=osism \
 ./run.sh operator
 ```
 
-When the `./run.sh operator` is executed, the following prompts are displayed.
+When the `./run.sh operator` is executed, the following prompts are displayed:
 
 | Prompt                                       | Value                                              | Comment                              |
 |:---------------------------------------------|:---------------------------------------------------|:-------------------------------------|
 | `SSH password:`                              | Password so that the `ANSIBLE_USER` can login      | Enabled by `ANSIBLE_ASK_PASS`        |
 | `BECOME password[defaults to SSH password]:` | Password so that the `ANSIBLE_USER` can use `sudo` | Enabled by `ANSIBLE_BECOME_ASK_PASS` |
 | `Vault password:`                            | Value of `secrets/vaultpass`                       | Enabled by `ANSIBLE_ASK_VAULT_PASS`  |
+
+**Useful information if something goes wrong in the step described**
 
 * If a password is required to login to the manager node, `ANSIBLE_ASK_PASS=True` must be set.
 * If an SSH key is required to login to the manager node, the key has to be added on the manager
@@ -112,13 +114,15 @@ in the Ansible documentation.
 | `ANSIBLE_BECOME_ASK_PASS` | Boolean | Toggle to prompt for privilege escalation password.                                                                                                                           |
 | `ANSIBLE_SSH_ARGS`        | String  | If set, this will override the Ansible default ssh arguments.                                                                                                                 |
 | `ANSIBLE_USER`            | String  | The user Ansible ‘logs in’ as.                                                                                                                                                |
-To verify the creation of the operator user, use the private key file `id_rsa.operator`. Make
+
+
+To verify the proper creation of the operator user, use the private key file `id_rsa.operator`. Make
 sure you purge all keys from ssh-agent identity cache using `ssh-add -D`. You can print the list
 using `ssh-add -l`. The list should be empty.
 
 ```
 ssh-add -D
-ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@testbed-manager
+ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 ```
 
 ### Step 2: Apply the network configuration
@@ -136,11 +140,13 @@ To prevent recurring installation of Ansible Collections, `export INSTALL_ANSIBL
 The network configuration, already present on a node should be backuped before this step.
 Then you can deploy the network configuration with the network role.
 
+Have a look to the [network documentation](../configuration-guide/network.md) and configure it before running this playbook.
+
 ```
 ./run.sh network
 ```
 
-Upon completion of the network configurtion, a node reboot should be performed to ensure the configuration
+Upon completion of the network configuration, a node reboot should be performed to ensure the configuration
 is functional and reboot safe. Since network services are not restarted automatically, later changes to the
 network configuration are not effective without a manual apply of the network configuration or reboot of the
 nodes.
@@ -188,6 +194,7 @@ This is recommended.
    ```
 
 4. Deploy the manager service.
+   Have a look to the [manager documentation](../configuration-guide/manager.mdx) and configure it before running this playbook.
 
    ```
    ./run.sh manager
@@ -199,9 +206,9 @@ Finally, the Ansible Vault password is made known on the manager node. Before th
 with the `dragon` user.
 
 ```
+ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 osism set vault password
-Ansible Vault password: ********
 ```
 
-Ready. The manager is now prepared and you can continue with the bootstrap of the other nodes.
-The seed node used until here is no longer necessary.
+Ready. The manager is now prepared, and you can continue with the bootstrap of the other nodes.
+The seed node used until here is now no longer necessary.
