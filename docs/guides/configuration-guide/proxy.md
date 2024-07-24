@@ -23,15 +23,27 @@ osism apply squid
 
 ## Configurations
 
-:::info
-It is advisable to exclude networks that are locally accessible from using the HTTP proxy
+It is advisable to exclude hosts that are locally accessible from using the HTTP proxy
 if they use HTTP(S) communication, as otherwise communication will take place unnecessarily via the
 proxy. In some cases the proxy does not have access to the internal networks (this depends on its location),
 but this can also lead to higher latencies or to inferred availability problems
 if the proxy is temporarily unavailable.
 
-It usually makes sense to exclude all [private ipv4 networks](https://www.rfc-editor.org/rfc/rfc1918).
+:::warning
+As [Gitlab has described in 2021](https://about.gitlab.com/blog/2021/01/27/we-need-to-talk-no-proxy/#no_proxy), there are subtle differences depending on the technology, implementation and age as to whether environment variables should be lowercase or uppercase, or what types of exclusions are possible.
+
+Furthermore, the documentation of certain implementations is not very clear in its statements.
+
+It usually makes sense to exclude all [private ipv4 networks](https://www.rfc-editor.org/rfc/rfc1918) when the involved technology supports this.
 :::
+
+We therefore try to choose the clearest examples possible.
+
+The example domain `landscape.example.com` is used for hosts of the following names:
+
+- `api.zone1.landscape.example.com`
+- `api-internal.zone1.landscape.example.com`
+- `manager.landscape.example.com`
 
 ### Docker
 
@@ -44,10 +56,13 @@ This allows Docker images to be pulled via a proxy.
 docker_configure_proxy: true
 docker_proxy_http: "http://{{ groups['manager'][0] }}:3128"
 docker_proxy_https: "{{ docker_proxy_http }}"
+
+# Due to the fact, that Golang supports CIDR blocks its a good idea to exclude local networks,
+# there might be cases where CIDR excludes are ignored when calling non-golang binaries.
 docker_proxy_no_proxy:
   - localhost
   - 127.0.0.1
-  - *.landscape.example.com
+  - landscape.example.com
   - "10.0.0.0/8"
   - "172.16.0.0/12"
   - "192.168.0.0/16"
@@ -64,13 +79,13 @@ This allows APT packages to be downloaded via a proxy.
 proxy_proxies:
   http: "http://{{ groups['manager'][0] }}:3128"
   https: "http://{{ groups['manager'][0] }}:3128"
+
+# Due to the fact, that APT and libcurl does not support CIDR blocks, we cannot use global excludes
+# using CIDR expressions
 proxy_no_proxy_extra:
   - localhost
   - 127.0.0.1
-  - *.landscape.example.com
-  - "10.0.0.0/8"
-  - "172.16.0.0/12"
-  - "192.168.0.0/16"
+  - landscape.example.com
 ```
 
 ### OpenStack
@@ -85,7 +100,10 @@ Exclude all internal adresses, *especially* the internal api endpoint.
 
 container_http_proxy: "http://{{ groups['manager'][0] }}:3128"
 container_https_proxy: "http://{{ groups['manager'][0] }}:3128"
-container_no_proxy: "localhost,127.0.0.1,*.landscape.example.com,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+
+# Due to the fact, that openstacks relies on python, we cannot trust that global CIDR 
+# excludes are working in general but it they don't harm
+container_no_proxy: "localhost,127.0.0.1,landscape.example.com,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 ```
 
 ### Kubernetes / K3s
@@ -102,5 +120,7 @@ An example:
 proxy_env:
   HTTP_PROXY: "http://{{ groups['manager'][0] }}:3128"
   HTTPS_PROXY: "http://{{ groups['manager'][0] }}:3128"
-  NO_PROXY: "localhost,127.0.0.1,*.landscape.example.com,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  # Due to the fact, that k8s is based on Golang supports CIDR blocks its a good idea to exclude local networks,
+  # there might be really rare cases where CIDR excludes are ignored when calling non-golang binaries.
+  NO_PROXY: "localhost,127.0.0.1,landscape.example.com,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 ```
