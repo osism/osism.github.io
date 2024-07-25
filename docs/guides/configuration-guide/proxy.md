@@ -34,7 +34,9 @@ As [Gitlab has described in 2021](https://about.gitlab.com/blog/2021/01/27/we-ne
 
 Furthermore, the documentation of certain implementations is not very clear in its statements.
 
-It usually makes sense to exclude all [private ipv4 networks](https://www.rfc-editor.org/rfc/rfc1918) when the involved technology supports this.
+It usually makes sense to exclude all [private ipv4 networks](https://www.rfc-editor.org/rfc/rfc1918) when the involved technology supports this
+because these private networks or network areas are typicall relatively rarely accessed via a proxy anyway but there is a high potential that a network
+which is required to be reached directly is overlooked.
 :::
 
 We therefore try to choose the clearest examples possible.
@@ -59,9 +61,7 @@ docker_proxy_https: "{{ docker_proxy_http }}"
 
 # Due to the fact, that Golang supports CIDR blocks its a good idea to exclude local networks,
 # there might be cases where CIDR excludes are ignored when calling non-golang binaries.
-docker_proxy_no_proxy:
-  - localhost
-  - 127.0.0.1
+docker_proxy_no_proxy_extra:
   - landscape.example.com
   - "10.0.0.0/8"
   - "172.16.0.0/12"
@@ -83,8 +83,6 @@ proxy_proxies:
 # Due to the fact, that APT and libcurl does not support CIDR blocks, we cannot use global excludes
 # using CIDR expressions
 proxy_no_proxy_extra:
-  - localhost
-  - 127.0.0.1
   - landscape.example.com
 ```
 
@@ -101,7 +99,7 @@ Exclude all internal adresses, *especially* the internal api endpoint.
 container_http_proxy: "http://{{ groups['manager'][0] }}:3128"
 container_https_proxy: "http://{{ groups['manager'][0] }}:3128"
 
-# Due to the fact, that openstacks relies on python, we cannot trust that global CIDR 
+# Due to the fact, that openstacks relies on python, we cannot trust that global CIDR
 # excludes are working in general but it they don't harm
 container_no_proxy: "localhost,127.0.0.1,landscape.example.com,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 ```
