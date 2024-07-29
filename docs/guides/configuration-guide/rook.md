@@ -45,7 +45,7 @@ After successfully configuring the environment for the client, run the installat
 osism apply cephclient
 ```
 
-TODO: This will try to detect a prior installation of a Ceph client with the install type `container` or `package` and cleanup that.
+This will try to detect a prior installation of a Ceph client with the install type `container` or `package` and cleanup that previous installation.
 
 
 
