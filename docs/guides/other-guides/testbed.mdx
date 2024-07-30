@@ -614,6 +614,72 @@ This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is l
 /opt/configuration/scripts/upgrade/100-rook-services.sh
 ```
 
+## Using testbed for OpenStack development
+
+Testbed may be used for doing development on OpenStack services through [`kolla_dev_mode`](https://docs.openstack.org/kolla-ansible/latest/contributor/kolla-for-openstack-development.html).
+`kolla_dev_mode` may be activated for all supported service by adding
+
+```
+kolla_dev_mode: true
+```
+
+to `environments/kolla/configuration.yml`. This will check out the `git` repositories of all supported and enabled OpenStack services under `/opt/stack` and bind mount them into the appropriate containers.
+Since this will fetch a lot of repositories it is advisable to enable this only selectively for the services you are going to work on. You can do so by adding a boolean variable to `environments/kolla/configuration.yml` consisting of the service name and the suffix `_dev_mode`, e.g.:
+
+```
+cinder_dev_mode: true
+```
+
+You may customise the used `git` repository by adding `kolla_repos_git` to `environments/kolla/configuration.yml` to specify a common root for the repositories of all services, which will be completed by the service's name, e.g.:
+
+```
+kolla_repos_git: "https://github.com/openstack"
+```
+
+will pull services from their `github` mirror. E.g. pull nova from https://github.com/openstack/nova
+The complete repository of a single service may be changed by adding a variable consisting of the service name and the suffix `_git_repository`, e.g.
+
+```
+cinder_git_repository: "https://github.com/myorg/my_custom_cinder_fork"
+```
+
+You may Specify the `git` reference globally by setting
+
+```
+kolla_source_version: my_feature_branch
+```
+
+in `environments/kolla/configuration.yml` or for specific services via service name and suffix `_source_version`, e.g.
+
+```
+cinder_source_version: my_cinder_feature
+```
+
+In order to update the `git` repositories on `kolla-ansible` deployments set either 
+
+```
+kolla_dev_repos_pull: true
+```
+
+or, e.g.
+
+```
+cinder_dev_repos_pull: true
+```
+
+in `environments/kolla/configuration.yml` to set the setting for all repositories or a service specific one.
+
+Thus, as an example for a development workflow:
+* Create a `git` mirror of the OpenStack service you want to work on
+* In `environments/kolla/configuration.yml`
+  * Set the corresponding `<service name>_dev_mode` variable to `true`
+  * Set the corresponding `<service name>_git_repository` variable to your development mirror created above
+  * Set the corresponding `<service name>_source_version` variable to a branch name you intend to push your changes to
+  * Set the corresponding `<service name>_dev_repos_pull` variable to `true`
+* Commit your changes and push them to the specified branch in the specified mirror
+* Run `osism apply <service name>` on the manager to checkout the code on every testbed node
+* Restart the service containers to actually pick up the new code
+
 ## Troubleshooting
 
 ### Ansible errors
