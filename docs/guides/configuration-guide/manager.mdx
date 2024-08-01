@@ -105,7 +105,13 @@ The branch can be changed in the following way:
    git checkout YOUR-BRANCH-FOR-CHANGE-XYZ
    osism apply configuration
    ```
-4. Start your work on the topic and perfom a final review when the topic is complete
+4. *Recommended:* Rebuild inventories and update facts
+   (On changing branches there are oft potential changes in the inventory structure)
+   ```
+   osism reconciler sync
+   osism apply facts
+   ```
+5. Start your work on the topic and perfom a final review when the topic is complete
 
 ## OpenSearch integration
 
