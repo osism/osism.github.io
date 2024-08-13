@@ -46,11 +46,11 @@ Release date: 12. August 2024
   * The Fluentd image has been rebuilt to make the use of the [fluent-plugin-grafana-loki](https://grafana.com/docs/loki/latest/send-data/fluentd/)
     plugin possible. If this plugin is not relevant, the upgrade can be skipped.
 
-  * Rebuild of the OVN images to update version to 24.3.2. Housekeeping for clusters that want the latest stable versions. The upgrade can be
-    skipped, there is no reason from a functional point of view.
+  * Rebuild of the OVN images to update version to [24.3.2](https://www.ovn.org/en/releases/changelog_v24.03.2/). Housekeeping for clusters
+    that want the latest stable versions. The upgrade can be skipped, there is no reason from a functional point of view.
 
-  * Rebuild of the OVS images to update version to 3.3.1. Housekeeping for clusters that want the latest stable versions. The upgrade can be
-    skipped, there is no reason from a functional point of view.
+  * Rebuild of the OVS images to update version to [3.3.1](https://www.openvswitch.org/releases/NEWS-3.3.1.txt). Housekeeping for clusters
+    that want the latest stable versions. The upgrade can be skipped, there is no reason from a functional point of view.
 
   * When upgrading the Nova and Keystone API services, there is a short downtime
     of the APIs. This downtime is usually less than 1 minute.
@@ -69,11 +69,25 @@ Release date: 12. August 2024
   docker_cli_version: "5:24.0.9"
   ```
 
+* The CAPI and CAPO versions have been changed to 1.7.4 and 0.10.4.. Run `osism apply clusterapi` if you use CAPI management cluster on the
+  ingegrated Kubernetes cluster.
+
 * New manager features.
 
 * New Kolla features.
 
+  * The `CS_AUTH_KEYS` environment variable for Barbican containers can be set via `barbican_cs_auth_keys`.
+
 * New roles & plays.
+
+  * `osism apply cleanup-journal` to vacuum the journald logs
+  * `osism apply openvswitch-ipfix` to manage an Open vSwitch IPFIX collector
+  * `osism apply openvswitch-netflow` to manage an Open vSwitch Netflow collector
+  * `osism apply openvswitch-sflow` to manage an Open vSwitch sFlow collector
+  * `osism apply zabbix_agent` for the deployment of the Zabbix agent
+  * `osism validate ceph-connectivity` to validate Ceph network connectivity
+  * `osism validate kolla-connectivity` to valdate Kolla network connectivity
+  * `osism validate ntp` to validate NTP synchronisation
 
 ## 7.1.0 (20240710)
 
