@@ -38,3 +38,25 @@ sudo apt -y install qemu-guest-agent
 sudo systemctl enable qemu-guest-agent
 sudo systemctl start qemu-guest-agent
 ```
+
+## VMware vSphere/ESXi
+
+When running Cloud in a Box on a VMware vSphere/ESXi virtual machine, you can use the below specs to configure the virtual machine:
+
+### Guest OS:
+
+* Compatibility set to current running vSphere/ESXi version
+* Guest OS family set to "Linux"
+* Guest OS version set to "Ubuntu Linux (64-bit)"
+
+
+### Hardware:
+
+* 32GB RAM
+* 8 vCores
+* SCSI Controller 0 set to LSI Logic Parallel
+* SCSI Disk with 500GB
+* CDROM/DVD drive mounted with ubuntu-autoinstall-cloud-in-a-box-1.iso image
+* Firmware set to "EFI" (VM Options > Boot Options > Firmware > choose EFI)
+
+This configuration has been successfully tested with VMware ESXi 7.0 U1.
