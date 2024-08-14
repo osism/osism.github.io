@@ -94,14 +94,14 @@ system release changes. The installation of older releases is currently not supp
    ssh dragon@IP_FROM_YOUR_SERVER
    passwd
    ```
-   ![CiaB Issue Text](images/cloud-in-a-box/issue.png)
+   ![CiaB Issue Text](images/issue.png)
 
 ### Manual installation
 
-1. Follow the [provisioning guide](../deploy-guide/provisioning),
+1. Follow the [provisioning guide](../../deploy-guide/provisioning),
    skip the part about disk layout and do it this way:
 
-   ![Disk layout](images/cloud-in-a-box/disk-layout.png)
+   ![Disk layout](images/disk-layout.png)
 
    1. Create a 1 GByte ext4 partition mounted in `/boot`
    2. Create a 8 GByte swap partition
@@ -162,7 +162,7 @@ system release changes. The installation of older releases is currently not supp
     ssh dragon@IP_FROM_YOUR_SERVER
     passwd
     ```
-    ![CiaB Issue Text](images/cloud-in-a-box/issue.png)
+    ![CiaB Issue Text](images/issue.png)
 
 
 :::info
@@ -389,51 +389,9 @@ available for use. If instances are to be started directly in this network,
 advance with the provider of the external network whether the use of DHCP
 is permitted there.
 
-### Running on a Virtual Machine
-
-The Cloud in a Box has been tested to run on a virtual machine. However, the Cloud in a Box is mainly made
-for running on bare metal, the automated installation does not work, and other things may not work either.
-
-#### Nested virtualization
-
-You likely want to run virtual machines on top of your Cloud in a Box.
-The host machine has to support and enabled nested virtualization.
-
-To enable nested virtualization the CPU configuration of the VM has to be `host-passthrough` or `host-model`
-
-* [Enabling nested virtualization in Fedora](https://docs.fedoraproject.org/en-US/quick-docs/using-nested-virtualization-in-kvm/)
-
-The linked guide can be used in other distributions as well.
-
-#### Disk space saving
-
-When using Cloud in a Box in a VM, you can utilize the qcow2 disk image or similar technology to save space.
-In that case, the base installation requires just around 70 GB instead of a full 1 TB.
-(*The drive still needs to be made with a capacity of at least 1TB; however, the actual disk space usage is lower.*)
-
-Also in case you want to experiment a bit more and "hack around" using the manual installation
-you can make disk snapshots when turned off after the Ubuntu installs, `bootstrap.sh` and `deploy.sh` to speed up your
-progress.
-
-If you use qemu, you can use following command to do snapshots.
-
-```bash
-sudo virsh snapshot-create-as --domain cib bootstrap "run of bootstrap.sh" --disk-only --diskspec sda,snapshot=external,file=/var/lib/libvirt/images/ub2022_cib_boostrap.qcow2 --atomic
-```
-
-#### QEMU guest agent
-
-When running inside QEMU, it may be worth it to install the QEMU guest agent.
-
-```bash
-sudo apt -y install qemu-guest-agent
-sudo systemctl enable qemu-guest-agent
-sudo systemctl start qemu-guest-agent
-```
-
 ## Troubleshooting
 
-![Broken disk setup](./images/cloud-in-a-box/screenshot1.png)
+![Broken disk setup](./images/screenshot1.png)
 
 This error means that your disk setup is broken. Use `cfdisk` and delete all partitions on
 the system on which you want to install the Cloud in a Box image.
