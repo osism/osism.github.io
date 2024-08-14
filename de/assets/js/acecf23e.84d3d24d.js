@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkosism=self.webpackChunkosism||[]).push([[7393],{1838:s=>{s.exports=JSON.parse('{"blogBasePath":"/de/blog","blogTitle":"Blog","authorsListPath":"/de/blog/authors"}')}}]);

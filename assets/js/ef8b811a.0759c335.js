@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkosism=self.webpackChunkosism||[]).push([[2644],{9441:e=>{e.exports=JSON.parse('{"authors":[{"name":"Christian Berendt","title":"Founder of OSISM","url":"https://github.com/berendt","imageURL":"https://github.com/berendt.png","key":"berendt","page":null,"count":6}]}')}}]);
