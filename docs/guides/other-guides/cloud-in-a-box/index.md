@@ -41,13 +41,6 @@ There are two types of Cloud in a Box.
    delivered to a central location. The storage backend will also be implemented differently there
    in the future instead of Ceph.
 
-## General notes and limitations
-
-* Load balancing in Octavia is only possible via OVN. The Amphora driver is not supported. This is due
-  to the limited resources we have. With the Amphora driver, a dedicated instance is started for each
-  load balancer, each of which consumes 1 GByte of memory. This represents a very high consumption in
-  relation to the usual sizes of the Cloud in a Box.
-
 ## Installation
 
 ### Automated installation (recommended)
