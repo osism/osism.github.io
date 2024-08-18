@@ -13,6 +13,7 @@ The release notes for 7.0.3 must then also be taken into account.
 
 | Release                  | Release Date    |
 |:-------------------------|:----------------|
+| [7.1.2](#712-20240818)   | 18. August 2024 |
 | [7.1.1](#711-20240812)   | 12. August 2024 |
 | [7.1.0](#710-20240710)   | 10. July 2024   |
 | [7.0.5](#705-20240524)   | 24. May 2024    |
@@ -21,6 +22,51 @@ The release notes for 7.0.3 must then also be taken into account.
 | [7.0.2](#702-20240407)   | 17. April 2024  |
 | [7.0.1](#701-20240327)   | 27. March 2024  |
 | [7.0.0](#700-20240320)   | 20. March 2024  |
+
+## 7.1.2 (20240818)
+
+Release date: 18. August 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images have not been rebuilt. No upgrade of OpenStack is required.
+
+* New manager features.
+
+  * It is now possible to manage custom images with `osism manage images`.
+  * It is now possible to manage custom flavors with `osism manage flavors`.
+  * Kubernetes Cluster API Images 1.31 are now deployed with `osism manage image clusterapi`.
+  * With `osism apply -a config PLAY` it is now possible to update only the configuration
+    files for services from the Kolla project.
+  * The Mitogen plugin for Ansible has been updated and Ansible 2.17 should now also be
+    usable.
+  * With `osism apply disable-compute-node` it is possible to stop & disable all services on
+    a compute node.
+  * With `osism apply remove-compute-node` it is possible  to stop, disable & remove
+    all services on a compute node.
+  * With `osism apply disable-network-node` it is possible to stop & disable all services on
+    a network node.
+  * With `osism apply enable-network-node` it is  possible to start & enable all services on
+    a network node.
+
+* New features in the `osism.commons.network` role.
+
+  * Dummy devices can be managed with the `network_dummy_devices parameter`.
+
+* New features in the `osism.commons.packages` role.
+
+  * The mode of the need start featore of APT can now be configured via the
+    `packages_needrestart_mode` parameter. By default, services that are to be
+    restarted are only listed.
+
+* Removed roles.
+
+  * `osism.validations.refstack` has been removed in favor of the `osism.validations.tempest` role.
+    The OpenStack Interop and therefore also the Refstack project will no longer be actively
+    continued.
+
+  * `osism.services.openstack_health_monitor` has been removed in favor of the new SCS health
+    monitor. This will probably be usable with OSISM 8.
 
 ## 7.1.1 (20240812)
 
