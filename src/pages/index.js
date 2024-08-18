@@ -16,7 +16,7 @@ function Announcements() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <div className="container" style={{"text-align": "center", "padding-top": "2em", "padding-bottom": "2em", "font-size": "1em"}}>
-      🎉️ <b><a href="https://osism.tech/docs/release-notes/osism-7#711-20240812">OSISM 7.1.1 (20240812)</a> is out!</b> 🥳️
+      🎉️ <b><a href="https://osism.tech/docs/release-notes/osism-7#712-20240818">OSISM 7.1.2 (20240818)</a> is out!</b> 🥳️
     </div>
   );
 }
