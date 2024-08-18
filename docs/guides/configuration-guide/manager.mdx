@@ -68,9 +68,7 @@ In the example, OSISM release 7.0.5 is used.
    git push
    ```
 
-## Working with Git-Branches
-
-:::info
+## Working with Git branches
 
 For example, for compliance and security reasons, many organizations prefer to prepare changes to
 production systems on dedicated Git branches, roll them out to the production environment
@@ -79,38 +77,44 @@ review and release process.
 
 A typical scenario is the [Manager Upgrade](../upgrade-guide/manager.mdx).
 
-OSISM offers the option of using specific GIT branches on the Manager.
+OSISM offers the option of using specific Git branches on the manager.
 
-:::
-
-The branch can be changed in the following way:
+The Git branch can be changed in the following way:
 
 1. Create a branch
+
    ```bash
    git checkout -b YOUR-BRANCH-FOR-CHANGE-XYZ
    ```
+
 2. Set the branch name of your deployment branch with the variable `configuration_git_version` in `configuration.yml`.
    This needs always to be changed on the manager node later if you merge the current branch to another target branch.
+
    ```bash
    BRANCH="$(git rev-parse --abbrev-ref HEAD)"
    sed -i "~s,^configuration_git_version:.*\$,configuration_git_version: ${BRANCH}," environments/configuration.yml
    git commit -m "Starting to work on #<issue-id>" -s environment/configuration.yml
    git push
    ```
+
 3. Login to the manager and activate the branch
-   (not needed when performing a initial manager install )
+   (not needed when performing a initial manager install)
+
    ```bash
    cd /opt/configuration
    git fetch
    git checkout YOUR-BRANCH-FOR-CHANGE-XYZ
    osism apply configuration
    ```
+
 4. *Recommended:* Rebuild inventories and update facts
    (On changing branches there are oft potential changes in the inventory structure)
+
    ```
    osism reconciler sync
    osism apply facts
    ```
+
 5. Start your work on the topic and perfom a final review when the topic is complete
 
 ## OpenSearch integration
