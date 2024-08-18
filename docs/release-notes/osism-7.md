@@ -51,7 +51,7 @@ Release date: 18. August 2024
 
 * New features in the `osism.commons.network` role.
 
-  * Dummy devices can be managed with the `network_dummy_devices parameter`.
+  * Dummy devices can be managed with the `network_dummy_devices` parameter (for Ubuntu >= 24.04).
 
 * New features in the `osism.commons.packages` role.
 
