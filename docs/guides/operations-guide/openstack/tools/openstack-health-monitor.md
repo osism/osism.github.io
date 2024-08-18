@@ -6,7 +6,7 @@ sidebar_label: OpenStack Health Monitor
 Kurt Garloff, 2024-02-20
 
 ## Intro
-The development of [openstack-health-monitor](https://github.com/SovereignCloudStack/openstack-health-monitor/) was done on [openSUSE 15.x images](https://kfg.images.obs-website.eu-de.otc.t-systems.com/), just because the author is very familiar with it and has some of the needed tools preinstalled. That said, the setup is not depending on anything specific from openSUSE and should work on every modern Linux distribution.
+The development of [openstack-health-monitor](https://github.com/SovereignCloudStack/openstack-health-monitor/) was done on [openSUSE 15.x images](http://kfg.images.obs-website.eu-de.otc.t-systems.com/), just because the author is very familiar with it and has some of the needed tools preinstalled. That said, the setup is not depending on anything specific from openSUSE and should work on every modern Linux distribution.
 
 Setting it up again in a different environment using Debian 12 images avoids a few of the shortcuts that were used and thus should be very suitable instructions to get it working in general. The step by step instructions are covered here.
 

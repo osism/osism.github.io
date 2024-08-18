@@ -43,6 +43,8 @@ on the seed node. The deployment of the seed node itself is documented in the
 cd environments/manager
 ```
 
+If you are working with Git branches, read [the instructions](../configuration-guide/manager.mdx).
+
 ### Step 1: Create operator user
 
 The operator user is created on each node. It is used as a service account for OSISM. All
@@ -200,7 +202,6 @@ with the `dragon` user.
 
 ```
 osism set vault password
-Ansible Vault password: ********
 ```
 
 Ready. The manager is now prepared and you can continue with the bootstrap of the other nodes.

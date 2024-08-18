@@ -22,8 +22,8 @@ In the example, OSISM release 7.0.5 is used.
 1. Set the new manager version in the configuration repository.
 
    ```
-   MANAGER_VERSION=7.0.5
-   sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION}/g" environments/manager/configuration.yml
+   MANAGER_VERSION="7.0.5"
+   sed -i "~s,^manager_version:.*\$,manager_version: ${MANAGER_VERSION}," environments/manager/configuration.yml
    ```
 
 2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
@@ -41,10 +41,11 @@ In the example, OSISM release 7.0.5 is used.
    <TabItem value="osism-6" label="OSISM < 7.0.0">
    If Gilt is not installed via the `requirements.txt` of the manager environment it is
    important to use a version smaller v2. The v2 of Gilt is not yet usable.
-
    ```
-   gilt overlay  # you have to do this 2x, this is not a copy & paste error
-   gilt overlay
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+     gilt overlay && gilt overlay
    ```
 
    Optionally, this is normally not necessary, it is possible to reference a specific tag of the
@@ -63,11 +64,58 @@ In the example, OSISM release 7.0.5 is used.
    workflows for changes to the configuration repository, only a generic example for Git.
 
    ```
-   git commit -a -s -m "manager: use OSISM version 7.0.5"
+   git commit -a -s -m "manager: use OSISM version ${MANAGER_VERSION?}"
    git push
    ```
 
-5. The upgrade is described in the [Manager Upgrade Guide](../upgrade-guide/manager).
+## Working with Git branches
+
+For example, for compliance and security reasons, many organizations prefer to prepare changes to
+production systems on dedicated Git branches, roll them out to the production environment
+using the 4-eyes control principle and then finally transfer them to the `main` branch through a
+review and release process.
+
+A typical scenario is the [Manager Upgrade](../upgrade-guide/manager.mdx).
+
+OSISM offers the option of using specific Git branches on the manager.
+
+The Git branch can be changed in the following way:
+
+1. Create a branch
+
+   ```bash
+   git checkout -b YOUR-BRANCH-FOR-CHANGE-XYZ
+   ```
+
+2. Set the branch name of your deployment branch with the variable `configuration_git_version` in `configuration.yml`.
+   This needs always to be changed on the manager node later if you merge the current branch to another target branch.
+
+   ```bash
+   BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+   sed -i "~s,^configuration_git_version:.*\$,configuration_git_version: ${BRANCH}," environments/configuration.yml
+   git commit -m "Starting to work on #<issue-id>" -s environment/configuration.yml
+   git push
+   ```
+
+3. Login to the manager and activate the branch
+   (not needed when performing a initial manager install)
+
+   ```bash
+   cd /opt/configuration
+   git fetch
+   git checkout YOUR-BRANCH-FOR-CHANGE-XYZ
+   osism apply configuration
+   ```
+
+4. *Recommended:* Rebuild inventories and update facts
+   (On changing branches there are oft potential changes in the inventory structure)
+
+   ```
+   osism reconciler sync
+   osism apply facts
+   ```
+
+5. Start your work on the topic and perfom a final review when the topic is complete
 
 ## OpenSearch integration
 
