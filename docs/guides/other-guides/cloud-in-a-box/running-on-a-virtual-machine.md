@@ -93,6 +93,6 @@ When running Cloud in a Box on a VirtualBox, you can use the the blow specs for 
 
 * Boot Order:  Set Optical as first boot device
 
-This configuration has been successfully tested with VirtualBox 6.1.50 using an Ubuntu 22.04 Host wit HWE Kernel 6.5.0
+This configuration has been successfully tested with VirtualBox 6.1.50 using an Ubuntu 22.04 Host with HWE Kernel 6.5.0
 The more CPU, RAM and Disc the better, as this is the bare minimum for a basic installation.
 
