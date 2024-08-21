@@ -643,6 +643,7 @@ $ sudo lvs
    ```
 
 7. Everything is now ready for the deployment of the new OSD.
+   Details on deploying the OSD service in the [Ceph operations guide](../operations-guide/ceph#add-a-new-osd).
 
 ## Dashboard
 
