@@ -563,6 +563,87 @@ $ sudo lvs
   osd-block-a0da232a-e5b8-5823-8c42-8fb231442edc ceph-a0da232a-e5b8-5823-8c42-8fb231442edc -wi-a----- <5.00g
 ```
 
+### Add a new osd
+
+1. There is the following existing configuration in `inventory/host_vars/<nodename>.yml`.
+
+   ```yaml
+   ceph_osd_devices:
+     sda:
+       osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
+     sdb:
+       osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
+   lvm_volumes:
+   - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
+     data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
+   - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
+     data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
+   ```
+
+2. The block device `sdc` should be added as new OSD on `nodename`. Edit the existing
+   configuration in `inventory/host_vars/<nodename>.yml` and add `sdc` to the list
+   `ceph_osd_devices`.
+
+   ```yaml
+   ceph_osd_devices:
+     sda:
+       osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
+     sdb:
+       osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
+     sdc:
+   lvm_volumes:
+   - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
+     data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
+   - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
+     data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
+   ```
+
+3. Commit changes in the configuration repository, sync the configuration repository on
+   the manager and reconcile the inventory with `osism reconciler sync`.
+
+4. Regenerate the configuration with `osism apply ceph-configure-lvm-volumes -l <nodename>`.
+   Synchronise the contents of `/tmp/<nodename>-ceph-lvm-configuration.yml` with those in
+   `inventory/host_vars/<nodename>.yml`.
+
+   ```yaml
+   ceph_osd_devices:
+     sda:
+       osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
+     sdb:
+       osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
+     sdc:
+       osd_lvm_uuid: ad1a16cd-b35e-58d1-8e40-80a14597f583
+   lvm_volumes:
+   - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
+     data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
+   - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
+     data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
+   - data: osd-block-ad1a16cd-b35e-58d1-8e40-80a14597f583
+     data_vg: ceph-ad1a16cd-b35e-58d1-8e40-80a14597f583
+   ```
+
+   Added in this case:
+
+   ```yaml
+   [...]
+     sdc:
+       osd_lvm_uuid: ad1a16cd-b35e-58d1-8e40-80a14597f583
+   [...]
+   - data: osd-block-ad1a16cd-b35e-58d1-8e40-80a14597f583
+     data_vg: ceph-ad1a16cd-b35e-58d1-8e40-80a14597f583
+   ```
+
+5. Commit changes in the configuration repository, sync the configuration repository on
+   the manager and reconcile the inventory with `osism reconciler sync`.
+
+6. Create new LVM devices.
+
+   ```yaml
+   osism apply ceph-create-lvm-devices -l <nodename>
+   ```
+
+7. Everything is now ready for the deployment of the new OSD.
+
 ## Dashboard
 
 Password for the admin user of the Ceph dashboard is set via `ceph_dashboard_password`.
