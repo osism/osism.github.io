@@ -1,6 +1,5 @@
 ---
 sidebar_label: Apply
-sidebar_position: 5
 ---
 
 # Apply

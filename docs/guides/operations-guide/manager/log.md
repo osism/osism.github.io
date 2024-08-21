@@ -1,6 +1,5 @@
 ---
 sidebar_label: Logging
-sidebar_position: 10
 ---
 
 # Logging

@@ -1,0 +1,160 @@
+---
+sidebar_label: Manager
+sidebar_position: 15
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Manager
+
+## Stable release
+
+:::warning
+
+Always read the [release notes](https://osism.tech/docs/release-notes/) first to learn what has changed and what
+adjustments are necessary. Read the release notes even if you are only updating from e.g. 7.0.2 to 7.0.5.
+
+:::
+
+In the example, OSISM release 7.0.5 is used.
+
+1. Set the new manager version in the configuration repository.
+
+   ```
+   MANAGER_VERSION="7.0.5"
+   sed -i "~s,^manager_version:.*\$,manager_version: ${MANAGER_VERSION}," environments/manager/configuration.yml
+   ```
+
+2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
+   (or anywhere else), they must be removed. If these are set, the stable release is not used for
+   these components.
+
+3. Sync the image versions in the configuration repository.
+
+   <Tabs>
+   <TabItem value="osism-7" label="OSISM >= 7.0.0">
+   ```
+   make sync
+   ```
+   </TabItem>
+   <TabItem value="osism-6" label="OSISM < 7.0.0">
+   If Gilt is not installed via the `requirements.txt` of the manager environment it is
+   important to use a version smaller v2. The v2 of Gilt is not yet usable.
+   ```
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+     gilt overlay && gilt overlay
+   ```
+
+   Optionally, this is normally not necessary, it is possible to reference a specific tag of the
+   [osism/cfg-generics](https://github.com/osism/cfg-generics) repository. To do this, first
+   check which version of osism/cfg-generics is used in a particular release. The version is
+   defined in `generics_version` in the `base.yml` file in the `osism/release` repository. For OSISM 6.0.0,
+   for example, this is version [v0.20230919.0](https://github.com/osism/release/blob/main/6.0.0/base.yml#L6).
+   This version is then added to the file `gilt.yml` in the configuration repository instead of
+   `main` at `version`. This change must be made again after each execution of `gilt overlay` as
+   it is overwritten by the call of `gilt overlay`. This cannot be realized differently in the
+   current implementation of [Gilt](https://github.com/retr0h/gilt).
+   </TabItem>
+   </Tabs>
+
+4. Commit and push changes in the configuration repository. Since everyone here has their own
+   workflows for changes to the configuration repository, only a generic example for Git.
+
+   ```
+   git commit -a -s -m "manager: use OSISM version ${MANAGER_VERSION?}"
+   git push
+   ```
+
+## Working with Git branches
+
+For example, for compliance and security reasons, many organizations prefer to prepare changes to
+production systems on dedicated Git branches, roll them out to the production environment
+using the 4-eyes control principle and then finally transfer them to the `main` branch through a
+review and release process.
+
+A typical scenario is the [Manager Upgrade](../upgrade-guide/manager.mdx).
+
+OSISM offers the option of using specific Git branches on the manager.
+
+The Git branch can be changed in the following way:
+
+1. Create a branch
+
+   ```bash
+   git checkout -b YOUR-BRANCH-FOR-CHANGE-XYZ
+   ```
+
+2. Set the branch name of your deployment branch with the variable `configuration_git_version` in `configuration.yml`.
+   This needs always to be changed on the manager node later if you merge the current branch to another target branch.
+
+   ```bash
+   BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+   sed -i "~s,^configuration_git_version:.*\$,configuration_git_version: ${BRANCH}," environments/configuration.yml
+   git commit -m "Starting to work on #<issue-id>" -s environment/configuration.yml
+   git push
+   ```
+
+3. Login to the manager and activate the branch
+   (not needed when performing a initial manager install)
+
+   ```bash
+   cd /opt/configuration
+   git fetch
+   git checkout YOUR-BRANCH-FOR-CHANGE-XYZ
+   osism apply configuration
+   ```
+
+4. *Recommended:* Rebuild inventories and update facts
+   (On changing branches there are oft potential changes in the inventory structure)
+
+   ```
+   osism reconciler sync
+   osism apply facts
+   ```
+
+5. Start your work on the topic and perfom a final review when the topic is complete
+
+## OpenSearch integration
+
+With the command `osism log opensearch` it is possible to send SQL queries
+to the OpenSearch service. For the command to be functional, the OpenSearch
+integration must be activated in the manager environment and the OpenSearch
+address and port must be set.
+
+```yaml title="environments/manager/configuration.yml"
+manager_opensearch_enable: true
+manager_opensearch_address: api-int.testbed.osism.xyz
+manager_opensearch_port: 9200
+manager_opensearch_protocol: https
+```
+
+The integration can also be enabled later. `osism update manager` is then
+executed after the configuration has been changed.
+
+## OpenStack broker integration
+
+If the Baremetal Service Integration in OSISM is used, the OpenStack Broker integration is
+required. The integration itself is activated by setting the parameter `enable_listener` to `true`.
+
+The hosts in the `manager_listener_broker_hosts` list are the control nodes of OpenStack.
+The user is set via `manager_listener_broker_username`. On OpenStack's RabbitMQ broker, the user `openstack`
+is present by default.
+
+```yaml title="environments/manager/configuration.yml"
+enable_listener: true
+manager_listener_broker_hosts:
+  - 192.168.16.10
+  - 192.168.16.11
+  - 192.168.16.12
+manager_listener_broker_username: openstack
+manager_listener_broker_uri: "{% for host in manager_listener_broker_hosts %}amqp://{{ manager_listener_broker_username }}:{{ manager_listener_broker_password }}@{{ host }}:5672/{% if not loop.last %};{% endif %}{% endfor %}"
+```
+
+The password used when using the `openstack` user is `rabbitmq_password` from `environments/kolla/secrets.yml`.
+
+```yaml title="environments/manager/secrets.yml"
+manager_listener_broker_password: RABBITMQ_PASSWORD
+```

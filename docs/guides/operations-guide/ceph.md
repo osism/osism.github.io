@@ -1,21 +1,18 @@
 ---
 sidebar_label: Ceph
-sidebar_position: 50
 ---
 
-# Ceph operations cheatsheet
+# Ceph
 
 ## Where to find docs
 
-The official Ceph documentation is located on https://docs.ceph.com/en/latest
+The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/operations/
 
 It is **strongly advised** to use the documentation for the version being used.
 
-* Pacific - https://docs.ceph.com/en/pacific
-* Quincy - https://docs.ceph.com/en/quincy
-* Reef - https://docs.ceph.com/en/reef
-
-ceph-ansible documentation is located on https://docs.ceph.com/projects/ceph-ansible/en/latest/
+* Pacific - https://docs.ceph.com/en/pacific/rados/operations/
+* Quincy - https://docs.ceph.com/en/quincy/rados/operations/
+* Reef - https://docs.ceph.com/en/reef/rados/operations/
 
 :::note
 
@@ -48,16 +45,53 @@ Shiny new features aren't worth the risk of total or partial data loss/corruptio
 
 The following commands can be used to quickly check the status of Ceph:
 
-```
-$ ceph -s # Print overall cluster status
-$ ceph health detail # Print detailed health information
-$ ceph osd tree # Display current OSD tree
-$ ceph df # Cluster storage usage by pool and storage class
-$ ceph osd pool ls detail # List pools with detailed configuration
-$ ceph osd df {plain|tree} {class e.g. hdd|ssd} # Get usage stats for OSDs
-$ ceph -w # Watch Ceph health messages sequentially
-$ ceph versions # List daemon versions running in the cluster
-``` 
+* Print overall cluster status
+
+  ```
+  ceph -s
+  ```
+
+* Print detailed health information
+
+  ```
+  ceph health detail
+  ```
+
+* Display current OSD tree
+
+  ```
+  ceph osd tree
+  ```
+
+* Cluster storage usage by pool and storage class
+
+  ```
+  ceph df
+  ```
+
+* List pools with detailed configuration
+
+  ```
+  ceph osd pool ls detail
+  ```
+
+* Get usage stats for OSDs
+
+  ```
+  ceph osd df {plain|tree} {class e.g. hdd|ssd}
+  ```
+
+* Watch Ceph health messages sequentially
+
+  ```
+  ceph -w
+  ```
+
+* List daemon versions running in the cluster
+
+  ```
+  ceph versions
+  ``` 
 
 Also you can run the following on each node running ceph-daemons,
 to provide further debug information about the environment:
@@ -270,34 +304,133 @@ $ ceph osd metadata
 $ ceph osd metadata osd.<ID>
 ```
 
-:::note
+Interesting fields:
 
-      Interesting fields:
-      osd_objectstore, rotational, hostname, devices, device_ids, device_paths,
-      bluefs_db_rotational, bluefs_wal_rotational,
-      bluefs_dedicated_db, bluefs_dedicated_wal,
-      bluestore_bdev_rotational
+* bluefs_db_rotational
+* bluefs_dedicated_db
+* bluefs_dedicated_wal
+* bluefs_wal_rotational
+* bluestore_bdev_rotational
+* device_ids
+* device_paths
+* devices
+* hostname
+* osd_objectstore
+* rotational
 
-:::
+### Add a new OSD
 
-### Add a new OSD using ceph-ansible
+1. Prepare the configuration for the new OSD first. Details on adding the configuration
+   for a new OSD in the [Ceph configuration guide](../configuration-guide/ceph/#add-a-new-osd).
 
-### Remove a OSD using ceph-ansible
+2. Deploy the new OSD service on `<nodename>`.
+
+   ```
+   osism apply ceph-osds -l <nodename> -e ceph_handler_osds_restart=false
+   ```
 
 ### Replace a defect OSD
 
-### Remove a single OSD node
+### Remove a OSD
 
-### Remove an OSD (removing it completely, not reprovisioning it again) without double rebalance
+As with ‘Remove a single OSD node’. Except that the steps are only executed
+for a single OSD and the node is not removed from the CRUSH map and the inventory.
+Only the entries relating to the removed OSD are removed from the host vars.
+
+#### Manual way
 
 ```
 $ ceph osd crush reweight osd.<ID> 0.0
-... Wait for rebalance to complete, then mark it OUT:
+# Wait for rebalance to complete...
 $ ceph osd out osd.<ID>
 # systemctl stop ceph-osd@<ID>
 # systemctl disable ceph-osd@<ID>
 $ ceph osd purge osd.<ID> --yes-i-really-mean-it
 ```
+
+The LV and VG defined in the inventory for this OSD must also be removed. The
+OSD itself should be wiped.
+
+### Remove a single OSD node
+
+1. Get all OSDs  of the node
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.11691  root default
+   -3         0.03897      host testbed-node-0
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   -7         0.03897      host testbed-node-2
+    2    hdd  0.01949          osd.2                up   1.00000  1.00000
+    5    hdd  0.01949          osd.5                up   1.00000  1.00000
+   ```
+
+2. Reduce the weighting of all OSDs on the node to 0. Do this for each OSD
+   in a row and wait after each adjustment until the Ceph cluster is balanced.
+   Depending on how large the Ceph cluster and the individual OSDs are, this
+   may take some time.
+
+   ```
+   $ ceph osd crush reweight osd.2 0.0
+   $ ceph osd crush reweight osd.5 0.0
+   ```
+
+   The Ceph OSDs that are to be removed then have a weight of 0.
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.07794  root default
+   -3         0.03897      host testbed-node-0
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   -7               0      host testbed-node-2
+    2    hdd        0          osd.2                up   1.00000  1.00000
+    5    hdd        0          osd.5                up   1.00000  1.00000
+   ```
+
+3. Remove the OSDs and everything that belongs to them from the node.
+   This is a disruptive action that cannot be undone. The devices used
+   are also reset.
+
+   ```
+   $ osism apply ceph-shrink-osd -e ireallymeanit=yes -e osd_to_kill=2,5
+   ```
+
+   All OSDs were removed.
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.07794  root default
+   -3         0.03897      host testbed-node-0
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   -7               0      host testbed-node-2
+   ```
+
+4. Remove the node from the CRUSH map.
+
+   ```
+   $ ceph osd crush remove testbed-node-2
+   removed item id -7 name 'testbed-node-2' from crush map
+   ```
+
+5. Remove the node from all Ceph groups in the inventory.
+
+6. Remove all Ceph-specific parameters from the host vars of the node from the
+   inventory
 
 ### Remove an OSD (temporarily e.g. when replacing a broken disk)
 
@@ -391,7 +524,7 @@ Recovery might not start immediately and might take some time.
 You can query the status of the recovery through ``ceph pg <pgid> query``.
 Be sure to read the Ceph manual about this topic *thoroughly*:
 
-https://docs.ceph.com/en/latest/rados/operations/pg-repair/
+https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-pg/
 
 :::
 
@@ -465,6 +598,18 @@ See: https://docs.ceph.com/en/latest/rados/configuration/mon-config-ref
 
 ### Set number of PGs for a pool
 
+If no autoscaling of PGs is used, it is very important to adapt the PGs per pool to the
+real world when operating a Ceph cluster. If, for example, OSDs are exchanged, added, new
+nodes are added, etc., the number of PGs must also be taken into account.
+
+The [PG Calc Tool](https://docs.ceph.com/en/latest/rados/operations/pgcalc/) can be used
+to calculate a reasonable number of PGs per pool depending on all ODSs and pools.
+
+Further information on placement groups can be found in the
+[Ceph documentation](https://docs.ceph.com/en/latest/rados/operations/placement-groups/).
+You should definitely read *FACTORS RELEVANT TO SPECIFYING PG_NUM* and *CHOOSING THE NUMBER OF PGS*
+there.
+
 ```
 $ ceph osd pool set <poolname> pg_num <num_pgs>
 ```
@@ -496,113 +641,6 @@ This can be used to move a pool from e.g. HDD to SSD or NVME class
 or anything else that the new CRUSH rule specifies.
 
 ## Advanced topics
-
-### Configure and create LVM devices for ceph-ansible using OSISM
-
-For more advanced OSD layout requirements leave out the `devices` key
-and instead use `lvm_volumes`.
-
-Details for this can be found on the official [ceph-ansible OSD Scenario](https://docs.ceph.com/projects/ceph-ansible/en/latest/osds/scenarios.html) documentation.
-
-In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
-OSISM has the two playbooks `configure-lvm-devices` and `create-lvm-devices` available.
-
-Their usage is as follows:
-
-1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
-   add a configuration like the following to it:
-
-   ```
-   ceph_osd_db_wal_devices_buffer_space_percent: 10
-   # optional percentage of VGs to leave free,
-   # defaults to false
-   # Can be helpful for SSD performance of some older SSD models
-   # or to extend lifetime of SSDs in general
-
-   ceph_db_devices:
-     nvme0n1:            # required, PV for a DB VG
-                         # Will be prefixed by /dev/ and can also be specified
-                         # like "by-path/foo" or other things under /dev/
-       num_osds: 6       # required, number of OSDs that shall be
-                         # maximum deployed to this device
-       db_size: 30 GB    # optional, if not set, defaults to
-                         # (VG size - buffer space (if enabled)) / num_osds
-   ceph_wal_devices:
-     nvme1n1:            # See above, PV for a WAL VG
-       num_osds: 6       # See above
-       wal_size: 2 GB    # optional, if not set, defaults to 2 GiB
-
-   ceph_db_wal_devices:
-   nvme2n1:              # See above, PV for combined WAL+DB VG
-     num_osds: 3         # See above
-       db_size: 30 GB    # See above, except that it also considers
-                         # total WAL size when calculating LV sizes
-       wal_size: 2 GB    # See above
-
-   ceph_osd_devices:
-     sda:                # Device name, will be prefixed by /dev/, see above conventions
-                         # This would create a "block only" OSD without DB/WAL
-                         # In reality, to ensure each device is uniquely identifiable,
-                         # you should use WWN or EUI-64
-                         # (in that case the entry here would be something like 
-                         # disk/by-id/wwn-<something> or disk/by-id/nvme-eui.<something>)
-     sdb:                # Create an OSD with dedicated DB
-       db_pv: nvme0n1    # Must be one device configured in ceph_db_devices
-                         # or ceph_db_wal_devices
-     sdc:                # Create an OSD with dedicated WAL
-       wal_pv: nvme1n1   # Must be one device configured in ceph_wal_devices
-                         # or ceph_db_wal_devices
-     sdb:                # Create an OSD with dedicated DB/WAL residing on different devices
-       db_pv: nvme0n1    # See above
-       wal_pv: nvme1n1   # See above
-     sdc:                # Create an OSD with dedicated DB/WAL residing on the same VG/PV
-       db_pv: nvme2n1    # Must be one device configured in ceph_db_wal_devices
-       wal_pv: nvme2n1   # Must be the same device configured in ceph_db_wal_devices
-   ```
-
-2. Push the configuration to your configuration repository and after that do the following
-
-   ```
-   $ osism apply configuration
-   $ osism apply facts
-   ```
-
-3. After the configuration has been pulled and facts updated,
-   you can run the LVM configuration playbook:
-
-   ```
-   $ osism apply ceph-configure-lvm-volumes [-l INVENTORY HOST PATTERN]
-   ```
-
-   This will generate a new configuration file for each node in `/tmp` 
-   on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
-
-4. Take the generated configuration file from `/tmp` and **replace the previously generated configuration** for each node.
-
-5. Push the updated configuration **again** to your configuration repository and re-run:
-
-   ```
-   $ osism apply configuration
-   $ osism apply facts
-   ```
-
-6. Finally you can let OSISM create the LVM devices for you, because
-   `ceph-ansible` will not do that. To do that you simply run:
-
-   ```
-   $ osism apply ceph-create-lvm-devices [-l INVENTORY HOST PATTERN]
-   ```
-
-7. Deploy OSDs with ceph-ansible
-
-   When everything has finished and is ready to be deployed,
-   you can run:
-
-   ```
-   $ osism apply ceph-osds [-l INVENTORY HOST PATTERN]
-   ```
-
-   This should then have `ceph-ansible` create new OSDs on the node.
 
 ### Validating Ceph using OSISM playbooks
 
@@ -814,6 +852,42 @@ in the section above, you do the following:
    ```
    # systemctl enable --now ceph-radosgw@<name>.service
    ```
+
+## Performance benchmark
+
+```
+# apt-get install -y fio
+```
+
+```bash
+#!/usr/bin/env bash
+
+BENCH_DEVICE="$2"
+DATE=$(date +%s)
+IOENGINE="libaio"
+LOGPATH="$1"
+SIZE=1G
+
+mkdir -p $LOGPATH
+
+for RW in "write" "randwrite" "read" "randread"
+do
+  for BS in "4K" "64K" "1M" "4M" "16M" "64M"
+  do
+    (
+    echo "==== $RW - $BS - DIRECT ===="
+    echo 3 > /proc/sys/vm/drop_caches
+    fio --rw=$RW --ioengine=${IOENGINE} --size=$SIZE --bs=$BS --direct=1 --runtime=60 --time_based --name=bench --filename=$BENCH_DEVICE --output=$LOGPATH/$RW.${BS}-direct-$(basename $BENCH_DEVICE).$DATE.log.json --output-format=json
+    sync
+    echo 3 > /proc/sys/vm/drop_caches
+    echo "==== $RW - $BS - DIRECT IODEPTH 32  ===="
+    fio --rw=$RW --ioengine=${IOENGINE} --size=$SIZE --bs=$BS --iodepth=32 --direct=1 --runtime=60 --time_based --name=bench --filename=$BENCH_DEVICE --output=$LOGPATH/$RW.${BS}-direct-iod32-$(basename $BENCH_DEVICE).$DATE.log.json --output-format=json
+    sync
+    ) | tee $LOGPATH/$RW.$BS-$(basename $BENCH_DEVICE).$DATE.log
+    echo
+  done
+done
+```
 
 ## Where and how to get further help
 

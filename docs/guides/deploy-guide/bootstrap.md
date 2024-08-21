@@ -5,9 +5,19 @@ sidebar_position: 40
 
 # Bootstrap
 
+:::info
+
+The prerequisite for bootstraping the nodes of a cluster the Manager node has to be
+prepares. What a Manager node is and how to prepare it is documented in the
+[Manager chapter of the Deploy Guide](./manager.md).
+
+All the nodes must also have already been provisioned. How manual provisioning is done
+is documented in the [Provisioning chapter of the Deploy Guide](./provisioning.md).
+
+:::
+
 Before the nodes can be bootstrapped, they must all have already been provisioned.
-The guide for this can be found in the section
-[Provisioning of management and control plane nodes](./provisioning)
+The guide for this can be found in the section [Provisioning of bare-metal nodes](./provisioning.md).
 
 The following steps are applied to bootstrap all nodes. After the completion of the bootstrap,
 the nodes are already ready for use.
@@ -123,22 +133,22 @@ the nodes are already ready for use.
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
-10. Prepare the SSH configuration of the manager node.
+10. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
+
+    ```
+    osism apply ping
+    ```
+
+11. Prepare the SSH configuration of the manager node.
 
     ```
     osism apply sshconfig
     ```
 
-11. Make all SSH public keys known.
+12. Make all SSH public keys known.
 
-   ```
-   osism apply known-hosts
-   ```
-
-11. Check again if all systems are reachable (you probably have to do this several times until all systems are accessible).
-
-   ```
-   osism apply ping
-   ```
+    ```
+    osism apply known-hosts
+    ```
 
 Ready. All nodes are now bootstrapped and available to deploy services.

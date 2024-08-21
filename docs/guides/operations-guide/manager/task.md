@@ -1,6 +1,5 @@
 ---
 sidebar_label: Task
-sidebar_position: 20
 ---
 
 # Task
@@ -23,11 +22,17 @@ All running or scheduled tasks can be listed with `osism task list`.
 Sometimes tasks get stuck. Due to the internal locks it is then not possible to re-execute
 plays with the same name. Also it is currently not possible to cancel already running tasks
 (is on the todo list). The only way to unblock the situation is to stop the manager service
-and remove the Redis volume. Afterwards the manager is started again.
+and start it again.
 
 ```
 cd /opt/manager
 docker compose down
-docker volume rm manager_redis
 docker compose up -d
+```
+
+In earlier versions of OSISM, the Redis service was not stateless. In these cases, it is
+necessary to delete the Redis service volume before restarting the manager service.
+
+```
+docker volume rm manager_redis
 ```

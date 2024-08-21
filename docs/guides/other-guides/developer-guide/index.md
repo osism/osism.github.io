@@ -1,6 +1,5 @@
 ---
 sidebar_label: Developer Guide
-sidebar_position: 90
 ---
 
 # Developer Guide
@@ -12,7 +11,7 @@ a container image. The following steps are necessary and are demonstrated using 
 of `osism.services.cgit`.
 
 | Description                                                                         | Example                                                                |
-|-------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+|:------------------------------------------------------------------------------------|:-----------------------------------------------------------------------|
 | Add the Ansible role in one of the Ansible collection repositories                  | https://github.com/osism/ansible-collection-services/pull/578/files    |
 | Add the Ansible playbook                                                            | https://github.com/osism/ansible-playbooks/pull/215/files              |
 | Add the Ansible inventory group                                                     | https://github.com/osism/cfg-generics/pull/225/files                   |
@@ -28,3 +27,13 @@ repository. The example here is from the `osism.services.keycloak` role: https:/
 
 Whenever possible, upstream container images should be used. If only minor customizations are necessary,
 always work with overlay container images based on upstream container images.
+
+## How service deployment works
+
+### Docker
+
+![Service deployment with Docker](./images/service-with-docker.drawio.png)
+
+### Kubernetes
+
+![Service deployment with Kubernetes](./images/service-with-kubernetes.drawio.png)

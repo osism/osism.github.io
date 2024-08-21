@@ -5,14 +5,16 @@ const themes = require('prism-react-renderer').themes;
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
+import {EnumChangefreq} from 'sitemap';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'OSISM',
-  tagline: 'Open Cloud Infrastructure',
+  title: 'OSISM – Sovereign Cloud Infrastructure',
+  tagline: 'Get your data center ready for the mulit-cloud era',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://osism.tech',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -30,7 +32,7 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'de'],
   },
 
   presets: [
@@ -48,7 +50,24 @@ const config = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        sitemap: {
+          changefreq: EnumChangefreq.DAILY,
+          priority: 1,
+          filename: 'sitemap.xml',
+        },
       }),
+    ],
+  ],
+
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'users',
+        path: 'users',
+        routeBasePath: 'users',
+        sidebarPath: require.resolve('./sidebarUsers.js')
+      }
     ],
   ],
 
@@ -58,7 +77,6 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'OSISM',
         logo: {
           alt: 'OSISM Logo',
           src: 'img/logo.svg',
@@ -68,12 +86,28 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Docs',
+            label: 'Documentation',
+          },
+          { to: "/users", label: "Users", position: "left" },
+          { to: "/blog", label: "Blog", position: "left" },
+          {
+            href: 'https://regiocloud.github.io',
+            label: 'REGIO',
+            position: 'right',
           },
           {
-            href: 'https://github.com/osism/osism.github.io',
-            label: 'GitHub',
+            href: 'https://scs.community',
+            label: 'Sovereign Cloud Stack',
             position: 'right',
+          },
+          {
+	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
+            label: 'Schedule a demo',
+            position: 'right',
+          },
+          {
+            type: 'localeDropdown',
+            position: 'left',
           },
         ],
       },
@@ -81,11 +115,97 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Community',
+            title: 'Resources',
             items: [
+              {
+                label: 'Documentation',
+                href: '/docs',
+              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/osism',
+              },
+              {
+                label: 'Zuul CI',
+                href: 'https://zuul.services.betacloud.xyz/t/osism/status',
+              },
+              {
+                label: 'Users',
+                href: '/users',
+              },
+              {
+                label: 'Partner Network',
+                href: '/partners',
+              },
+              {
+                label: 'Support',
+                href: '/support',
+              },
+	    ],
+          },
+          {
+            title: 'Comparisons',
+            items: [
+              {
+                label: 'OSISM vs. FishOS',
+                href: '/docs/appendix/comparisons#osism-vs-fishos',
+              },
+              {
+                label: 'OSISM vs. Red Hat OpenStack Services on OpenShift',
+                href: '/docs/appendix/comparisons#osism-vs-red-hat-openstack-services-on-openshift',
+              },
+              {
+                label: 'OSISM vs. Canonical OpenStack',
+                href: '/docs/appendix/comparisons#osism-vs-canonical-openstack',
+              },
+              {
+                label: 'OSISM vs. SUSE OpenStack Cloud',
+                href: '/docs/appendix/comparisons#osism-vs-suse-openstack-cloud',
+              },
+              {
+                label: 'OSISM vs. Mirantis OpenStack for Kubernetes',
+                href: '/docs/appendix/comparisons#osism-vs-mirantis-openstack-for-kubernetes',
+              },
+              {
+                label: 'OSISM vs. OpenStack Ansible',
+                href: '/docs/appendix/comparisons#osism-vs-openstack-ansible',
+              },
+	    ],
+          },
+          {
+            title: 'Company',
+            items: [
+              {
+                label: 'Blog',
+                href: '/blog',
+              },
+              {
+                label: 'Contact Us',
+                href: '/contact-us',
+              },
+              {
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/company/osism/',
+              },
+              {
+                label: 'About Us',
+                href: '/about-us',
+              },
+              {
+                label: 'Jobs',
+                href: '/jobs',
+              },
+              {
+                label: 'Privacy Policy',
+                href: '/privacy',
+              },
+              {
+                label: 'Terms & Conditions',
+                href: '/terms',
+              },
+              {
+                label: 'Legals',
+                href: '/legals',
               },
             ],
           },
@@ -97,6 +217,27 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  markdown: {
+    mermaid: true,
+  },
+  themes: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
+      ({
+        // ... Your options.
+        // `hashed` is recommended as long-term-cache of index file is possible.
+        hashed: true,
+        docsRouteBasePath: 'https://osism.tech/docs/',
+        blogRouteBasePath: 'https://osism.tech/blog/',
+        indexPages: true,
+        // For Docs using Chinese, The `language` is recommended to set to:
+        // ```
+        // language: ["en", "zh"],
+        // ```
+      }),
+    ],
+  ],
 };
 
 module.exports = config;

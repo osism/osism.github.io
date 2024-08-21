@@ -6,73 +6,140 @@ sidebar_position: 60
 # OpenStack
 
 Common issues with deploying OpenStack services are documented in the
-[OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
+[OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack.md).
 
-## OpenStack client
+:::info
 
-```
-osism apply openstackclient
-```
+An OpenStack deployment contains a number of components providing APIs to access infrastructure resources.
+The [OpenStack Components](https://www.openstack.org/software/project-navigator/openstack-components#openstack-services)
+page lists the various services that can be deployed to provide such resources to cloud end users.
+Unfortunately, not all of the OpenStack projects listed there are still active.
+Not all of the services listed there are supported by OSISM.
 
-## Keystone
+:::
 
-```
-osism apply -a pull keystone
-osism apply keystone
-```
+1. OpenStack client
 
-## Glance
+   ```
+   osism apply openstackclient
+   ```
 
-```
-osism apply -a pull glance
-osism apply glance
-```
+2. Keystone
 
-## Designate
+   ```
+   osism apply -a pull keystone
+   osism apply keystone
+   ```
 
-```
-osism apply -a pull designate
-osism apply designate
-```
+3. Glance
 
-## Placement
+   ```
+   osism apply -a pull glance
+   osism apply glance
+   ```
 
-```
-osism apply -a pull placement
-osism apply placement
-```
+4. Designate
 
-## Cinder
+   ```
+   osism apply -a pull designate
+   osism apply designate
+   ```
 
-```
-osism apply -a pull cinder
-osism apply cinder
-```
+5. Placement
 
-## Neutron
+   ```
+   osism apply -a pull placement
+   osism apply placement
+   ```
 
-```
-osism apply -a pull neutron
-osism apply neutron
-```
+6. Cinder
 
-## Nova
+   ```
+   osism apply -a pull cinder
+   osism apply cinder
+   ```
 
-```
-osism apply -a pull nova
-osism apply nova
-```
+7. Neutron
 
-## Octavia
+   ```
+   osism apply -a pull neutron
+   osism apply neutron
+   ```
 
-```
-osism apply -a pull octavia
-osism apply octavia
-```
+8. Nova
 
-## Horizon
+   ```
+   osism apply -a pull nova
+   osism apply nova
+   ```
 
-```
-osism apply -a pull horizon
-osism apply horizon
-```
+9. Octavia
+
+   ```
+   osism apply octavia-certificates
+   osism apply copy-octavia-certificates
+   ```
+
+   ```
+   osism apply -a pull octavia
+   osism apply octavia
+   ```
+
+10. Optional: Manage amphora image
+
+   This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
+   this step is not necessary.
+
+   We provide regularly updated images for Octavia in
+   [osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
+
+   * Configure API Endpoint
+
+     For the command to be usable, a cloud profile for octavia must currently be added in the
+     clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
+
+     ```yaml title="environments/openstack/clouds.yml"
+     clouds:
+       [...]
+       octavia:
+         auth:
+           username: octavia
+           project_name: service
+           auth_url: https://api.testbed.osism.xyz:5000/v3
+           project_domain_name: default
+           user_domain_name: default
+         cacert: /etc/ssl/certs/ca-certificates.crt
+         identity_api_version: 3
+     ```
+
+  * Configure the secret
+
+    The secret is added to the secure.yml file. The password is set in the parameter
+    `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
+
+    Get the secret with
+    ```
+    make ansible_vault_show FILE=environments/kolla/secrets.yml |grep octavia_keystone_password
+    ```
+
+    ```yaml title="environments/openstack/secure.yml"
+    ---
+    clouds:
+      [...]
+      octavia:
+        auth:
+          password: VALUE_OF_octavia_keystone_password
+    ```
+
+  * Upload the correct and current image depending on the current Openstack release:
+
+    ```
+    osism manage image octavia
+    ```
+
+11. Horizon
+
+    ```
+    osism apply -a pull horizon
+    osism apply horizon
+    ```

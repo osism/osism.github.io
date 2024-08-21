@@ -5,80 +5,98 @@ sidebar_position: 40
 
 # OpenStack
 
-## Keystone
+:::info
 
-```
-osism apply -a pull keystone
-osism apply -a upgrade keystone
-```
+When upgrade the different OpenStack services, all containers must be
+restarted. When restarting the API services, there is a short downtime
+of the APIs. This downtime is usually less than 1 minute.
 
-## Glance
+:::
 
-```
-osism apply -a pull glance
-osism apply -a rolling-upgrade glance
-```
+1. OpenStack client
 
-## Designate
+   ```
+   osism apply openstackclient
+   ```
 
-```
-osism apply -a pull designate
-osism apply -a upgrade designate
-```
+2. Keystone
 
-## Placement
+   ```
+   osism apply -a pull keystone
+   osism apply -a upgrade keystone
+   ```
 
-```
-osism apply -a pull placement
-osism apply -a upgrade placement
-```
+3. Glance
 
-## Cinder
+   ```
+   osism apply -a pull glance
+   osism apply -a upgrade glance
+   ```
 
-```
-osism apply -a pull cinder
-osism apply -a upgrade cinder
-```
+4. Designate
 
-## Neutron
+   ```
+   osism apply -a pull designate
+   osism apply -a upgrade designate
+   ```
 
-```
-osism apply -a pull neutron
-osism apply -a rolling-upgrade neutron
-```
+5. Placement
 
-## Nova
+   ```
+   osism apply -a pull placement
+   osism apply -a upgrade placement
+   ```
 
-```
-osism apply -a pull nova
-osism apply -a rolling-upgrade nova
-```
+6. Cinder
 
-## Octavia
+   ```
+   osism apply -a pull cinder
+   osism apply -a upgrade cinder
+   ```
 
-```
-osism apply -a pull octavia
-osism apply -a upgrade octavia
-```
-### Amphora image update
+7. Neutron
 
-This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
-this step is not necessary.
+   ```
+   osism apply -a pull neutron
+   osism apply -a upgrade neutron
+   ```
 
-### Amphora rotation
+8. Nova
 
-This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
-this step is not necessary.
+   ```
+   osism apply -a pull nova
+   osism apply -a upgrade nova
+   ```
 
-## Horizon
+9. Octavia
 
-```
-osism apply -a pull horizon
-osism apply -a upgrade horizon
-```
+   ```
+   osism apply -a pull octavia
+   osism apply -a upgrade octavia
+   ```
 
-## OpenStack client
+   9.1. Update amphora image
 
-```
-osism apply openstackclient
-```
+   This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
+   this step is not necessary.
+
+   We provide regularly updated images for Octavia in
+   [osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
+   The OSISM CLI can be used to upload the correct image depending on the OpenStack release
+   used.
+
+   ```
+   osism manage image octavia
+   ```
+
+   9.2. Amphora rotation
+
+   This step is only necessary if the Amphora driver is used. If OVN is used as the driver,
+   this step is not necessary.
+
+10. Horizon
+
+    ```
+    osism apply -a pull horizon
+    osism apply -a upgrade horizon
+    ```

@@ -3,7 +3,7 @@ sidebar_label: Provisioning
 sidebar_position: 30
 ---
 
-# Provisioning of management and control plane nodes
+# Provisioning of bare-metal nodes
 
 For the initial deployment of the management plane and the control plane of OSISM,
 the nodes must be pre-provisioned with Ubuntu 22.04. Currently, only Ubuntu 22.04 is supported
@@ -21,7 +21,7 @@ There are different variants of the ISO image. The variants differ in the disc l
 The available variants are described in the README file of the [osism/node-image](https://github.com/osism/node-image)
 repository.
 
-### Manual provisioning
+## Manual provisioning
 
 If none of the provided variants is suitable, this section describes the manual
 installation with the help of the Ubuntu 22.04 live ISO image. The manual installation
@@ -54,9 +54,8 @@ is possible without network connectivity.
   * Dedicated disks may be provided for `/var/lib/docker` on the controller nodes. In this case, do not
     use an LV for `/var/lib/docker` but the devices provided for it.
   * Do not configure devices that are not required for the operating system.
-  * The use of own file systems for the following mountpoints is recommended. The size of the individual partitions
-    is minimal. Depending on the node type, the individual partitions should be made larger. This applies in
-    particular to `/var/lib/docker`. On controllers at least 100 GByte should be used.
+  * The use of own file systems for the following mountpoints is recommended. The size of the partitions/LVs
+    is minimal. Depending on the node type, the partitions/LVs should be made larger.
     * `/` (10 GByte, logical volume `root`)
     * `/home` (2 GByte, logical volume `home`)
     * `/tmp` (5 GByte, logical volume `tmp`)
@@ -64,9 +63,12 @@ is possible without network connectivity.
     * `/var/lib/docker` (30 GByte, logical volume `docker`, do not set the `nosuid` flag on `/var/lib/docker`)
       * When using XFS as the file system for `/var/lib/docker`, note the following: Running on XFS without `d_type` support
         causes Docker to skip the attempt to use the `overlay` or `overlay2` driver.
+      * 100 GB should be used on a control node at the beginning.
+      * `/var/lib/docker` must be extended later during operation depending on the node type. You do this
+        in operation when you can see how many logs etc. are generated.
     * `/var/log/audit` (1 GByte, logical volume `audit`)
     * `/var` (10 GByte, logical volume `var`)
-    * `swap` (min 8 GByte, logical volume `swap`)
+    * `swap` (8 GByte, logical volume `swap`)
 * Choose `No automatic updates`.
 * Choose `OpenSSH server` as software to install.
   * **Do not install any other software component.** Everything you need will be installed later by OSISM.

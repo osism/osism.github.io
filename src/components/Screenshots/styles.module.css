@@ -1,0 +1,11 @@
+.screenshots {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0));
+  display: flex;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.screenshotImage {
+  height: 100%;
+  width: 100%;
+}

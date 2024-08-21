@@ -6,27 +6,27 @@ sidebar_position: 40
 # Logging & Monitoring
 
 Common issues with deploying logging & monitoring services provided by Kolla
-are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack).
+are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack.md).
 
-## OpenSearch
+1. OpenSearch
 
-OpenSearch dashboards is also deployed with the `opensearch` role.
+   OpenSearch dashboards is also deployed with the `opensearch` role.
 
-```
-osism apply -a pull opensearch
-osism apply opensearch
-```
+   ```
+   osism apply -a pull opensearch
+   osism apply opensearch
+   ```
 
-## Prometheus
+2. Prometheus
 
-```
-osism apply -a pull prometheus
-osism apply prometheus
-```
+   ```
+   osism apply -a pull prometheus
+   osism apply prometheus
+   ```
 
-## Grafana
+3. Grafana
 
-```
-osism apply -a pull grafana
-osism apply grafana
-```
+   ```
+   osism apply -a pull grafana
+   osism apply grafana
+   ```

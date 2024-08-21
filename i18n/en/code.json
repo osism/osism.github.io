@@ -1,0 +1,472 @@
+{
+  "generic.more_information": {
+    "message": "More information",
+    "description": "More information"
+  },
+  "sidebar.documentation.title": {
+    "message": "Documentation",
+    "description": "Documentation title"
+  },
+  "homepage.cta1": {
+    "message": "Schedule a demo",
+    "description": "Homepage CTA1"
+  },
+  "homepage.title": {
+    "message": "Managing the world's cloud infrastructures",
+    "description": "Homepage title"
+  },
+  "homepage.subtitle1": {
+    "message": "Manage your own cloud infrastructure and save up to 90% compared to the public cloud",
+    "description": "Homepage subtitle1"
+  },
+  "homepage.pagetitle": {
+    "message": "OSISM – Sovereign Cloud Infrastructure",
+    "description": "Homepage pagetitle"
+  },
+  "services.title": {
+    "message": "Support & Services from OSISM",
+    "description": "Services title"
+  },
+  "discover.title": {
+    "message": "Discover more about OSISM",
+    "description": "Discover title"
+  },
+  "discover.cta1": {
+    "message": "Request more information",
+    "description": "Discover CTA1"
+  },
+  "users.title": {
+    "message": "Some of our happy OSISM users",
+    "description": "Users title"
+  },
+  "partners.title": {
+    "message": "Our partners",
+    "description": "Partners title"
+  },
+  "integration_partners.title": {
+    "message": "Our integration partners",
+    "description": "Integration partners title"
+  },
+  "module.title": {
+    "message": "Supported components",
+    "description": "Software module title"
+  },
+  "module.openstack.title": {
+    "message": "Infrastructure as a Service (IaaS) with OpenStack",
+    "description": "OpenStack title"
+  },
+  "module.openstack.description": {
+    "message": "Discover the power of flexibility and scalability with OpenStack! In the dynamic world of cloud computing, OpenStack stands out as a comprehensive open-source solution, empowering businesses with robust Infrastructure as a Service (IaaS) capabilities. Embrace unparalleled flexibility as you deploy a variety of workloads, from virtual machines to Kubernetes, all on a platform that seamlessly integrates with your existing systems.",
+    "description": "OpenStack description"
+  },
+  "module.sonic.title": {
+    "message": "Software Defined Networking (SDN) with SONiC & OVN",
+    "description": "SONiC title"
+  },
+  "module.sonic.description": {
+    "message": "With SONiC, experience unparalleled flexibility and scalability in your network operations. It enables you to control your network resources with software, simplifying complex tasks and providing a more efficient and adaptable network environment. This platform is not just about efficiency; it's about enabling rapid innovation and customization to meet the ever-evolving demands of cloud computing and data centers.",
+    "description": "SONiC description"
+  },
+  "module.ceph.title": {
+    "message": "Software Defined Storage (SDS) with Ceph",
+    "description": "Ceph title"
+  },
+  "module.ceph.description": {
+    "message": "In the dynamic world of digital data, Ceph stands out as a game-changer. This highly scalable, open-source software-defined storage solution is designed to address the growing demand for performance, reliability, and flexibility in data management. Whether it's for small projects or large-scale enterprise needs, Ceph seamlessly adapts to any environment.",
+    "description": "Ceph description"
+  },
+  "module.ironic.title": {
+    "message": "Bare Metal as a Service (BMaaS) with Ironic",
+    "description": "Ironic title"
+  },
+  "module.ironic.description": {
+    "message": "With Ironic, you get direct access to bare-metal hardware, eliminating the overhead of virtualization and offering a level of performance that virtual environments can't match. Ideal for high-performance computing, large-scale data processing, and intensive workloads.",
+    "description": "Ironic description"
+  },
+  "module.gardener.title": {
+    "message": "Kubernetes as a Service (KaaS) with Gardener",
+    "description": "Gardener title"
+  },
+  "module.gardener.description": {
+    "message": "Kubernetes as a Service (KaaS) with Gardener offers a dynamic, scalable, and efficient solution for managing containerized applications across multiple cloud environments. Embrace the power of Kubernetes, optimized by Gardener's advanced automation and cluster management capabilities. With Gardener, you get seamless integration, simplified operations, and enhanced security for your Kubernetes clusters, whether on-premises, in the cloud, or in a hybrid setting.",
+    "description": "Gardener description"
+  },
+  "module.cluster_api.title": {
+    "message": "Kubernetes as a Service (KaaS) mit Cluster API",
+    "description": "Cluster API title"
+  },
+  "module.cluster_api.description": {
+    "message": "Cluster API is a Kubernetes sub-project focused on providing declarative APIs and tooling to simplify provisioning, upgrading, and operating multiple Kubernetes clusters.",
+    "description": "Cluster API description"
+  },
+  "module.k3s.title": {
+    "message": "Kubernetes (K8s) with K3S",
+    "description": "K3S title"
+  },
+  "module.k3s.description": {
+    "message": "K3s is an innovative, lightweight Kubernetes distribution that simplifies the deployment and operation. One of the standout features of K3s is its minimal footprint, requiring only 512MB of RAM to run. K3s achieves its lightweight nature by removing legacy, alpha, and non-default features from Kubernetes, packaging all necessary components into a single binary less than 100MB in size. This all-in-one approach simplifies installation, updates, and operations, significantly reducing the overhead and expertise required to manage a Kubernetes cluster.",
+    "description": "K3S description"
+  },
+  "module.keycloak.title": {
+    "message": "Identity & Access Management with Keycloak",
+    "description": "Keycloak title"
+  },
+  "module.keycloak.description": {
+    "message": "Unlock the full potential of your digital security with Keycloak, the cutting-edge solution for Identity and Access Management (IAM). Designed for modern enterprises, Keycloak offers a robust and flexible platform to manage user identities and control access to applications and services.",
+    "description": "Keycloak description"
+  },
+  "module.prometheus.title": {
+    "message": "Logging, Monitoring & Telemetry with Prometheus & Grafana",
+    "description": "Prometheus title"
+  },
+  "module.prometheus.description": {
+    "message": "Integrating Prometheus with Grafana offers a seamless experience. Set up is straightforward, and the synergy between Prometheus's detailed data collection and Grafana's sophisticated visualization tools provides an unmatched monitoring solution. This powerful combination empowers your team to make data-driven decisions, ensuring your systems are not only performing optimally but also poised for future growth.",
+    "description": "Prometheus description"
+  },
+  "module.netdata.title": {
+    "message": "Realtime insights with Netdata",
+    "description": "Netdata title"
+  },
+  "module.netdata.description": {
+    "message": "Netdata is revolutionizing the world of realtime monitoring, offering an unparalleled experience in tracking system performance and health. This powerful tool provides instant insights, ensuring you're always one step ahead in identifying and resolving issues. With its user-friendly interface, Netdata makes monitoring accessible to everyone, regardless of technical expertise.",
+    "description": "Netdata description"
+  },
+  "module.teleport.title": {
+    "message": "Privileged Access Management (PAM) to all infrastructure with Teleport",
+    "description": "Teleport title"
+  },
+  "module.teleport.description": {
+    "message": "Teleport is an innovative open-source software that redefines the way teams access their infrastructure. Designed with security and efficiency at its core, Teleport allows engineers and DevOps teams to seamlessly access servers, Kubernetes clusters, and internal applications, regardless of where they are located or what device they are using. It centralizes access control, providing a unified gateway to manage permissions and access rights across your entire infrastructure landscape.",
+    "description": "Teleport description"
+  },
+  "module.proxmox.title": {
+    "message": "Simple virtualization & containerization with Proxmox VE",
+    "description": "Proxmos title"
+  },
+  "module.proxmox.description": {
+    "message": "Proxmox VE is a comprehensive open-source platform designed for virtualization and container-based management. It seamlessly combines two virtualization technologies in one solution: KVM for virtual machines and LXC for containerized applications. This dual capability allows to manage VMs and containers through a single, intuitive web-based interface, enhancing operational efficiency and flexibility.",
+    "description": "Proxmox description"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "This page crashed.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Scroll back to top",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "Archive",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "Archive",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Blog list page navigation",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Newer Entries",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Older Entries",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Blog post page navigation",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Newer Post",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Older Post",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.blog.post.plurals": {
+    "message": "One post|{count} posts",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} tagged with \"{tagName}\"",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "View All Tags",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Switch between dark and light mode (currently {mode})",
+    "description": "The ARIA label for the navbar color mode toggle"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "dark mode",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "light mode",
+    "description": "The name for the light color mode"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Breadcrumbs",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.DocCard.categoryDescription": {
+    "message": "{count} items",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Docs pages",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Previous",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Next",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "One doc tagged|{count} docs tagged",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} with \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Version: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "This is unreleased documentation for {siteTitle} {versionLabel} version.",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "This is documentation for {siteTitle} {versionLabel}, which is no longer actively maintained.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "For up-to-date documentation, see the {latestVersionLink} ({versionLabel}).",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "latest version",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.editThisPage": {
+    "message": "Edit this page",
+    "description": "The link label to edit the current page"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Direct link to {heading}",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " on {date}",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " by {user}",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Last updated{atDate}{byUser}",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.NotFound.title": {
+    "message": "Page Not Found",
+    "description": "The title of the 404 page"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Versions",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Tags:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Close",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.admonition.caution": {
+    "message": "caution",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "danger",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "info",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "note",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "tip",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "warning",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Blog recent posts navigation",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Copied",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Copy code to clipboard",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Copy",
+    "description": "The copy button label on code blocks"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Toggle word wrap",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Expand sidebar category '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Collapse sidebar category '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Main",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.NotFound.p1": {
+    "message": "We could not find what you were looking for.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.NotFound.p2": {
+    "message": "Please contact the owner of the site that linked you to the original URL and let them know their link is broken.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "On this page",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Languages",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "One min read|{readingTime} min read",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.post.readMore": {
+    "message": "Read More",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "Read more about {title}",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Home page",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Collapse sidebar",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Collapse sidebar",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Docs sidebar",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Close navigation bar",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Back to main menu",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Toggle navigation bar",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Expand sidebar",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Expand sidebar",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "No results"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "See all results"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "See results outside {context}"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "See all results in {context}"
+  },
+  "theme.SearchBar.label": {
+    "message": "Search",
+    "description": "The ARIA label and placeholder for search button"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "Search results for \"{query}\"",
+    "description": "The search page title for non-empty query"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "Search the documentation",
+    "description": "The search page title for empty query"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "everywhere"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "1 document found|{count} documents found",
+    "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "No documents were found",
+    "description": "The paragraph for empty search result"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Try again",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Skip to main content",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Tags",
+    "description": "The title of the tag list page"
+  },
+  "theme.unlistedContent.title": {
+    "message": "Unlisted page",
+    "description": "The unlisted content banner title"
+  },
+  "theme.unlistedContent.message": {
+    "message": "This page is unlisted. Search engines will not index it, and only users having a direct link can access it.",
+    "description": "The unlisted content banner message"
+  }
+}
