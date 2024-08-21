@@ -1,0 +1,891 @@
+---
+sidebar_label: Testbed Guide
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Testbed
+
+With the OSISM Testbed, it is possible to run a full Sovereign Cloud Stack
+deployment on an existing OpenStack environment such as Cleura or [REGIO.cloud](https://regio.digital).
+
+OSISM is the reference implementation for the Infrastructure as a Service (IaaS) layer in the
+[Sovereign Cloud Stack](https://scs.community) (SCS) project. The OSISM Testbed is therefore
+used in the SCS project to test and work on the Instrastructure as a Service layer.
+
+The OSISM Testbed is intended as a playground. Further services and integration will
+be added over time. A increasing number of best practices and experiences from the productive
+deployments will be included here in the future. It will become more production-like
+over time. However, at no point does it claim to represent a production setup exactly.
+
+## Requirements
+
+### Cloud access
+
+The usual prerequisite is to have an account on one of the supported OpenStack cloud providers.
+As the OSISM Testbed also virtualizes systems itself, the OpenStack cluster should provide
+the capabilities for nested virtualization.
+
+It is not part of this guide to describe the registration with the individual cloud
+providers. Please contact the respective cloud provider for this.
+
+| Product             | Provider       | Profile name     | Note                              |
+|:--------------------|:---------------|:-----------------|:----------------------------------|
+| Cleura              | Cleura         | `cleura`         |                                   |
+| Fuga Cloud          | FUGA           | `fuga`           |                                   |
+| HuaweiCloud         | HuaweiCloud    | `huaweicloud`    |                                   |
+| OVH                 | OVH            | `ovh`            |                                   |
+| OpenTelekomCloud    | T-Systems      | `otc`            |                                   |
+| pluscloud open      | plusserver     | `pluscloudopen`  |                                   |
+| pluscloud SCS Test  | plusserver     | `gx-scs`         |                                   |
+| REGIO.cloud         | OSISM          | `regiocloud`     |                                   |
+| REGIO.cloud         | OSISM          | `regio-fast`     | boot from NVMe SSD backed volumes |
+| Wavestack           | noris network  | `wavestack`      |                                   |
+
+For each cloud provider listed in the table, a predefined profile is available in the
+`terraform/environments` directory. This profile contains the name of the public
+network, which flavors to use, etc.
+
+Here is an example from the profile for [REGIO.cloud](https://regio.digital).
+
+```text
+flavor_manager            = "SCS-4V-16-50"
+flavor_node               = "SCS-8V-32-50"
+volume_type               = "ssd"
+image                     = "Ubuntu 22.04"
+image_node                = "Ubuntu 22.04"
+public                    = "public"
+availability_zone         = "nova"
+volume_availability_zone  = "nova"
+network_availability_zone = "nova"
+```
+
+### Cloud resources
+
+The OSISM Testbed requires at least the following project quota when using the default flavors:
+
+| Quantity | Resource             | Note                                          |
+|:---------|:---------------------|:----------------------------------------------|
+| 4        | Instances            | 28 VCPUs + 112 GByte RAM (3 modes, 1 manager) |
+| 9        | Volumes              | 90 GByte volume storage                       |
+| 1        | Floating IP          |                                               |
+| 1        | Keypair              |                                               |
+| 3        | Security group       |                                               |
+| 16       | Security group rules |                                               |
+| 1        | Network              |                                               |
+| 1        | Subetwork            |                                               |
+| 6        | Ports                |                                               |
+| 1        | Router               |                                               |
+
+### Software
+
+* `make` must be installed on the system
+* Wireguard or `sshuttle` must be installed on your system for VPN access
+* Python must be installed, the Python version used must be at least 3.10, otherwise
+  the current Ansible release cannot be used (details in the
+  [Ansible support matrix](https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix))
+* `python3-venv` must be installed for managing Python dependencies like Ansible
+
+## Deployment
+
+This section describes step by step how to deploy the OSISM Testbed.
+
+1. Request access from the administrator of the respective cloud or get access to an OpenStack cloud.
+
+2. Clone the [osism/testbed](https://github.com/osism/testbed) repository.
+
+   The repository can also be cloned to any other location.
+
+   ```sh
+   mkdir -p ~/src/github.com/osism
+   git clone https://github.com/osism/testbed ~/src/github.com/osism/testbed
+   cd ~/src/github.com/osism/testbed
+   ```
+
+3. Configure your cloud access profile
+
+   The access data for the cloud provider used is stored in `terraform/clouds.yaml` and (optionally)
+   in `terraform/secure.yaml` (same structure, if you want to store credentials on a separate place).
+
+   In file [terraform/clouds.yaml.sample](https://github.com/osism/testbed/blob/main/terraform/clouds.yaml.sample)
+   you will find examples of typical setups. Settings that are identical for all users of a cloud can be defined
+   centrally via the profiles of the file
+   [terraform/clouds-public.yaml](https://github.com/osism/testbed/blob/main/terraform/clouds-public.yaml).
+   You can reference these settings by using the `profile` parameter in cloud-specific
+   definition in `terraform/clouds.yaml`.
+
+   The user specific settings of the `clouds.yaml` file are provided by the cloud provider. Please check the
+   documentation  of the cloud provider you are using or their support for details.
+
+   [REGIO.cloud](https://regio.digital) is used as an example here. The cloud name in `clouds.yaml`
+   and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. It is important that
+   the name of the cloud in `clouds.yaml` matches the name of the environment to be used. The names must
+   be identical. It is currently not possible to name the cloud `regiocloud-123` in `clouds.yaml` if the
+   environment is `regiocloud`.
+
+   If another cloud is used, replace `regiocloud` with the respective profile name [from the table above](#cloud-access).
+
+   <Tabs>
+   <TabItem value="testbed-cloud-access-with-app-credentials" label="Application Credentials">
+   The use of application credentials is preferred. This way it is not necessary to store
+   details like username, project name or sensitive information like the password in the
+   `clouds.yaml` file.
+
+   The application credentials can be found in Horizon under **Identity**. Use `OSISM Testbed` as
+   name and click `Create Application Credential`.
+
+   ```yaml title="terraform/clouds.yaml"
+   clouds:
+     regiocloud:
+       profile: regiocloud
+       auth:
+         application_credential_id: ID
+         application_credential_secret: SECRET
+       auth_type: "v3applicationcredential"
+   ```
+
+   If you want to make use of `terraform/secure.yaml` add your application credential secret there
+   instead of `terraform/clouds.yaml`.
+
+   ```yaml title="terraform/secure.yaml"
+   clouds:
+     regiocloud:
+       auth:
+         application_credential_secret: SECRET
+   ```
+
+
+   </TabItem>
+   <TabItem value="testbed-cloud-access-with-username-password" label="Username/Password">
+   ```yaml title="terraform/clouds.yaml"
+   clouds:
+     regiocloud:
+       profile: regiocloud
+       auth:
+         project_name: PROJECT
+         username: USERNAME
+         project_domain_name: DOMAIN
+         user_domain_name: DOMAIN
+   ```
+
+   If you want to make use of `terraform/secure.yaml` add your password there instead of `terraform/clouds.yaml`.
+
+   ```yaml title="terraform/secure.yaml"
+   clouds:
+     regiocloud:
+       auth:
+         password: PASSWORD
+   ```
+
+   </TabItem>
+   </Tabs>
+
+4. Prepare the deployment.
+
+   The versions of Ansible and [OpenTofu](https://opentofu.org) are managed
+   automatically and necessary dependencies are cloned.
+
+   ```sh
+   make prepare
+   ```
+
+   If any error occurs during preparation and you want to run the preparation
+   again, it is important to run `make wipe-local-install` first. Otherwise the
+   preparation will not be redone completely and necessary parts will be missing
+   later on.
+
+5. Create the infrastructure with OpenTofu.
+
+   ```sh
+   make ENVIRONMENT=regiocloud create
+   ```
+
+6. Deploy the OSISM manager and bootstrap all nodes.
+
+   <Tabs>
+   <TabItem value="testbed-deploy-latst" label="Deploy latest manager version">
+   ```sh
+   make ENVIRONMENT=regiocloud manager
+   ```
+   </TabItem>
+   <TabItem value="testbed-deploy-stable" label="Deploy a stable manager version">
+   ```sh
+   make ENVIRONMENT=regiocloud VERSION_MANAGER=7.0.3 manager
+   ```
+   </TabItem>
+   </Tabs>
+
+7. After the bootstrap, you can log in to the manager via SSH.
+
+   ```sh
+   make ENVIRONMENT=regiocloud login
+   ```
+
+   Yo can log in to the nodes of the cluster via the manager.
+
+   ```sh
+   osism console testbed-node-0
+   ```
+
+8. Deploy all services.
+
+   <Tabs>
+   <TabItem value="testbed-deploy-multi-steps" label="Deployment in single steps">
+   It is also possible to deploy the services step by step on the
+   manager. To do this, first log in to the manager with `make ENVIRONMENT=regiocloud login`
+   and then execute the deploy scripts one after the other. It is recommended to do this
+   within a screen session.
+
+   Deploying the services takes some time and depends on how much bandwidth is available,
+   how the instances are equipped, etc. 90-120 minutes is not unusual when Ceph and OpenStack
+   are fully deployed.
+
+   To speed up the Ansible playbooks, [ARA](https://ara.recordsansible.org) can be disabled. This
+   is done by executing `/opt/configuration/scripts/disable-ara.sh`. Run this script **before** the deployment scripts.
+   Afterwards no more logs are available in the ARA web
+   interface. To re-enable ARA use `/opt/configuration/scripts/enable-ara.sh`.
+
+   There is also the option of pre-population of images with `/opt/configuration/scripts/pull-images.sh`
+   so that deployments do not have to be lengthy. Run this script **before** the deployment scripts.
+
+   ```sh
+   /opt/configuration/scripts/deploy/001-helper-services.sh
+   /opt/configuration/scripts/deploy/005-kubernetes.sh
+   /opt/configuration/scripts/deploy/100-ceph-services.sh
+   /opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh
+   /opt/configuration/scripts/deploy/300-openstack-services-basic.sh
+   /opt/configuration/scripts/deploy/400-monitoring-services.sh
+   ```
+
+    Prepare OpenStack resources like public network, flavors and images by running
+   `/opt/configuration/scripts/bootstrap.sh`. Run this script **after** the deployment scripts.
+
+   :::info
+
+   If you only want to deploy the monitoring services with `/opt/configuration/scripts/deploy/400-monitoring-services.sh`,
+   a few dependencies must be deployed first. You can then use the monitoring services without having to install a
+   complete OpenStack & Ceph environment.
+
+   ```sh
+   osism apply common
+   osism apply loadbalancer
+   osism apply opensearch
+   osism apply mariadb
+   ```
+
+   :::
+   </TabItem>
+   <TabItem value="testbed-deploy-single-step" label="Deployment of all services">
+   In this single step deployment, Ceph, OpenStack and all necessary
+   infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
+   Depending on the cloud, the deployment will take some time. Up to two hours is not unusual. 
+
+   ```sh
+   make ENVIRONMENT=regiocloud deploy
+   ```
+   </TabItem>
+   </Tabs>
+
+9. If you want to verify the deployment with [refstack](https://opendev.org/openinfra/refstack) run
+   `/opt/configuration/scripts/check.sh`. This step will take some time and is optional.
+
+10. The machine images required for the use of Kubernetes Cluster API and the amphora driver of OpenStack Octavia
+    service are not provided by default to save resources on the OSISM Testbed and improve deployment time.
+    These can be provisioned if required.
+
+    ```sh
+    /opt/configuration/scripts/bootstrap/301-openstack-octavia-amhpora-image.sh
+    /opt/configuration/scripts/bootstrap/302-openstack-k8s-clusterapi-images.sh
+    ```
+
+11. If you want you can create a test project with a test user after login. It also
+    creates an instance with a volume attached to a network with a router. This step is optional.
+
+    ```sh
+    osism apply --environment openstack test
+    ```
+
+12. When the OSISM Testbed is no longer needed, it can be deleted.
+
+    ```sh
+    make ENVIRONMENT=regiocloud clean
+    ```
+
+## Usage
+
+Deployment must be completed at this point.
+
+### Custom CA
+
+The OSISM Testbed deployment currently uses hostnames in the domain `testbed.osism.xyz`. This is a real domain
+and we provide the DNS records matching the addresses used in the OSISM Testbed, so that once you connect to your testbed via a direct
+link or Wireguard, you can access hosts and servers by their hostname (e.g. `ssh testbed-manager.testbed.osism.xyz`).
+
+We also provide a wildcard TLS certificate signed by a custom CA for `testbed.osism.xyz` and `*.testbed.osism.xyz`.
+This CA is always used for each testbed. The CA is not regenerated and it is not planned to change this for the next 10 years.
+
+In order for these certificates to be recognized locally as valid, the CA
+[environments/kolla/certificates/ca/testbed.crt](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
+must be imported locally.
+
+### VPN access
+
+#### Wireguard
+
+Install wireguard on your workstation, if you have not done this before. For instructions how to do
+it on your workstation, please have a look on the documentation of your used distribution. The
+wireguard documentation you will find [here](https://www.wireguard.com).
+
+Start the wireguard tunnel.
+(Press CTRL+c to keep the tunnel running forever. The make target also launches a browser tab with references to all services)
+
+```bash
+make vpn-wireguard ENVIRONMENT=regiocloud
+```
+
+If you want to connect to the OSISM Testbed from multiple clients, change the client IP
+address in the downloaded configuration file to be different on each client.
+
+If you only want to download the Wireguard configuration, you can use the `vpn-wireguard-config`
+target. The configuration is then available in the file `wg-testbed-regiocloud.conf`, for example.
+
+```bash
+make vpn-wireguard-config ENVIRONMENT=regiocloud
+```
+
+#### sshuttle
+
+If you do not want to use Wireguard you can also work with [sshuttle](https://github.com/sshuttle/sshuttle).
+
+```bash
+make vpn-sshuttle ENVIRONMENT=regiocloud
+killall sshuttle
+```
+
+### Static entries in `/etc/hosts`
+
+If you are unable to access the following domains, you can customize your local `/etc/hosts`
+with the following static entries. This may be necessary, for example, if you use Pi-hole and
+all DNS entries from a public DNS with a non-public IP address are filtered.
+
+```bash
+# OSISM Testbed hosts
+192.168.16.5   ara.testbed.osism.xyz             ara
+192.168.16.5   cgit.testbed.osism.xyz            cgit
+192.168.16.5   flower.testbed.osism.xyz          flower
+192.168.16.5   homer.testbed.osism.xyz           homer
+192.168.16.5   netbox.testbed.osism.xyz          netbox
+192.168.16.5   testbed-manager.testbed.osism.xyz testbed-manager
+192.168.16.5   nexus.testbed.osism.xyz           nexus
+192.168.16.5   phpmyadmin.testbed.osism.xyz      phpmyadmin
+192.168.16.9   api-int.testbed.osism.xyz         api-int
+192.168.16.10  testbed-node-0.testbed.osism.xyz  testbed-node-0
+192.168.16.11  testbed-node-1.testbed.osism.xyz  testbed-node-1
+192.168.16.12  testbed-node-2.testbed.osism.xyz  testbed-node-2
+192.168.16.13  testbed-node-3.testbed.osism.xyz  testbed-node-3
+192.168.16.14  testbed-node-4.testbed.osism.xyz  testbed-node-4
+192.168.16.15  testbed-node-5.testbed.osism.xyz  testbed-node-5
+192.168.16.16  testbed-node-6.testbed.osism.xyz  testbed-node-6
+192.168.16.17  testbed-node-7.testbed.osism.xyz  testbed-node-7
+192.168.16.18  testbed-node-8.testbed.osism.xyz  testbed-node-8
+192.168.16.19  testbed-node-9.testbed.osism.xyz  testbed-node-9
+192.168.16.100 keycloak.testbed.osism.xyz        keycloak
+192.168.16.254 api.testbed.osism.xyz             api
+```
+
+### Webinterfaces
+
+All SSL enabled services within the OSISM Testbed use certs which are signed by the self-signed
+[OSISM Testbed CA](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
+(Download the file and import it as certification authority to your browser).
+
+If you want to access the services please choose the URL from the following table.
+
+| Name                     | URL                                            | Username     | Password     | Note            |
+|:-------------------------|:-----------------------------------------------|:-------------|:-------------|:----------------|
+| ARA                      | https://ara.testbed.osism.xyz                  | ara          | password     |                 |
+| Ceph                     | https://api-int.testbed.osism.xyz:8140         | admin        | password     |                 |
+| Flower                   | https://flower.testbed.osism.xyz               |              |              |                 |
+| Grafana                  | https://api-int.testbed.osism.xyz:3000         | admin        | password     |                 |
+| HAProxy (testbed-node-0) | http://testbed-node-0.testbed.osism.xyz:1984   | openstack    | password     |                 |
+| HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984   | openstack    | password     |                 |
+| HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984   | openstack    | password     |                 |
+| Homer                    | https://homer.testbed.osism.xyz                |              |              |                 |
+| Horizon (via Keycloak)   | https://api.testbed.osism.xyz                  | alice        | password     |                 |
+| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin        | password     | domain: default |
+| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test         | test         | domain: test    |
+| Keycloak                 | https://keycloak.testbed.osism.xyz/auth        | admin        | password     |                 |
+| Netbox                   | https://netbox.testbed.osism.xyz               | admin        | password     |                 |
+| Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |              |              |                 |
+| Nexus                    | https://nexus.testbed.osism.xyz                | admin        | password     |                 |
+| OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601             | opensearch   | password     |                 |
+| Prometheus               | https://api-int.testbed.osism.xyz:9091         | admin        | password     |                 |
+| RabbitMQ                 | https://api-int.testbed.osism.xyz:15672        | openstack    | password     |                 |
+| phpMyAdmin               | https://phpmyadmin.testbed.osism.xyz           | root         | password     |                 |
+
+### Authentication with OIDC
+
+Authentication with OpenID Connect (OIDC) is possible via Keycloak, which is automatically configured for the OIDC mechanism.
+
+#### OpenStack web dashboard (Horizon) login via OIDC
+
+For logging in via OIDC, open your browser at OpenStack Dashboard Login Page, select **Authenticate via Keycloak**, after being
+redirected to the Keycloak login page, perform the login with the credentials **alice** and **password**.
+After that you will be redirected back to the Horizon dashboard, where you will be logged in with the user **alice**.
+
+#### OpenStack web dashboard (Horizon) logout
+
+Keep in mind, that clicking **Sign Out** on the Horizon dashboard currently doesn't revoke your OIDC token, and any consequent
+attempt to **Authenticate via Keycloak** will succeed without providing the credentials.
+
+The expiration time of the Single Sign On tokens can be controlled on multiple levels in Keycloak.
+
+1. On realm level under *Realm Settings* > *Tokens*.
+   Assuming the *keycloak_realm* ansible variable is the default *osism*, and keycloak is listening on
+   [keycloak.testbed.osism.xyz](https://keycloak.testbed.osism.xyz), then the configuration form is available
+   [here](https://keycloak.testbed.osism.xyz/auth/admin/master/console/#/realms/osism/token-settings).
+
+   Detailed information is available in the Keycloak Server Administrator Documentation
+   [Session and Token Timeouts](https://www.keycloak.org/docs/latest/server_admin/#_timeouts) section.
+
+2. In a realm down on the [client level](https://keycloak.testbed.osism.xyz/auth/admin/master/console/#/realms/osism/clients)
+   select the client (keystone), and under *Settings* > *Advanced Settings*.
+
+   It is recommended to keep the *Access Token Lifespan* on a relatively low value, with the trend of blocking third party
+   cookies. For further information see the Keycloak documentation's [Browsers with Blocked Third-Party Cookies](https://www.keycloak.org/docs/latest/securing_apps/#browsers-with-blocked-third-party-cookies) section.
+
+#### Usage of the OpenStack CLI
+
+The `environments/openstack` folder contains the needed files for the openstack client:
+
+```bash
+cd environments/openstack
+export OS_CLOUD=<the cloud environment>  # i.e. admin
+openstack floating ip list
+```
+
+#### OpenStack CLI operations with OpenID Connect password
+
+Using the OpenStack cli is also possible via OIDC, assuming you provisioned the user **alice** with password **password**,
+then you can perform a simple `project list` operation like this:
+
+See chapter "Usage the OpenStack CLI" for basic openstack usage.
+
+```sh
+openstack \
+ --os-cacert /etc/ssl/certs/ca-certificates.crt \
+ --os-auth-url https://api.testbed.osism.xyz:5000/v3 \
+ --os-auth-type v3oidcpassword \
+ --os-client-id keystone \
+ --os-client-secret 0056b89c-030f-486b-a6ad-f0fa398fa4ad \
+ --os-username alice \
+ --os-password password \
+ --os-identity-provider keycloak \
+ --os-protocol openid \
+ --os-identity-api-version 3 \
+ --os-discovery-endpoint https://keycloak.testbed.osism.xyz/auth/realms/osism/.well-known/openid-configuration \
+project list
+```
+
+#### OpenStack CLI token issue with OpenID Connect
+
+It is also possible to exchange your username/password to a token, for further use with the cli.
+The `token issue` subcommand returns an SQL table, in which the `id` column's `value` field contains the token:
+
+See chapter "Usage the OpenStack CLI" for basic openstack usage.
+
+```sh
+openstack \
+ --os-cacert /etc/ssl/certs/ca-certificates.crt \
+ --os-auth-url https://api.testbed.osism.xyz:5000/v3 \
+ --os-auth-type v3oidcpassword \
+ --os-client-id keystone \
+ --os-client-secret 0056b89c-030f-486b-a6ad-f0fa398fa4ad \
+ --os-username alice \
+ --os-password password \
+ --os-identity-provider keycloak \
+ --os-protocol openid \
+ --os-identity-api-version 3 \
+ --os-discovery-endpoint https://keycloak.testbed.osism.xyz/auth/realms/osism/.well-known/openid-configuration \
+ --os-openid-scope "openid profile email" \
+token issue \
+  -c id
+  -f value
+```
+
+An example token is like:
+
+```sh
+gAAAAABhC98gL8nsQWknro3JWDXWLFCG3CDr3Mi9OIlvVAZMjy2mNgYtlXv_0yAIy-
+nSlLAaLIGhht17-mwf8uclKgRuNVsYLSmgUpB163l89-ch2w2_OFe9zNSQNWf4qfd8
+Cl7E7XvvUoFr1N8Gh09vaYLvRvYgCGV05xBUSs76qCHa0qElPUsk56s5ft4ALrSrzD
+4cEQRVb5PXNjywdZk9_gtJziz31A7sD4LPIy82O5N9NryDoDw
+```
+
+* TODO: OpenStack CLI operations with token
+* TODO: OpenStack CLI token revoke
+
+## Advanced Usage
+
+### External API
+
+It is possible to provide the OpenStack APIs and the OpenStack Dashboard via the manager's public IP address.
+This is not enabled by default, with the exception of the OTC profile. To provide the OpenStack APIs and the
+OpenStack dashboard via the public IP address of the manager, the following changes are necessary in the
+`terraform/environments/regiocloud.tfvars` file. If a cloud other than the REGIO.cloud is used, the profile
+of the other cloud is changed accordingly.
+
+1. Add the customisation `external_api`. This customisation makes sure that the required security group rules
+   are created for the various OpenStack APIs and the OpenStack dashboard.
+
+   ```
+   # customisation:external_api
+   ```
+
+2. Set parameter `external_api` to `true`. This makes sure that all necessary changes are made in the configuration
+   repository when the Manager service is deployed. It is correct that this is added as a comment.
+
+   ```
+   external_api = true
+   ```
+
+3. After the deployment of the Manager service and the OpenStack services, the OpenStack APIs and the OpenStack
+   dashboard can be reached via a DNS name. The service [traefik.me](https://traefik.me) is used for the DNS record.
+   Run the following two commands on the manager node to get the DNS record.
+
+   ```
+   $ source /opt/manager-vars.sh
+   $ echo "api-${MANAGER_PUBLIC_IP_ADDRESS//./-}.traefik.me"
+   api-80-158-46-219.traefik.me
+   ```
+
+### Change versions
+
+1. Go to `/opt/configuration` on `testbed-manager`
+2. Run `./scripts/set-openstack-version.sh 2023.2` to set the OpenStack version to `2023.2`
+3. Run `./scripts/set-ceph-version.sh reef` to set the Ceph version to `reef`
+4. Run `osism update manager` to update the Manager service
+
+### Deploy services
+
+| Script                                                                      | Description |
+|:----------------------------------------------------------------------------|:------------|
+| `/opt/configuration/scripts/deploy/000-manager-service.sh`                  |             |
+| `/opt/configuration/scripts/deploy/001-helper-services.sh`                  |             |
+| `/opt/configuration/scripts/deploy/100-ceph-services-basic.sh`              | alternative to ceph |
+| `/opt/configuration/scripts/deploy/100-rook-services-basic.sh`              |             |
+| `/opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh`    |             |
+| `/opt/configuration/scripts/deploy/210-infrastructure-services-extended.sh` |             |
+| `/opt/configuration/scripts/deploy/300-openstack-services-basic.sh`         |             |
+| `/opt/configuration/scripts/deploy/310-openstack-services-extended.sh`      |             |
+| `/opt/configuration/scripts/deploy/320-openstack-services-baremetal.sh`     |             |
+| `/opt/configuration/scripts/deploy/330-openstack-services-additional.sh`    |             |
+| `/opt/configuration/scripts/deploy/400-monitoring-services.sh`              |             |
+
+### Upgrade services
+
+| Script                                                                    | Description |
+|:--------------------------------------------------------------------------|:------------|
+| `/opt/configuration/scripts/upgrade/100-ceph-services.sh`                 |             |
+| `/opt/configuration/scripts/upgrade/100-rook-services.sh`                 | alternative to ceph |
+| `/opt/configuration/scripts/upgrade/200-infrastructure-services-basic.sh` |             |
+| `/opt/configuration/scripts/upgrade/300-openstack-services-basic.sh`      |             |
+| `/opt/configuration/scripts/upgrade/310-openstack-services-extended.sh`   |             |
+| `/opt/configuration/scripts/upgrade/320-openstack-services-baremetal.sh`  |             |
+| `/opt/configuration/scripts/upgrade/330-openstack-services-additional.sh` |             |
+
+### Ceph via Rook (technical preview)
+
+Please have a look at [Deploy Guide - Services - Rook](../deploy-guide/services/rook.md) and [Configuration Guide - Rook](../configuration-guide/rook.md) for details on how to configure Rook.
+
+To deploy this in the testbed, you can use an environment variable in your make target.
+
+```
+make CEPH_STACK=rook manager
+make CEPH_STACK=rook ceph
+```
+
+This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is later being used by:
+
+```
+/opt/configuration/scripts/deploy-services.sh
+/opt/configuration/scripts/deploy-ceph-services.sh
+/opt/configuration/scripts/upgrade/100-rook-services.sh
+```
+
+## Using testbed for OpenStack development
+
+Testbed may be used for doing development on OpenStack services through [`kolla_dev_mode`](https://docs.openstack.org/kolla-ansible/latest/contributor/kolla-for-openstack-development.html).
+`kolla_dev_mode` may be activated for all supported service by adding
+
+```
+kolla_dev_mode: true
+```
+
+to `environments/kolla/configuration.yml`. This will check out the `git` repositories of all supported and enabled OpenStack services under `/opt/stack` and bind mount them into the appropriate containers.
+Since this will fetch a lot of repositories it is advisable to enable this only selectively for the services you are going to work on. You can do so by adding a boolean variable to `environments/kolla/configuration.yml` consisting of the service name and the suffix `_dev_mode`, e.g.:
+
+```
+cinder_dev_mode: true
+```
+
+You may customise the used `git` repository by adding `kolla_repos_git` to `environments/kolla/configuration.yml` to specify a common root for the repositories of all services, which will be completed by the service's name, e.g.:
+
+```
+kolla_repos_git: "https://github.com/openstack"
+```
+
+will pull services from their `github` mirror. E.g. pull nova from https://github.com/openstack/nova
+The complete repository of a single service may be changed by adding a variable consisting of the service name and the suffix `_git_repository`, e.g.
+
+```
+cinder_git_repository: "https://github.com/myorg/my_custom_cinder_fork"
+```
+
+You may Specify the `git` reference globally by setting
+
+```
+kolla_source_version: my_feature_branch
+```
+
+in `environments/kolla/configuration.yml` or for specific services via service name and suffix `_source_version`, e.g.
+
+```
+cinder_source_version: my_cinder_feature
+```
+
+In order to update the `git` repositories on `kolla-ansible` deployments set either 
+
+```
+kolla_dev_repos_pull: true
+```
+
+or, e.g.
+
+```
+cinder_dev_repos_pull: true
+```
+
+in `environments/kolla/configuration.yml` to set the setting for all repositories or a service specific one.
+
+Thus, as an example for a development workflow:
+* Create a `git` mirror of the OpenStack service you want to work on
+* In `environments/kolla/configuration.yml`
+  * Set the corresponding `<service name>_dev_mode` variable to `true`
+  * Set the corresponding `<service name>_git_repository` variable to your development mirror created above
+  * Set the corresponding `<service name>_source_version` variable to a branch name you intend to push your changes to
+  * Set the corresponding `<service name>_dev_repos_pull` variable to `true`
+* Commit your changes and push them to the specified branch in the specified mirror
+* Run `osism apply <service name>` on the manager to checkout the code on every testbed node
+* Restart the service containers to actually pick up the new code
+
+## Troubleshooting
+
+### Ansible errors
+
+Ansible errors that have something to do with undefined variables (e.g. `AnsibleUndefined`) are most likely due to cached
+facts that are no longer valid. The facts can be updated by running `osism apply facts`.
+
+### Unsupported locale setting
+
+```sh
+$ make prepare
+ansible-playbook -i localhost, ansible/check-local-versions.yml
+ERROR: Ansible could not initialize the preferred locale: unsupported locale setting
+make: *** [prepare] Error 1
+```
+
+To solve the problem you have to modify the `Makefile`. Change the 1st line as follows.
+
+```bash
+export LC_ALL=en_US.UTF-8
+```
+
+To find out the locale used on the system `printenv` can be used.
+
+```bash
+$ printenv | grep -i lang|locale
+LANG="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_CTYPE="UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_ALL=
+```
+
+## Appendix
+
+### Configuration
+
+This section describes how to configure and customise the OSISM Testbed.
+
+#### Variables
+
+The defaults for the OpenTofu variables are intended for [REGIO.cloud](https://regio.digital).
+
+| Variable                  | Default                  | Note                                     |
+|:--------------------------|:-------------------------|:-----------------------------------------|
+| availability_zone         | `nova`                   |                                          |
+| ceph_version              | `quincy`                 |                                          |
+| cloud_provider            | `regiocloud`             |                                          |
+| configuration_version     | `main`                   |                                          |
+| deploy_monitoring         | `false`                  |                                          |
+| dns_nameservers           | `["8.8.8.8", "9.9.9.9"]` |                                          |
+| enable_config_drive       | `true`                   |                                          |
+| external_api              | `false`                  |                                          |
+| flavor_manager            | `SCS-4V-16-50`           |                                          |
+| flavor_node               | `SCS-8V-32-50`           |                                          |
+| image                     | `Ubuntu 22.04`           | Only Ubuntu 22.04 is currently supported |
+| image_node                | `Ubuntu 22.04`           | Only Ubuntu 22.04 is currently supported |
+| keypair                   | `testbed`                |                                          |
+| manager_version           | `latest`                 |                                          |
+| network_availability_zone | `nova`                   |                                          |
+| number_of_nodes           | `3`                      |                                          |
+| number_of_volumes         | `3`                      |                                          |
+| openstack_version         | `2023.2`                 |                                          |
+| prefix                    | `testbed`                |                                          |
+| public                    | `external`               |                                          |
+| refstack                  | `false`                  |                                          |
+| volume_availability_zone  | `nova`                   |                                          |
+| volume_size_base          | `30`                     |                                          |
+| volume_size_storage       | `10`                     |                                          |
+| volume_type               | `__DEFAULT__`            |                                          |
+
+#### Overrides
+
+| Name                                       | Description      |
+|:-------------------------------------------|:-----------------|
+| `manager_boot_from_image`                  |                  |
+| `manager_boot_from_volume`                 |                  |
+| `neutron_availability_zone_hints_network`  |                  |
+| `neutron_availability_zone_hints_router`   |                  |
+| `neutron_router_enable_snat`               |                  |
+| `nodes_boot_from_image`                    |                  |
+| `nodes_boot_from_volume`                   |                  |
+| `nodes_use_ephemeral_storage`              |                  |
+
+#### Customisations
+
+| Name                  | Description      |
+|:----------------------|:-----------------|
+| `access_floatingip`   |                  |
+| `access_ipv4`         |                  |
+| `access_ipv6`         |                  |
+| `default`             |                  |
+| `external_api`        |                  |
+| `neutron_floatingip`  |                  |
+
+
+### Notes
+
+* The configuration is intentionally kept quite static. Please create no PRs to make the configuration more flexible/dynamic.
+* The OSISM documentation uses hostnames, examples, addresses etc. from OSISM Testbed.
+* The third volume (`/dev/sdd`) is not enabled for Ceph by default. This is to test the scaling of Ceph.
+* The manager is used as pull through cache for Docker images and Ubuntu packages. This reduces the amount of traffic consumed.
+
+### Supported releases
+
+The following stable Ceph and OpenStack releases are supported.
+
+The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ansible/).
+
+* Ceph Quincy (**default**)
+* Ceph Reef
+
+The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
+
+* OpenStack 2023.1
+* OpenStack 2023.2 (**default**)
+* OpenStack 2024.1
+
+The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
+
+* Kubernetes v1.29 (**default**)
+
+### Included services
+
+The following services can currently be used with the OSISM Testbed without further adjustments.
+
+#### Infrastructure
+
+* Ceph
+* Cluster API Management Cluster
+* Fluentd
+* Gnocchi
+* Grafana
+* Haproxy
+* Influxdb
+* Keepalived
+* Keycloak
+* Kubernetes
+* Mariadb
+* Memcached
+* Netbox
+* Netdata
+* Opensearch
+* Openvswitch
+* Patchman
+* Prometheus exporters
+* Rabbitmq
+* Redis
+
+#### OpenStack
+
+* Barbican
+* Ceilometer
+* Cinder
+* Designate
+* Glance
+* Heat
+* Horizon
+* Ironic
+* Keystone
+* Magnum
+* Manila
+* Neutron
+* Nova (with Libvirt/KVM)
+* Octavia
+* Senlin
+* Skyline
+
+### Makefile reference
+
+```bash
+$ make help
+
+Usage:
+  make <target>
+  help                  Display this help.
+  clean                 Destroy infrastructure with OpenTofu.
+  wipe-local-install    Wipe the software dependencies in `venv`.
+  create                Create required infrastructure with OpenTofu.
+  login                 Log in on the manager.
+  vpn-wireguard         Establish a wireguard vpn tunnel.
+  vpn-sshuttle          Establish a sshuttle vpn tunnel.
+  bootstrap             Bootstrap everything.
+  manager               Deploy only the manager service.
+  identity              Deploy only identity services.
+  ceph                  Deploy only ceph services.
+  deploy                Deploy everything and then check it.
+  prepare               Run local preperations.
+  deps                  Install software preconditions to `venv`.
+
+$ make <TAB> <TAB>
+```
+
+### CI jobs
+
+You can inspect the [results of the daily zuul jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0).
+
+| Name                      | Description |
+|:--------------------------|:------------|
+| testbed-deploy            |             |
+| testbed-deploy-ceph       |             |
+| testbed-deploy-stable     |             |
+| testbed-update-stable     |             |
+| testbed-upgrade           |             |
+| testbed-upgrade-ceph      |             |
+| testbed-upgrade-stable    |             |
