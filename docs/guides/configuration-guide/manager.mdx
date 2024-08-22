@@ -93,7 +93,7 @@ The Git branch can be changed in the following way:
    ```bash
    BRANCH="$(git rev-parse --abbrev-ref HEAD)"
    sed -i "~s,^configuration_git_version:.*\$,configuration_git_version: ${BRANCH}," environments/configuration.yml
-   git commit -m "Starting to work on #<issue-id>" -s environment/configuration.yml
+   git commit -m "Starting to work on #<issue-id>" -s environments/configuration.yml
    git push
    ```
 
