@@ -504,8 +504,7 @@ nodeAffinity:
         - "true"
 ```
 
-TODO: Implement a way to cleanly relabel nodes.
-TODO: Implement reschedule after changing labels
+If you decide after the initial deployment to move Ceph components to different nodes you can do so modifying `inventory/20-roles` and run `osism apply rook-change-labels` afterwards.
 
 ## Crash Collector
 

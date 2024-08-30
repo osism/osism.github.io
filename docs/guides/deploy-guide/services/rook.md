@@ -100,6 +100,35 @@ OpenStack integration between Keystone/Swift and Rook is currently missing upstr
 
 :::
 
+## Change node labels
+
+In case you decided to move workloads to different nodes and changed the inventory groups e.g. like this:
+
+  ```ini title="inventory/20-roles"
+  [rook-mds:children]
+  ceph-control
+
+  [rook-mgr:children]
+  ceph-control
+
+  [rook-mon:children]
+  ceph-control
+
+  [rook-osd:children]
+  ceph-resource
+
+  [rook-rgw:children]
+  ceph-control
+  ```
+
+You can apply the changes running:
+
+  ```bash
+  osism apply rook-change-labels
+  ```
+
+This will remove all labels and apply the changed inventory groups as labels. After those steps are done it will trigger the rescheduling of the components so they get deployed on the adjusted nodes.
+
 ## Cleanup
 
 :::warning
