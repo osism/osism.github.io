@@ -60,3 +60,39 @@ When running Cloud in a Box on a VMware vSphere/ESXi virtual machine, you can us
 * Firmware set to "EFI" (VM Options > Boot Options > Firmware > choose EFI)
 
 This configuration has been successfully tested with VMware ESXi 7.0 U1.
+
+
+## VirtualBox
+
+When running Cloud in a Box on a VirtualBox, you can use the the blow specs for configure the virtual machine:
+
+### General:
+
+* Type Linux
+* Version Ubuntu (64-bit)
+
+### System:
+
+* 32GB RAM
+* 8 Processors
+* Enable PAE/NX
+* Enable Nested VT-x/AMD-v
+* Extended Feature: Enable EFI (special OSes only)
+
+### Storage:
+
+* Controller: SATA
+* Type AHCI
+* Use Host I/O Cache
+* Disc Size 600 GB
+
+* Controller: IDE
+* Optical Drive: IDE Secondary Device
+* Live CD/DVD
+* Insert the ubuntu-autoinstall-cloud-in-a-box-1.iso image
+
+* Boot Order:  Set Optical as first boot device
+
+This configuration has been successfully tested with VirtualBox 6.1.50 using an Ubuntu 22.04 Host with HWE Kernel 6.5.0
+The more CPU, RAM and Disc the better, as this is the bare minimum for a basic installation.
+
