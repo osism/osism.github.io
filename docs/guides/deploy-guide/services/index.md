@@ -15,8 +15,14 @@ the nodes. How to bootstrap the nodes is documented in the
 
 When setting up a new cluster, the services are deployed in a specific order.
 
-1. [Infrastructure](./infrastructure.md)
-2. [Network](./network.md)
-3. [Logging & Monitoring](./logging-monitoring.md)
-4. [Ceph](./ceph.mdx) or [Ceph via Rook (technical preview)](./rook.md)
-5. [OpenStack](./openstack.md)
+1. [Infrastructure](./infrastructure)
+2. [Network](./network)
+3. [Logging & Monitoring](./logging-monitoring)
+4. [Ceph](./ceph)
+5. [OpenStack](./openstack)
+
+
+In the examples, the pull of images (if supported by a role) is always run first. While
+this is optional, it is recommended to speed up the execution of the deploy action in
+the second step. This significantly reduces the times required for the deployment time of new 
+services.
