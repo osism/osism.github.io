@@ -81,7 +81,7 @@ listed there will be queried during the execution of Cookiecutter.
    ```
    [1/19] with_ceph (1):
    [2/19] with_keycloak (0):
-   [3/19] ceph_network(192.168.64.0/19):
+   [3/19] ceph_network(192.168.16.0/20):
    [4/19] ceph_version (quincy):
    [5/19] domain (osism.xyz):
    [6/19] fqdn_external (api.osism.xyz):
@@ -91,8 +91,8 @@ listed there will be queried during the execution of Cookiecutter.
    [10/19] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
    [11/19] git_username (git):
    [12/19] git_version (main):
-   [13/19] ip_external (192.168.96.9):
-   [14/19] ip_internal (192.168.32.9):
+   [13/19] ip_external (192.168.16.254):
+   [14/19] ip_internal (192.168.16.9):
    [15/19] manager_version (7.0.4):
    [16/19] name_server (149.112.112.112):
    [17/19] ntp_server (de.pool.ntp.org):
@@ -418,7 +418,7 @@ set the `openstack_version` and the `ceph_version` explicitly.
 
 | Parameter                  | Description                                                                                                                                | Default                                   |
 |:---------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------|
-| `ceph_network`             | Address range for Ceph's network                                                                                                           | `192.168.64.0/20`                         |
+| `ceph_network`             | Address range for Ceph's network                                                                                                           | `192.168.16.0/20`                         |
 | `ceph_version`             | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                  |
 | `domain`                   | The domain used by hostnames                                                                                                               | `osism.xyz`                               |
 | `fqdn_external`            | External API FQDN                                                                                                                          | `api.osism.xyz`                           |
@@ -428,8 +428,8 @@ set the `openstack_version` and the `ceph_version` explicitly.
 | `git_repository`           | Path to the git configuration repository                                                                                                   | `YOUR_ORG/YOUR_CONFIGURATION_REPOSITORY`  |
 | `git_username`             | Username of the git repository                                                                                                             | `git`                                     |
 | `git_version`              | Git branch name                                                                                                                            | `main`                                    |
-| `ip_external`              | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.96.9`                            |
-| `ip_internal`              | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.32.9`                            |
+| `ip_external`              | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                          |
+| `ip_internal`              | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                            |
 | `manager_version`          | The version of OSISM. An overview of available OSISM releases can be found [here](https://osism.tech/docs/release-notes/)                  | `7.0.4`                                   |
 | `name_server`              | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                         |
 | `ntp_server`               | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                         |
@@ -503,7 +503,8 @@ targets that can be used to view encrypted files and to edit encrypted files.
   This opens a pager, e.g. less, and you can search with `/` for specific files, keys and passwords.
 
   ```
-  make ansible_vault_show
+  make ansible_vault_show FILE=all
+  make ansible_vault_show FILE=environments/secrets.yml
   ```
 
 * Change or add secrets in an encrypted file with the editor set in ` $EDITOR`.

@@ -76,53 +76,68 @@ Not all of the services listed there are supported by OSISM.
 9. Octavia
 
    ```
+   osism apply octavia-certificates
+   osism apply copy-octavia-certificates
+   ```
+
+   ```
    osism apply -a pull octavia
    osism apply octavia
    ```
 
-   9.1. Manage amphora image
+10. Optional: Manage amphora image
 
    This step is only necessary if the Amphora Driver is used. If OVN is used as the driver,
    this step is not necessary.
 
    We provide regularly updated images for Octavia in
    [osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
-   The OSISM CLI can be used to upload the correct image depending on the OpenStack release
-   used.
 
-   ```
-   osism manage image octavia
-   ```
+   * Configure API Endpoint
 
-   For the command to be usable, a cloud profile for octavia must currently be added in the
-   clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
+     For the command to be usable, a cloud profile for octavia must currently be added in the
+     clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
 
-   ```yaml title="environments/openstack/clouds.yml"
-   clouds:
-     [...]
-     octavia:
-       auth:
-         username: octavia
-         project_name: service
-         auth_url: https://api.testbed.osism.xyz:5000/v3
-         project_domain_name: default
-         user_domain_name: default
-       cacert: /etc/ssl/certs/ca-certificates.crt
-       identity_api_version: 3
-   ```
+     ```yaml title="environments/openstack/clouds.yml"
+     clouds:
+       [...]
+       octavia:
+         auth:
+           username: octavia
+           project_name: service
+           auth_url: https://api.testbed.osism.xyz:5000/v3
+           project_domain_name: default
+           user_domain_name: default
+         cacert: /etc/ssl/certs/ca-certificates.crt
+         identity_api_version: 3
+     ```
 
-   The secret is added to the secure.yml file. The password is set in the parameter
-   `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
+  * Configure the secret
 
-   ```yaml title="environments/openstack/secure.yml"
-   clouds:
-     [...]
-     octavia:
-       auth:
-         password: VALUE_OF_octavia_keystone_password
-   ```
+    The secret is added to the secure.yml file. The password is set in the parameter
+    `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
 
-10. Horizon
+    Get the secret with
+    ```
+    make ansible_vault_show FILE=environments/kolla/secrets.yml |grep octavia_keystone_password
+    ```
+
+    ```yaml title="environments/openstack/secure.yml"
+    ---
+    clouds:
+      [...]
+      octavia:
+        auth:
+          password: VALUE_OF_octavia_keystone_password
+    ```
+
+  * Upload the correct and current image depending on the current Openstack release:
+
+    ```
+    osism manage image octavia
+    ```
+
+11. Horizon
 
     ```
     osism apply -a pull horizon
