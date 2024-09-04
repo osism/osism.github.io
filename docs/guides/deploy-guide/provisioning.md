@@ -43,7 +43,8 @@ is possible without network connectivity.
   * The hostname is e.g. `node` and not a FQDN like `node.systems.osism.xyz`.
 * Set `osism` as full name for the new user.
 * Set `osism` as the username for the account.
-  * The later used operator user `dragon` is created during the bootstrap and **should not be created** during the installation
+  * The later used operator user `dragon` is created during the bootstrap and **should not be created** during the installation.
+    Do not use `dragon` as username.
   * The account is only needed initially and can be deleted after completion of the bootstrap.
 * Set a password for the account.
 * Choose `Manual` as partitioning method and execute the partitioning according to company specifications
