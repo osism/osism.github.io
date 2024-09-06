@@ -23,7 +23,7 @@ In the example, OSISM release 7.0.5 is used.
     1.1. Set the new OSISM version in the configuration repository.
 
          ```
-         MANAGER_VERSION=7.0.5
+         MANAGER_VERSION="7.1.2"
          sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION:?}/g" environments/manager/configuration.yml
          ```
 
