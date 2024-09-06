@@ -46,10 +46,11 @@ adjustments are necessary. Read the release notes even if you are only updating 
 :::
 
 * Step 1: [Upgrade the Manager](./manager)
-* Step 2: [Upgrade Kubernetes](./kubernetes)
-* Step 3: [Upgrade Logging & Monitoring](./logging-monitoring)
-* Step 4: [Upgrade the Infrastructure](./infrastructure)
-* Step 5: [Upgrade the Network](./network)
-* Step 6: [Upgrade Docker](./docker)
-* Step 7: [Upgrade Openstack](./openstack)
-* Step 8: [Upgrade the Ceph](./ceph)
+* Step 2: [Upgrade the Network](./network)
+* Step 3: [Upgrade the Ceph](./ceph)
+* Step 4: [Upgrade Docker](./docker)
+* Step 5: [Upgrade Kubernetes](./kubernetes)
+* Step 6: [Upgrade Logging & Monitoring](./logging-monitoring)
+* Step 7: [Upgrade the Infrastructure](./infrastructure)
+* Step 8: [Upgrade Openstack](./openstack)
+

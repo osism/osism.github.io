@@ -1,6 +1,6 @@
 ---
 sidebar_label: Kubernetes
-sidebar_position: 20
+sidebar_position: 50
 ---
 
 # Kubernetes

@@ -1,6 +1,6 @@
 ---
 sidebar_label: Logging & Monitoring
-sidebar_position: 40
+sidebar_position: 60
 ---
 
 # Logging & Monitoring
