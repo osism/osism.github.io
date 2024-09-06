@@ -5,16 +5,7 @@ sidebar_position: 30
 
 # Infrastructure
 
-1. **Optional:** Kubernetes
-
-   This is only necessary if the internal Kubernetes cluster has also been deployed.
-   This can be checked by executing `kubectl get nodes` on the manager node.
-
-   ```
-   osism apply k3s-upgrade
-   ```
-
-2. **Optional:** Pull containers
+1. **Optional:** Pull containers
 
    ```
    osism apply -a pull common
@@ -26,7 +17,7 @@ sidebar_position: 30
    osism apply -a pull mariadb
    ```
 
-3. Cron, Fluentd & Kolla Toolbox
+2. Cron, Fluentd & Kolla Toolbox
 
    The common role of Kolla is used to manage the services `cron`, `fluentd`
    and `kolla-toolbox`.
@@ -39,31 +30,31 @@ sidebar_position: 30
    osism apply -a upgrade common
    ```
 
-4. Loadbalancer
+3. Loadbalancer
 
    ```
    osism apply -a upgrade loadbalancer
    ```
 
-5. Redis
+4. Redis
 
    ```
    osism apply -a upgrade redis
    ```
 
-6. Memcached
+5. Memcached
 
    ```
    osism apply -a upgrade memcached
    ```
 
-7. RabbitMQ
+6. RabbitMQ
 
    ```
    osism apply -a upgrade rabbitmq
    ```
 
-8. MariaDB
+7. MariaDB
 
    ```
    osism apply -a upgrade mariadb
