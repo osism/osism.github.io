@@ -11,20 +11,213 @@ therefore not only read and take into account the release notes for 7.0.4 but al
 previous release notes. The same applies to an update from, for example, 7.0.2 to 7.0.4.
 The release notes for 7.0.3 must then also be taken into account.
 
-| Release                  | Release Date   |
-|:-------------------------|:---------------|
-| [7.0.5](#705-20240524)   | 24. May 2024   |
-| [7.0.4](#704-20240507)   | 7. May 2024    |
-| [7.0.3](#703-20240503)   | 3. May 2024    |
-| [7.0.2](#702-20240407)   | 17. April 2024 |
-| [7.0.1](#701-20240327)   | 27. March 2024 |
-| [7.0.0](#700-20240320)   | 20. March 2024 |
+| Release                  | Release Date    |
+|:-------------------------|:----------------|
+| [7.1.2](#712-20240818)   | 18. August 2024 |
+| [7.1.1](#711-20240812)   | 12. August 2024 |
+| [7.1.0](#710-20240710)   | 10. July 2024   |
+| [7.0.5](#705-20240524)   | 24. May 2024    |
+| [7.0.4](#704-20240507)   | 7. May 2024     |
+| [7.0.3](#703-20240503)   | 3. May 2024     |
+| [7.0.2](#702-20240407)   | 17. April 2024  |
+| [7.0.1](#701-20240327)   | 27. March 2024  |
+| [7.0.0](#700-20240320)   | 20. March 2024  |
 
-:::warning
+## 7.1.2 (20240818)
 
-7.0.0a, 7.0.0b, 7.0.0c, 7.0.0d are pre-releases. Do not use these releases.
+Release date: 18. August 2024
 
-:::
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images have not been rebuilt. No upgrade of OpenStack is required.
+
+* New manager features.
+
+  * It is now possible to manage custom images with `osism manage images`.
+  * It is now possible to manage custom flavors with `osism manage flavors`.
+  * Kubernetes Cluster API Images 1.31 are now deployed with `osism manage image clusterapi`.
+  * With `osism apply -a config PLAY` it is now possible to update only the configuration
+    files for services from the Kolla project.
+  * The Mitogen plugin for Ansible has been updated and Ansible 2.17 should now also be
+    usable.
+  * With `osism apply disable-compute-node` it is possible to stop & disable all services on
+    a compute node.
+  * With `osism apply remove-compute-node` it is possible  to stop, disable & remove
+    all services on a compute node.
+  * With `osism apply disable-network-node` it is possible to stop & disable all services on
+    a network node.
+  * With `osism apply enable-network-node` it is  possible to start & enable all services on
+    a network node.
+
+* New features in the `osism.commons.network` role.
+
+  * Dummy devices can be managed with the `network_dummy_devices` parameter (for Ubuntu >= 24.04).
+
+* New features in the `osism.commons.packages` role.
+
+  * The mode of the need start featore of APT can now be configured via the
+    `packages_needrestart_mode` parameter. By default, services that are to be
+    restarted are only listed.
+
+* Removed roles.
+
+  * `osism.validations.refstack` has been removed in favor of the `osism.validations.tempest` role.
+    The OpenStack Interop and therefore also the Refstack project will no longer be actively
+    continued.
+
+  * `osism.services.openstack_health_monitor` has been removed in favor of the new SCS health
+    monitor. This will probably be usable with OSISM 8.
+
+## 7.1.1 (20240812)
+
+Release date: 12. August 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images for Nova and Keystone have been rebuilt.
+  Upgrades of the Nova service is recommended.
+  The OVN, OVS and Fluentd service images have been rebuild.
+
+  * The Nova images have been rebuilt because of a critical security
+    issues. Further details can be found in security advisory
+    [OSSA-2024-002: Incomplete file access fix and regression for QCOW2 backing files and VMDK flat descriptors](https://security.openstack.org/ossa/OSSA-2024-002.html)
+    and in SCS blog post
+    [SCS Security Advisory on incomplete QCOW2 and VMDK image handling protections (CVE-2024-40767)](https://scs.community/de/security/2024/07/23/cve-2024-40767/). This upgrade is important. If a hotfix for this problem has already
+    been deployed in advance, the parameters added for this in `environments/kolla/images.yml`
+    must be removed again.
+
+  * The Keystone images have been rebuilt to make the use of the [vexxhost/keystone-keycloak-backend](https://github.com/vexxhost/keystone-keycloak-backend)
+    plugin possible. If this plugin is not relevant, the upgrade can be skipped.
+
+  * The Fluentd image has been rebuilt to make the use of the [fluent-plugin-grafana-loki](https://grafana.com/docs/loki/latest/send-data/fluentd/)
+    plugin possible. If this plugin is not relevant, the upgrade can be skipped.
+
+  * Rebuild of the OVN images to update version to [24.3.2](https://www.ovn.org/en/releases/changelog_v24.03.2/). Housekeeping for clusters
+    that want the latest stable versions. The upgrade can be skipped, there is no reason from a functional point of view.
+
+  * Rebuild of the OVS images to update version to [3.3.1](https://www.openvswitch.org/releases/NEWS-3.3.1.txt). Housekeeping for clusters
+    that want the latest stable versions. The upgrade can be skipped, there is no reason from a functional point of view.
+
+  * When upgrading the Nova and Keystone API services, there is a short downtime
+    of the APIs. This downtime is usually less than 1 minute.
+
+* The Kubernetes version of the integrated Kubernetes cluster has been upgraded to 1.30.3. An upgrade of the Kubernetes cluster should be performed
+  with `osism apply k3s-upgrade`.
+
+* In preparation for the support of Ubuntu 24.04, the default Docker version was changed to 26.1.4. If an upgrade of Docker is made, this should
+  be done node by node. The upgrade results in a restart of all containers.
+
+  If you do not want to upgrade from Docker 24.0.9 to 26.1.4 yet, make sure that the versions are pinned
+  in `environments/configuration.yml`. Double check that the versions there are correct after the configuration repositoryhas been pulled on the manager.
+
+  ```
+  docker_version: "5:24.0.9"
+  docker_cli_version: "5:24.0.9"
+  ```
+
+* The CAPI and CAPO versions have been changed to 1.7.4 and 0.10.4.. Run `osism apply clusterapi` if you use CAPI management cluster on the
+  ingegrated Kubernetes cluster.
+
+* New manager features.
+
+* New Kolla features.
+
+  * The `CS_AUTH_KEYS` environment variable for Barbican containers can be set via `barbican_cs_auth_keys`.
+
+* New roles & plays.
+
+  * `osism apply cleanup-journal` to vacuum the journald logs
+  * `osism apply openvswitch-ipfix` to manage an Open vSwitch IPFIX collector
+  * `osism apply openvswitch-netflow` to manage an Open vSwitch Netflow collector
+  * `osism apply openvswitch-sflow` to manage an Open vSwitch sFlow collector
+  * `osism apply zabbix_agent` for the deployment of the Zabbix agent
+  * `osism validate ceph-connectivity` to validate Ceph network connectivity
+  * `osism validate kolla-connectivity` to valdate Kolla network connectivity
+  * `osism validate ntp` to validate NTP synchronisation
+
+## 7.1.0 (20240710)
+
+Release date: 10. July 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images for Octavia, Nova, Glance, Cinder and Magnum have been rebuilt.
+  Upgrades of those services are recommended. No upgrades of other OpenStack
+  and associated infrastructure services such as MariaDB or RabbitMQ are required.
+
+  * The Nova, Glance, and Cinder images have been rebuilt because of a critical security
+    issues. Further details can be found in security advisory
+    [OSSA-2024-001: Arbitrary file access through custom QCOW2 external data](https://security.openstack.org/ossa/OSSA-2024-001.html)
+    and in SCS blog post
+    [SCS Security Advisory on arbitrary file access through QCOW2 external data file (CVE-2024-32498)](https://scs.community/de/security/2024/07/02/cve-2024-32498/). This upgrade is important. If a hotfix for this problem has already
+    been deployed in advance, the parameters added for this in `environments/kolla/images.yml`
+    must be removed again.
+
+  * The Octavia images have been rebuilt to fix an issue with the removal of leftover OVN LB HM ports
+    ([osism/issues#921](https://github.com/osism/issues/issues/921)). If this is not relevant, the
+    upgrade can be skipped.
+
+  * The Magnum images have been rebuild to bump the versions of the included Magnum Cluster API plugins
+    and to make the use of the Cilium CNI possible. If this is not relevant, the upgrade can be skipped.
+
+  * When upgrading the Octavia, Nova, Glance, Cinder and Magnum API services, there is a short downtime
+    of the APIs. This downtime is usually less than 1 minute.
+
+* New manager features.
+
+  * It is possible to [lock parts of the configuration repository](https://osism.tech/docs/guides/configuration-guide/configuration-repository/#locks)
+    or the complete configuration repository. It is then no longer possible to execute plays assigned to
+    these parts in the locked parts. This makes it possible to prevent the execution of plays in specific areas.
+    To lock an environment, a `.lock` file is created in the corresponding directory of the environment. For
+    example, the file `environments/kolla/.lock` locks the Kolla environment.
+
+  * The defaults for the `hosts_*` parameters have been changed from `all` to `generic` in all plays. The default
+    for the `hosts_*` parameters has already been set to `generic` in [osism/defaults](https://github.com/osism/defaults).
+    This means that the behaviour does not change.
+
+  * The old wrapper scripts, e.g. `osism-generic`, are no longer copied. They will be removed in the future.
+
+  * There is a new manager service that is used to manage all services on the internal Kubernetes cluster.
+    This has to be activated explicitly via the parameter `enable_osism_kubernetes` in `environments/manager/configuration.yml`.
+
+  * Host vars from the configuration repository are no longer synchronised to the Netbox. The config context of hosts
+    from the Netbox can still be used for host vars.
+
+* New Kolla features.
+
+  * With the `haproxy_enable_horizon` parameter it is possible to disable the Horizon service in the
+    loadbalancer. The value of the parameter is `yes` by default.
+  * An error in the play for MariaDB backups has been fixed. It is now possible to use incremental backups.
+  * The `org.opencontainers.image.version` container label is now used for the service versions inside
+    the container image. So far, it has been used for the OSISM version.
+  * The `haproxy_socket_level_admin` parameter is now set to `yes` by default.
+  * With the `kolla_handler_throttle` parameter it is possible to throttle the execution of handlers.
+  * If the restart of a container fails in the loadbalancer play, the execution of the play is
+    interrupted immediately. This prevents the master container from being restarted if one of the 
+    backup containers fails to restart.
+
+* New roles & plays.
+
+  * The k9s CLI can be used with osism.commons.k9s.
+  * With osism.services.netbird it is possible to connect a node to a Netbird cluster.
+  * With the gather-facts play it is possible to gather only the facts.
+  * The `manage-loadbalancer` play can be used to manage the API services in the loadbalancer.
+    In future, this play will be used by all upgrade plays to automatically remove an API service
+    from the loadbalancer before restarting.
+
+* Removed roles.
+
+  * osism.commons.kompose
+
+* Technical preview.
+
+  * Rook
+
+* New documentation.
+
+  * https://osism.tech/docs/guides/operations-guide/ceph/#remove-a-single-osd-node
+  * https://osism.tech/docs/guides/operations-guide/network/
+  * https://osism.tech/docs/guides/configuration-guide/openstack/#example-for-the-use-of-name-based-endpoints
 
 ## 7.0.5 (20240524)
 
