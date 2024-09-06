@@ -40,6 +40,7 @@ In the example, OSISM release 7.1.2 is used.
          make sync
          ```
          </TabItem>
+
          <TabItem value="osism-6" label="OSISM < 7.0.0">
          If Gilt is not installed via the `requirements.txt` of the manager environment it is
          important to use a version smaller v2. The v2 of Gilt is not yet usable.
@@ -69,7 +70,12 @@ In the example, OSISM release 7.1.2 is used.
          git push
          ```
 
-2. Update the configuration repository on the manager node.
+2. Login to the manager using the "dragon" user
+   ```
+   ssh dragon@<MANAGER_NODE>
+   ```
+
+3. Update the configuration repository on the manager node.
 
    ```
    git pull
@@ -77,7 +83,7 @@ In the example, OSISM release 7.1.2 is used.
    osism apply configuration
    ```
 
-3. Update the manager service on the manager node.
+4. Update the manager service on the manager node.
 
    ```
    osism update manager
@@ -88,17 +94,10 @@ In the example, OSISM release 7.1.2 is used.
    * If `osism update manager` does not work yet, use `osism-update-manager` instead.
 
 
-4. Refresh the facts cache.
+5. Refresh the facts cache.
 
    ```
    osism apply facts
-   ```
-
-5. If Traefik is used on the manager node (`traefik_enable: true` in `environments/infrastructure/configuration.yml`)
-   then Traefik should also be upgraded.
-
-   ```
-   osism apply traefik
    ```
 
 6. Finally, the Ansible vault password must be made known again.
@@ -106,8 +105,16 @@ In the example, OSISM release 7.1.2 is used.
    ```
    osism set vault password
    ```
-7. Optional: Tag the upgrade in Git
+
+7. If Traefik is used on the manager node (`traefik_enable: true` in `environments/infrastructure/configuration.yml`)
+   then Traefik should also be upgraded.
+
    ```
-   git tag ${MANAGER_VERSION:?}
+   osism apply traefik
+   ```
+
+8. Optional: Tag the upgrade in Git
+   ```
+   git tag "$(grep "manager_version:" environments/manager/configuration.yml|awk '{print $2}')"
    git push --tags
    ```
