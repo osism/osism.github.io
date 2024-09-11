@@ -12,17 +12,18 @@ The old release notes (before OSISM 7) can be found on the archived page
 
 :::
 
-**The latest available release of OSISM is `7.1.3`.**
+**The latest available release of OSISM is `8.0.0`.**
 
-| Series               | Status               | Initial Release Date | Next Phase           | EOL Date     |
-|:---------------------|:---------------------|:---------------------|:---------------------|:-------------|
-| [OSISM 7](./osism-7) | Maintained           | 20. March 2024       | Extended Maintenance |              |
-| OSISM 6              | Extended Maintenance | 20. September 2023   | End of life          | 20. May 2024 |
-| OSISM 5              | End of life          |                      |                      |              |
-| OSISM 4              | End of life          |                      |                      |              |
-| OSISM 3              | End of life          |                      |                      |              |
-| OSISM 2              | End of life          |                      |                      |              |
-| OSISM 1              | End of life          |                      |                      |              |
+| Series               | Status               | Initial Release Date | Next Phase           | EOL Date         |
+|:---------------------|:---------------------|:---------------------|:---------------------|:-----------------|
+| [OSISM 8](./osism-8) | Planned              | 11. September 2024   | Maintained           |                  |
+| [OSISM 7](./osism-7) | Maintained           | 20. March 2024       | Extended Maintenance | 31. October 2024 |
+| OSISM 6              | End of life          | 20. September 2023   |                      | 20. May 2024     |
+| OSISM 5              | End of life          |                      |                      |                  |
+| OSISM 4              | End of life          |                      |                      |                  |
+| OSISM 3              | End of life          |                      |                      |                  |
+| OSISM 2              | End of life          |                      |                      |                  |
+| OSISM 1              | End of life          |                      |                      |                  |
 
 The release notes build on each other. When upgrading from 6.0.2 to 7.0.4, you should
 therefore not only read and take into account the release notes for 7.0.4 but also the
