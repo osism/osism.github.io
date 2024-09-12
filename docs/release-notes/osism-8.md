@@ -55,6 +55,9 @@ Release date: 11. September 2024
   designate_enable_notifications_sink: "yes"
   ```
 
+* The file containing the custom local settings of Horizon has been renamed from
+  `custom_local_settings` to `_9999-custom-settings.py`.
+
 ### Other & References
 
 OpenStack 2024.1 press announcement: https://www.openstack.org/software/openstack-caracal
