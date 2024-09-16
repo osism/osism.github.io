@@ -13,6 +13,10 @@ At this point, we would also like to point out the open source project
 [cloudbase/coriolis](https://github.com/cloudbase/coriolis) from Cloudbase. There are also commercial
 providers that perform migration from VMware ESXi to OpenStack. One of the offerings is
 [Hystax Acura Live Cloud Migration](https://hystax.com/cloud-migration/).
+[Migratekit](https://github.com/vexxhost/migratekit) from Vexxhost is another option for migrating VMWare to OpenStack.
+
+A good overview and comparison of VMWare resources and their OpenStack counterparts is available [here](https://www.openstack.org/vmware-migration-to-openstack).
+
 
 ## Scenario
 
