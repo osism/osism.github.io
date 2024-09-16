@@ -28,7 +28,7 @@ functionality of the BMC of the servers used. In this way, the basic installatio
 out without external dependencies such as adapting the switch configuration, DHCP, upstream connectivity, etc.
 In many cases, this simplifies the process, makes it more automation-friendly and avoids potential sources of error.
 
-OSISM also provides a tool to generate node images specific for you needs.
+OSISM also provides a [tool](https://github.com/osism/node-image?tab=readme-ov-file#creation-of-specific-images) to generate node images specific for you needs.
 
 This makes particular sense for the node-provisioning in the following situations:
 
