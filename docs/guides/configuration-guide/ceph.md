@@ -3,6 +3,9 @@ sidebar_label: Ceph
 sidebar_position: 30
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Ceph
 
 The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/configuration/
@@ -12,6 +15,9 @@ It is **strongly advised** to use the documentation for the version being used.
 * Pacific - https://docs.ceph.com/en/pacific/rados/configuration/
 * Quincy - https://docs.ceph.com/en/quincy/rados/configuration/
 * Reef - https://docs.ceph.com/en/reef/rados/configuration/
+
+Its a good idea to review all options in the follwing list.
+
 
 ## Unique Identifier
 
@@ -23,11 +29,17 @@ and must be unique. It can be generated with `uuidgen`.
 fsid: c2120a4a-669c-4769-a32c-b7e9d7b848f4
 ```
 
+## Configure the mon address on the mon nodes
+
+Set the variable `monitor_address` in the inventory files of the mon hosts to give ceph-ansible the
+advise which ip adress should be used to reach the monitor instances.
+(`inventory/host_vars/<HOSTNAME>.yml`).
+
 ## Client
 
 The `client.admin` keyring is placed in the file `environments/infrastructure/files/ceph/ceph.client.admin.keyring`.
 
-## Swappiness
+## Systemctl Parameters, Swappiness and Friends
 
 The swappiness is set via the `os_tuning_params` dictionary. The dictionary can
 only be completely overwritten via an entry in the file `environments/ceph/configuration.yml`.
@@ -125,7 +137,7 @@ vm.min_free_kbytes=4194303
    ceph-control
    ```
 
-## Extra pools
+## Configuration of custom ceph pools
 
 Extra pools can be defined via the `openstack_pools_extra` parameter.
 
@@ -156,134 +168,178 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
 
 ## OSD devices
 
-1. For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
-   add a configuration like the following to it. Ensure that no `devices` parameter
-   is present in the file.
+For more advanced OSD layout requirements leave out the `devices` key
+and instead use `lvm_volumes`. Details for this can be found on the
+[OSD Scenario](https://docs.ceph.com/projects/ceph-ansible/en/latest/osds/scenarios.html) documentation.
 
-   1. Parameters
+In order to aid in creating the `lvm_volumes` config entries and provision the LVM devices for them,
+OSISM has the two playbooks `ceph-configure-lvm-volumes` and `ceph-create-lvm-devices` available.
+TODO: add reference to https://docs.ceph.com/en/latest/rados/operations/pgcalc/ and PG autocaler dryrun
 
-      * With the optional parmaeter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
-        set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
-        for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
+### Configure the device layout
 
-        ```yaml
-        ceph_osd_db_wal_devices_buffer_space_percent: 10
-        ```
-      * It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
-        `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
-      * It is always possible to use device names such as `sda` or device IDs such as
-        `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`. `/dev/` is not
-        prefixed and is added automatically.
-      * The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
-      * The `wal_size` parameter is optional and defaults to `2 GB`.
-      * The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
-      * The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
-      * The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
+For each Ceph storage node edit the file `inventory/host_vars/<nodename>.yml`
+add a configuration like the following to it. Ensure that no `devices` parameter
+is present in the file.
 
-   2. OSD only
+**General information about the parameters**
 
-      The `sda` device will be used as an OSD device without WAL and DB device.
+* With the optional parmaeter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
+  set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
+  for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
 
-      ```yaml
-      ceph_osd_devices:
-        sda:
-      ```
+  ```yaml
+  ceph_osd_db_wal_devices_buffer_space_percent: 10
+  ```
+* It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
+  `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
+* It is always possible to use device names such as `sda` or device IDs such as
+  `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`.
+  The top level dierectory `/dev/` is not prefixed and is added automatically.
+* The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
+* The `wal_size` parameter is optional and defaults to `2 GB`.
+* The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
+* The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
+* The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
 
-    3. OSD + DB device
+**Layout variants**
 
-       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
-       OSD is provided with 30 GB.
+OSISM basically utilizes LVM volumes for all OSD setup variants.
 
-       ```yaml
-       ceph_db_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-       ```
+<Tabs>
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device.
+<TabItem value="osd_only" label="OSD only">
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-       ```
+This variant does not use a dedicated wal- or db-device.
+This is the most simple variant and this variant can be used if you use a all-flash setup with NVMes.
 
-    4. OSD + WAL device
+The `sda` device will be used as an OSD device without WAL and DB volume device.
 
-       The `nvme0n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
-       OSD is provided with 2 GB.
+```yaml
+ceph_osd_devices:
+  sda:
+```
+</TabItem>
 
-       ```yaml
-       ceph_wal_devices:
-         nvme0n1:
-           num_osds: 6
-           wal_size: 2 GB
-       ```
+<TabItem value="osd_and_db" label="OSD + DB device">
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as WAL device.
+The `nvme0n1` device will be used as an source for DB device volumes.
+With the configured values the provisioning mechanism creates 6 logical volumes of 30GB size each on the nvme which can
+be used for 6 OSD instances.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            wal_pv: nvme0n1
-       ```
+ ```yaml
+ ceph_db_devices:
+   nvme0n1:
+     num_osds: 6
+     db_size: 30 GB
+ ```
 
-    5. OSD + DB device + WAL device (same device for DB + WAL)
+The devices `sda` up to `sdf` will use the previously defined DB volumes from `nvme0n1` for the listed OSD instances.
 
-       The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
-       to 6 OSDs.
+ ```yaml
+ ceph_osd_devices:
+    sda:
+      db_pv: nvme0n1
+    ...
+    sdf:
+      db_pv: nvme0n1
+ ```
+</TabItem>
 
-       ```yaml
-       ceph_db_wal_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-           wal_size: 2 GB
-       ```
+<TabItem value="osd_and_wal" label="OSD + WAL device">
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
+The `nvme0n1` device will be used as an source for WAL device volumes.
+With the configured values the provisioning mechanism creates 6 logical volumes of 2B size each on `nvme0n1` which can
+be used for 6 OSD instances.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-            wal_pv: nvme0n1
-       ```
 
-    6. OSD + DB device + WAL device (different device for DB + WAL)
+```yaml
+ceph_wal_devices:
+  nvme0n1:
+    num_osds: 6
+    wal_size: 2 GB
+```
 
-       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
-       OSD is provided with 30 GB.
+The devices `sda` up to `sdf` will use the previously defined WAL volumes from `nvme0n1` for the listed OSD instances.
 
-       ```yaml
-       ceph_db_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-       ```
+```yaml
+ceph_osd_devices:
+   sda:
+     wal_pv: nvme0n1
+```
+</TabItem>
 
-       The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
-       OSD is provided with 2 GB.
+<TabItem value="osd_and_wal_same" label="OSD and DB + WAL on same device">
 
-       ```yaml
-       ceph_wal_devices:
-         nvme1n1:
-           num_osds: 6
-           wal_size: 2 GB
-       ```
+The `nvme0n1` device will be used as an source for WAL and DB device volumes.
+With the configured values the provisioning mechanism creates 6 logical DB volumes of 30GB and 6 logical WAL volumes of 2B size each
+on `nvme0n1` which can be used for 6 OSD instances.
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-            wal_pv: nvme1n1
-       ```
+The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
+to 6 OSDs.
 
-2. Push the configuration to your configuration repository and after that do the following
+```yaml
+ceph_db_wal_devices:
+  nvme0n1:
+    num_osds: 6
+    db_size: 30 GB
+    wal_size: 2 GB
+```
 
+The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
+
+```yaml
+ceph_osd_devices:
+   sda:
+     db_pv: nvme0n1
+     wal_pv: nvme0n1
+```
+
+In the example shown here, both the data structures for the RocksDB and for the write-ahead log are placed on the faster NVMe device.
+(This is described in the [Ceph documentation](https://docs.ceph.com/en/latest/rados/configuration/bluestore-config-ref/) as "...whenever a DB device is specified but an explicit WAL device is not, the WAL will be implicitly colocated with the DB on the faster device...").
+
+</TabItem>
+
+<TabItem value="osd_and_wal_different" label="OSD and DB + WAL different device">
+
+The `nvme0n1` device will be used as an source for WAL and `nvme1n1` for DB device volumes.
+With the configured values the provisioning mechanism creates 6 logical volumes of 30 GB and 6 logical WAL volumes of 2B size each.
+
+```yaml
+ceph_db_devices:
+  nvme0n1:
+    num_osds: 6
+    db_size: 30 GB
+```
+
+The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
+OSD is provided with 2 GB.
+
+```yaml
+ceph_wal_devices:
+  nvme1n1:
+    num_osds: 6
+    wal_size: 2 GB
+```
+
+The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
+
+```yaml
+ceph_osd_devices:
+   sda:
+     db_pv: nvme0n1
+     wal_pv: nvme1n1
+```
+</TabItem>
+
+</Tabs>
+
+### Provision the configured layout
+
+1. Commit and push the configuration to your configuration repository
+2. Establish the changed configuration
+   Make sure that you do not have any open changes on the manager node either, as these will be discarded during this step.
    ```
    $ osism apply configuration
    $ osism reconciler sync
@@ -331,14 +387,15 @@ pools are to be created is `ceph.rbd`, then the parameters would be stored in
    This content from the file in the `/tmp` directory is added in the host vars file.
    The previous `ceph_osd_devices` is replaced with the new content.
 
-5. Push the updated configuration **again** to your configuration repository and re-run:
-
+5. Commit and push the configuration to your configuration repository **again**
+6. Establish the changed configuration
+   Make sure that you do not have any open changes on the manager node either, as these will be discarded during this step.
    ```
    $ osism apply configuration
    $ osism reconciler sync
    ```
 
-6. Finally create the LVM devices.
+7. Finally create the LVM devices.
 
    ```
    $ osism apply ceph-create-lvm-devices
