@@ -11,6 +11,8 @@ As of OSISM 7, it is possible to create a Kubernetes cluster on all nodes.
 At the moment, this is still optional. In the future, it will be necessary
 to deploy this Kubernetes cluster.
 
+Check the [configuration guide](../../configuration-guide/services) for configuring kubernetes.
+
 :::
 
 1. Deploy the [K3s](https://k3s.io) cluster.
