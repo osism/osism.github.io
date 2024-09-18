@@ -5,6 +5,10 @@ sidebar_position: 20
 
 # Loadbalancer
 
+The settings of the following section rely on the mechanisms of Kolla-Ansible, 
+therefore it's a good idea to use the [upstream documenation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html) 
+for finding out details which are not covered by this documentation.
+
 ## IP addresses & FQDNs
 
 ```yaml title="environments/kolla/configuration.yml"
@@ -25,42 +29,76 @@ hosts_additional_entries:
 
 ## TLS certificates
 
-To enable external TLS encryption:
+:::warning
+To avoid unnecessary additional work and problems, it is recommended that you configure TLS with the intended target
+configuration of the specific environment during the initial rollout process.
+:::
 
-```yaml title="environments/kolla/configuration.yml"
-kolla_enable_tls_external: "yes"
-```
+For example: Changes to the configuration of TLS or the fully qualified domain names (FQDNs) will result in new URLs (with and without the https prefix)
+stored in the Openstack databases, and in the case of self-signed certificates, the CA certificate must be distributed to all participating clients.
 
-To enable internal TLS encryption:
+As a result, the involved Ansible Plays must at least be executed in the correct order, and not all Ansible Plays can handle all possible configuration transitions on their own.
+Therefore, in some cases, manual adjustments must be made to the systems.
 
-```yaml title="environments/kolla/configuration.yml"
-kolla_enable_tls_internal: "yes"
-```
+For this reason, we recommend that you define domains, obtain certificates, and perform configurations in advance.
+
+## General procedure
+
+To enable TLS encryption the following steps are needed.
+
+1. Acticate tls encryption for both endpoints
+
+  * To enable external TLS encryption:
+
+    ```yaml title="environments/kolla/configuration.yml"
+    kolla_enable_tls_external: "yes"
+    ```
+  * To enable internal TLS encryption:
+
+    ```yaml title="environments/kolla/configuration.yml"
+    kolla_enable_tls_internal: "yes"
+     ```
+
+2. Add the combined server certificate and private key to the following locations in the configuration repository:
+  * private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
+  * private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`
+3. Encrypt the certificates using ansible vault:
+   ```
+   make ansible_vault_edit FILE=environments/kolla/certificates/haproxy.pem
+   make ansible_vault_edit FILE=environments/kolla/certificates/haproxy-internal.pem
+   ```
+4. Add the changesto the Git repository
+   ```
+   git add environments/kolla/certificates/haproxy.pem \
+     environments/kolla/certificates/haproxy-internal.pem \
+     environments/kolla/configuration.yml
+
+   git commit -m "Add new certificates" environments/kolla/certificates/haproxy.pem \
+     environments/kolla/certificates/haproxy-internal.pem \
+     environments/kolla/configuration.yml
+   ```
+5. Rollout changes
+   ```
+   osism apply loadbalancer
+   ```
+
+### Self-signed certificates
+
+OSISM supports the usage of self-signed certificates with a custom CA i.e if you
+are running a test installation or for interim purposes.
 
 Two certificate files are required to use TLS securely with authentication,
-which will be provided by your Certificate Authority:
+which will be provided by your custom Certificate Authority:
 
 * the server certificate with private key
 * the CA certificate with any intermediate certificates
 
-The combined server certificate and private key needs to be provided at
-the following locations in the configuration repository:
-
-* private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
-* private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`
-
-## Generating TLS certificates with Let’s Encrypt
-
-## Self-signed certificates
-
-The use of self-signed certificates with a custom CA is possible. However, a few
-additional parameters are then required in the configuration so that the custom CA
-is known everywhere and the self-signed certificates are accepted as valid.
+The following procedure describes the prepration procedure for the CA, which is later followed
+by the general steps described above.
 
 1. Import custom CA
 
    Any custom CA can be added via the `certificates_ca` parameter.
-   The import on the nodes is done via `osism apply certificates`.
    This is already done in the bootstrap of the nodes.
 
    ```yaml title="environments/configuration.yml"
@@ -71,6 +109,7 @@ is known everywhere and the self-signed certificates are accepted as valid.
          [...]
          -----END CERTIFICATE-----
    ```
+
 
 2. Manager service
 
@@ -83,16 +122,44 @@ is known everywhere and the self-signed certificates are accepted as valid.
    ```
 
 3. Use in OpenStack
+   * Add the custom CA to the configuration repository in the directory `environments/kolla/certificates/ca` with the same
+     name like in step 1
+   * Configure the custom CA to be copied to the OpenStack containers
+     ```yaml title="environments/manager/configuration.yml"
+     kolla_copy_ca_into_containers: "yes"
+     openstack_cacert: /etc/ssl/certs/ca-certificates.crt
+     ```
 
-   The custom CA must also be copied into the OpenStack containers. To do this, the custom
-   CA is first added in a file in the `environments/kolla/certificates/ca` of the configuration
-   repository.  It makes sense to use the same filename like in step 1.
+4. Import the ca certificate to all nodes so that the custom CA is known everywhere and the self-signed certificates are accepted as valid.
+   ```
+   osism apply certificates
+   ```
 
-   The import of the custom CA must then be explicitly enabled.
+5. Execute all steps in the general documentation above
+
+### Generating TLS certificates with Let’s Encrypt
+
+Using Let's encrypt certificates is a good alternative to traditional certificate authorities and
+greatly simplifies the administration of TLS certificates.
+
+For a working Let's Encrypt configuration, the API endpoints (configured by `kolla_internal_fqdn` and `kolla_external_fqdn`) 
+must be accessible from the internet.
+
+1. Acticate Let's Encrypt tls encryption for both endpoints
 
    ```yaml title="environments/kolla/configuration.yml"
-   kolla_copy_ca_into_containers: "yes"
-   openstack_cacert: /etc/ssl/certs/ca-certificates.crt
+   enable_letsencrypt: "yes"
+   letsencrypt_email: "<The email used for registration and recovery contact>"
+   kolla_enable_tls_external: "yes"
+   kolla_enable_tls_internal: "yes"
+   ```
+
+2. Rollout changes
+   ```
+   osism apply loadbalancer
+   ```
+
+For more details about this topic, we recommend the [offical kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
 
 ## Second Loadbalancer
 
