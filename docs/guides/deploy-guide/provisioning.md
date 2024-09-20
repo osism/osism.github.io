@@ -17,9 +17,34 @@ control plane manually. An ISO image is provided for this purpose which automati
 provisions a node. The ISO images are available for download in the
 [osism/node-image](https://github.com/osism/node-image) repository.
 
+## Automated Installation using Node Images
+
 There are different variants of the ISO image. The variants differ in the disc layout.
-The available variants are described in the README file of the [osism/node-image](https://github.com/osism/node-image)
-repository.
+
+The pre-build variants are described in the [osism/node-image](https://github.com/osism/node-image/blob/main/README.md) repository.
+
+A good way to provision the nodes is to use virtual media mounts via the usually available Redfish
+functionality of the BMC of the servers used. In this way, the basic installation can be carried
+out without external dependencies such as adapting the switch configuration, DHCP, upstream connectivity, etc.
+In many cases, this simplifies the process, makes it more automation-friendly and avoids potential sources of error.
+
+OSISM also provides a [tool](https://github.com/osism/node-image?tab=readme-ov-file#creation-of-specific-images) to generate node images specific for you needs.
+
+This makes particular sense for the node-provisioning in the following situations:
+
+* Make complex configurations like layer3 underlay
+* Add your SSH keys to the image
+* Configure a specific root password
+* Change other characteristics of the setup
+  * Templates
+  * Partitioning
+  * Packages
+  * ...
+* Develop new standard images
+
+The procedures for building custom images are described in the
+[osism/node-image](https://github.com/osism/node-image/blob/main/README.md) repository.
+
 
 ## Manual provisioning
 
@@ -43,7 +68,8 @@ is possible without network connectivity.
   * The hostname is e.g. `node` and not a FQDN like `node.systems.osism.xyz`.
 * Set `osism` as full name for the new user.
 * Set `osism` as the username for the account.
-  * The later used operator user `dragon` is created during the bootstrap and **should not be created** during the installation
+  * The later used operator user `dragon` is created during the bootstrap and **should not be created** during the installation.
+    Do not use `dragon` as username.
   * The account is only needed initially and can be deleted after completion of the bootstrap.
 * Set a password for the account.
 * Choose `Manual` as partitioning method and execute the partitioning according to company specifications

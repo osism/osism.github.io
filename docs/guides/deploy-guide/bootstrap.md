@@ -30,7 +30,9 @@ the nodes are already ready for use.
 
    * When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
      and the password of this user is `password`. If you install Ubuntu manually the user usually
-     is `ubuntu`. If you want to use any other user here, that's no problem. It is important that
+     is `ubuntu`. If you want to use any other user here, with exception of `dragon`, that's no problem.
+     The later used operator user `dragon` is created during the bootstrap and **should not be created**
+     during the installation. Do not use `dragon` as username. It is important that
      this user has sudo rights. The password according to what you have set yourself.
 
    * The operator public SSH key has to be added in advance on all nodes to `authorized_keys` file

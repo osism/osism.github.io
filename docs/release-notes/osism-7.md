@@ -11,17 +11,66 @@ therefore not only read and take into account the release notes for 7.0.4 but al
 previous release notes. The same applies to an update from, for example, 7.0.2 to 7.0.4.
 The release notes for 7.0.3 must then also be taken into account.
 
-| Release                  | Release Date    |
-|:-------------------------|:----------------|
-| [7.1.2](#712-20240818)   | 18. August 2024 |
-| [7.1.1](#711-20240812)   | 12. August 2024 |
-| [7.1.0](#710-20240710)   | 10. July 2024   |
-| [7.0.5](#705-20240524)   | 24. May 2024    |
-| [7.0.4](#704-20240507)   | 7. May 2024     |
-| [7.0.3](#703-20240503)   | 3. May 2024     |
-| [7.0.2](#702-20240407)   | 17. April 2024  |
-| [7.0.1](#701-20240327)   | 27. March 2024  |
-| [7.0.0](#700-20240320)   | 20. March 2024  |
+| Release                  | Release Date      |
+|:-------------------------|:------------------|
+| [7.1.3](#713-20240908)   | 8. September 2024 |
+| [7.1.2](#712-20240818)   | 18. August 2024   |
+| [7.1.1](#711-20240812)   | 12. August 2024   |
+| [7.1.0](#710-20240710)   | 10. July 2024     |
+| [7.0.5](#705-20240524)   | 24. May 2024      |
+| [7.0.4](#704-20240507)   | 7. May 2024       |
+| [7.0.3](#703-20240503)   | 3. May 2024       |
+| [7.0.2](#702-20240407)   | 17. April 2024    |
+| [7.0.1](#701-20240327)   | 27. March 2024    |
+| [7.0.0](#700-20240320)   | 20. March 2024    |
+
+## 7.1.3 (20240908)
+
+Release date: 8. September 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images for Ironic have been rebuilt.
+  Upgrades of the Ironic service is recommended.
+
+  * The Ironic have been rebuilt because of a critical security
+    issues. Further details can be found in security advisory
+    [OSSA-2024-003: Unvalidated image data passed to qemu-img](https://security.openstack.org/ossa/OSSA-2024-003.html)
+    and in SCS blog post
+    [Sovereign Cloud Stack Security Advisory Image Processing in Ironic (CVE-2024-44082)](https://scs.community/de/security/2024/09/07/cve-2024-44082/). This upgrade is important.
+
+* New manager features.
+
+  * The name of the Kubernetes Cluster API image managed with `osism manage image clusterapi`
+    changed to e.g. `ubuntu-capi-image-v1.30.0`.
+
+  * Zombie processes when using `osism console --type ansible <HOSTGROUP>` are now removed.
+
+* New Kolla features.
+
+  * The Prometheus node-exporter is now deployed on all nodes by default.
+  * cAdvisor is now deployed on all nodes by default.
+  * Deprecation warnings in API services are disabled by default. To change this
+    add the following parameter in `environments/kolla/configuration.yml`.
+
+    ```yaml
+    kolla_disable_python_deprecation_warnings: "no"
+    ```
+
+* New features in the `osism.commons.packages` role.
+
+  * `bash-completion` and `git` are installed by default.
+
+* New features in the `osism.services.netbox` role.
+
+  * The start period of services can be configured.
+
+    ```yaml
+    netbox_service_netbox_start_period: 120s
+    netbox_service_netbox_worker_start_period: 30s
+    netbox_service_postgres_start_period: 30s
+    netbox_service_redis_start_period: 30s
+    ```
 
 ## 7.1.2 (20240818)
 
@@ -117,8 +166,6 @@ Release date: 12. August 2024
 
 * The CAPI and CAPO versions have been changed to 1.7.4 and 0.10.4.. Run `osism apply clusterapi` if you use CAPI management cluster on the
   ingegrated Kubernetes cluster.
-
-* New manager features.
 
 * New Kolla features.
 
