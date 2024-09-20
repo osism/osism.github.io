@@ -6,14 +6,9 @@ sidebar_label: Ceph via Rook (technical preview)
 
 :::warning
 
-This is a technical preview and not recommended for production use yet.
-
-:::
-
-
-:::warning
-
-This whole document has to be reworkded with more rook like handling. Do not take it for granted yet.
+This is a technical preview and not recommended for production use yet. This whole
+document has to be reworkded with more rook like handling. Do not take it for
+granted yet.
 
 :::
 
@@ -63,6 +58,18 @@ Shiny new features aren't worth the risk of total or partial data loss/corruptio
 Please have a look at the [Rook Troubleshooting documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/ceph-toolbox/).
 
 The Rook toolbox is available via the `ceph` command on the manager node, after you deployed the wrapper via `osism apply cephclient`. You have to make sure the correct [Configuration Options for the Rook Ceph Client Wrapper](../configuration-guide/rook.md#client) are net.
+
+## Monitoring
+
+### Dashboard
+
+* https://rook.io/docs/rook/latest/Storage-Configuration/Monitoring/ceph-dashboard/
+
+The password is stored in the secret `rook-ceph-dashboard-password`.
+
+```
+kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+```
 
 ## Updating
 
