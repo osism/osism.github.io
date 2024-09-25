@@ -13,7 +13,7 @@ The release notes for 8.0.1 must then also be taken into account.
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|
-| [8.0.1](#800-20240924)   | 24. September 2024  |
+| [8.0.1](#801-20240924)   | 24. September 2024  |
 | [8.0.0](#800-20240911)   | 11. September 2024  |
 
 ## 8.0.1 (20240924)
