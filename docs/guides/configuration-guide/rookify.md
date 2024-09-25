@@ -1,5 +1,5 @@
 ---
-sidebar_label: Configure Rookify: Migrate to Rook from Ceph Ansible (technical preview)
+sidebar_label: Rookify Ceph Ansible (technical preview)
 sidebar_position: 31
 ---
 

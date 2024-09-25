@@ -1,5 +1,5 @@
 ---
-sidebar_label: Rookify Operation: Migrate to Rook from Ceph Ansible (technical preview)
+sidebar_label: Rookify Ceph Ansible (technical preview)
 ---
 
 # Use Rookify: Migrate to Rook from Ceph Ansible (technical preview)
