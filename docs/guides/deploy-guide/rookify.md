@@ -1,5 +1,5 @@
 ---
-sidebar_label: Rookify Ceph Ansible (technical preview)
+sidebar_label: Rookify (technical preview)
 sidebar_position: 51
 ---
 

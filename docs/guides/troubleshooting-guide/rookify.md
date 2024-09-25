@@ -1,5 +1,5 @@
 ---
-sidebar_label: Rookify
+sidebar_label: Rookify (technical preview)
 sidebar_position: 40
 ---
 
