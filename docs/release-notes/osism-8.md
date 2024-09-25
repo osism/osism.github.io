@@ -13,7 +13,51 @@ The release notes for 8.0.1 must then also be taken into account.
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|
+| [8.0.1](#800-20240924)   | 24. September 2024  |
 | [8.0.0](#800-20240911)   | 11. September 2024  |
+
+## 8.0.1 (20240924)
+
+Release date: 24. September 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images have not been rebuilt. No upgrade of OpenStack is required.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have not been rebuilt. No upgrade is required.
+
+* The network service images (OVN, OVS) have not been rebuilt. No upgrade is required.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have not been rebuilt. No upgrade is required.
+
+* The logging service images (OpenSearch, Fluentd) have not been rebuilt. No upgrade is required.
+
+* The Prometheus OpenStack Exporter is no longer enabled by default as there have been frequent
+  OOM problems and the exporter generates a very high load on the OpenStack APIs. If the exporter
+  is still to be used, the `enable_prometheus_openstack_exporter` parameter can be used for this.
+
+  ```yaml title="environments/kolla/configuration.yml"
+  enable_prometheus_openstack_exporter: "yes"
+  ```
+
+* An error when upgrading the Postres database of the Netbox service has been fixed. Upgrades
+  of the Postgres database are now done automatically.
+
+* The Scaphandre service now accesses the host PIDs by default in order to better assign the
+  consumption data to the running processes. If this is not wanted, it can be switched off using
+  the `scaphandre_share_pids_with_host` parameter.
+
+  ```yaml title="environments/configuration.yml"
+  scaphandre_share_pids_with_host: false
+  ```
+
+* Both Ceph play (`osism apply ceph`)  and the validation of Ceph OSD services
+  (`osism validate ceph-osds`) have been fixed for non-HCI environments.  
+
+* Inventory groups in `inventory/20-roles` now also overwrite groups in all other files
+  (with exception of `inventory/99-ovewrite`). The same applies to groups that are set
+  via labels in Netbox. This makes it possible, for example, to define the load balancers
+  via the `loadbalancer` group directly via `inventory/20-roles` or a Netbox label.
 
 ## 8.0.0 (20240911)
 
