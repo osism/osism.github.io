@@ -15,31 +15,28 @@ Nevertheless, it is **strongly advised** to test Rookify in a controlled environ
 
 :::
 
-Rookify is now available in the SCS Reference Implementation (OSISM) and can be deployed as shown in the [paragraph below](#using-the-scs-reference-implementation-osism).
+Currenlty Rookify is best install it on your own machine and then connected through vpn to you target system (the one where Ceph-Ansible needs to be rookified ;) ).
+
+Rookify runs `in place`, which means that there are no parallel nodes necesssary. As mentioned above, Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_ but infrastructures are complicated, so precautionary backups and safety measure are very much advised.
 
 The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) includes a README.md that provides a condensed summary of the information covered here.
 
-## Using the SCS Reference Implementation (OSISM)
+## Prerequisites && Requirements
 
-:::info
-
-Rookify will be available in OSISM and will be deployable usin osism-commands based on ansible configurations.
-
-:::
-
-But is is not available yet ;)
+- A functioning Ceph cluster deployed via traditional methods.
+- Access to a Kubernetes cluster with sufficient resources to host the
+ migrated Ceph cluster.
+  - Kubernetes nodes should be rolled out at least on the OSD nodes
+- Rook operator version 1.13 or higher installed in the Kubernetes clu
+ster.
+- _local development enivornment_ requires radoslib version 2.0.0 inst
+alled
 
 ## Manual Installation
 
 ### Download or Clone the Repository
 
 Clone or download Rookify from the [repository](https://github.com/SovereignCloudStack/rookify).
-
-:::tip
-
-Checkout the included options of the added `Makefile` by simply typing `make`.
-
-:::
 
 ## Install and Run Locally
 
@@ -50,6 +47,12 @@ cd rookify
 ```
 
 2. To install Rookify locally, pythons virtualenv will be used (Note: This will install pre-commit in your local user context):
+
+:::tip
+
+Checkout the included options of the added `Makefile` by simply typing `make`.
+
+:::
 
 ```
 make setup
