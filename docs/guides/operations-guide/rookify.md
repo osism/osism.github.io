@@ -57,9 +57,8 @@ Run `--show` if you used a pickel-file (see the configuration-guide concerning t
 
 ## Debugging and Testing
 
-If you suspect that something is not working in Rookify itself, you can start setting logging to `DEBUG`.
-
-If you suspect that something is not working in Rookify itself, you could start by running the tests. For this you need to have access to rookifies code.
+If you suspect that something is not working in Rookify itself, you can start by setting logging to `DEBUG`.
+If that is not sufficient enough you could run the enclosed tests from the Rookify code itself.
 
 ### Set logging to debug level
 
