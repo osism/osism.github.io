@@ -6,22 +6,22 @@ sidebar_position: 51
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Deploy Rookify: Migrate to Rook from Ceph Ansible (technical preview)
+# Deploy Rookify: Migrate to Rook from Ceph-Ansible (Technical Preview)
 
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment beforehand, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that all precautionary backups are taken, and any other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that precautionary backups are made, and all other necessary safety measures are in place.
 
 :::
 
-Currently it is recommended to install Rookify on your own machine and then connect through VPNs to you target system (the one where Ceph-Ansible needs to be rookified ;) ).
+It is currently recommended to install Rookify on your local machine and connect through VPNs to the target system (the one where Ceph-Ansible needs to be "rookified" 😉).
 
-Rookify runs `in place`, which means that there are no parallel nodes necessary. As mentioned above, Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_ but infrastructure can be complex, so precautionary backups and safety measure are very much advised.
+Rookify operates `in place`, meaning no parallel nodes are required. As noted earlier, Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_, but given the complexity of infrastructure, precautionary backups and safety measures are highly recommended.
 
-The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) includes a README.md that provides a condensed summary of the information covered here.
+For a condensed summary of the information covered here, refer to the [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify).
 
-## Prerequisites && Requirements
+## Prerequisites & Requirements
 
 - A functioning Ceph cluster deployed using traditional methods.
 - Access to a Kubernetes cluster with sufficient resources to host the migrated Ceph cluster.
@@ -29,6 +29,7 @@ The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) 
 - Rook operator version 1.13 or higher installed on the Kubernetes cluster.
 - `radoslib` version 2.0.0 installed.
 - For a _dockerized setup_, `docker` and `docker compose` are required.
+- In order to use the Makefile, `GNU make` is required.
 
 ## Manual Installation
 
@@ -36,7 +37,7 @@ The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) 
 
 Clone or download Rookify from the [repository](https://github.com/SovereignCloudStack/rookify).
 
-## Install and Run Locally
+### Install and Run Locally (without Docker)
 
 1.  Navigate to the tool directory:
 
@@ -44,11 +45,11 @@ Clone or download Rookify from the [repository](https://github.com/SovereignClou
 cd rookify
 ```
 
-2. To install Rookify locally, python's `virtualenv` will be used (Note: This will install pre-commit in your local user context):
+2. To install Rookify locally, Python's `virtualenv` will be used (Note: This will install `pre-commit` in your local user user context):
 
 :::tip
 
-Checkout the included options of the added `Makefile` by simply typing `make`.
+Checkout the included options in the `Makefile` by typing `make`.
 
 :::
 
@@ -56,15 +57,15 @@ Checkout the included options of the added `Makefile` by simply typing `make`.
 make setup
 ```
 
-This command also checks if you have the required python library for `radoslib` installed. Make sure to have it installed on your linux distribution.
+This command also verifies if the required Python library `radoslib` is installed. Ensure it is available on your Linux distribution.
 
 :::tip
 
-Before running Rookify, first check all options by using `rookify --help`.
+Before running Rookify, check all available options by using `rookify --help`.
 
 :::
 
-To run rookify you can either run it directly from within pythons virtualenv or with help of the make file:
+To run Rookify you can either run it directly from within Python's `virtualenv` or with help of the Makefile:
 
 ```bash
 # directly
@@ -73,23 +74,23 @@ To run rookify you can either run it directly from within pythons virtualenv or 
 make run-local-rookify
 ```
 
-## Install and Run from within a Container
+### Install and Run from within a Container
 
 1. Navigate to the tool directory:
 
-2. To install Rookify into a container, podman or docker can be used (Note: in both cases pythons library for `radoslib` needs to be installed locally):
+2. To install Rookify in a container, you can use either Podman or Docker (Note: In both cases, Python’s `radoslib` library must be installed locally):
 
 ```
 make check-radoslib
 make up
 ```
 
-This command uses `docker compose`, so make sure you have that installed as well.
+This command uses `docker compose`, so ensure it is installed as well.
 
-To run rookify you can either enter the container and run rookify from there or use `make run-rookify`.
+To run Rookify, you can either enter the container and run it from there or use `make run-rookify`.
 
 :::note
 
-Before running rookify, it can be useful to check all options by using `rookify --help`
+Before running rookify, it's useful to check all options by using `rookify --help`.
 
 :::

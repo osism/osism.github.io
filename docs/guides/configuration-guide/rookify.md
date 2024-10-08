@@ -3,20 +3,20 @@ sidebar_label: Rookify (technical preview)
 sidebar_position: 31
 ---
 
-# Configure Rookify: Migrate from Ceph Ansible to Rook (Technical Preview)
+# Configure Rookify: Migrate from Ceph-Ansible to Rook (Technical Preview)
 
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment beforehand, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that all precautionary backups are taken, and any other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Addition ure that precautionary backups are made, and all other necessary safety measures are in place.
 
 :::
 
-The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) includes a README.md that provides a condensed summary of the information covered here.
+For a condensed summary of the information covered here, refer to the [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify).
 
 ## Config.yaml
 
-The primary configuration file for Rookify is `config.yaml`. The repository contains an example file for general use, as well as one specifically tailored to the OSISM testbed setup:
+The primary configuration file for Rookify is `config.yaml`. The repository includes an example file for general use, as well as one specifically tailored for the OSISM testbed setup:
 
 - [config.example.yaml](https://github.com/SovereignCloudStack/rookify/blob/main/config.example.yaml)
 - [config.example.osism.yaml](https://github.com/SovereignCloudStack/rookify/blob/main/config.example.osism.yaml)
@@ -30,7 +30,7 @@ general:
   machine_pickle_file: data.pickle
 ```
 
-The general section allows for optional definition of a pickle file, which allows for saving the state of the migration as serialized objects on disk. The pickle filed can be named as pleased.
+The `general` section allows for the optional definition of a pickle file, which saves the state of the migration as serialized objects on disk. The pickle filed can be named as desired.
 
 #### Logging
 
@@ -42,7 +42,7 @@ logging:
     renderer: console # or: json
 ```
 
-The `logging` section allows for specification of `structlog`. The `level` parameter can be set to all python [log-levels](https://docs.python.org/3/library/logging.html#logging-levels), i.e. `NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAl`, but it is recommended to use `INFO`.
+The `logging` section allows for specification of `structlog`. The `level` parameter can be set to any Python [log-levels](https://docs.python.org/3/library/logging.html#logging-levels), such as `NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAl`, but using `INFO` is recommended.
 
 #### Ceph
 
@@ -53,12 +53,12 @@ ceph:
   keyring: ./.ceph/ceph.client.admin.keyring
 ```
 
-The `ceph` section specifies the `ceph.conf` and `ceph.client.admin.keyring` of the target systems (i.e. the system where Ceph-Ansible needs to be migrated to Rook).
+The ceph section specifies the paths for the `ceph.conf` and `ceph.client.admin.keyring` files on the target system (the system where Ceph-Ansible needs to be migrated to Rook).
 
 #### SSH
 
 ```yaml title="config.example.yaml"
-# fill in correct path to private key
+# specify the correct path to the private key
 ssh:
   private_key: /home/USER/.ssh/cloud.private
   hosts:
@@ -73,7 +73,7 @@ ssh:
       user: dragon
 ```
 
-The `ssh` section requires specification of the `private_key` and `hosts`. The `hosts` section specifies the hostnames or aliases (e.g. keys like `testbed-node-0`), their ip-addresses (e.g. if rookify connects to the target systems per VPN add ips starting with `192.186...`) and user for login. If you are using the OSISM testbed, make sure that the private key does not contain any `EOF` or other strings, i.e. make sure the keys are 'clean' to avoid connection errors.
+The `ssh` section specifies the `private_key` and `hosts`. The `hosts` section includes hostnames or aliases (e.g. `testbed-node-0`), their IP addresses (e.g., for VPN connections, IPs starting with `192.186...`), and the user for login. If you are using the OSISM testbed, ensure the private key does not contain any extra strings like `EOF`. The keys must be 'clean' to avoid connection errors.
 
 #### Kubernetes
 
@@ -83,7 +83,7 @@ kubernetes:
   config: ./k8s/config
 ```
 
-The `kubernetes` section specifies the kubernetes configuration (e.g. if you use kubectl it is located in `~/.kube/config`) for Rookify's kubernetes library. Rookify needs to connect to the kubernetes cluster on the target systems in order to use Rook.
+The `kubernetes` section specifies the Kubernetes configuration (e.g. if you use `kubectl`, this is usually located in `~/.kube/config`) for Rookify's Kubernetes library. Rookify needs to connect to the Kubernetes cluster on the target systems to use Rook.
 
 ```yaml title="config.example.yaml"
 rook:
@@ -94,11 +94,14 @@ rook:
     image: quay.io/ceph/ceph:v18.2.1
 ```
 
-The `rook` sections requires some information about the Rook installation on the target system. Concerning the `cluster` Rookify needs to know the cluster-name and cluster-namespace. Rookify also needs to know the ceph version used by Rookify, i.e. the image version of the ceph container.
+The `rook` sections requires information about the Rook installation on the target system. For the `cluster`, Rookify needs the cluster name and namespace. Additionally, Rookify requires the Ceph version being used, i.e., the image version of the Ceph container.
 
-_Note_: Rookify does not install Rook for you. You need to provide a running Rook, i.e. a Rook Operator, on you target system.
+:::note
+  Rookify does not install Rook for you. You need to provide a running Rook installation, i.e. a Rook Operator, on your target system.
+:::
 
-_Note_: For OSISM specific migrations, Rookify needs to have some additional information, i.e. the respective labels for the rook resources:
+
+For OSISM-specific migrations, Rookify needs additional information, such as the respective labels for the Rook resources:
 
 ```yaml title="config.example.osism.yaml"
 rook:
@@ -131,6 +134,9 @@ migration_modules:
 - migrate_rgw_pools
 ```
 
-Rookify is designed to use a modular structure. It contains various modules to migrate parts of Ceph-Ansible to Rook. The `migration_modules` section specifies which modules need to be run for the migration. Rookify contains more modules, take a look at the [`src/rookify/module`](https://github.com/SovereignCloudStack/rookify/tree/main/src/rookify/modules) directory to see the ones that are currently implemented.
+Rookify uses a modular structure, allowing you to migrate various parts of Ceph-Ansible to Rook. The `migration_modules` section specifies which modules need to be executed for the migration. Rookify contains more modules — check the [`src/rookify/module`](https://github.com/SovereignCloudStack/rookify/tree/main/src/rookify/modules) directory to see the currently implemented modules.
 
-_NOTE_: Many modules are dependent of each other. This means that some modules will implicitly run other modules. For example: the `analyze_ceph` module specified above, will be run by all the modules. This means, that one does not need to specify it. It was added here only for reasons of clarity.
+:::note
+  Many modules depend on each other. For example, the `analyze_ceph` module will automatically run with all other modules, so 
+  there is no need to specify it. It’s included here for clarity.
+:::

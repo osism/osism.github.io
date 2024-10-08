@@ -3,30 +3,32 @@ sidebar_label: Rookify (technical preview)
 sidebar_position: 40
 ---
 
-# Rookify (technical preview)
+# Rookify (Technical Preview)
 
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment beforehand, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that all precautionary backups are taken, and any other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that precautionary backups are made, and all other necessary safety measures are in place.
 
 :::
 
-The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) includes a README.md that provides a condensed summary of the information covered here.
+For a condensed summary of the information covered here, refer to the [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify).
 
-## ssh-issues 
-
-
-**"Failed to load private key" **
+## SSH Issues 
 
 
-- make sure the id-rsa keys are "clean" and do not contain unexpected strings like "\<\<EOF". Possible solution: Clean the keys manually or call `ssh-keygen -p -N "" -f ssh.key` to convert and reformat the keyfile to the expected format.
+**"Failed to load private key"**
+
+- ensure the `id-rsa` keys are "clean" and do not contain unexpected strings like "\<\<EOF".
+- Solution: Clean the keys manually, or use the following command to reformat the keyfile: `ssh-keygen -p -N "" -f ssh.key`.
 
 
-**"too many authentications error"**
+**"Too many authentications error"**
 
-- Sometimes too many keys loaded are loaded by the ssh-agent. Possible solution: Switch off the ssh-agent on you machine. You can do this yourself or by allowing direnv ( `direnv allow` ) to use `.envrc`. 
+- This can occur if too many keys are loaded by the ssh-agent.
+- Solution: Disable the ssh-agent on your machine. You can do this manually or by allowing `direnv` to use `.envrc` with the command `direnv allow`. To install `direnv` on your machine refer to [Direnv's documentation](https://direnv.net/docs/installation.html)
 
-## frozen state
+## Frozen State
 
-- if the rookify process freezes, check your connections. In the OSISM testbed especially check the vpn-connection (in testbed epository try `make vpn-*`)
+- If the Rookify process freezes, check your connections.
+- In the OSISM testbed, ensure the VPN connection is active. For help to setup the VPN connection for the Testbed refer to [OSISM's documentation for testbed setup](https://osism.tech/docs/guides/other-guides/testbed/#vpn-access).

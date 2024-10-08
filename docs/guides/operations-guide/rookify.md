@@ -2,30 +2,30 @@
 sidebar_label: Rookify (technical preview)
 ---
 
-# Use Rookify: Migrate to Rook from Ceph Ansible (technical preview)
+# Use Rookify: Migrate to Rook from Ceph Ansible (Technical Preview)
 
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment beforehand, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that all precautionary backups are taken, and any other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that precautionary backups are made, and all other necessary safety measures are in place.
 
 :::
 
-The [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify) includes a README.md that provides a condensed summary of the information covered here.
+For a condensed summary of the information covered here, refer to the [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify).
 
-## Consider using a pickle file
+## Consider Using a Pickle File
 
-In order to have a trackable state of process you can add a pickle file. Specify this option in the `config.yaml`:
+To track the migration, you can add a pickle file. Specify this option in the `config.yaml`:
 
 ```yaml title="config.example.yaml"
 general:
   machine_pickle_file: data.pickle
 ```
 
-Now you will be able to view the state of progress by running `rookify --show-state`.
+You can then view the migration progress by running `rookify --show-state`.
 
 :::warning
-    Rookify will take data.pickle as a source of truth for its operations. If you want to start a clean migration, be sure to delete the file.
+    Rookify treats the pickle file as a source of truth for its operations. If you want to start a clean migration, ensure you delete the file first.
 :::
 
 ## Rookify CLI
@@ -33,36 +33,35 @@ Now you will be able to view the state of progress by running `rookify --show-st
 ### Run
 
 :::note
-    Rookify executes the preflight mode, i.e. `--dry-run`, per default.
+    By default, Rookify runs in preflight mode (`--dry-run`).
 :::
 
-Currently Rookify executes the preflight mode, i.e. `--dry-run`, per default. This means: if you run Rookify without any additional arguments, it will run all preflight checks of the modules and their (indirect) dependent modules as configured in `config.yaml`.
+Rookify runs in preflight mode by default, meaning it performs all preflight checks on the modules and their dependent modules, as configured in `config.yaml`, without executing the migration.
 
 ### --dry-run
 
 :::tip
-    Run preflight-mode to check if Rookify can connect to your target systems
+    Run preflight-mode to ensure Rookify can connect to your target systems.
 :::
 
-Rookify has a `preflight-mode` to check if basic commands and the connection to the target systems are working.
-You can always run `--dry-run` mode, without any danger that migration processes will be executed.
+Rookify's `preflight-mode` allows you to verify that basic commands and connections to the target systems are functioning correctly. Running `--dry-run` mode ensures no migration processes are executed.
 
 ### --help
 
-Run `--help` to see the various options the CLI provides.
+Run `rookify --help` to view the various CLI options available.
 
 ### --show
 
-Run `--show` if you used a pickel-file (see the configuration-guide concerning the general section). This will show the status of your migration process.
+Run `--show` to display the status of your migration process. Note that if you specified  a pickle file, Rookify will use it to determine the state of migration.
 
 ## Debugging and Testing
 
-If you suspect that something is not working in Rookify itself, you can start by setting logging to `DEBUG`.
-If that is not sufficient enough you could run the enclosed tests from the Rookify code itself.
+If you encounter issues with Rookify, you can start by setting the logging level to `DEBUG`.
+If further troubleshooting is needed, you can run the tests included in the Rookify code.
 
 ### Set logging to debug level
 
-Edit the `config.yaml` and set level to "DEBUG":
+Edit the `config.yaml` and set the logging level to "DEBUG":
 
 ```yaml title="config.example.yaml"
 logging:
@@ -72,11 +71,11 @@ logging:
     renderer: console # or: json
 ```
 
-You can also set the other formatting options, as indicated by the comments, for further options take a look a the documentation of [structlog](https://www.structlog.org/en/stable/standard-library.html).
+You can also customize other formatting options, as shown in the comments. For more details, refer to the [structlog](https://www.structlog.org/en/stable/standard-library.html).
 
 ### Run tests
 
-Make sure you can reach Rookify's code on your system. Then you can run the following for testing:
+To run tests on Rookify, ensure you have access to the Rookify code on your system. Then:
 
-1. run `make run-tests-locally` from the working directory of the Rookify repository. If you prefer to use a containerized setup, use `make run-tests`.
-2. run `.venv/bin/python -m pytest` from the virtual environment of you installation
+1. Run `make run-tests-locally` from the working directory of the Rookify repository. If you prefer a containerized setup, use `make run-tests`.
+2. Alternatively, run `.venv/bin/python -m pytest` from the virtual environment of your installation.
