@@ -32,11 +32,11 @@ Now you will be able to view the state of progress by running `rookify --show-st
 
 ### Run
 
-:::warning
-    Currenlty rookify executes per default
+:::note
+    Rookify executes the preflight mode, i.e. `--dry-run`, per default.
 :::
 
-Currenlty rookify executes per default. This means: if you run rookify like so `.venv/bin/rookify`, it will start the migration as configured in `config.yaml`.
+Currently rookify executes the preflight mode, i.e. `--dry-run`, per default. This means: if you run rookify without any additional arguments, it will run all preflight checks of the modules and their (indirect) dependent modules as configured in `config.yaml`.
 
 ### --dry-run
 
