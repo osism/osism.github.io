@@ -19,14 +19,14 @@ For a condensed summary of the information covered here, refer to the [Rookify G
 
 **"Failed to load private key"**
 
-- ensure the `id-rsa` keys are "clean" and do not contain unexpected strings like "\<\<EOF".
-- Solution: Clean the keys manually, or use the following command to reformat the keyfile: `ssh-keygen -p -N "" -f ssh.key`.
+- Ensure the `id-rsa` keys are "clean" and do not contain unexpected strings like "\<\<EOF".
+- Clean the keys manually, or use the following command to reformat the keyfile: `ssh-keygen -p -N "" -f ssh.key`.
 
 
 **"Too many authentications error"**
 
 - This can occur if too many keys are loaded by the ssh-agent.
-- Solution: Disable the ssh-agent on your machine. You can do this manually or by allowing `direnv` to use `.envrc` with the command `direnv allow`. To install `direnv` on your machine refer to [Direnv's documentation](https://direnv.net/docs/installation.html)
+- Disable the ssh-agent on your machine. You can do this manually or by allowing `direnv` to use `.envrc` with the command `direnv allow`. To install `direnv` on your machine refer to [Direnv's documentation](https://direnv.net/docs/installation.html)
 
 ## Frozen State
 
