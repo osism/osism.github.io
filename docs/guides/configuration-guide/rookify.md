@@ -133,4 +133,4 @@ migration_modules:
 
 Rookify is designed to use a modular structure. It contains various modules to migrate parts of Ceph-Ansible to Rook. The `migration_modules` section specifies which modules need to be run for the migration. Rookify contains more modules, take a look at the [`src/rookify/module`](https://github.com/SovereignCloudStack/rookify/tree/main/src/rookify/modules) directory to see the ones that are currently implemented.
 
-_NOTE_: Many modules are dependent of each other. This means that some models will implicitly run other modules. For example: the `analyze_ceph` module specified above, will be run by all the modules. This means, that one does not need to specify it. It was added here only for reasons of clearity.
+_NOTE_: Many modules are dependent of each other. This means that some modules will implicitly run other modules. For example: the `analyze_ceph` module specified above, will be run by all the modules. This means, that one does not need to specify it. It was added here only for reasons of clarity.
