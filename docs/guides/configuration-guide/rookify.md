@@ -83,7 +83,7 @@ kubernetes:
   config: ./k8s/config
 ```
 
-The `kubernetes` section specifies the kubernetes configuration (e.g. if you use kubectl it is located in `~/.kube/config`) for rookifies kubernetes library. Rookify needs to connect to the kubernetes cluster on the target systems in order to use Rook.
+The `kubernetes` section specifies the kubernetes configuration (e.g. if you use kubectl it is located in `~/.kube/config`) for Rookify's kubernetes library. Rookify needs to connect to the kubernetes cluster on the target systems in order to use Rook.
 
 ```yaml title="config.example.yaml"
 rook:

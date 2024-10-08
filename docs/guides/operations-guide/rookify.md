@@ -36,7 +36,7 @@ Now you will be able to view the state of progress by running `rookify --show-st
     Rookify executes the preflight mode, i.e. `--dry-run`, per default.
 :::
 
-Currently rookify executes the preflight mode, i.e. `--dry-run`, per default. This means: if you run rookify without any additional arguments, it will run all preflight checks of the modules and their (indirect) dependent modules as configured in `config.yaml`.
+Currently Rookify executes the preflight mode, i.e. `--dry-run`, per default. This means: if you run Rookify without any additional arguments, it will run all preflight checks of the modules and their (indirect) dependent modules as configured in `config.yaml`.
 
 ### --dry-run
 
@@ -76,7 +76,7 @@ You can also set the other formatting options, as indicated by the comments, for
 
 ### Run tests
 
-Make sure you can reach Rookifies code on you system. Then you can either:
+Make sure you can reach Rookify's code on your system. Then you can run the following for testing:
 
-1. run `make run-tests-locally` from the working directory of the rookify repository. If you prefer to use a containerized setup, use `make run-tests`.
+1. run `make run-tests-locally` from the working directory of the Rookify repository. If you prefer to use a containerized setup, use `make run-tests`.
 2. run `.venv/bin/python -m pytest` from the virtual environment of you installation
