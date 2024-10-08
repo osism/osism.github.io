@@ -22,7 +22,7 @@ general:
   machine_pickle_file: data.pickle
 ```
 
-Now you will be able to to view the state of progress by running `rookify --show-state`.
+Now you will be able to view the state of progress by running `rookify --show-state`.
 
 :::warning
     Rookify will take data.pickle as a source of truth for its operations. If you want to start a clean migration, be sure to delete the file.
