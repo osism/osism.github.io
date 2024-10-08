@@ -15,7 +15,7 @@ Nevertheless, it is **strongly advised** to test Rookify in a controlled environ
 
 :::
 
-Currenlty Rookify is best install it on your own machine and then connected through vpn to you target system (the one where Ceph-Ansible needs to be rookified ;) ).
+Currently it is recommended to install Rookify on your own machine and then connect through VPNs to you target system (the one where Ceph-Ansible needs to be rookified ;) ).
 
 Rookify runs `in place`, which means that there are no parallel nodes necesssary. As mentioned above, Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_ but infrastructures are complicated, so precautionary backups and safety measure are very much advised.
 
