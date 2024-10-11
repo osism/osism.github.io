@@ -6,7 +6,7 @@ sidebar_position: 20
 # Loadbalancer
 
 The settings of the following section rely on the mechanisms of Kolla-Ansible, 
-therefore it's a good idea to use the [upstream documenation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html) 
+therefore it's a good idea to use the [upstream documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html) 
 for finding out details which are not covered by this documentation.
 
 ## IP addresses & FQDNs
@@ -46,7 +46,7 @@ For this reason, we recommend that you define domains, obtain certificates, and 
 
 To enable TLS encryption the following steps are needed.
 
-1. Acticate tls encryption for both endpoints
+1. Activate tls encryption for both endpoints
 
   * To enable external TLS encryption:
 
@@ -67,7 +67,7 @@ To enable TLS encryption the following steps are needed.
    make ansible_vault_edit FILE=environments/kolla/certificates/haproxy.pem
    make ansible_vault_edit FILE=environments/kolla/certificates/haproxy-internal.pem
    ```
-4. Add the changesto the Git repository
+4. Add the changes to the Git repository
    ```
    git add environments/kolla/certificates/haproxy.pem \
      environments/kolla/certificates/haproxy-internal.pem \
@@ -93,7 +93,7 @@ which will be provided by your custom Certificate Authority:
 * the server certificate with private key
 * the CA certificate with any intermediate certificates
 
-The following procedure describes the prepration procedure for the CA, which is later followed
+The following procedure describes the preparation tasks for the CA, which is later followed
 by the general steps described above.
 
 1. Import custom CA
@@ -145,7 +145,7 @@ greatly simplifies the administration of TLS certificates.
 For a working Let's Encrypt configuration, the API endpoints (configured by `kolla_internal_fqdn` and `kolla_external_fqdn`) 
 must be accessible from the internet.
 
-1. Acticate Let's Encrypt tls encryption for both endpoints
+1. Activate Let's Encrypt tls encryption for both endpoints
 
    ```yaml title="environments/kolla/configuration.yml"
    enable_letsencrypt: "yes"
