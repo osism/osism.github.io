@@ -94,7 +94,7 @@ which will be provided by your custom Certificate Authority:
 * the CA certificate with any intermediate certificates
 
 The following procedure describes the preparation tasks for the CA, which is later followed
-by the general steps described above.
+by the [general procedure](#general-procedure) described above.
 
 1. Import custom CA
 
@@ -135,7 +135,7 @@ by the general steps described above.
    osism apply certificates
    ```
 
-5. Execute all steps in the general documentation above
+5. Execute all steps in the [general procedure](#general-procedure) above
 
 ### Generating TLS certificates with Let’s Encrypt
 
