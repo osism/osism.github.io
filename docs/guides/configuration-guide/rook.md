@@ -160,44 +160,71 @@ rook_cephobjectstores:
 Have a look at [CephFilesystem CRD Spec](https://rook.io/docs/rook/latest/CRDs/Shared-Filesystem/ceph-filesystem-crd/) for details on how to configure Cephfs.
 
 ```yaml title="environments/rook/configuration.yml"
-rook_cephfilesystem_default_name: cephfs
-rook_cephfilesystem_replicated_default_size: 3
-rook_cephfilesystem_erasurecoded_default_datachunks: 2
-rook_cephfilesystem_erasurecoded_default_codingchunks: 1
-rook_cephfilesystem_default_metadatapool_parameters_compression_mode: none
-rook_cephfilesystem_default_datapool_parameters_compression_mode: none
-rook_cephfilesystems:
-  - name: "{{ rook_cephfilesystem_default_name }}"
+rook_cephobjectstore_default_name: rgw
+rook_cephobjectstore_replicated_default_size: 3
+rook_cephobjectstore_erasurecoded_default_datachunks: 2
+rook_cephobjectstore_erasurecoded_default_codingchunks: 1
+rook_cephobjectstore_failuredomain: host
+rook_cephobjectstore_default_port: 8081
+rook_cephobjectstore_preservepoolsondelete: true
+rook_cephobjectstore_keystone_acceptedRoles: []
+  # - admin
+  # - member
+rook_cephobjectstore_keystone_implicitTenants: true
+rook_cephobjectstore_keystone_revocationInterval: 1200
+rook_cephobjectstore_keystone_serviceUserSecretName: ceph-rgw-usersecret
+rook_cephobjectstore_keystone_tokenCacheSize: 1000
+rook_cephobjectstore_keystone_url: ""
+rook_cephobjectstore_swift_accountInUrl: true
+rook_cephobjectstore_swift_urlPrefix: ""
+rook_cephobjectstore_swift_versioningEnabled: true
+rook_cephobjectstore_s3_authKeystone: true 
+rook_cephobjectstore_s3_enable: true
+# the following settings are belonging to the usersecret
+rook_cephobjectstore_keystone_identity_api_version: 3
+rook_cephobjectstores:
+  - name: "{{ rook_cephobjectstore_default_name }}"
     spec:
       metadataPool:
-        failureDomain: host
-        # The metadata pool spec must use replication.
+        failureDomain: "{{ rook_cephobjectstore_failuredomain }}"
         replicated:
-          size: "{{ rook_cephfilesystem_replicated_default_size }}"
-          requireSafeReplicaSize: true
-        parameters:
-          compression_mode: "{{ rook_cephfilesystem_default_datapool_parameters_compression_mode }}"
-          # target_size_ratio: ".5"
-      dataPools:
-        - failureDomain: host
-          # The data pool spec can use replication or erasure coding.
-          replicated:
-            size: "{{ rook_cephfilesystem_replicated_default_size }}"
-            requireSafeReplicaSize: true
-          # erasureCoded:
-          #   dataChunks: "{{ rook_cephfilesystem_erasurecoded_default_datachunks }}"
-          #   codingChunks: "{{ rook_cephfilesystem_erasurecoded_default_codingchunks }}"
-          name: data0
-          parameters:
-            compression_mode: "{{ rook_cephfilesystem_default_datapool_parameters_compression_mode }}"
-            # target_size_ratio: ".5"
-      metadataServer:
-        activeCount: "{{ rook_mds_count }}"
-        activeStandby: true
-        resources: "{{ rook_resources_cephfilesystem }}"
-        priorityClassName: system-cluster-critical"
-        placement: "{{ rook_placement_cephfilesystem }}"
-        annotations: "{{ rook_annotations_cephfilesystem }}"
+          size: "{{ rook_cephobjectstore_replicated_default_size }}"
+        # erasureCoded:
+        #   dataChunks: "{{ rook_cephobjectstore_erasurecoded_default_datachunks }}"
+        #   codingChunks: "{{ rook_cephobjectstore_erasurecoded_default_codingchunks }}"
+      dataPool:
+        failureDomain: "{{ rook_cephobjectstore_failuredomain }}"
+        replicated:
+          size: "{{ rook_cephobjectstore_replicated_default_size }}"
+        # erasureCoded:
+        #   dataChunks: "{{ rook_cephobjectstore_erasurecoded_default_datachunks }}"
+        #   codingChunks: "{{ rook_cephobjectstore_erasurecoded_default_codingchunks }}"
+      preservePoolsOnDelete: "{{ rook_cephobjectstore_preservepoolsondelete }}"
+      gateway:
+        port: "{{ rook_cephobjectstore_default_port }}"
+        resources: "{{ rook_resources_cephobjecstore }}"
+        # securePort: 443
+        # sslCertificateRef:
+        instances: 1
+        priorityClassName: system-cluster-critical
+        placement: "{{ rook_placement_cephobjectstore }}"
+        annotations: "{{ rook_annotations_cephobjecstore }}"
+      auth:
+        keystone:
+          acceptedRoles: "{{ rook_cephobjectstore_keystone_acceptedRoles }}"
+          implicitTenants: "{{ rook_cephobjectstore_keystone_implicitTenants }}"
+          revocationInterval: "{{ rook_cephobjectstore_keystone_revocationInterval }}"
+          serviceUserSecretName: "{{ rook_cephobjectstore_keystone_serviceUserSecretName }}"
+          tokenCacheSize: "{{ rook_cephobjectstore_keystone_tokenCacheSize }}"
+          url: "{{ rook_cephobjectstore_keystone_url }}"
+        protocols:
+          swift:
+            accountInUrl: "{{ rook_cephobjectstore_swift_accountInUrl }}"
+            urlPrefix: "{{ rook_cephobjectstore_swift_urlPrefix }}"
+            versioningEnabled: "{{ rook_cephobjectstore_swift_versioningEnabled }}" 
+          s3:
+            authKeystone: "{{ rook_cephobjectstore_s3_authKeystone }}"
+            enable: "{{ rook_cephobjectstore_s3_enable }}"
     storageClass:
       enabled: false
 ```

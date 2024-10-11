@@ -94,12 +94,6 @@ When using rook, all services are deployed via a single helm chart and at the sa
 
 Deployment of the Ceph RGW Service is enabled by default in rook. This is done by creating a default [CephObjectStore CRD](https://rook.io/docs/rook/latest-release/CRDs/Object-Storage/ceph-object-store-crd/). How the Ceph RGW service can be deployed and integrated into OpenStack is described here.
 
-:::info
-
-OpenStack integration between Keystone/Swift and Rook is currently missing upstream in Rook. Please have a look at [#1027](https://github.com/orgs/SovereignCloudStack/projects/18/views/1?layout=board&pane=issue&itemId=63889060) to get the current status of the integration in OSISM.
-
-:::
-
 ## Change node labels
 
 In case you decided to move workloads to different nodes and changed the inventory groups e.g. like this:
