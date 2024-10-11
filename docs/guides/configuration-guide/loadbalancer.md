@@ -40,7 +40,8 @@ stored in the Openstack databases, and in the case of self-signed certificates, 
 As a result, the involved Ansible Plays must at least be executed in the correct order, and not all Ansible Plays can handle all possible configuration transitions on their own.
 Therefore, in some cases, manual adjustments must be made to the systems.
 
-For this reason, we recommend that you define domains, obtain certificates, and perform configurations in advance.
+For this reason, we recommend that you define and configure the specific details of domains/hostnames and tls-certificates
+before running the first rollout procedures of your installation.
 
 ## General procedure
 
