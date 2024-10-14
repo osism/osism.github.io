@@ -5,8 +5,8 @@ sidebar_position: 20
 
 # Loadbalancer
 
-The settings of the following section rely on the mechanisms of Kolla-Ansible, 
-therefore it's a good idea to use the [upstream documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html) 
+The settings of the following section rely on the mechanisms of Kolla-Ansible,
+therefore it's a good idea to consult the [upstream documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html)
 for finding out details which are not covered by this documentation.
 
 ## IP addresses & FQDNs
@@ -30,18 +30,20 @@ hosts_additional_entries:
 ## TLS certificates
 
 :::warning
-To avoid unnecessary additional work and problems, it is recommended that you configure TLS with the intended target
-configuration of the specific environment during the initial rollout process.
+To avoid unnecessary additional work and debugging, it is recommended that you configure TLS with the intended target
+configuration of the specific environment before executing the initial rollout procedures.
 :::
 
-For example: Changes to the configuration of TLS or the fully qualified domain names (FQDNs) will result in new URLs (with and without the https prefix)
-stored in the Openstack databases, and in the case of self-signed certificates, the CA certificate must be distributed to all participating clients.
+Changes to the configuration of TLS (i.e. enable or disable) or fully qualified domain names (FQDNs) will
+result in new URLs (with and without the https prefix).
+These addresses are often stored in the Openstack database on initial deployment and cannot
+be updated by simply modifying the configuration repository and performing an additional rollout.
 
-As a result, the involved Ansible Plays must at least be executed in the correct order, and not all Ansible Plays can handle all possible configuration transitions on their own.
-Therefore, in some cases, manual adjustments must be made to the systems.
+In the case of self-signed certificates, the CA certificate must be distributed to all participating
+https clients in the correct dependency order and in a manner appropriate to the associated Openstack service.
 
-For this reason, we recommend that you define and configure the specific details of domains/hostnames and tls-certificates
-before running the first rollout procedures of your installation.
+As a result, at a minimum, the involved Ansible Plays must be run in the appropriate order, and not all Ansible Plays
+are designed to to handle all possible configuration transitions on their own.
 
 ## General procedure
 
