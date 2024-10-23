@@ -11,6 +11,10 @@ does not result in the execution being aborted. In this case, the logs can also 
 
 ## List all plays
 
+The `osism apply` command can be used to list all integrated playbooks and their associated
+environments. Custom plays that have been added in the configuration repository are not visible
+in this list.
+
 ```
 $ osism apply
 2023-09-30 10:09:25 | INFO     | No role given for execution. The roles listed in the table can be used.
