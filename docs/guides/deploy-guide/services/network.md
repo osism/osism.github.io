@@ -12,7 +12,7 @@ osism apply -a pull openvswitch
 osism apply openvswitch
 ```
 
-## OVN (if used)
+## OVN
 
 In `environments/kolla/configuration.yml` the parameter `neutron_plugin_agent` is set to
 `ovn` if OVN is used as a network plugin. Otherwise the network plugin is set to `openvswitch`.

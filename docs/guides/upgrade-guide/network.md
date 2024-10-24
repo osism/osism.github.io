@@ -12,7 +12,7 @@ osism apply -a pull openvswitch
 osism apply -a upgrade openvswitch
 ```
 
-## OVN (if used)
+## OVN
 
 Before the upgrade of OVN, the upgrade of Open vSwitch must already have been done.
 
