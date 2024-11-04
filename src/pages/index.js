@@ -42,7 +42,6 @@ export default function Home() {
   return (
     <Layout
       description="<Translate description='Homepage pagetitle'>homepage.pagetitle</Translate>">
-      <Announcements />
       <HomepageHeader />
       <main>
         <Discover />
