@@ -26,6 +26,7 @@ For a condensed summary of the information covered here, refer to the [Rookify G
 - A functioning Ceph cluster deployed using traditional methods.
 - Access to a Kubernetes cluster with sufficient resources to host the migrated Ceph cluster.
 - Kubernetes nodes must be deployed on at least the OSD nodes.
+- Monitor and OSD daemons should stay in place. Former to ensure that the Ceph endpoints do not change during migration, the later ones to have access to the underlying hardware.
 - Rook operator version 1.13 or higher installed on the Kubernetes cluster.
 - `radoslib` version 2.0.0 installed.
 - For a _dockerized setup_, `docker` and `docker compose` are required.
