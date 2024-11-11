@@ -8,7 +8,7 @@ sidebar_position: 31
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Addition ure that precautionary backups are made, and all other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally ensure that precautionary backups are made and all other necessary safety measures are in place.
 
 :::
 
@@ -16,7 +16,7 @@ For a condensed summary of the information covered here, refer to the [Rookify G
 
 ## Config.yaml
 
-The primary configuration file for Rookify is `config.yaml`. The repository includes an example file for general use, as well as one specifically tailored for the OSISM testbed setup:
+The primary configuration file for Rookify is `config.yaml`. The repository includes an example file for general use, as well as one specifically tailored for OSISM based setups:
 
 - [config.example.yaml](https://github.com/SovereignCloudStack/rookify/blob/main/config.example.yaml)
 - [config.example.osism.yaml](https://github.com/SovereignCloudStack/rookify/blob/main/config.example.osism.yaml)
@@ -30,7 +30,7 @@ general:
   machine_pickle_file: data.pickle
 ```
 
-The `general` section allows for the optional definition of a pickle file, which saves the state of the migration as serialized objects on disk. The pickle filed can be named as desired.
+The `general` section allows for the optional definition of a pickle file, which saves the state of the migration as serialized objects on disk. The pickle file can be named as desired.
 
 #### Logging
 

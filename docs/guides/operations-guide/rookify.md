@@ -7,7 +7,7 @@ sidebar_label: Rookify (technical preview)
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that precautionary backups are made, and all other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally ensure that precautionary backups are made and all other necessary safety measures are in place.
 
 :::
 
@@ -22,7 +22,7 @@ general:
   machine_pickle_file: data.pickle
 ```
 
-You can then view the migration progress by running `rookify --show-state`.
+You can then view the migration progress by running `rookify --show-states`.
 
 :::warning
     Rookify treats the pickle file as a source of truth for its operations. If you want to start a clean migration, ensure you delete the file first.
@@ -44,15 +44,23 @@ Rookify runs in preflight mode by default, meaning it performs all preflight che
     Run preflight-mode to ensure Rookify can connect to your target systems.
 :::
 
-Rookify's `preflight-mode` allows you to verify that basic commands and connections to the target systems are functioning correctly. Running `--dry-run` mode ensures no migration processes are executed.
+Rookify's `preflight-mode` allows you to verify that basic commands and connections to the target systems are functioning correctly. Running `--dry-run` or `-d` mode ensures no migration processes are executed.
+
+### --migrate
+
+:::tip
+    Ensure that you use the correct `data.pickle` file. If you used the pickle file for other setups previously, be sure to delete it.
+:::
+
+Rookify's `execution-mode` allows you to run the migration. This a point of no (easy) return. Be sure to check all your configurations. Run `--migrate` or `-m` to execute the migration process.
 
 ### --help
 
 Run `rookify --help` to view the various CLI options available.
 
-### --show
+### --show-states
 
-Run `--show` to display the status of your migration process. Note that if you specified  a pickle file, Rookify will use it to determine the state of migration.
+Run `--show-states` or `-s` to display the status of your migration process. Note that if you specified  a pickle file, Rookify will use it to determine the state of migration.
 
 ## Debugging and Testing
 

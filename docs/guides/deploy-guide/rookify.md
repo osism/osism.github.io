@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 :::warning
 
 Rookify is developed to migrate from Ceph-Ansible to Rook _in place_ and _without downtime_.
-Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally, ensure that precautionary backups are made, and all other necessary safety measures are in place.
+Nevertheless, it is **strongly advised** to test Rookify in a controlled environment first, such as the [OSISM testbed](https://github.com/osism/testbed). Additionally ensure that precautionary backups are made and all other necessary safety measures are in place.
 
 :::
 
