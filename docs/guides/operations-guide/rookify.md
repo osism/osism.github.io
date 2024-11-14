@@ -52,7 +52,7 @@ Rookify's `preflight-mode` allows you to verify that basic commands and connecti
     Ensure that you use the correct `data.pickle` file. If you used the pickle file for other setups previously, be sure to delete it.
 :::
 
-Rookify's `execution-mode` allows you to run the migration. This a point of no (easy) return. Be sure to check all your configurations. Run `--migrate` or `-m` to execute the migration process.
+Rookify's `execution-mode` allows you to run the migration. This is a point of no (easy) return. Be sure to check all your configurations. Run `--migrate` or `-m` to execute the migration process.
 
 ### --help
 
