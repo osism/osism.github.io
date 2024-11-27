@@ -48,3 +48,34 @@ testbed-node-0>>>
   Solution:
 
   Check your Ceph keyfiles. Probably a missing newline at the EOF.
+
+## Cinder volume create failure
+
+* Problem: Volume creation is stuck after creation of the database object with no host assigned.
+
+  Solution:
+
+  Database objects are created by the api service for valid request while the host is assigned by the scheduler.
+
+  * Check the scheduler logs for errors
+  * If there is nothing wrong with the scheduler itself, check the communication between the services via oslo.messaging
+    Usually this is done via rabbitmq:
+    * Check cluster status on every node for status, alarms and network partitions
+      ```
+      docker exec rabbitmq rabbitmqctl cluster_status
+      ```
+    * Check rabbitmq logs for errors
+    * Check rabbitmq queues for errors or accumulated messages
+      ```
+      docker exec rabbitmq rabbitmqctl list_queues name type state consumers messages | grep -E '^cinder'
+      ```
+   * If everything seems fine check network connectivity to rule out network issues
+     ```
+     osism validate kolla-connectivity
+     ```
+   * If networking is fine then as a last resort a reset of rabbitmq may be considered
+     Beware that this will destroy rabbitmq state which may result in inconsitent resource states
+     ```
+     osism apply rabbitmq-reset-state
+     ```
+
