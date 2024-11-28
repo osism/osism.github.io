@@ -94,11 +94,32 @@ When using rook, all services are deployed via a single helm chart and at the sa
 
 Deployment of the Ceph RGW Service is enabled by default in rook. This is done by creating a default [CephObjectStore CRD](https://rook.io/docs/rook/latest-release/CRDs/Object-Storage/ceph-object-store-crd/). How the Ceph RGW service can be deployed and integrated into OpenStack is described here.
 
-:::info
+In the `environments/rook/configuration.yml` file you have to adapt accordingly to your environment at least like shown below:
 
-OpenStack integration between Keystone/Swift and Rook is currently missing upstream in Rook. Please have a look at [#1027](https://github.com/orgs/SovereignCloudStack/projects/18/views/1?layout=board&pane=issue&itemId=63889060) to get the current status of the integration in OSISM.
+```yaml title="environments/rook/configuration.yml"
+rook_cephconfig:
+  client.rgw.rgw.a:
+    rgw_keystone_verify_ssl: "false"
+    rgw_verify_ssl: "false"
+## keystone
+rook_cephobjectstore_keystone_acceptedRoles:
+  - admin
+  - member
+rook_cephobjectstore_keystone_implicitTenants: "true"
+rook_cephobjectstore_keystone_url: "https://api-int.testbed.osism.xyz:5000"
+rook_cephobjectstore_swift_urlPrefix: "swift"
+## keystone user
+rook_cephobjectstore_keystone_auth_type: "password"
+rook_cephobjectstore_keystone_project_domain_name: "Default"
+rook_cephobjectstore_keystone_project_name: "service"
+rook_cephobjectstore_keystone_user_domain_name: "Default"
+rook_cephobjectstore_keystone_username: "ceph_rgw"
+````
+As well as in the `environments/rook/secrets.yml` file:
 
-:::
+```yaml title="environments/rook/secrets.yml"
+rook_cephobjectstore_keystone_passwor: supersecretpassword
+````
 
 ## Change node labels
 
