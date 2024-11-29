@@ -125,17 +125,6 @@ const FeatureList = [
       </>
     ),
   },
-  {
-    title: (<Translate description="Proxmox title">module.proxmox.title</Translate>),
-    name: (<>Proxmox VE</>),
-    linktarget: "/docs/guides/concept-guide/components/proxmox",
-    Svg: require('@site/static/img/logo-proxmox.svg').default,
-    description: (
-      <>
-        <Translate description="Proxmox description">module.proxmox.description</Translate>
-      </>
-    ),
-  },
 ];
 
 function Feature({Svg, title, description, name, linktarget}) {
