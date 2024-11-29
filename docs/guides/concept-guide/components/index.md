@@ -16,4 +16,3 @@ sidebar_position: 10
 * [Privileged Access Management (PAM) to all infrastructure with Teleport](./teleport)
 * [Logging, Monitoring & Telemetry with Prometheus & Grafana](./prometheus)
 * [Realtime insights with Netdata](./netdata)
-* [Simple virtualization & containerization with Proxmox VE](./proxmox)
