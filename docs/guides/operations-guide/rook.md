@@ -1,16 +1,29 @@
 ---
-sidebar_label: Ceph
+sidebar_label: Ceph via Rook (technical preview)
 ---
 
-# Ceph
+# Ceph via Rook (technical preview)
+
+:::warning
+
+This is a technical preview and not recommended for production use yet. This whole
+document has to be reworkded with more rook like handling. Do not take it for
+granted yet.
+
+:::
 
 ## Where to find docs
+
+The official Rook documentation starts here https://rook.io/docs/rook/latest-release/Getting-Started/intro/
+
+Some sections to point out are:
+  - [Rook Common Issues Documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/common-issues/)
+  - [Rook Ceph Common Issues Documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/ceph-common-issues/)
 
 The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/operations/
 
 It is **strongly advised** to use the documentation for the version being used.
 
-* Pacific - https://docs.ceph.com/en/pacific/rados/operations/
 * Quincy - https://docs.ceph.com/en/quincy/rados/operations/
 * Reef - https://docs.ceph.com/en/reef/rados/operations/
 
@@ -25,6 +38,7 @@ as close to your real workload scenario as possible.
 
 :::
 
+
 ## Advice on Ceph releases
 
 The current Ceph releases and their support status can be found on https://docs.ceph.com/en/latest/releases/
@@ -38,6 +52,38 @@ unless you really, really now what you're doing and can live with a possible cat
 Be **very** conservative about what version you run on production systems.
 
 Shiny new features aren't worth the risk of total or partial data loss/corruption.
+
+## Troubleshooting
+
+Please have a look at the [Rook Troubleshooting documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/ceph-toolbox/).
+
+The Rook toolbox is available via the `ceph` command on the manager node, after you deployed the wrapper via `osism apply cephclient`. You have to make sure the correct [Configuration Options for the Rook Ceph Client Wrapper](../configuration-guide/rook.md#client) are net.
+
+## Monitoring
+
+### Dashboard
+
+* https://rook.io/docs/rook/latest/Storage-Configuration/Monitoring/ceph-dashboard/
+
+The password is stored in the secret `rook-ceph-dashboard-password`.
+
+```
+kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+```
+
+## Updating
+
+### Rook Upgrades
+
+Please have a look at the [Rook Upgrades documentation](https://rook.io/docs/rook/latest-release/Upgrade/rook-upgrade/). Take note of update instructions specific to your version.
+
+Usually you can simply update by bumping the `rook_operator_image_tag` ansible variable and applying `osism apply rook-operator`.
+
+### Ceph Upgrades
+
+Please have a look at the [Rook Ceph Upgrades documentation](https://rook.io/docs/rook/latest-release/Upgrade/ceph-upgrade/). Take note of update instructions specific to your version.
+
+Usually you can simply update by bumping the `rook_ceph_image_tag` ansible variable and applying `osism apply rook`.
 
 ## General maintenance
 
@@ -291,154 +337,7 @@ at least perform a blanking pass on HDDs with a tool like nwipe.
 
 ## OSD maintenance tasks
 
-### Locate a specific OSD in the cluster
-
-```
-$ ceph osd find osd.<ID>
-```
-
-### Get OSD metadata (global and single OSD)
-
-```
-$ ceph osd metadata
-$ ceph osd metadata osd.<ID>
-```
-
-Interesting fields:
-
-* bluefs_db_rotational
-* bluefs_dedicated_db
-* bluefs_dedicated_wal
-* bluefs_wal_rotational
-* bluestore_bdev_rotational
-* device_ids
-* device_paths
-* devices
-* hostname
-* osd_objectstore
-* rotational
-
-### Add a new OSD
-
-1. Prepare the configuration for the new OSD first. Details on adding the configuration
-   for a new OSD in the [Ceph configuration guide](../configuration-guide/ceph/#add-a-new-osd).
-
-2. Deploy the new OSD service on `<nodename>`.
-
-   ```
-   osism apply ceph-osds -l <nodename> -e ceph_handler_osds_restart=false
-   ```
-
-### Replace a defect OSD
-
-### Remove a OSD
-
-As with ‘Remove a single OSD node’. Except that the steps are only executed
-for a single OSD and the node is not removed from the CRUSH map and the inventory.
-Only the entries relating to the removed OSD are removed from the host vars.
-
-#### Manual way
-
-```
-$ ceph osd crush reweight osd.<ID> 0.0
-# Wait for rebalance to complete...
-$ ceph osd out osd.<ID>
-# systemctl stop ceph-osd@<ID>
-# systemctl disable ceph-osd@<ID>
-$ ceph osd purge osd.<ID> --yes-i-really-mean-it
-```
-
-The LV and VG defined in the inventory for this OSD must also be removed. The
-OSD itself should be wiped.
-
-### Remove a single OSD node
-
-1. Get all OSDs  of the node
-
-   ```
-   $ ceph osd tree
-   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
-   -1         0.11691  root default
-   -3         0.03897      host testbed-node-0
-    0    hdd  0.01949          osd.0                up   1.00000  1.00000
-    4    hdd  0.01949          osd.4                up   1.00000  1.00000
-   -5         0.03897      host testbed-node-1
-    1    hdd  0.01949          osd.1                up   1.00000  1.00000
-    3    hdd  0.01949          osd.3                up   1.00000  1.00000
-   -7         0.03897      host testbed-node-2
-    2    hdd  0.01949          osd.2                up   1.00000  1.00000
-    5    hdd  0.01949          osd.5                up   1.00000  1.00000
-   ```
-
-2. Reduce the weighting of all OSDs on the node to 0. Do this for each OSD
-   in a row and wait after each adjustment until the Ceph cluster is balanced.
-   Depending on how large the Ceph cluster and the individual OSDs are, this
-   may take some time.
-
-   ```
-   $ ceph osd crush reweight osd.2 0.0
-   $ ceph osd crush reweight osd.5 0.0
-   ```
-
-   The Ceph OSDs that are to be removed then have a weight of 0.
-
-   ```
-   $ ceph osd tree
-   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
-   -1         0.07794  root default
-   -3         0.03897      host testbed-node-0
-    0    hdd  0.01949          osd.0                up   1.00000  1.00000
-    4    hdd  0.01949          osd.4                up   1.00000  1.00000
-   -5         0.03897      host testbed-node-1
-    1    hdd  0.01949          osd.1                up   1.00000  1.00000
-    3    hdd  0.01949          osd.3                up   1.00000  1.00000
-   -7               0      host testbed-node-2
-    2    hdd        0          osd.2                up   1.00000  1.00000
-    5    hdd        0          osd.5                up   1.00000  1.00000
-   ```
-
-3. Remove the OSDs and everything that belongs to them from the node.
-   This is a disruptive action that cannot be undone. The devices used
-   are also reset.
-
-   ```
-   $ osism apply ceph-shrink-osd -e ireallymeanit=yes -e osd_to_kill=2,5
-   ```
-
-   All OSDs were removed.
-
-   ```
-   $ ceph osd tree
-   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
-   -1         0.07794  root default
-   -3         0.03897      host testbed-node-0
-    0    hdd  0.01949          osd.0                up   1.00000  1.00000
-    4    hdd  0.01949          osd.4                up   1.00000  1.00000
-   -5         0.03897      host testbed-node-1
-    1    hdd  0.01949          osd.1                up   1.00000  1.00000
-    3    hdd  0.01949          osd.3                up   1.00000  1.00000
-   -7               0      host testbed-node-2
-   ```
-
-4. Remove the node from the CRUSH map.
-
-   ```
-   $ ceph osd crush remove testbed-node-2
-   removed item id -7 name 'testbed-node-2' from crush map
-   ```
-
-5. Remove the node from all Ceph groups in the inventory.
-
-6. Remove all Ceph-specific parameters from the host vars of the node from the
-   inventory
-
-### Remove an OSD (temporarily e.g. when replacing a broken disk)
-
-```
-$ ceph osd out osd.<ID>
-# systemctl stop ceph-osd@<ID>
-# systemctl disable ceph-osd@<ID>
-```
+Please have a look at the [Rook Ceph OSD Management documentation](https://rook.io/docs/rook/latest-release/Storage-Configuration/Advanced/ceph-osd-mgmt/.)
 
 ### Disable backfills/recovery completely
 
@@ -554,11 +453,17 @@ $ ceph osd crush rule dump
 
 ### Get autoscaler status
 
+Autoscaler is enabled by default in a Rook Ceph cluster.
+
 ```
 $ ceph osd pool autoscale-status
 ```
 
 ### Create a replicated pool
+
+This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../configuration-guide/rook.md#extra-pool--cephblockpool-crd).
+
+It also can be done by hand but Rook will not know about the pool in this case.
 
 ```
 $ ceph osd pool create <pool_name> <pg_num> <pgp_num> replicated [<crush_rule_name>]
@@ -577,26 +482,23 @@ Typical application names are: rbd, rgw, cephfs
 
 ### Delete a pool
 
+This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../configuration-guide/rook.md#extra-pool--cephblockpool-crd).
+
+It also can be done by hand but Rook will not know about the pool in this case.
+
 :::warning
 
 This will delete all data in that pool. There is no undo/undelete.
 
 :::
 
-```
-$ ceph osd pool delete <pool_name> <pool_name> --yes-i-really-really-mean-it
-```
+### Set number of PGs for a pool
 
 :::note
 
-In order to be able to delete pools, it has to be enabled on the monitors
-by setting the ``mon_allow_pool_delete`` flag to true. Default is false.
-
-See: https://docs.ceph.com/en/latest/rados/configuration/mon-config-ref
+PG autoscaling is enabled by default in Rook managed Ceph Clusters.
 
 :::
-
-### Set number of PGs for a pool
 
 If no autoscaling of PGs is used, it is very important to adapt the PGs per pool to the
 real world when operating a Ceph cluster. If, for example, OSDs are exchanged, added, new
@@ -642,224 +544,13 @@ or anything else that the new CRUSH rule specifies.
 
 ## Advanced topics
 
-### Validating Ceph using OSISM playbooks
-
-For Ceph, special playbooks were added to validate the deployment status of
-the OSD, MON and MGR services. The commands for use are `osism validate ceph-osds`,
-`osism validate ceph-mons`, and `osism validate ceph-mgrs`.
-
-These playbooks will validate that the deployed Ceph environment matches 
-the configuration and is overall in a healthy state. The playbooks will 
-generate report files in JSON format on the first manager node in `/opt/reports/validator`.
-
-### Shutdown a Ceph cluster
-
-In order to fully shutdown a Ceph cluster safely, you first do the following steps:
-
-:::warning
-
-Take GOOD NOTES of the unit names and OSD IDs running on each node.
-You will need them to restart the cluster later.
-
-:::
-
-1. Stop the workload that is using the cluster
-
-   This will vary depending on your environment and is not covered here.
-
-2. Pause/Stop operations on the cluster by setting flags
-
-   ```
-   $ ceph osd set noout
-   $ ceph osd set nobackfill
-   $ ceph osd set norecover
-   $ ceph osd set norebalance
-   $ ceph osd set nodown
-   $ ceph osd set pause
-   ```
-3. Stop and disable the ``radosgw`` services on all nodes (on each rgw node) (if RGW is used)
-
-   Get the name of the unit (globs not supported for disable) and
-   make a note of the unit name for that node:
-
-   ```
-   # systemctl | grep ceph-radosgw
-   ```
-
-   Then disable and stop the unit:
-   ```
-   # systemctl disable --now ceph-radosgw@<name>.service
-   ```
-
-4. Stop all CephFS file systems (if CephFS is used)
-
-   List all Ceph file systems
-
-   ```
-   $ ceph fs ls
-   ```
-
-   For each CephFS do:
-
-   ```
-   $ ceph fs <file system name> down true
-   ```
-
-5. After that disable and stop all ``ceph-mds`` services on all nodes (do this on each node)
-
-   Get the name of the unit (globs not supported for disable) and
-   make a note of the unit name for that node:
-
-   ```
-   # systemctl | grep ceph-mds
-   ``` 
-
-   ```
-   # systemctl disable --now ceph-mds@<unit>.service
-   ```
-
-6. Stop and disable the ``ceph-mgr`` services on all nodes (do this on each node)
-
-   Get the name of the unit (globs not supported for disable) and
-   make a note of the unit name for that node:
-
-   ```
-   # systemctl | grep ceph-mgr
-   ```
-
-   ```
-   # systemctl disable --now ceph-mgr@<unit>.service
-   ```
-
-7. Stop and disable the ``ceph-osd`` services on all nodes (do this on each node)
-
-   Get the names of the units (globs not supported for disable) and
-   make a note of the unit names for that node (best to save it to a file):
-
-   ```
-   # systemctl | grep ceph-osd
-   ```
-
-   For each OSD unit execute:
-
-   ```
-   # systemctl disable ceph-osd@<osd-id>.service
-   ```
-
-   Stop all OSDs at once:
-
-   ```
-   # systemctl stop ceph-osd\*.service
-   ```
-
-8. Finally stop the ``ceph-mon`` services on all nodes (do this on each node)
-
-   Get the name of the unit (globs not supported for disable) and
-   make a note of the unit name for that node:
-
-   ```
-   # systemctl | grep ceph-mon
-   ```
-
-   ```
-   # systemctl disable --now ceph-mon@<unit>.service
-   ```
-
-### Restart a Ceph cluster after manual shutdown
-
-:::warning
-
-You will need the notes taken during shutdown of the unit names.
-It **can** be done without, but then it'll be way more work finding out the names.
-
-:::
-
-In order to restart a Ceph cluster after performing a manual shutdown like described
-in the section above, you do the following:
-
-1. Enable & start the ``ceph-mon`` services on all nodes (do this on each node)
-
-   ```
-   # systemctl enable --now ceph-mon@<unit-name>.service
-   ```
-
-2. Enable & start the ``ceph-osd`` services on all nodes (do this on each node)
-
-   For each Ceph OSD on that node do:
-
-   ```
-   # systemctl enable --now ceph-osd@<osd-id>.service
-   ```
-
-   Depending on the number of OSDs on that node it can take a while.
-
-3. Enable & start the ``ceph-mgr`` services on all nodes (do this on each node)
-
-   ```
-   # systemctl enable --now ceph-mgr@<unit-name>.service
-   ```
-
-4. Check the status of your cluster and wait for all OSDs to come online
-
-   You can watch the status periodically by running:
-
-   ```
-   $ watch ceph -s
-   ```
-
-   You should wait until all OSDs are up + in again, before removing flags.
-
-5. Remove flags to unpause operations
-
-   ```
-   $ ceph osd unset pause
-   $ ceph osd unset nodown
-   $ ceph osd unset noout
-   $ ceph osd unset nobackfill
-   $ ceph osd unset norecover
-   $ ceph osd unset norebalance
-   ```
-
-6. Wait for cluster to resume operations
-
-   See step #4 of this SOP.
-   Now you wait until the cluster seems "happy enough" to accept clients.
-   (i.e. rebalancing finished etc.)
-   Maybe it will complain about MDS being down, but that's normal for now.
-
-7. Enable & start the ``ceph-mds`` services on each node (if CephFS is used)
-
-   ```
-   # systemctl enable --now ceph-mds@<unit>.service
-   ```
-
-8. Start CephFS file systems again
-
-   List all Ceph file systems
-
-   ```
-   $ ceph fs ls
-   ```
-
-   For each CephFS do:
-
-   ```
-   $ ceph fs <file system name> down false
-   ```
-
-9. Enable & start the ``radosgw`` services on each node (if RGW is used)
-
-   ```
-   # systemctl enable --now ceph-radosgw@<name>.service
-   ```
-
 ## Performance benchmark
 
 ```
 # apt-get install -y fio
 ```
 
-```bash
+```
 #!/usr/bin/env bash
 
 BENCH_DEVICE="$2"

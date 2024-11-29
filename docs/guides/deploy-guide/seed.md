@@ -28,7 +28,7 @@ the seed node.
 ## Install required packages
 
 ```
-sudo apt-get install git python3-pip python3-virtualenv sshpass
+sudo apt-get install git python3-pip python3-virtualenv sshpass libssh-dev
 ```
 
 ## Get a copy of the configuration repository

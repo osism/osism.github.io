@@ -16,7 +16,7 @@ function Announcements() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <div className="container" style={{"text-align": "center", "padding-top": "2em", "padding-bottom": "2em", "font-size": "1em"}}>
-      🎉️ <b><a href="https://osism.tech/docs/release-notes/osism-7#705-20240524">OSISM 7.0.5 (20240524)</a> is out!</b> 🥳️
+      🎉️ <b><a href="https://osism.tech/docs/release-notes/osism-7#713-20240908">OSISM 7.1.3 (20240908)</a> is out!</b> 🥳️
     </div>
   );
 }
@@ -42,7 +42,6 @@ export default function Home() {
   return (
     <Layout
       description="<Translate description='Homepage pagetitle'>homepage.pagetitle</Translate>">
-      <Announcements />
       <HomepageHeader />
       <main>
         <Discover />

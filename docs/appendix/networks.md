@@ -10,6 +10,7 @@ sidebar_label: Networks
 | `openstackclient_network`          | `172.31.100.16/28`  |
 | `phpmyadmin_network`               | `172.31.100.32/28`  |
 | `adminer_network`                  | `172.31.100.64/28`  |
+| `zabbix_network`                   | `172.31.100.112/28` |
 | `openstack_health_monitor_network` | `172.31.100.160/28` |
 | `netbox_network`                   | `172.31.100.176/28` |
 | `homer_network`                    | `172.31.100.208/28` |
