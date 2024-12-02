@@ -106,6 +106,7 @@ the help of the OpenStack Image Manager.
    ---
    images:
      - name: MyCirros
+       enable: true
        format: qcow2
        login: cirros
        password: gocubsgo
@@ -120,16 +121,21 @@ the help of the OpenStack Image Manager.
          hw_rng_model: virtio
          hw_scsi_model: virtio-scsi
          hw_watchdog_action: reset
+         hypervisor_type: qemu
          os_distro: cirros
          replace_frequency: never
          uuid_validity: none
          provided_until: none
        tags: []
        versions:
-         - version: "0.6.0"
-           url: https://github.com/cirros-dev/cirros/releases/download/0.6.0/cirros-0.6.0-x86_64-disk.img
-           checksum: "sha256:94e1e2c94dbbae7d4bdc38e68590a1daf73c9de2d03dd693857b4b0a042548e8"
-           build_date: 2022-09-28
+         - version: '0.6.2'
+           url: https://github.com/cirros-dev/cirros/releases/download/0.6.2/cirros-0.6.2-x86_64-disk.img
+           checksum: "sha256:07e44a73e54c94d988028515403c1ed762055e01b83a767edf3c2b387f78ce00"
+           build_date: 2023-05-30
+         - version: '0.6.3'
+           url: https://github.com/cirros-dev/cirros/releases/download/0.6.3/cirros-0.6.3-x86_64-disk.img
+           checksum: "sha256:7d6355852aeb6dbcd191bcda7cd74f1536cfe5cbf8a10495a7283a8396e4b75b"
+           build_date: 2024-09-26
    ```
 
 3. Run the OpenStack Image Manager. It is assumed that a profile with the name `openstack` exists in the
