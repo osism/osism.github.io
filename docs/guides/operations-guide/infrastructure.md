@@ -132,6 +132,60 @@ to start a recovery.
 osism apply mariadb_recovery
 ```
 
+### Create database & user
+
+1. Create a custom play `playbook-database-sample.yml` in `environments/kolla` in
+   the configuration repository.
+
+   ```yaml
+   ---
+   - name: Manage sample database
+     hosts: control
+
+     vars:
+       database_sample_username: sample
+       database_sample_name: sample
+
+     tasks:
+       - name: Create sample database
+         become: true
+         kolla_toolbox:
+           container_engine: "{{ kolla_container_engine }}"
+           module_name: mysql_db
+           module_args:
+             login_host: "{{ database_address }}"
+             login_port: "{{ database_port }}"
+             login_user: "root"
+             login_password: "{{ database_password }}"
+             name: "{{ database_sample_name }}"
+         run_once: true
+
+       - name: Create sample user
+         become: true
+         kolla_toolbox:
+           container_engine: "{{ kolla_container_engine }}"
+           module_name: mysql_user
+           module_args:
+             login_host: "{{ api_interface_address }}"
+             login_port: "{{ mariadb_port }}"
+             login_user: "root"
+             login_password: "{{ database_password }}"
+             name: "{{ database_sample_username }}"
+             password: "{{ database_sample_password }}"
+             host: "%"
+             priv: "{{ database_sample_name }}.*:ALL"
+             append_privs: True
+         run_once: true
+   ```
+
+2. Add secret `database_sample_password` in `environments/kolla/secrets.yml` in the
+   configuration repository.
+
+3. Commit the custom play and the secret. Sync the configuration on the manager
+   node with `osism apply configuration`.
+
+4. Run `osism apply xxx` on the manager node.
+
 ## Open Search
 
 ### Get all indices
