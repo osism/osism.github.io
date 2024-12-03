@@ -17,7 +17,7 @@ export default function Subscriptions() {
         <div className="row">
           <div className={clsx('col col--12')}>
             <p>OSISM subscriptions are the extra service you need to keep your private cloud running smoothly.
-            Open source software with high-quality advanced and enterprise support, so you can keep your private cloud up to date and have access to experts when you need them.
+            Open source software with high-quality enterprise support, so you can keep your private cloud up to date and have access to experts when you need them.
             Send us an email to <a href="mailto:info@osism.tech">info@osism.tech</a> for more information.</p>
           </div>
         </div>
@@ -68,7 +68,6 @@ export default function Subscriptions() {
                 <tr>
                   <td style={{"text-align": "left"}}>Support hours</td>
                   <td></td>
-                  <td>Business hours</td>
                   <td>Up to 24x7</td>
                 </tr>
                 <tr>
@@ -136,6 +135,7 @@ export default function Subscriptions() {
             <table className="table">
               <thead>
                 <tr>
+	          <td></td>
                   <td>Community</td>
                   <td>Enterprise</td>
                 </tr>
