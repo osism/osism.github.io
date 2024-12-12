@@ -98,6 +98,7 @@ Not all of the services listed there are supported by OSISM.
      For the command to be usable, a cloud profile for octavia must currently be added in the
      clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
 
+
      ```yaml title="environments/openstack/clouds.yml"
      clouds:
        [...]
@@ -105,6 +106,8 @@ Not all of the services listed there are supported by OSISM.
          auth:
            username: octavia
            project_name: service
+           # use this url, when using kolla_enable_tls_external=no
+           #auth_url: http://api.testbed.osism.xyz:5000/v3 
            auth_url: https://api.testbed.osism.xyz:5000/v3
            project_domain_name: default
            user_domain_name: default
