@@ -96,7 +96,7 @@ const config = {
             position: 'right',
           },
           {
-            href: 'https://scs.community',
+            href: 'https://www.sovereigncloudstack.org',
             label: 'Sovereign Cloud Stack',
             position: 'right',
           },
