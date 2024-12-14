@@ -5,7 +5,7 @@ authors: [berendt]
 tags: [Sneak Peak, Kubernetes]
 ---
 New big and small features are constantly being added to OSISM. This makes using OSISM
-a little better for operators of the [Sovereign Cloud Stack](https://scs.community) every day.
+a little better for operators of the [Sovereign Cloud Stack](https://www.sovereigncloudstack.org) every day.
 
 Since we currently only do a major release every 6 months in which we write about these big
 and small features in the release notes, there will be this kind of blog posts from now on.
