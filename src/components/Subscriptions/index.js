@@ -28,7 +28,7 @@ export default function Subscriptions() {
                 <tr>
                   <td></td>
                   <td>Community</td>
-                  <td>Enterprise</td>
+                  <td>Partner</td>
                 </tr>
               </thead>
               <tbody>
@@ -137,7 +137,7 @@ export default function Subscriptions() {
                 <tr>
 	          <td></td>
                   <td>Community</td>
-                  <td>Enterprise</td>
+                  <td>Partner</td>
                 </tr>
               </thead>
               <tbody>
@@ -203,7 +203,7 @@ export default function Subscriptions() {
         <div className="row" style={{"font-size": "0.7em"}}>
           <div className={clsx('col col--12')}>
             <ol>
-              <li>Some of the listed services of the Enterprise edition are provided by solution partners</li>
+              <li>Some of the listed services of the partner edition are provided by our solution partners</li>
               <li>OpenShift, Rancher, Gardener, Kubermatic, Cluster API, and many more are directly usable</li>
               <li>Red Hat Enterprise Linux, SUSE Linux Enterprise Server, Oracle Linux, Windows Server, Windows, Rockylinux, Almalinux</li>
             </ol>
