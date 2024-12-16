@@ -167,6 +167,11 @@ export default function Subscriptions() {
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
+                  <td style={{"text-align": "left"}}>Bill of Materials (BOM)</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
                   <td style={{"text-align": "left"}}>Software Bill of Materials (SBOM)</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
@@ -198,6 +203,21 @@ export default function Subscriptions() {
                 </tr>
                 <tr>
                   <td style={{"text-align": "left"}}>Kernel Live Patches</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Pre-built K8s Cluster API Images</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Pre-built Ironic Node Images</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Pre-built Octavia Node iIages</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
