@@ -125,17 +125,6 @@ const FeatureList = [
       </>
     ),
   },
-  {
-    title: (<Translate description="Proxmox title">module.proxmox.title</Translate>),
-    name: (<>Proxmox VE</>),
-    linktarget: "/docs/guides/concept-guide/components/proxmox",
-    Svg: require('@site/static/img/logo-proxmox.svg').default,
-    description: (
-      <>
-        <Translate description="Proxmox description">module.proxmox.description</Translate>
-      </>
-    ),
-  },
 ];
 
 function Feature({Svg, title, description, name, linktarget}) {
@@ -167,7 +156,8 @@ export default function SoftwareModules () {
         </div>
         <div className="row">
           <div className={clsx('col col--12')}>
-            OSISM can be used to manage a number of components that are necessary to build your own private cloud.
+	    OSISM is the lifecycle management framework for software-defined cloud infrastructure.
+            It manages the components needed to build your own private cloud.
           </div>
         </div>
         <div className="row">

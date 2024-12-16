@@ -11,7 +11,7 @@ With the OSISM Testbed, it is possible to run a full Sovereign Cloud Stack
 deployment on an existing OpenStack environment such as Cleura or [REGIO.cloud](https://regio.digital).
 
 OSISM is the reference implementation for the Infrastructure as a Service (IaaS) layer in the
-[Sovereign Cloud Stack](https://scs.community) (SCS) project. The OSISM Testbed is therefore
+[Sovereign Cloud Stack](https://www.sovereigncloudstack.org) (SCS) project. The OSISM Testbed is therefore
 used in the SCS project to test and work on the Instrastructure as a Service layer.
 
 The OSISM Testbed is intended as a playground. Further services and integration will
@@ -42,6 +42,7 @@ providers. Please contact the respective cloud provider for this.
 | REGIO.cloud         | OSISM          | `regiocloud`     |                                   |
 | REGIO.cloud         | OSISM          | `regio-fast`     | boot from NVMe SSD backed volumes |
 | Wavestack           | noris network  | `wavestack`      |                                   |
+| CNDS Cloud          | artcodix       | `artcodix`       |                                   |
 
 For each cloud provider listed in the table, a predefined profile is available in the
 `terraform/environments` directory. This profile contains the name of the public
@@ -97,7 +98,7 @@ This section describes step by step how to deploy the OSISM Testbed.
 
    The repository can also be cloned to any other location.
 
-   ```sh
+   ```bash
    mkdir -p ~/src/github.com/osism
    git clone https://github.com/osism/testbed ~/src/github.com/osism/testbed
    cd ~/src/github.com/osism/testbed
@@ -186,7 +187,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    The versions of Ansible and [OpenTofu](https://opentofu.org) are managed
    automatically and necessary dependencies are cloned.
 
-   ```sh
+   ```bash
    make prepare
    ```
 
@@ -197,7 +198,7 @@ This section describes step by step how to deploy the OSISM Testbed.
 
 5. Create the infrastructure with OpenTofu.
 
-   ```sh
+   ```bash
    make ENVIRONMENT=regiocloud create
    ```
 
@@ -205,26 +206,29 @@ This section describes step by step how to deploy the OSISM Testbed.
 
    <Tabs>
    <TabItem value="testbed-deploy-latst" label="Deploy latest manager version">
-   ```sh
+   ```bash
    make ENVIRONMENT=regiocloud manager
    ```
    </TabItem>
    <TabItem value="testbed-deploy-stable" label="Deploy a stable manager version">
-   ```sh
-   make ENVIRONMENT=regiocloud VERSION_MANAGER=7.0.3 manager
+   ```bash
+   make ENVIRONMENT=regiocloud VERSION_MANAGER=8.0.1 manager
    ```
    </TabItem>
    </Tabs>
+   Replace the version with the version you prefer.
+   Check the [OSISM release notes](https://osism.tech/docs/release-notes/)
+   to find out what's available.
 
 7. After the bootstrap, you can log in to the manager via SSH.
 
-   ```sh
+   ```bash
    make ENVIRONMENT=regiocloud login
    ```
 
    Yo can log in to the nodes of the cluster via the manager.
 
-   ```sh
+   ```bash
    osism console testbed-node-0
    ```
 
@@ -249,7 +253,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    There is also the option of pre-population of images with `/opt/configuration/scripts/pull-images.sh`
    so that deployments do not have to be lengthy. Run this script **before** the deployment scripts.
 
-   ```sh
+   ```bash
    /opt/configuration/scripts/deploy/001-helper-services.sh
    /opt/configuration/scripts/deploy/005-kubernetes.sh
    /opt/configuration/scripts/deploy/100-ceph-services.sh
@@ -267,7 +271,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    a few dependencies must be deployed first. You can then use the monitoring services without having to install a
    complete OpenStack & Ceph environment.
 
-   ```sh
+   ```bash
    osism apply common
    osism apply loadbalancer
    osism apply opensearch
@@ -281,7 +285,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
    Depending on the cloud, the deployment will take some time. Up to two hours is not unusual. 
 
-   ```sh
+   ```bash
    make ENVIRONMENT=regiocloud deploy
    ```
    </TabItem>
@@ -294,7 +298,7 @@ This section describes step by step how to deploy the OSISM Testbed.
     service are not provided by default to save resources on the OSISM Testbed and improve deployment time.
     These can be provisioned if required.
 
-    ```sh
+    ```bash
     /opt/configuration/scripts/bootstrap/301-openstack-octavia-amhpora-image.sh
     /opt/configuration/scripts/bootstrap/302-openstack-k8s-clusterapi-images.sh
     ```
@@ -302,13 +306,13 @@ This section describes step by step how to deploy the OSISM Testbed.
 11. If you want you can create a test project with a test user after login. It also
     creates an instance with a volume attached to a network with a router. This step is optional.
 
-    ```sh
+    ```bash
     osism apply --environment openstack test
     ```
 
 12. When the OSISM Testbed is no longer needed, it can be deleted.
 
-    ```sh
+    ```bash
     make ENVIRONMENT=regiocloud clean
     ```
 
@@ -472,7 +476,7 @@ then you can perform a simple `project list` operation like this:
 
 See chapter "Usage the OpenStack CLI" for basic openstack usage.
 
-```sh
+```bash
 openstack \
  --os-cacert /etc/ssl/certs/ca-certificates.crt \
  --os-auth-url https://api.testbed.osism.xyz:5000/v3 \
@@ -495,7 +499,7 @@ The `token issue` subcommand returns an SQL table, in which the `id` column's `v
 
 See chapter "Usage the OpenStack CLI" for basic openstack usage.
 
-```sh
+```bash
 openstack \
  --os-cacert /etc/ssl/certs/ca-certificates.crt \
  --os-auth-url https://api.testbed.osism.xyz:5000/v3 \
@@ -544,13 +548,13 @@ of the other cloud is changed accordingly.
    ```
 
 2. Set parameter `external_api` to `true`. This makes sure that all necessary changes are made in the configuration
-   repository when the Manager service is deployed. It is correct that this is added as a comment.
+   repository when the manager service is deployed. It is correct that this is added as a comment.
 
    ```
    external_api = true
    ```
 
-3. After the deployment of the Manager service and the OpenStack services, the OpenStack APIs and the OpenStack
+3. After the deployment of the manager service and the OpenStack services, the OpenStack APIs and the OpenStack
    dashboard can be reached via a DNS name. The service [traefik.me](https://traefik.me) is used for the DNS record.
    Run the following two commands on the manager node to get the DNS record.
 
@@ -563,37 +567,37 @@ of the other cloud is changed accordingly.
 ### Change versions
 
 1. Go to `/opt/configuration` on `testbed-manager`
-2. Run `./scripts/set-openstack-version.sh 2023.2` to set the OpenStack version to `2023.2`
+2. Run `./scripts/set-openstack-version.sh 2024.2` to set the OpenStack version to `2024.2`
 3. Run `./scripts/set-ceph-version.sh reef` to set the Ceph version to `reef`
-4. Run `osism update manager` to update the Manager service
+4. Run `osism update manager` to update the manager service
 
 ### Deploy services
 
-| Script                                                                      | Description |
-|:----------------------------------------------------------------------------|:------------|
-| `/opt/configuration/scripts/deploy/000-manager-service.sh`                  |             |
-| `/opt/configuration/scripts/deploy/001-helper-services.sh`                  |             |
-| `/opt/configuration/scripts/deploy/100-ceph-services-basic.sh`              | alternative to ceph |
-| `/opt/configuration/scripts/deploy/100-rook-services-basic.sh`              |             |
-| `/opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh`    |             |
-| `/opt/configuration/scripts/deploy/210-infrastructure-services-extended.sh` |             |
-| `/opt/configuration/scripts/deploy/300-openstack-services-basic.sh`         |             |
-| `/opt/configuration/scripts/deploy/310-openstack-services-extended.sh`      |             |
-| `/opt/configuration/scripts/deploy/320-openstack-services-baremetal.sh`     |             |
-| `/opt/configuration/scripts/deploy/330-openstack-services-additional.sh`    |             |
-| `/opt/configuration/scripts/deploy/400-monitoring-services.sh`              |             |
+| Script                                                                    | Description                 |
+|:--------------------------------------------------------------------------|:----------------------------|
+| `/opt/configuration/scripts/deploy/000-manager-service.sh`                |                             |
+| `/opt/configuration/scripts/deploy/001-helper-services.sh`                |                             |
+| `/opt/configuration/scripts/deploy/100-ceph-services.sh`                  | Alternative to ceph-ansible |
+| `/opt/configuration/scripts/deploy/100-rook-services.sh`                  |                             |
+| `/opt/configuration/scripts/deploy/200-infrastructure-services.sh`        |                             |
+| `/opt/configuration/scripts/deploy/300-openstack-services.sh`             |                             |
+| `/opt/configuration/scripts/deploy/310-openstack-services-extended.sh`    |                             |
+| `/opt/configuration/scripts/deploy/400-monitoring-services.sh`            |                             |
+| `/opt/configuration/scripts/deploy/500-kubernetes.sh`                     |                             |
+| `/opt/configuration/scripts/deploy/510-clusterapi.sh`                     |                             |
 
 ### Upgrade services
 
-| Script                                                                    | Description |
-|:--------------------------------------------------------------------------|:------------|
-| `/opt/configuration/scripts/upgrade/100-ceph-services.sh`                 |             |
-| `/opt/configuration/scripts/upgrade/100-rook-services.sh`                 | alternative to ceph |
-| `/opt/configuration/scripts/upgrade/200-infrastructure-services-basic.sh` |             |
-| `/opt/configuration/scripts/upgrade/300-openstack-services-basic.sh`      |             |
-| `/opt/configuration/scripts/upgrade/310-openstack-services-extended.sh`   |             |
-| `/opt/configuration/scripts/upgrade/320-openstack-services-baremetal.sh`  |             |
-| `/opt/configuration/scripts/upgrade/330-openstack-services-additional.sh` |             |
+| Script                                                                    | Description                 |
+|:--------------------------------------------------------------------------|:----------------------------|
+| `/opt/configuration/scripts/upgrade/100-ceph-services.sh`                 |                             |
+| `/opt/configuration/scripts/upgrade/100-rook-services.sh`                 | Alternative to ceph-ansible |
+| `/opt/configuration/scripts/upgrade/200-infrastructure-services.sh`       |                             |
+| `/opt/configuration/scripts/upgrade/300-openstack-services.sh`            |                             |
+| `/opt/configuration/scripts/upgrade/310-openstack-services-extended.sh`   |                             |
+| `/opt/configuration/scripts/upgrade/400-monitoring-services.sh`           |                             |
+| `/opt/configuration/scripts/upgrade/500-kubernetes.sh`                    |                             |
+| `/opt/configuration/scripts/upgrade/510-clusterapi.sh`                    |                             |
 
 ### Add new OSD in Ceph
 
@@ -601,14 +605,14 @@ In the testbed, three volumes per node are provided for use by Ceph by default. 
 these devices are used as OSDs during the initial deployment. The third device is intended
 for testing the addition of a further OSD to the Ceph cluster.
 
-1. Add `sdd` to `ceph_osd_devices` in `/opt/configuration/inventory/host_vars/testbed-node-0.testbed.osism.xyz/ceph-lvm-configuration.yml`.
+1. Add `sdd` to `ceph_osd_devices` in `/opt/configuration/inventory/host_vars/testbed-node-0/ceph-lvm-configuration.yml`.
    The following content is an example, the IDs look different everywhere. Do not copy 1:1
    but only add `sdd` to the file.
 
 ```yaml
 ---
 #
-# This is Ceph LVM configuration for testbed-node-0.testbed.osism.xyz
+# This is Ceph LVM configuration for testbed-node-0
 # generated by ceph-configure-lvm-volumes playbook.
 #
 ceph_osd_devices:
@@ -624,15 +628,15 @@ lvm_volumes:
   data_vg: ceph-29899765-42bf-557b-ae9c-5c7c984b2243
 ```
 
-2. Run `osism apply ceph-configure-lvm-volumes -l testbed-node-0.testbed.osism.xyz`
+2. Run `osism apply ceph-configure-lvm-volumes -l testbed-node-0`
 
-3. Run `cp /tmp/testbed-node-0.testbed.osism.xyz-ceph-lvm-configuration.yml /opt/configuration/inventory/host_vars/testbed-node-0.testbed.osism.xyz/ceph-lvm-configuration.yml`.
+3. Run `cp /tmp/testbed-node-0-ceph-lvm-configuration.yml /opt/configuration/inventory/host_vars/testbed-node-0/ceph-lvm-configuration.yml`.
 
 4. Run `osism reconciler sync`
 
-5. Run `osism apply ceph-create-lvm-devices -l testbed-node-0.testbed.osism.xyz`
+5. Run `osism apply ceph-create-lvm-devices -l testbed-node-0`
 
-6. Run `osism apply ceph-osds -l testbed-node-0.testbed.osism.xyz -e ceph_handler_osds_restart=false`
+6. Run `osism apply ceph-osds -l testbed-node-0 -e ceph_handler_osds_restart=false`
 
 7. Check the OSD tree
 
@@ -746,7 +750,7 @@ facts that are no longer valid. The facts can be updated by running `osism apply
 
 ### Unsupported locale setting
 
-```sh
+```bash
 $ make prepare
 ansible-playbook -i localhost, ansible/check-local-versions.yml
 ERROR: Ansible could not initialize the preferred locale: unsupported locale setting
@@ -851,16 +855,17 @@ The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ans
 
 * Ceph Quincy (**default**)
 * Ceph Reef
+* Ceph Squid
 
 The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
 
 * OpenStack 2023.1
-* OpenStack 2023.2 (**default**)
-* OpenStack 2024.1
+* OpenStack 2023.2
+* OpenStack 2024.1 (**default**)
 
 The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
 
-* Kubernetes v1.29 (**default**)
+* Kubernetes v1.30 (**default**)
 
 ### Included services
 
@@ -874,7 +879,6 @@ The following services can currently be used with the OSISM Testbed without furt
 * Gnocchi
 * Grafana
 * Haproxy
-* Influxdb
 * Keepalived
 * Keycloak
 * Kubernetes
@@ -884,7 +888,6 @@ The following services can currently be used with the OSISM Testbed without furt
 * Netdata
 * Opensearch
 * Openvswitch
-* Patchman
 * Prometheus exporters
 * Rabbitmq
 * Redis
@@ -905,7 +908,6 @@ The following services can currently be used with the OSISM Testbed without furt
 * Neutron
 * Nova (with Libvirt/KVM)
 * Octavia
-* Senlin
 * Skyline
 
 ### Makefile reference
@@ -936,13 +938,3 @@ $ make <TAB> <TAB>
 ### CI jobs
 
 You can inspect the [results of the daily zuul jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0).
-
-| Name                      | Description |
-|:--------------------------|:------------|
-| testbed-deploy            |             |
-| testbed-deploy-ceph       |             |
-| testbed-deploy-stable     |             |
-| testbed-update-stable     |             |
-| testbed-upgrade           |             |
-| testbed-upgrade-ceph      |             |
-| testbed-upgrade-stable    |             |

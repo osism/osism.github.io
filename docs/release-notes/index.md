@@ -12,7 +12,7 @@ The old release notes (before OSISM 7) can be found on the archived page
 
 :::
 
-**The latest available release of OSISM is `8.0.0`.**
+**The latest available release of OSISM is `8.0.2`.**
 
 | Series               | Status               | Initial Release Date | Next Phase           | EOL Date         |
 |:---------------------|:---------------------|:---------------------|:---------------------|:-----------------|

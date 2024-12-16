@@ -129,30 +129,65 @@ vm.min_free_kbytes=4194303
 
 Extra pools can be defined via the `openstack_pools_extra` parameter.
 
-```yaml title="inventory/group_vars/generic/ceph.yml"
-openstack_cinder_extra001_pool:
+```yaml title="environments/ceph/configuration.yml"
+openstack_extra001_pool:
   name: extra001
   pg_num: "{{ openstack_pool_default_pg_num }}"
   pgp_num: "{{ openstack_pool_default_pg_num }}"
   rule_name: "replicated_rule"
-  min_size: "{{ openstack_pool_default_min_size }}"
+  type: 1
+  erasure_profile: ""
+  expected_num_objects: ""
   application: "rbd"
+  size: "{{ openstack_pool_default_size }}"
+  min_size: "{{ openstack_pool_default_min_size }}"
+  pg_autoscale_mode: false
 
 openstack_pools_extra:
-  - "{{ openstack_cinder_extra001_pool }}"
+  - "{{ openstack_extra001_pool }}"
 ```
 
 If more than one Ceph cluster is managed with one manager, do not place the
-parameters in `inventory/group_vars/generic` but in a corresponding directory.
+parameters in `environments/ceph/configuration.yml` but in a corresponding file.
 
-If, for example, the inventory group of the Ceph cluster on which the additional
-pools are to be created is `ceph.rbd`, then the parameters would be stored in
-`inventory/group_vars/ceph.rbd.yml` accordingly.
+The defaults for these parameters are defined in the osism/defaults repository
+as follows:
 
 | Parameter                         | Default value |
 |:----------------------------------|:--------------|
-| `openstack_pool_default_pg_num`   | 64            |
 | `openstack_pool_default_min_size` | 0             |
+| `openstack_pool_default_pg_num`   | 64            |
+| `openstack_pool_default_size`     | 3             |
+
+The extra pools can then be created by calling `osism apply ceph-pools`.
+
+## Extra keys
+
+Extra keys can be defined via the `openstack_keys_extra` parameter.
+
+```yaml title="environments/ceph/configuration.yml"
+openstack_extra001_key:
+  - name: client.extra001
+    caps:
+      mon: "profile rbd"
+      osd: "profile rbd pool={{ openstack_extra001_pool.name }}"
+    mode: "0600"
+
+openstack_keys_extra:
+  - "{{ openstack_extra001_key }}"
+```
+
+The key is also added in the manager environment to copy it to the correct location.
+
+```yaml title="environments/manager/configuration.yml"
+ceph_custom_keys:
+  - src: ceph.client.extra001.keyring
+    dest: "{{ configuration_directory }}/environments/infrastructure/files/ceph/ceph.client.extra001.keyring"
+```
+
+The extra keys can then be created by calling `osism apply ceph-pools`.
+
+The extra keys can then be fetched and copied by calling `osism apply ceph-copy-keys`.
 
 ## OSD devices
 
@@ -836,3 +871,77 @@ by default.
     0:  10  20
     1:  20  10
   ```
+
+## Use of RBDs for nodes
+
+1. Add an extra pool (see [Extra pools](#extra-pools)).
+
+2. Add a key for the new pool (see [Extra keys](#extra-keys)).
+
+3. Add nodes on which RBDs are to be used to the inventory group `cephclient`. The file
+   `99-overwrite` must be used for this. By default, the inventory group looks like this:
+
+   ```ini file="inventory/99-overwrite"
+   [cephclient:children]
+   manager
+   ```
+
+   It could look like this with the additional inventory group:
+
+   ```ini file="inventory/99-overwrite"
+   [cephclient:children]
+   manager
+   testbed-resource-nodes
+   ```
+
+4. Prepare the configuration of the Ceph client. Get the keyring with
+   `ceph auth get client.extra001`.
+
+  ```yaml file="inventory/group_vars/testbed-resource-nodes.yml"
+  ---
+  cephclient_install_type: package
+  cephclient_keyring_name: client.extra001
+  cephclient_keyring: |
+    [client.extra001]
+        key = AQBiHV9nAAAAABAAhtxl8rdW/EBvxiOGw4iMJw==
+        caps mon = "profile rbd"
+        caps osd = "profile rbd pool=extra001"
+  ```
+
+  For Ubuntu 24.04 nodes also add the following parameter. At the moment no Ceph packages
+  are available for Ubuntu 24.04.
+
+  ```yaml
+  cephclient_debian_repository: "deb https://download.ceph.com/debian-{{ cephclient_version }} jammy main"
+  ```
+
+5. Create new RBD in the new pool (run this command on the manager node).
+   In this example, the name of the node on which the RBD is to be used is
+   used as the name for the RBD.
+
+   ```
+   rbd create testbed-node-5 --size 64 --pool extra001
+   ```
+
+6. On the node map the RBD as block device.
+
+   ```
+   sudo rbd map testbed-node-5 --pool extra001 --id extra001
+   ```
+
+7. On the node check the mapped block device.
+
+   ```
+   sudo rbd showmapped --id extra001
+   id  pool      namespace  image           snap  device
+   0   extra001             testbed-node-5  -     /dev/rbd0
+   ```
+
+8. Done. `/dev/rbd0` can now be used like a normal block device.
+
+9. The file `/etc/ceph/rbdmap` is used to persist the mapping. The service `rbdmap.service`
+   must be activated and started for this.
+
+   ```
+   extra001/testbed-node-5 id=extra001,keyring=/etc/ceph/ceph.client.extra001.keyring
+   ```

@@ -66,43 +66,125 @@ global
 
 ### Backup
 
-[Mariabackup](https://mariadb.com/kb/en/mariabackup-overview/)  is used to create backups
-of MariaDB.
+[Mariabackup](https://mariadb.com/kb/en/mariabackup-overview/) is used to create backups
+of MariaDB. For more details about backups, you can use the offical
+[kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html) documentation.
 
-* Full backup
+* Create a full backup
 
   ```
   osism apply mariadb_backup
   ```
 
-* Incremental backup (supported as of OSISM 7.0.6)
+* Create a incremental backup (supported as of OSISM 7.0.6)
 
   ```
   osism apply mariadb_backup -e mariadb_backup_type=incremental
   ```
 
-There is a Docker volume `mariadb_backup` on the 1st control node. The backups
-are stored in this volume.
+* Accessing created backups
+
+  There is a Docker volume `mariadb_backup` on the 1st control node. The backups
+  are stored in this volume.
+  (see also /var/lib/docker/volumes/mariadb_backup/)
+
+  ```
+  $ docker run --rm -v mariadb_backup:/backup -it ubuntu:22.04 bash -c 'ls -la /backup'
+  total 9728
+  drwxr-xr-x 2 42434 42434    4096 Jun  3 18:46 .
+  drwxr-xr-x 1 root  root     4096 Jun  3 18:47 ..
+  -rw-r--r-- 1 42434 42434 4530618 Jun  3 18:46 incremental-18-mysqlbackup-03-06-2024-1717440409.qp.xbc.xbs.gz
+  -rw-r--r-- 1 42434 42434      11 Jun  3 18:45 last_full_date
+  -rw-r--r-- 1 42434 42434 5411763 Jun  3 18:45 mysqlbackup-03-06-2024-1717440342.qp.xbc.xbs.gz
+  ```
+
+Currently there is no offical scheduling and houskeeping (disk space) for mariadb backups.
+You can create a simple cronjob on the manager or use your enterprise backup software.
 
 ```
-$ docker run --rm -v mariadb_backup:/backup -it ubuntu:22.04 bash -c 'ls -la /backup'
-total 9728
-drwxr-xr-x 2 42434 42434    4096 Jun  3 18:46 .
-drwxr-xr-x 1 root  root     4096 Jun  3 18:47 ..
--rw-r--r-- 1 42434 42434 4530618 Jun  3 18:46 incremental-18-mysqlbackup-03-06-2024-1717440409.qp.xbc.xbs.gz
--rw-r--r-- 1 42434 42434      11 Jun  3 18:45 last_full_date
--rw-r--r-- 1 42434 42434 5411763 Jun  3 18:45 mysqlbackup-03-06-2024-1717440342.qp.xbc.xbs.gz
+cat /etc/cron.d/mariadb_backup <<'EOF'
+0 7 * * * dragon osism apply mariadb_backup |logger -t mariadb_backup
+EOF
 ```
 
 ### Restore
 
-https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html#restoring-backups
+* Stop all MariaDb Instances
+
+  ```
+  osism apply -s stop maria
+  ```
+
+* Follow the [restore procedure described in the kolla-ansible manual](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html#restoring-backups)
+
+* Execute the recovery procedure with the node name where you executed the recovery
+
+  ```
+  osism apply mariadb_recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE
+  ```
 
 ### Recovery
+
+If you stopped your mariadb galera cluster completly, you can use the following procedure
+to start a recovery.
 
 ```
 osism apply mariadb_recovery
 ```
+
+### Create database & user
+
+1. Create a custom play `playbook-database-sample.yml` in `environments/kolla` in
+   the configuration repository.
+
+   ```yaml
+   ---
+   - name: Manage sample database
+     hosts: control
+
+     vars:
+       database_sample_username: sample
+       database_sample_name: sample
+
+     tasks:
+       - name: Create sample database
+         become: true
+         kolla_toolbox:
+           container_engine: "{{ kolla_container_engine }}"
+           module_name: mysql_db
+           module_args:
+             login_host: "{{ database_address }}"
+             login_port: "{{ database_port }}"
+             login_user: "root"
+             login_password: "{{ database_password }}"
+             name: "{{ database_sample_name }}"
+         run_once: true
+
+       - name: Create sample user
+         become: true
+         kolla_toolbox:
+           container_engine: "{{ kolla_container_engine }}"
+           module_name: mysql_user
+           module_args:
+             login_host: "{{ api_interface_address }}"
+             login_port: "{{ mariadb_port }}"
+             login_user: "root"
+             login_password: "{{ database_password }}"
+             name: "{{ database_sample_username }}"
+             password: "{{ database_sample_password }}"
+             host: "%"
+             priv: "{{ database_sample_name }}.*:ALL"
+             append_privs: True
+         run_once: true
+   ```
+
+2. Add secret `database_sample_password` in `environments/kolla/secrets.yml` in the
+   configuration repository.
+
+3. Commit the custom play and the secret. Sync the configuration on the manager
+   node with `osism apply configuration`.
+
+4. Run `osism apply xxx` on the manager node.
 
 ## Open Search
 

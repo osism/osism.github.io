@@ -4,11 +4,16 @@ sidebar_label: Apply
 
 # Apply
 
+With the `apply` command it is possible to run Ansible plays. These are executed as
+background activity via a queuing system so that, for example, the loss of an SSH connection
+does not result in the execution being aborted. In this case, the logs can also be analyzed
+[retrospectively](./log).
 
-Applies are there to roll out Ansible Plays.  These are executed as background activity via a queuing system so that, for example, the loss of an SSH connection does not result in the execution being aborted.
-In this case, the logs can also be analyzed [retrospectively](./log).
+## List all plays
 
-## List all available plays
+The `osism apply` command can be used to list all integrated playbooks and their associated
+environments. Custom plays that have been added in the configuration repository are not visible
+in this list.
 
 ```
 $ osism apply
@@ -39,7 +44,7 @@ $ osism apply
 ...
 ```
 
-## Apply a role
+## Apply a play
 
 ```
 $ osism apply operator -l node01
@@ -50,43 +55,51 @@ PLAY [Make ssh pipelining working] *********************************************
 
 TASK [Do not require tty for all users] ****************************************
 ok: [node01]
-
 ...
-...
-
 PLAY RECAP *********************************************************************
 2024-06-14 09:34:14 | INFO     | Play has been completed. There may now be a delay until all logs have been written.
 2024-06-14 09:34:14 | INFO     | Please wait and do not abort execution.
 node01          : ok=11   changed=0    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0
 ```
 
-## Use of custom plays and roles
+## Use of custom plays
 
-Custom plays and roles can be used in all environments of the configuration repository to add 
+Custom plays can be used in all environments of the configuration repository to add
 logic which should also be part of the configuration repository.
 
 :::info
-It seems to us to be a good idea to minimize the amount of such special solutions, as extensive in-house solutions can potentially result in unexpected interactions or
-additional testing-, integration and maintenance work.
 
-We would also like to make a clear recommendation that, if possible, missing functions should be resolved by contributing to OSISM.
+It seems to us to be a good idea to minimize the amount of such special solutions, as extensive in-house
+solutions can potentially result in unexpected interactions or additional testing-, integration and maintenance
+work.
+
+We would also like to make a clear recommendation that, if possible, missing functions should be resolved by
+contributing to OSISM.
+
 :::
 
-Some facts about custom plays and roles:
+Some facts about custom plays:
 
 * Plays must be stored under the following naming scheme so that they can be executed with the OSISM command.
   ```environments/<environment>/playbook-<the name of the play>.yml```
-* Without specifying a particular environment the "custom" environment is used.
-  ```
+
+* Without specifying a particular environment the `custom` environment is used.
+
+  ```yaml
   # executes: environments/custom/playbook-setup-serial-device.yml
   osism apply setup-serial-device
   ```
+
 * Specifying a play of a environment:
-  ```
+
+  ```yaml
   # executes environments/deph/playbook-wipe-parititons.yml
   osism apply -e ceph wipe-parititons
   ```
-* Custom roles that are used for a specific environment must be stored under the following path so that they can be found by plays.
+
+* Custom roles that are used for a specific environment must be stored under the following path so that
+  they can be found by plays.
+
   `environments/<environment>/roles/<role>/`
 
 ### Example play with roles: Manage the infrastructure of the SCS testing environment
@@ -95,7 +108,7 @@ The SCS hardware landscape testing environment provides a selection of custom ro
 to manage some infrastructural aspects of this testing environment.
 
 * Instructions [how to use](https://github.com/SovereignCloudStack/hardware-landscape/blob/main/documentation/System_Deployment.md) the custom code
-* The custom  [playsi and roles](https://github.com/SovereignCloudStack/hardware-landscape/tree/main/environments/custom)
+* The custom  [plays and roles](https://github.com/SovereignCloudStack/hardware-landscape/tree/main/environments/custom)
 
 ### Example play: Wiping partitions
 

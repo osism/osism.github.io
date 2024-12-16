@@ -3,9 +3,6 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import Discover from '@site/src/components/Discover';
-import Adaptors from '@site/src/components/Adaptors';
-import Services from '@site/src/components/Services';
 import Subscriptions from '@site/src/components/Subscriptions';
 import SoftwareModules from '@site/src/components/SoftwareModules';
 import Translate from '@docusaurus/Translate';
@@ -42,10 +39,8 @@ export default function Home() {
   return (
     <Layout
       description="<Translate description='Homepage pagetitle'>homepage.pagetitle</Translate>">
-      <Announcements />
       <HomepageHeader />
       <main>
-        <Discover />
         <SoftwareModules />
         <Subscriptions />
       </main>

@@ -13,7 +13,121 @@ The release notes for 8.0.1 must then also be taken into account.
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|
+| [8.0.2](#802-20241006)   | 6. October 2024     |
+| [8.0.1](#801-20240924)   | 24. September 2024  |
 | [8.0.0](#800-20240911)   | 11. September 2024  |
+
+## 8.0.2 (20241006)
+
+Release date: 6. October 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images for Ironic have been rebuilt.
+  Upgrades of the Ironic service is recommended.
+
+  * The Ironic have been rebuilt because of a critical security
+    issues. Further details can be found in security advisory
+    [OSSA-2024-004: Ironic fails to verify checksums of supplied image_source URLs when configured to convert images to raw for streaming](https://security.openstack.org/ossa/OSSA-2024-004.html).
+    This upgrade is important.
+
+* Other OpenStack service images have not been rebuilt. No upgrade of other OpenStack
+  services is required.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have not been rebuilt. No upgrade is required.
+
+* The network service images (OVN, OVS) have not been rebuilt. No upgrade is required.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have not been rebuilt. No upgrade is required.
+
+* The logging service images (OpenSearch, Fluentd) have not been rebuilt. No upgrade is required.
+
+* The generic inventory group is now used as the default for the FRR service.
+
+* In the inventory reconciler, the handling of inventory groups from the configuration repoistory
+  and the Netbox has been improved. Groups that exist both in the configuration repository and in
+  the Netbox are now merged and do not overwrite each other.
+
+* With the `proxy_enable` parameter of `osism.commons.proxy` it is possible to disable the proxy
+  configuration. This makes it easier to configure global proxy parameters
+  (via environment or group_vars) and to skip them via host_vars only for
+  specific hosts.
+
+* The `osism.commons.repository` role now supports the newer DEB822 format and is now also
+  usuable on Ubuntu 24.04 based ARM nodes.
+
+* With the `nexus_force_init` parameter of `osism.services.nexus` it is possible to force the
+  initialisation of the Nexus service.
+
+* A temporary workaround for the installation of python3-docker on Ubuntu 24.04 has been added
+  to `osism.services.docker`. This will be removed later.
+
+* With the `docker_storage_containerd_snapshotter` parameter of `osism.services.docker` it is
+  possible to enable the [experimental container-snapshotter feature](https://docs.docker.com/engine/storage/containerd/).
+  Only use this on new nodes.
+
+* With the `frr_enable_bfdd` parameter of `osism.services.frr` it is possible to enable the BFD
+  daemon.
+
+* All `frr_uplinks__*` parameters will now be merged with the `frr_uplinks`
+  parameter of `osism.services.frr`. This way it is possible to add host specific `frr_uplinks` via
+  the host vars.
+
+* The integration of the [OpenStack Resource Manager](https://github.com/osism/openstack-resource-manager)
+  was started in the OSISM CLI.
+
+  * `osism manage compute list`
+  * `osism manage compute list HOSTNAME`
+  * `osism manage server list`
+  * `osism manage volume list`
+  * `osism manage compute evacuate HOSTNAME`
+  * `osism manage compute disable HOSTNAME`
+  * `osism manage compute enable HOSTNAME`
+  * `osism manage compute start HOSTNAME`
+  * `osism manage compute stop HOSTNAME`
+
+## 8.0.1 (20240924)
+
+Release date: 24. September 2024
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* The OpenStack service images have not been rebuilt. No upgrade of OpenStack is required.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have not been rebuilt. No upgrade is required.
+
+* The network service images (OVN, OVS) have not been rebuilt. No upgrade is required.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have not been rebuilt. No upgrade is required.
+
+* The logging service images (OpenSearch, Fluentd) have not been rebuilt. No upgrade is required.
+
+* The Prometheus OpenStack Exporter is no longer enabled by default as there have been frequent
+  OOM problems and the exporter generates a very high load on the OpenStack APIs. If the exporter
+  is still to be used, the `enable_prometheus_openstack_exporter` parameter can be used for this.
+
+  ```yaml title="environments/kolla/configuration.yml"
+  enable_prometheus_openstack_exporter: "yes"
+  ```
+
+* An error when upgrading the Postres database of the Netbox service has been fixed. Upgrades
+  of the Postgres database are now done automatically.
+
+* The Scaphandre service now accesses the host PIDs by default in order to better assign the
+  consumption data to the running processes. If this is not wanted, it can be switched off using
+  the `scaphandre_share_pids_with_host` parameter.
+
+  ```yaml title="environments/configuration.yml"
+  scaphandre_share_pids_with_host: false
+  ```
+
+* Both Ceph play (`osism apply ceph`)  and the validation of Ceph OSD services
+  (`osism validate ceph-osds`) have been fixed for non-HCI environments.  
+
+* Inventory groups in `inventory/20-roles` now also overwrite groups in all other files
+  (with exception of `inventory/99-ovewrite`). The same applies to groups that are set
+  via labels in Netbox. This makes it possible, for example, to define the load balancers
+  via the `loadbalancer` group directly via `inventory/20-roles` or a Netbox label.
 
 ## 8.0.0 (20240911)
 
