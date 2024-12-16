@@ -9,9 +9,10 @@ The deployment of the k3s cluster is optional and disabled by default.
 The deployment is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible) and the defaults
 are configured and described in [099-k3s.yml](https://github.com/osism/defaults/blob/main/all/099-k3s.yml)
 
+<!-- can be removed after https://github.com/osism/issues/issues/1067 is solved -->
 :::warning
-K3S is currently not installable on nodes that use a layer-3 underlay network by running an FRR
-instance on the node itself. The OSISM integration for this scenario is still pending.
+K3S is currently not installable on nodes that use a layer-3 underlay network by running an FRR instance on the node itself. 
+The OSISM integration for this scenario is still pending.
 Metal-LB either uses ARP for the leader election (which cannot work in principle) or starts its own
 FRR instance which conflicts with the FRR instance of the host.
 :::
