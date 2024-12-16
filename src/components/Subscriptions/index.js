@@ -58,6 +58,11 @@ export default function Subscriptions() {
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
+                  <td style={{"text-align": "left"}}><a href="https://www.sovereigncloudstack.org">SCS</a> compatible</td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
                   <td colspan="4" style={{"text-align": "left", "font-weight": "bold"}}>Support</td>
                 </tr>
                 <tr>
