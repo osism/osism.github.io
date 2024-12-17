@@ -197,7 +197,7 @@ The extra keys can then be fetched and copied by calling `osism apply ceph-copy-
 
    1. Parameters
 
-      * With the optional parmaeter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
+      * With the optional parameter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
         set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
         for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
 
@@ -332,7 +332,7 @@ The extra keys can then be fetched and copied by calling `osism apply ceph-copy-
    $ osism apply ceph-configure-lvm-volumes
    ```
 
-   This will generate a new configuration file for each node in `/tmp` 
+   This will generate a new configuration file for each node in `/tmp`
    on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
 
 4. Take the generated configuration file from `/tmp` and **replace the previously

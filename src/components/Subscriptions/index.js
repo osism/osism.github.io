@@ -217,7 +217,7 @@ export default function Subscriptions() {
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
-                  <td style={{"text-align": "left"}}>Pre-built Octavia Node iIages</td>
+                  <td style={{"text-align": "left"}}>Pre-built Octavia Node Images</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>

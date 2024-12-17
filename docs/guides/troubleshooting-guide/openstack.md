@@ -27,7 +27,7 @@ kolla_toolbox
 testbed-node-0>>>
 ```
 
-## Ceph connections not working 
+## Ceph connections not working
 
 * Problem: `auth: error parsing file` or `auth: failed to load`
 
@@ -55,7 +55,7 @@ testbed-node-0>>>
 
   Solution:
 
-  Database objects are created by the api service for valid request while the host is assigned by the scheduler.
+  Database objects are created by the API service for valid request while the host is assigned by the scheduler.
 
   * Check the scheduler logs for errors
   * If there is nothing wrong with the scheduler itself, check the communication between the services via oslo.messaging

@@ -327,7 +327,7 @@ rook_cephblockpools:
       failureDomain: host
       erasureCoded:
         dataChunks: "{{ rook_cephblockpool_erasurecoded_default_datachunks }}"
-        codingChunks: "{{ rook_cephblockpool_erasurecoded_default_codingchunks }}"        
+        codingChunks: "{{ rook_cephblockpool_erasurecoded_default_codingchunks }}"
       parameters:
         min_size: "{{ rook_cephblockpool_default_min_size }}"
         pg_num: "{{ rook_cephblockpool_default_pg_num }}"

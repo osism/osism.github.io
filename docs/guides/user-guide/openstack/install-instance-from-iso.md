@@ -5,7 +5,7 @@ sidebar_label: Install instance from ISO image
 # Install instance from ISO image
 
 While in general it is considered best practice to create instances from existing or specially crafted images, sometimes it is necessary to install an instance using a traditional installer packaged in an ISO image.
-One way to do this in OpenStack is to leverage the [instance rescue mechanism](https://docs.openstack.org/nova/latest/user/rescue.html), which allows to boot an instance from another imagewhile providing access to the instances storage.
+One way to do this in OpenStack is to leverage the [instance rescue mechanism](https://docs.openstack.org/nova/latest/user/rescue.html), which allows to boot an instance from another image while providing access to the instances storage.
 
 ## Upload the ISO image
 

@@ -35,13 +35,13 @@ A good overview and comparison of VMWare resources and their OpenStack counterpa
   * SSH enabled on ESXi host
   * access to the webinterface of the ESXi host
 * OpenStack credentials
- 
+
 * Linux packages installed on the coverter, in this case it is an Ubuntu 22.04
 
   ```sh
   apt-get install qemu-utils python3-openstackclient
   ```
- 
+
 * twice the space of the largest vmdk disc image on the converter or nfs access to the image files with enough storage
 
 ## Prechecks
@@ -59,7 +59,7 @@ If they are all mounted by LVM or UUID you do not need to change anything.
 ```
 
 If they are mounted like `/dev/sda` it is better to change the `/etc/fstab` to UUID mounting using `blkid`.
-  
+
 Replace these entries with `UUID=filesystems_uuid` and add the rest of the line same as with the devicenames.
 
 Example:
@@ -128,12 +128,12 @@ testing-host-disc0.vmdk      testing-host-disc1-flat.vmdk
 
 :::note
 
-Now convert those vmdk files into raw images with the following flags:  
+Now convert those vmdk files into raw images with the following flags:
 
 ```
--p show progress (optional)  
--f Input Format  
--O Output Format  
+-p show progress (optional)
+-f Input Format
+-O Output Format
 ```
 
 Raw files are required to import images into OpenStack.
@@ -168,14 +168,14 @@ On Ubuntu you can use losetup to mount the raw image as a loopdevice to mount it
 losetup -f -P testing-host-disc0.raw
 losetup -l
 
-mount /dev/loop0p1 /mnt/test/  
+mount /dev/loop0p1 /mnt/test/
 or
 lvscan and mount the lvm volume
 ```
 
 ### How to import Images
 
-First of all you need your OpenStack credentials, having them in an `my-project-openrc.sh` file and source them to your shell. 
+First of all you need your OpenStack credentials, having them in an `my-project-openrc.sh` file and source them to your shell.
 
 The openstack cli client is now able to connect to the cloud environment and do all the following steps.
 
@@ -244,7 +244,7 @@ As we are starting an already configured system we do not need to inject SSH key
 openstack server create --flavor SCS-8V-16 \
  --image 2a12b545-5d09-4ca1-9a76-b57f8d2489be --boot-from-volume 20 \
  --security-group 73967e73-e8d5-4318-b621-a06e7496fec3 \
- --nic net-id=9688192e-11dd-4618-a18c-99d3267f630a,v4-fixed-ip=10.50.40.230 \ 
+ --nic net-id=9688192e-11dd-4618-a18c-99d3267f630a,v4-fixed-ip=10.50.40.230 \
  --block-device uuid=b34744f7-6ef6-4282-a001-08a06812e381,source_type=image,destination_type=volume,volume_size=20 \
  --os-compute-api-version 2.90 testing-host
 ```
@@ -262,7 +262,7 @@ openstack server list
 To see the attached volumes and their mountpoints:
 
 ```
-openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc   
+openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc
 +----------+--------------------------------------+--------------------------------------+------+------------------------+--------------------------------------+--------------------------------------+
 | Device   | Server ID                            | Volume ID                            | Tag  | Delete On Termination? | Attachment ID                        | BlockDeviceMapping UUID              |
 +----------+--------------------------------------+--------------------------------------+------+------------------------+--------------------------------------+--------------------------------------+
@@ -288,7 +288,7 @@ openstack console url show 71a8b930-4212-434a-8891-afdeeb1802dc
 
 This will print out the VNC URL for the videoconsole connection to your host.
 
-Now the server will boot and be available. 
+Now the server will boot and be available.
 
 Maybe you need to tweak the network setup if it is still not accessible.
 To do this, you could use the VNC console of the OpenStack host:

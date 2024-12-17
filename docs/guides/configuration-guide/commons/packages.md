@@ -1,5 +1,5 @@
 ---
-sidebar_label: Packages 
+sidebar_label: Packages
 ---
 
 # Packages

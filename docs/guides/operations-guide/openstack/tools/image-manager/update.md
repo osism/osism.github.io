@@ -1,5 +1,5 @@
 ---
-sidebar_label: Automated updates 
+sidebar_label: Automated updates
 sidebar_position: 1
 ---
 
@@ -7,9 +7,9 @@ sidebar_position: 1
 
 ## Overview
 
-The OpenStack Image Manager `update.py` Script updates the `/etc/images/*.yaml` files to the always latest release of the Distributions, set S3 Mirror Urls and uploads the Images to the mirror. 
+The OpenStack Image Manager `update.py` Script updates the `/etc/images/*.yaml` files to the always latest release of the distributions, set S3 mirror URLs and uploads the images to the mirror.
 
-These updated yaml files are later processed by the Image Manger itself. 
+These updated yaml files are later processed by the Image Manger itself.
 
 
 ## Installation
@@ -17,7 +17,7 @@ These updated yaml files are later processed by the Image Manger itself.
 Prepare to use the `update.py` script.
 
 ```
-git clone https://github.com/osism/openstack-image-manager/ 
+git clone https://github.com/osism/openstack-image-manager/
 cd openstack-image-manager
 pipenv install
 pipenv shell
@@ -27,9 +27,9 @@ pipenv shell
 
 ```
 python contrib/update.py --help
-                                                                                                                                                          
- Usage: update.py [OPTIONS]                                                                                                                               
-                                                                                                                                                          
+
+ Usage: update.py [OPTIONS]
+
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --debug                           Enable debug logging                                                                                                 │
 │ --dry-run                         Do not perform any changes                                                                                           │
@@ -46,14 +46,14 @@ python contrib/update.py --help
 
 :::note
 
-* At this time the update.py expects all yamls Files at /etc/images/, which can't be configured at the moment.
+* At this time the update.py expects all yaml files at /etc/images/, which can't be configured at the moment.
 * Mirroring can't be disabled at the moment.
 
 :::
 
 
-Best is to run this Script by cron or a CI job, to update all Distribution Files periodically to the latest release and afterwards run [Openstack Image Manager](../image-manager/).
-The Distribution Image yaml files must exists before running the script, you can use the files from Github repo at `etc/images/` as template for your first run.
+Best run this script by cron or a CI job, to update all distribution files periodically to the latest release and afterwards run [Openstack Image Manager](../image-manager/).
+The distribution image yaml files must exist before running the script, you can use the files from the Github repo at `etc/images/` as template for your first run.
 
 
 ```
@@ -108,7 +108,7 @@ $ python contrib/update.py
 2024-04-24 09:29:48 | INFO     | update_image:229 - New values are {'version': '20240423', 'build_date': datetime.date(2024, 4, 23), 'checksum': 'sha256:32a9d30d18803da72f5936cf2b7b9efcb4d0bb63c67933f17e3bdfd1751de3f3', 'url': 'https://cloud-images.ubuntu.com/noble/20240423/noble-server-cloudimg-amd64.img'}
 ```
 
-These yaml files are now extended with additional fields and the update.py will take care of the versions, checksum, url and build date to the latest release in the yaml file on every run.
+These yaml files are now extended with additional fields and the `update.py` will take care of the versions, checksum, url and build date to the latest release in the yaml file on every run.
 
 * latest_checksum_url  - URL of the distros checksum file
 * latest_url           - URL of the distros latest image
