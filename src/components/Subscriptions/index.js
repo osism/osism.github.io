@@ -221,6 +221,16 @@ export default function Subscriptions() {
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed Health Monitor</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed <a href="https://www.sovereigncloudstack.org">SCS</a> Compliant Tests</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
               </tbody>
             </table>
           </div>
