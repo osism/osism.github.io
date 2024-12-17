@@ -91,7 +91,7 @@ The following commands can be used to quickly check the status of Ceph:
 
   ```
   ceph versions
-  ``` 
+  ```
 
 Also you can run the following on each node running ceph-daemons,
 to provide further debug information about the environment:
@@ -233,7 +233,7 @@ This will destroy all data on the device!
 # nvme format -s2 /dev/nvmeXnY
 # blkdiscard /dev/nvmeXnY
 # nvme format -s1 /dev/nvmeXnY
-```  
+```
 
 ### Secure Erase a SATA/SAS drive using hdparm
 
@@ -276,7 +276,7 @@ This will destroy all data on the device!
 
    ```
    # hdparm --user-master wipeit --security-erase wipeit /dev/sdX
-   ```      
+   ```
 
 :::note
 
@@ -648,8 +648,8 @@ For Ceph, special playbooks were added to validate the deployment status of
 the OSD, MON and MGR services. The commands for use are `osism validate ceph-osds`,
 `osism validate ceph-mons`, and `osism validate ceph-mgrs`.
 
-These playbooks will validate that the deployed Ceph environment matches 
-the configuration and is overall in a healthy state. The playbooks will 
+These playbooks will validate that the deployed Ceph environment matches
+the configuration and is overall in a healthy state. The playbooks will
 generate report files in JSON format on the first manager node in `/opt/reports/validator`.
 
 ### Shutdown a Ceph cluster
@@ -712,7 +712,7 @@ You will need them to restart the cluster later.
 
    ```
    # systemctl | grep ceph-mds
-   ``` 
+   ```
 
    ```
    # systemctl disable --now ceph-mds@<unit>.service

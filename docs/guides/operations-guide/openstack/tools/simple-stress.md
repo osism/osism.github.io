@@ -21,7 +21,7 @@ pipenv shell
 
 ## Defaults
 
-The `main.py` command and his default options while executing the command.
+The `main.py` command and the default options while executing the command.
 
 ```
  --cleanup       true
@@ -51,7 +51,7 @@ The `main.py` command and his default options while executing the command.
 
 There must be a `clouds.yml` and a `secure.yml` file in the directory where the OpenStack Simple Stress will be executed, examples are provided within the git repository.
 
-The cloud profile to be used can be specified via the optional --cloud parameter. By default, the cloud profile with the name simple-stress is used. 
+The cloud profile to be used can be specified via the optional `--cloud` parameter. By default, the cloud profile with the name `simple-stress` is used.
 
 ```
 $ python src/main.py -h
@@ -158,7 +158,7 @@ Using a config directory with configfiles to run the test.
 
 Path to a config directory to pull `*.conf` files from. This file set is sorted,
 so as to provide a predictable parse order if individual options are over-ridden.
-The set is parsed after the file(s) specified via previous --config file, 
+The set is parsed after the file(s) specified via previous --config file,
 arguments hence over-ridden options in the directory take precedence. This
 option must be set from the command-line.
 
@@ -167,7 +167,7 @@ option must be set from the command-line.
 python src/main.py --config-dir /path/to/config-dir
 ```
 
-## Config files 
+## Config files
 
 The config files which can be used for `main.py` are using the [oslo.config format](https://docs.openstack.org/oslo.config/latest/configuration/quickstart.html), you can set the command line options as `key = value pair` and create your own config files matching your setup.
 

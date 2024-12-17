@@ -275,7 +275,7 @@ as **RancherOS x.y.z**. Here also the visibility of older images is not changed.
 #### image status
 
 * deactivation: change `status` to `deactivated`
-* reactivation: change `status` to `active` 
+* reactivation: change `status` to `active`
 
 #### Image visibility
 

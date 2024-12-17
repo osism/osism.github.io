@@ -74,14 +74,14 @@ use spaces instead of tabs.
 clouds:
   openstack:
     auth:
-      auth_url: <OS_AUTH_URL goes here> 
+      auth_url: <OS_AUTH_URL goes here>
       password: <OS_PASSWORD goes here, if not set, enter you password here>
       project_domain_name: <OS_PROJECT_DOMAIN_NAME goes here>
       project_name: <OS_PROJECT_NAME goes here>
       user_domain_name: <OS_USER_DOMAIN_NAME goes here>
       username: <OS_USERNAME goes here>
    region_name: <OS_REGION_NAME goes here>
-   identity_api_version: <OS_IDENTITY_API_VERSION goes here> 
+   identity_api_version: <OS_IDENTITY_API_VERSION goes here>
    interface: <OS_INTERFACE goes here>
 ```
 
@@ -110,7 +110,7 @@ clouds:
 ```python title="clouds.py"
 import os
 import yaml
- 
+
 clouds = {
   "clouds":{
     "openstack": {
@@ -128,7 +128,7 @@ clouds = {
     }
   }
 }
- 
+
 print(yaml.dump(clouds))
 ```
 
