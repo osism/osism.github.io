@@ -91,16 +91,6 @@ const config = {
           { to: "/users", label: "Users", position: "left" },
           { to: "/blog", label: "Blog", position: "left" },
           {
-            href: 'https://regiocloud.github.io',
-            label: 'REGIO',
-            position: 'right',
-          },
-          {
-            href: 'https://www.sovereigncloudstack.org',
-            label: 'Sovereign Cloud Stack',
-            position: 'right',
-          },
-          {
 	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
             label: 'Schedule a demo',
             position: 'right',
@@ -140,6 +130,16 @@ const config = {
               {
                 label: 'Support',
                 href: '/support',
+              },
+              {
+                href: 'https://regiocloud.github.io',
+                label: 'REGIO',
+                position: 'right',
+              },
+              {
+                href: 'https://www.sovereigncloudstack.org',
+                label: 'Sovereign Cloud Stack',
+                position: 'right',
               },
 	    ],
           },
