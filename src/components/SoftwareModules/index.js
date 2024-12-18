@@ -156,7 +156,7 @@ export default function SoftwareModules () {
         </div>
         <div className="row">
           <div className={clsx('col col--12')}>
-	    OSISM is the lifecycle management framework for software-defined cloud infrastructure.
+	    OSISM is the lifecycle management platform for software-defined cloud infrastructure.
             It manages the components needed to build your own private cloud.
           </div>
         </div>
