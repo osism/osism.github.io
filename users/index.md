@@ -8,7 +8,6 @@ sidebar_position: 10
 
 | Environment        | Operating company                  | Short Description                                                                                         |
 |:-------------------|:-----------------------------------|:----------------------------------------------------------------------------------------------------------|
-| Betacloud          | OSISM GmbH                         | Used for CI                                                                                               |
 | CNDS               | artcodix GmbH                      |                                                                                                           |
 | pluscloud open     | plusserver GmbH                    | Currently 4 regions, used for example for the [BayernCloud School (ByCS)](https://www.bycs.de/index.html) |
 | REGIO.cloud        | OSISM GmbH                         |                                                                                                           |
