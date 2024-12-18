@@ -6,7 +6,7 @@ sidebar_label: OpenStack Health Monitor
 Kurt Garloff, 2024-02-20
 
 ## Intro
-The development of [openstack-health-monitor](https://github.com/SovereignCloudStack/openstack-health-monitor/) was done on [openSUSE 15.x images](http://kfg.images.obs-website.eu-de.otc.t-systems.com/), just because the author is very familiar with it and has some of the needed tools preinstalled. That said, the setup is not depending on anything specific from openSUSE and should work on every modern Linux distribution.
+The development of [openstack-health-monitor](https://github.com/SovereignCloudStack/openstack-health-monitor/) was done on [openSUSE 15.x images](https://kfg.images.obs-website.eu-de.otc.t-systems.com/), just because the author is very familiar with it and has some of the needed tools preinstalled. That said, the setup is not depending on anything specific from openSUSE and should work on every modern Linux distribution.
 
 Setting it up again in a different environment using Debian 12 images avoids a few of the shortcuts that were used and thus should be very suitable instructions to get it working in general. The step by step instructions are covered here.
 
@@ -333,7 +333,7 @@ cp -p startup/apimon.service ~/.config/systemd/user/
 systemctl --user enable apimon
 systemctl --user start apimon
 sudo loginctl enable-linger debian
-tmux attach oshealthmon
+tmux attach -t oshealthmon
 ```
 
 This assumes that you are using the user `debian` for this monitoring and have checked out the repository at `~/openstack-health-monitor/`. Adjust the paths and user name otherwise. (If for whatever reason you have chosen to install things as root, you will have to install the systemd service unit in the system paths and ensure it's not started too early in the boot process.)
@@ -472,7 +472,7 @@ of health mon instances.
 
 Reload Caddy with `sudo systemctl reload caddy`. That's it.
 
-You should now be able to access `https://health.YOURCLOUD.sovereignit.de:3000` and see a proxy error
+You should now be able to access `https://health.YOURCLOUD.sovereignit.cloud:3000` and see a proxy error
 page because the Grafana service is not yet running (this is our next step).
 The very first request will be a bit slower, because Caddy interacts with Let's Encrypt API to create
 the TLS certificate behind the scenes.
@@ -551,7 +551,7 @@ We do the OIDC connection in the section `[auth.github]` [later](#github-oidc-in
 We can now restart the service: `sudo systemctl restart grafana-server`.
 Being at it, also enable it on system startup: `sudo systemctl enable grafana-server`.
 
-You should now be able to access your dashboard on `https://health.YOURCLOUD.sovereignit.de:3000` and log in
+You should now be able to access your dashboard on `https://health.YOURCLOUD.sovereignit.cloud:3000` and log in
 via the configured username `admin` and your `SOME_SECRET_PASS` password.
 
 #### Enable influx database in grafana
