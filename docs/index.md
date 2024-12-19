@@ -7,11 +7,11 @@ sidebar_position: 10
 
 OSISM is a solution for the holistic management of sustainable, sovereign
 software-defined cloud infrastructures. It provides a solid and stable base
-for the deployment, operation and lifecycle management of on-premise cloud
-infrastructures, for public cloud data centres and, at the edge,
-for distributed systems. It is also suitable for building supercomputers and HPC
-environments. OSISM enables fast, easy and consistent management and provisioning
-of compute, storage and network resources to run cloud-native applications.
+for the deployment and operation cloud infrastructures, for public cloud data
+centres and, at the edge, for distributed systems. It is also suitable for
+building supercomputers and HPC environments. OSISM enables fast, easy and
+consistent management and provisioning of compute, storage and network
+resources to run cloud-native applications.
 
 The documentation is organised into guides:
 
@@ -31,11 +31,9 @@ The documentation is organised into guides:
 
 ## Required knowledge
 
-OSISM is a life cycle management framework for managing complex modules such as Ceph,
-OpenStack or Kubernetes. We try to make deployment, upgrade, day2 operations etc. as
-easy as possible for everyone to use. However, knowledge is still required that we do
-not cover in our documentation. Wherever possible, we try to refer to existing documentation
-from e.g. Ansible or Docker.
+We try to make deployment, upgrade, day2 operations etc. as easy as possible for everyone
+to use. However, knowledge is still required that we do not cover in our documentation.
+Wherever possible, we try to refer to existing documentation from e.g. Ansible or Docker.
 
 If you are not sure whether you already have the required knowledge, need support in
 gaining the knowledge or would like a guided introduction, you are welcome to contact
