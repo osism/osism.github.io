@@ -89,7 +89,6 @@ const config = {
             label: 'Documentation',
           },
           { to: "/users", label: "Users", position: "left" },
-          { to: "/blog", label: "Blog", position: "left" },
           {
 	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
             label: 'Schedule a demo',
@@ -176,10 +175,6 @@ const config = {
             title: 'Company',
             items: [
               {
-                label: 'Blog',
-                href: '/blog',
-              },
-              {
                 label: 'Contact Us',
                 href: '/contact-us',
               },
@@ -229,7 +224,7 @@ const config = {
         // `hashed` is recommended as long-term-cache of index file is possible.
         hashed: true,
         docsRouteBasePath: 'https://osism.tech/docs/',
-        blogRouteBasePath: 'https://osism.tech/blog/',
+        // blogRouteBasePath: 'https://osism.tech/blog/',
         indexPages: true,
         // For Docs using Chinese, The `language` is recommended to set to:
         // ```
