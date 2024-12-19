@@ -148,6 +148,64 @@ to pin instance cores 0 and 1.
 
 All properties used in this section may also be set on images to indicate that instances should use the specified mixed or dedicated cores or isolated emulator threads. Note however that properties set on flavors take precedence.
 
+## Back instance memory by hugepages
+
+Qemu/KVM can make use of hugepages, which reduces the required number of TLB entries for the instances memory. Thus it will reduce the number TLB misses, which will result in faster memory access inside the instance.
+As with [dedicated cores](#dedicated-cores-for-instances) usage will enable NUMA topologies and require the [NUMA topology filter to be added to the nova-scheduler's enabled filters](#add-numa-topology-filter-to-nova-scheduler).
+Since allocating hugepages requires contiguous regions of memory it is advisable to do so at boot time, by [specifying the required size and number of hugepages on the kernel cmdline](https://docs.kernel.org/admin-guide/mm/hugetlbpage.html).
+
+If you have configured dedicated cores, make sure to configure a matching hugepage reservation by NUMA node.
+E.g. assuming a compute node with two NUMA nodes of 32GB where some cores and 8GB of 4k memory pages on the first NUMA node are reserved for the hypervisor services, while the rest should be used as hugepage-backed instance memory, the following cmdline could be used: `default_hugepagesz=1G transparent_hugepage=never hugepagesz=1G hugepages=0:24,1:32`
+This would set a default hugepage size of 1GB, turn off [transparent hugepages](https://docs.kernel.org/admin-guide/mm/transhuge.html), and reserve 24 1GB hugepages on NUMA node 0 and 32 1GB hugepages on NUMA node 1.
+To set this via osism for a group of hosts defined in the inventory create or add to the file with the following content:
+
+```yaml title="inventory/group_vars/INVENTORY_GROUP_NAME.yml"
+---
+grub__configuration:
+  - name: cmdline_linux
+    value:
+      - default_hugepagesz=1G
+      - transparent_hugepage=never
+      - hugepagesz=1G
+      - hugepages=0:24,1:32
+```
+Of course the same configuration may also be set by host using `host_vars` in `inventory/host_vars/INVENTORY_HOST_NAME.yml`.
+
+Sync the variables with the inventory by running
+
+```
+osism sync inventory
+```
+
+and apply the configuration with
+
+```
+osism apply grub
+```
+
+After rebooting the nodes the hugepages will be allocated. You may check this by, e.g. looking at the corresponding values in `/proc/meminfo`
+
+```
+grep Huge /proc/meminfo
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+FileHugePages:         0 kB
+HugePages_Total:      24
+HugePages_Free:       24
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:    1048576 kB
+Hugetlb:        25165824 kB
+```
+
+If you require hugepages for services on the compute node, make sure to configure nova to reserve them for the host by setting [DEFAULT.reserved_huge_pages](https://docs.openstack.org/nova/latest/configuration/config.html#DEFAULT.reserved_huge_pages) accordingly.
+
+To back an instance's memory by hugepages add the property `hw:mem_page_size=large` to a flavor and create the instance from it, e.g.:
+
+```
+openstack flavor set --property hw:mem_page_size=large $FLAVOR_NAME
+```
+
 ## Local SSD storage
 
 In this example, a local SSD is provided for use on compute node `testbed-node-0`.
