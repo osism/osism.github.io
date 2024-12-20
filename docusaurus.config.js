@@ -131,6 +131,11 @@ const config = {
                 href: '/support',
               },
               {
+                href: 'https://github.com/osism/issues/issues/new/choose',
+                label: 'Open issue',
+                position: 'right',
+              },
+              {
                 href: 'https://regiocloud.github.io',
                 label: 'REGIO',
                 position: 'right',
