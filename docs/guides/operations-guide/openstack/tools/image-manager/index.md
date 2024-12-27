@@ -8,6 +8,8 @@ sidebar_position: 50
 The [OpenStack Image Manager](https://pypi.org/project/openstack-image-manager/) is a tool for managing all
 images on an OpenStack environment
 
+* TODO: Update to describe using `osism manage images` instead?
+
 ## Requirements
 
 This information is only relevant for the operator of an OpenStack environment. You can skip this section if

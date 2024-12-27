@@ -11,6 +11,8 @@ It operates as a facilitator that orchestrates compute flavors in alignment
 with the standard [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
 by utilizing YAML files provided by the SCS project.
 
+* TODO: Update to describe using `osism manage flavors` instead?
+
 ## Installation
 
 The OpenStack Flavor Manager can be used via the OSISM CLI. This is the preferred way to use it.
