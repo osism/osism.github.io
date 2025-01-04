@@ -4,9 +4,11 @@ sidebar_label: Comparisons
 
 # Comparisons
 
-## OSISM vs. FishOS
+## OSISM vs. Sardina Systems FishOS
 
 ## OSISM vs. Red Hat OpenStack Services on OpenShift
+
+## OSISM vs. Red Hat OpenStack Platform
 
 ## OSISM vs. Canonical OpenStack
 
@@ -15,3 +17,17 @@ sidebar_label: Comparisons
 ## OSISM vs. Mirantis OpenStack for Kubernetes
 
 ## OSISM vs. OpenStack Ansible
+
+## OSISM vs. Kolla
+
+## OSISM vs. YAOOK
+
+## OSISM vs. VEXXHOST Atmosphere
+
+## OSISM vs. OpenStack Helm
+
+## OSISM vs. Rackspace Genestack
+
+## OSISM vs. OpenNebula
+
+## OSISM vs. Apache CloudStack
