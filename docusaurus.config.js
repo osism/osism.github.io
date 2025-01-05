@@ -89,6 +89,7 @@ const config = {
             label: 'Documentation',
           },
           { to: "/users", label: "Users", position: "left" },
+          { to: "/partners", label: "Partners", position: "left" },
           {
 	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
             label: 'Schedule a demo',
@@ -107,72 +108,49 @@ const config = {
             title: 'Resources',
             items: [
               {
+                label: 'Comparisions',
+                href: '/docs/appendix/comparisons',
+              },
+              {
                 label: 'Documentation',
                 href: '/docs',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/osism',
-              },
-              {
-                label: 'Zuul CI',
-                href: 'https://zuul.services.betacloud.xyz/t/osism/status',
               },
               {
                 label: 'Users',
                 href: '/users',
               },
               {
-                label: 'Partner Network',
+                label: 'Partners',
                 href: '/partners',
-              },
-              {
-                label: 'Support',
-                href: '/support',
-              },
-              {
-                href: 'https://github.com/osism/issues/issues/new/choose',
-                label: 'Open issue',
-                position: 'right',
-              },
-              {
-                href: 'https://regiocloud.github.io',
-                label: 'REGIO',
-                position: 'right',
-              },
-              {
-                href: 'https://www.sovereigncloudstack.org',
-                label: 'Sovereign Cloud Stack',
-                position: 'right',
               },
 	    ],
           },
           {
-            title: 'Comparisons',
+            title: 'External links',
             items: [
               {
-                label: 'OSISM vs. FishOS',
-                href: '/docs/appendix/comparisons#osism-vs-fishos',
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/company/osism/',
               },
               {
-                label: 'OSISM vs. Red Hat OpenStack Services on OpenShift',
-                href: '/docs/appendix/comparisons#osism-vs-red-hat-openstack-services-on-openshift',
+                label: 'GitHub',
+                href: 'https://github.com/osism',
               },
               {
-                label: 'OSISM vs. Canonical OpenStack',
-                href: '/docs/appendix/comparisons#osism-vs-canonical-openstack',
+                href: 'https://github.com/osism/issues/issues/new/choose',
+                label: 'Open issue on GitHub',
               },
               {
-                label: 'OSISM vs. SUSE OpenStack Cloud',
-                href: '/docs/appendix/comparisons#osism-vs-suse-openstack-cloud',
+                label: 'Zuul CI',
+                href: 'https://zuul.services.betacloud.xyz/t/osism/status',
               },
               {
-                label: 'OSISM vs. Mirantis OpenStack for Kubernetes',
-                href: '/docs/appendix/comparisons#osism-vs-mirantis-openstack-for-kubernetes',
+                href: 'https://regiocloud.github.io',
+                label: 'REGIO.cloud',
               },
               {
-                label: 'OSISM vs. OpenStack Ansible',
-                href: '/docs/appendix/comparisons#osism-vs-openstack-ansible',
+                href: 'https://www.sovereigncloudstack.org',
+                label: 'Sovereign Cloud Stack',
               },
 	    ],
           },
@@ -180,16 +158,20 @@ const config = {
             title: 'Company',
             items: [
               {
+                label: 'About Us',
+                href: '/about-us',
+              },
+              {
                 label: 'Contact Us',
                 href: '/contact-us',
               },
               {
-                label: 'LinkedIn',
-                href: 'https://www.linkedin.com/company/osism/',
+	        href: 'mailto:info@osism.tech?subject=OSISM Demo',
+                label: 'Schedule a demo',
               },
               {
-                label: 'About Us',
-                href: '/about-us',
+                label: 'Support',
+                href: '/support',
               },
               {
                 label: 'Jobs',
