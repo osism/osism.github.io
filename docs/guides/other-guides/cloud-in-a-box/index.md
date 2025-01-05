@@ -2,11 +2,12 @@
 sidebar_label: Cloud in a Box Guide
 ---
 
-# Cloud in a Box - CiaB
+# Cloud in a Box
 
 💡 Cloud in a Box (CiaB) is a minimalistic installation of the latest stable OSISM release with only services which are needed to
-make it work with Kubernetes. It is intended for use as a development
-system on bare-metal or for use in edge environments.
+make it work with Kubernetes. It is intended for use as a development system on bare-metal or for use in edge environments or for
+training purposes. Its flexibility makes it ideal for building, testing, and refining cloud infrastructure setups in controlled
+environments, enabling teams to experiment with different configurations and scenarios before deploying them to production
 
 :::warning
 
@@ -29,7 +30,7 @@ The system to be used as Cloud in a Box must fulfill these minimum requirements.
 
 ## Types
 
-There are two types of Cloud in a Box.
+There are three types of Cloud in a Box.
 
 1. The **sandbox** type is intended for developers and demonstrations. A full OSISM installation
    is one there which also includes Ceph and OpenSearch, for example. In the course of the
@@ -40,6 +41,9 @@ There are two types of Cloud in a Box.
    implemented differently. For example, OpenSearch is not deployed because the logs are
    delivered to a central location. The storage backend will also be implemented differently there
    in the future instead of Ceph.
+
+3. The **kubernetes** type is intended to be deployed as an appliance to provide a edge Kubernetes
+   cluster on a single node.
 
 ## Installation
 
@@ -170,7 +174,7 @@ start over with fresh installation.
 ### Wireguard VPN service access
 
 Copy the `/home/dragon/wireguard-client.conf` file from Cloud in a Box to your workstation. This is necessary
-for using the web endpoints on your workstation. Rename the wireguard config file to something
+for using the web endpoints on your workstation. Rename the Wireguard config file to something
 like `cloud-in-a-box.conf`.
 
 If you want to connect to the Cloud in a Box system from multiple clients, change the client IP
@@ -180,14 +184,37 @@ address in the config file to be different on each client.
 scp dragon@IP_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/cloud-in-a-box.conf
 ```
 
-Install wireguard on your workstation, if you have not done this before. For instructions how to do
+Install Wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
-wireguard documentation you will find [here](https://www.wireguard.com).
+Wireguard documentation you will find [here](https://www.wireguard.com).
 
-Start the wireguard tunnel.
+Start the Wireguard tunnel.
 
 ```bash
 sudo wg-quick up $HOME/cloud-in-a-box.conf
+```
+
+Once the Wireguard tunnel has been set up, it is possible to access individual services on a name-based basis.
+As a test, you can try whether the name `api.in-a-box.cloud` resolves correctly to the IP address `192.168.16.254`.
+
+```
+dig +short A api.in-a-box.cloud
+192.168.16.254
+```
+
+If this does not work, a DNS filter such as Pi-hole or AdGuard will most likely be used. This ensures that private
+IP ranges such as `192.168.16.0/20` are not resolved via a public DNS server. If this is the case, the following
+entries must be added to the local `/etc/hosts` file for the name resolution to work.
+
+```
+192.166.16.10	cgit.services.in-a-box.cloud
+192.166.16.10	netbox.services.in-a-box.cloud
+192.168.16.10	ara.services.in-a-box.cloud
+192.168.16.10	flower.services.in-a-box.cloud
+192.168.16.10	homer.services.in-a-box.cloud
+192.168.16.10	phpmyadmin.services.in-a-box.cloud
+192.168.16.10   manager.systems.in-a-box.cloud
+192.168.16.254	api.in-a-box.cloud
 ```
 
 ### Webinterfaces
