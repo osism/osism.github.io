@@ -108,7 +108,7 @@ const config = {
             title: 'Resources',
             items: [
               {
-                label: 'Comparisions',
+                label: 'Comparisons',
                 href: '/docs/appendix/comparisons',
               },
               {
