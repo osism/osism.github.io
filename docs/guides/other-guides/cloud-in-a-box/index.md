@@ -86,14 +86,24 @@ system release changes. The installation of older releases is currently not supp
 7. Start the system again. System is ready for use, by default DHCP is tried on the first network device.
 
 8. Login via SSH. Use the user `dragon` with the password `password`.
-   (You can obtain the ip address by inspecting the logs of your dhcp server or from the *issue text* of the virtual consoles of the system)
+
    ```bash
-   ssh dragon@IP_FROM_YOUR_SERVER
-   passwd
+   ssh dragon@IP_ADDRESS_FROM_YOUR_SERVER
    ```
-   ![CiaB Issue Text](images/issue.png)
+
+   :::info
+
+   You can obtain the IP address by inspecting the logs of your DHCP server or from the *issue text* of the virtual consoles of the system.
+
+   ![Cloud in a Box Issue Text](images/issue.png)
+
+   :::
 
 ### Manual installation
+
+The scripts are not idempotent yet. In case there is any fail during `bootstrap.sh` or `deploy.sh` you have to
+start over with fresh installation.
+
 
 1. Follow the [provisioning guide](../../deploy-guide/provisioning),
    skip the part about disk layout and do it this way:
@@ -154,20 +164,18 @@ system release changes. The installation of older releases is currently not supp
 11. Start the system again. System is ready for use, by default DHCP is tried on the first network device.
 
 11. Login via SSH. Use the user `dragon` with the password `password`.
-    (You can obtain the ip address by inspecting the logs of your dhcp server or from the *issue text* of the virtual consoles of the system)
+
     ```bash
-    ssh dragon@IP_FROM_YOUR_SERVER
-    passwd
+    ssh dragon@IP_ADDRESS_FROM_YOUR_SERVER
     ```
-    ![CiaB Issue Text](images/issue.png)
 
+    :::info
 
-:::info
+    You can obtain the IP address by inspecting the logs of your DHCP server or from the *issue text* of the virtual consoles of the system.
 
-The scripts are not idempotent yet. In case there is any fail during `bootstrap.sh` or `deploy.sh` you have to
-start over with fresh installation.
+    ![Cloud in a Box Issue Text](images/issue.png)
 
-:::
+    :::
 
 ## Usage
 
@@ -181,7 +189,7 @@ If you want to connect to the Cloud in a Box system from multiple clients, chang
 address in the config file to be different on each client.
 
 ```bash
-scp dragon@IP_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/cloud-in-a-box.conf
+scp dragon@IP_ADDRESS_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/cloud-in-a-box.conf
 ```
 
 Install Wireguard on your workstation, if you have not done this before. For instructions how to do
