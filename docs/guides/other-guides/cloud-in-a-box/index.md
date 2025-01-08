@@ -265,6 +265,11 @@ Login to Cloud in a Box as described in step 8 of the installation chapter.
    openstack server list # After installation there are no servers
    ```
 
+### Log files
+
+The logs that are logged on the console during the bootstrap and initial deployment
+can be viewed in the file `/var/log/install-cloud-in-a-box.log`.
+
 ### Import of additional images
 
 The [OpenStack Image Manager](https://github.com/osism/openstack-image-manager/) is used to manage images.
