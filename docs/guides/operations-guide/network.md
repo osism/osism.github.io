@@ -193,3 +193,104 @@ Servers:
     dfdf (dfdf at tcp:192.168.16.11:6644) last msg 146 ms ago
     085c (085c at tcp:192.168.16.12:6644) last msg 41063293 ms ago
 ```
+
+### L3 high availability
+
+Router L3 high availability is built natively into OVN and does not require any actions from neutron. OVN routers are shown as "HA" in neutron, with the flag being immutable.
+
+Nodes providing connection to external networks do have the `ovn-cms-options` key in their `Open_vSwitch` tables `external_ids` column set to `enable-chassis-as-gw`. This is done automatically in `osism` for all hosts in inventory group `ovn-controller-network`, which defaults to include all network nodes.
+You can check this on any particular node by running
+
+```
+docker exec openvswitch_vswitchd ovs-vsctl get Open_vSwitch . external_ids:ovn-cms-options
+```
+
+All nodes with the `ovn-cms-options=enable-chassis-as-gw` property take part in active/passive router gateway high availability.
+Gateway chassis will monitor other gateway chassis and compute node chassis, while compute node chassis will monitor all gateway chassis, but not each other.
+Monitoring is done using [Bidirectional Forwarding Detection (BFD)](https://datatracker.ietf.org/doc/html/rfc5880) over the geneve tunnels established between each chassis.
+Failures detected this way are
+
+* Disconnection of the gateway chassis from the network used for tunneling:
+  The BFD signal will be disrupted, since it it being send over the tunnel network. It is therfore advisable to not use a different physical network as tunnel network.
+* Stop/Crash of `openvswitch_vswitchd`:
+  The daemon is the source of the BFD signal.
+* Graceful termination of ovn-controller
+  The OVN controller will unregister the chassis on being gracefully stopped.
+  Note, that sending SIGTERM does not initiate graceful shutdown of this service.
+
+Note that there is no detection of failures in the external network connectivity of a gateway chassis and subsequently no failover in this case!
+
+For each router created in neutron a `Logical_Router` object is created in the OVN northd DB. The list can be retrived by connecting to one of the hosts running `ovn-northd`
+
+```
+docker exec ovn_northd ovn-nbctl --db $ovn_nb_connection list Logical_Router
+_uuid               : f0ea6a95-d4bd-40e0-9efd-6da197825981
+copp                : []
+enabled             : true
+external_ids        : {"neutron:availability_zone_hints"="", "neutron:revision_number"="5", "neutron:router_name"=test}
+load_balancer       : []
+load_balancer_group : []
+name                : neutron-e9133cdd-7c31-4f67-8aac-a32384ce7939
+nat                 : [960ebe78-3f75-4f6e-bab4-c19522407d20, 982dc2bc-4536-4912-90fb-2aca7ba358c3]
+options             : {always_learn_from_arp_request="false", dynamic_neigh_routers="true", mac_binding_age_threshold="0"}
+policies            : []
+ports               : [bc73e085-ea33-45a9-89cf-78f81625d172, edff2d86-3bdb-4396-a307-d7bfc69ac2d0]
+static_routes       : [fa183064-0953-4c93-880a-78b049a8846f]
+```
+
+The `ovn_nb_connection` is retrieved from the neutron ML2 configuration in the same as [described above](#open-virtual-network-ovn).
+
+Finding the routers external gateway port directly may be achieved by searching the OVN's `Logical_Router_Port` table for logical router ports having the `neutron:is_ext_gw=True` and `neutron:router_name=$Router_ID` in their `external_ids` column, where `$ROUTER_ID` is the ID of the router in neutron, which may also be found as part of the `name` in the OVN `Logical_Router` above.
+
+```
+ROUTER_ID="e9133cdd-7c31-4f67-8aac-a32384ce7939"
+docker exec ovn_northd ovn-nbctl --db $ovn_nb_connection find Logical_Router_Port external_ids:\"neutron:is_ext_gw\"=True external_ids:\"neutron:router_name\"=$ROUTER_ID
+_uuid               : bc73e085-ea33-45a9-89cf-78f81625d172
+enabled             : []
+external_ids        : {"neutron:is_ext_gw"=True, "neutron:network_name"=neutron-b7cb8fa6-10ee-4470-9212-95bb30390cc6, "neutron:revision_number"="322", "neutron:router_name"="e9133cdd-7c31-4f67-8aac-a32384ce7939", "neutron:subnet_ids"="9095ecb9-e32b-4ed7-8fdf-d9dd8bdaf50b"}
+gateway_chassis     : [06ce2cd0-b901-47c1-8bbd-889e16b1ae0f, cdf5423d-be53-44d4-b9cb-7df4138832b0, fadc4891-66ef-4478-b56c-66bf11cfff08]
+ha_chassis_group    : []
+ipv6_prefix         : []
+ipv6_ra_configs     : {}
+mac                 : "fa:16:3e:78:8c:d7"
+name                : lrp-429c0111-ba3b-4641-b4ac-3fad8749e592
+networks            : ["192.168.112.179/20"]
+options             : {}
+peer                : []
+status              : {hosting-chassis=testbed-node-1}
+```
+
+The `gateway_chassis` field in the output above shows the chassis currently involved providing high availability for the port and the `status` field shows the currently active chassis as the value of the `hosting-chassis` key.
+At most five gateway chassis are used even if more nodes with external connectivity are available to keep BFD complexity low.
+To look at the gateway chassis names and their priorities the bare list of gateway chassis from the command above may used to retrieve them specifically
+
+```
+docker exec ovn_northd ovn-nbctl --db=tcp:127.0.0.1:6641 --columns chassis_name,priority list Gateway_Chassis \
+  $(docker exec ovn_northd ovn-nbctl --db=tcp:127.0.0.1:6641 --bare --columns gateway_chassis find Logical_Router_Port external_ids:\"neutron:is_ext_gw\"=True external_ids:\"neutron:router_name\"=$ROUTER_ID)
+chassis_name        : testbed-node-2
+priority            : 2
+
+chassis_name        : testbed-node-0
+priority            : 1
+
+chassis_name        : testbed-node-1
+priority            : 3
+```
+
+#### Testing OVN router L3 high availability
+
+* In a test installation create a test environment
+* Find the router ID and query the `hosting-chassis` as described above
+* Run a network test through the router, e.g. by pinging the external gateway
+* Connect to the hosting chassis and cause a failover by triggering one of the detected failures above
+* Observe change of the hosting-chassis as described above
+* Evaluate packet-loss in the network test
+
+During testing of the first two detected failures listed above (loss of tunnel network connectivity and stop of `openvswitch_vswitchd`) loss of a couple of ICMP echo replies was observed occasionally, while failback consistently resulted in loss of multiple ICMP echo replies.
+During tests of graceful shutdown of `ovn-controller` no loss of ICMP replies was observed. Additionally no failback occured, but logical router port priorities were adapted instead, thus giving a seamless networking experience even during shutdown of network nodes.
+
+#### References
+https://docs.openstack.org/neutron/latest/admin/ovn/refarch/refarch.html
+https://docs.openstack.org/neutron/latest/admin/ovn/routing.html#l3ha-support
+https://docs.openstack.org/neutron/latest/admin/ovn/l3_scheduler.html
+https://docs.ovn.org/en/latest/topics/high-availability.html
