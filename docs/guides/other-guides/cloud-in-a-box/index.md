@@ -423,7 +423,24 @@ is permitted there.
 
 ## Troubleshooting
 
-![Broken disk setup](./images/screenshot1.png)
+### High load after reboot
+
+After a reboot, there is a very high load for the first few minutes. Depending
+on which CPU is used, this can be over 100.
+
+```
+dragon@cumulus:~$ uptime
+ 16:58:12 up 1 min,  1 user,  load average: 101.44, 30.94, 10.78
+```
+
+After about 5 minutes, when all services have been started, this normalises again
+and the load drops well below 10.
+
+![Netdata System Load Average](./images/netdata-high-load.png)
+
+### Broken disk setup
+
+![Broken disk setup](./images/broken-disk-setup.png)
 
 This error means that your disk setup is broken. Use `cfdisk` and delete all partitions on
 the system on which you want to install the Cloud in a Box image.
