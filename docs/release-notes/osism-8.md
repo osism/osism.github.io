@@ -13,9 +13,41 @@ The release notes for 8.0.1 must then also be taken into account.
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|
+| [8.1.0](#810-20250116)   | 16. January 2025    |
 | [8.0.2](#802-20241006)   | 6. October 2024     |
 | [8.0.1](#801-20240924)   | 24. September 2024  |
 | [8.0.0](#800-20240911)   | 11. September 2024  |
+
+## 8.1.0 (20250116)
+
+Release date: 17. January 2025
+
+* The Ceph service images have not been rebuilt. No upgrade of Ceph is required.
+
+* All OpenStack service images have been rebuilt. An upgrade of OpenStack
+  services is recommended.
+
+* The service images for Kuryr and Zun will be not longer included in the next stable release.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have been rebuilt. An upgrade is recommended.
+
+* The network service images (OVN, OVS) have been rebuilt. An upgrade is recommended.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have been rebuilt. An upgrade is recommended.
+
+* The logging service images (OpenSearch, Fluentd) have been rebuilt. An upgrade is recommended.
+
+* The `osism.commons.clevis` role was removed.
+
+* The `osism.services.tang` role was removed.
+
+* The `osism.services.metering` role was removed.
+
+* New `osism.services.wazuh_agent` role was added.
+
+* New `osism.services.sshd` role was added.
+
+* New `osism.services.teleport` role was added.
 
 ## 8.0.2 (20241006)
 
