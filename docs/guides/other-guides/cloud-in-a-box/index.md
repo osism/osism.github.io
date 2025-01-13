@@ -142,28 +142,40 @@ start over with fresh installation.
    sudo apt update
    sudo apt upgrade
    ```
+7. Install upgrades
 
-8. Run the `bootstrap.sh` script with the required [type](#types) (use of `sandbox` is recommended)
+   ```bash
+   sudo apt update
+   sudo apt upgrade
+   ```
+
+8. Run the `prepare.sh` script to prepare the configuration
+
+   ```bash
+   sudo /opt/cloud-in-a-box/prepare.sh
+   ```
+
+9. Run the `bootstrap.sh` script with the required [type](#types) (use of `sandbox` is recommended)
 
    ```bash
    sudo /opt/cloud-in-a-box/bootstrap.sh sandbox
    ```
 
-9. Run the `deploy.sh` script with the same type as in step 8 to deploy services like Ceph and OpenStack
+10. Run the `deploy.sh` script with the same type as in step 8 to deploy services like Ceph and OpenStack
 
    ```bash
    sudo /opt/cloud-in-a-box/deploy.sh sandbox
    ```
 
-10. Shutdown the system
+11. Shutdown the system
 
     ```bash
     sudo shutdown -h now
     ```
 
-11. Start the system again. System is ready for use, by default DHCP is tried on the first network device.
+12. Start the system again. System is ready for use, by default DHCP is tried on the first network device.
 
-11. Login via SSH. Use the user `dragon` with the password `password`.
+13. Login via SSH. Use the user `dragon` with the password `password`.
 
     ```bash
     ssh dragon@IP_ADDRESS_FROM_YOUR_SERVER
