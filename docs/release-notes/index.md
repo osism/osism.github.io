@@ -14,6 +14,8 @@ The old release notes (before OSISM 7) can be found on the archived page
 
 **The latest available release of OSISM is `8.0.2`.**
 
+* TODO: Osism 7 is EOL? Discuss date format
+
 | Series               | Status               | Initial Release Date | Next Phase           | EOL Date         |
 |:---------------------|:---------------------|:---------------------|:---------------------|:-----------------|
 | [OSISM 8](./osism-8) | Maintained           | 11. September 2024   | Maintained           |                  |

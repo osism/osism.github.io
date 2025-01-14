@@ -68,14 +68,14 @@ The OSISM Testbed requires at least the following project quota when using the d
 
 | Quantity | Resource             | Note                                          |
 |:---------|:---------------------|:----------------------------------------------|
-| 4        | Instances            | 28 VCPUs + 112 GByte RAM (3 modes, 1 manager) |
+| 4        | Instances            | 28 VCPUs + 112 GByte RAM (3 nodes, 1 manager) |
 | 9        | Volumes              | 90 GByte volume storage                       |
 | 1        | Floating IP          |                                               |
 | 1        | Keypair              |                                               |
-| 3        | Security group       |                                               |
+| 3        | Security groups      |                                               |
 | 16       | Security group rules |                                               |
 | 1        | Network              |                                               |
-| 1        | Subetwork            |                                               |
+| 1        | Subnet               |                                               |
 | 6        | Ports                |                                               |
 | 1        | Router               |                                               |
 
@@ -117,7 +117,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    definition in `terraform/clouds.yaml`.
 
    The user specific settings of the `clouds.yaml` file are provided by the cloud provider. Please check the
-   documentation  of the cloud provider you are using or their support for details.
+   documentation of the cloud provider you are using or their support for details.
 
    [REGIO.cloud](https://regio.digital) is used as an example here. The cloud name in `clouds.yaml`
    and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. It is important that
@@ -226,7 +226,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    make ENVIRONMENT=regiocloud login
    ```
 
-   Yo can log in to the nodes of the cluster via the manager.
+   You can log in to the nodes of the cluster via the manager.
 
    ```bash
    osism console testbed-node-0
@@ -461,7 +461,7 @@ The expiration time of the Single Sign On tokens can be controlled on multiple l
 
 #### Usage of the OpenStack CLI
 
-The `environments/openstack` folder contains the needed files for the openstack client:
+The `environments/openstack` folder contains the files needed for the `openstack` client:
 
 ```bash
 cd environments/openstack
@@ -469,9 +469,11 @@ export OS_CLOUD=<the cloud environment>  # i.e. admin
 openstack floating ip list
 ```
 
+* TODO: fill this with some useful stuff to make the reference below worthwhile
+
 #### OpenStack CLI operations with OpenID Connect password
 
-Using the OpenStack cli is also possible via OIDC, assuming you provisioned the user **alice** with password **password**,
+Using the OpenStack CLI is also possible via OIDC, assuming you provisioned the user **alice** with password **password**,
 then you can perform a simple `project list` operation like this:
 
 See chapter "Usage the OpenStack CLI" for basic openstack usage.
@@ -494,10 +496,10 @@ project list
 
 #### OpenStack CLI token issue with OpenID Connect
 
-It is also possible to exchange your username/password to a token, for further use with the cli.
+It is also possible to exchange your username/password to a token, for further use with the CLI.
 The `token issue` subcommand returns an SQL table, in which the `id` column's `value` field contains the token:
 
-See chapter "Usage the OpenStack CLI" for basic openstack usage.
+See chapter "Usage of the OpenStack CLI" for basic openstack usage.
 
 ```bash
 openstack \
@@ -541,7 +543,7 @@ OpenStack dashboard via the public IP address of the manager, the following chan
 of the other cloud is changed accordingly.
 
 1. Add the customisation `external_api`. This customisation makes sure that the required security group rules
-   are created for the various OpenStack APIs and the OpenStack dashboard.
+   are created to allow access to the various OpenStack APIs and the OpenStack dashboard.
 
    ```
    # customisation:external_api
@@ -766,7 +768,7 @@ export LC_ALL=en_US.UTF-8
 To find out the locale used on the system `printenv` can be used.
 
 ```bash
-$ printenv | grep -i lang|locale
+$ printenv | egrep -i 'lang|lc_'
 LANG="en_US.UTF-8"
 LC_COLLATE="en_US.UTF-8"
 LC_CTYPE="UTF-8"
@@ -786,6 +788,8 @@ This section describes how to configure and customise the OSISM Testbed.
 #### Variables
 
 The defaults for the OpenTofu variables are intended for [REGIO.cloud](https://regio.digital).
+
+* TODO: Ubuntu 24.04 supported? default?
 
 | Variable                  | Default                  | Note                                     |
 |:--------------------------|:-------------------------|:-----------------------------------------|
@@ -853,19 +857,22 @@ The following stable Ceph and OpenStack releases are supported.
 
 The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ansible/).
 
+* TODO: check current default
 * Ceph Quincy (**default**)
 * Ceph Reef
 * Ceph Squid
 
 The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
 
-* OpenStack 2023.1
 * OpenStack 2023.2
 * OpenStack 2024.1 (**default**)
+* OpenStack 2024.2
+* TODO: check current default
 
 The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
 
 * Kubernetes v1.30 (**default**)
+* TODO: check current default
 
 ### Included services
 
