@@ -34,24 +34,30 @@ sidebar_position: 10
 * [Monitoring Plane](./layers#monitoring-plane)
 * [Network Plane](./layers#network-plane)
 
-## Cluster design
+## Reference architecture
 
-* [Compute architecture](./design#compute-architecture)
-* [Storage architecture](./design#storage-architecture)
-* [Network architecture](./design#network-architecture)
-* [Identity architecture](./design#identity-architecture)
-* [Control plane architecture](./design#control-plane-architecture)
+* [Manager architecture](./architecture#manager-architexture)
+* [Control architecture](./architecture#control-architecture)
+* [Compute architecture](./architecture#compute-architecture)
+* [Storage architecture](./architecture#storage-architecture)
+* [Network architecture](./architecture#network-architecture)
+* [Routing architecture](./architecture#routing-architecture)
+* [Firewall architecture](./architecture#firewall-architecture)
+* [Loadbalancer architecture](./architecture#loadbalancer-architecture)
+* [Logging architecture](./architecture#logging-architecture)
+* [Monitoring architecture](./architecture#monitoring-architecture)
+* [Identity architecture](./architecture#identity-architecture)
 
 ## Use cases
 
 * [Hyper-converged infrastructure (HCI)](./use-cases#hyper-converged-infrastructure-hci)
 
-## Hardware Bill of Materials
+## Bill of Materials
 
-* [Control nodes](./hardware-bom#control-nodes)
-* [Compute nodes](./hardware-bom#compute-nodes)
-* [Storage nodes](./hardware-bom#storage-nodes)
-* [Network nodes](./hardware-bom#network-nodes)
-* [Manager nodes](./hardware-bom#manager-nodes)
-* [Switches](./hardware-bom#switches)
-* [Network interface cards](./hardware-bom#network-interface-cards)
+* [Control nodes](./bom#control-nodes)
+* [Compute nodes](./bom#compute-nodes)
+* [Storage nodes](./bom#storage-nodes)
+* [Network nodes](./bom#network-nodes)
+* [Manager nodes](./bom#manager-nodes)
+* [Switches](./bom#switches)
+* [Network interface cards](./bom#network-interface-cards)

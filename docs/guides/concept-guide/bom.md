@@ -1,9 +1,9 @@
 ---
-sidebar_label: Hardware Bill of Materials
+sidebar_label: Bill of Materials
 sidebar_position: 50
 ---
 
-# Hardware Bill of Materials
+# Bill of Materials
 
 :::info
 

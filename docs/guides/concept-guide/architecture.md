@@ -1,9 +1,9 @@
 ---
-sidebar_label: Cluster design
+sidebar_label: Reference architecture
 sidebar_position: 30
 ---
 
-# Cluster design
+# Reference architecture
 
 :::info
 
@@ -13,12 +13,24 @@ and have been published under the Apache Licence 2.0.
 
 :::
 
-## Compute architecture
+## Manager architecture
 
-## Control plane architecture
+## Control architecture
+
+## Compute architecture
 
 ## Storage architecture
 
 ## Network architecture
+
+## Routing architecture
+
+## Firewall architecture
+
+## Loadbalancer architecture
+
+## Logging architecture
+
+## Monitoring architecture
 
 ## Identity architecture
