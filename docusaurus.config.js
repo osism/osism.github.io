@@ -61,6 +61,15 @@ const config = {
 
   plugins: [
     [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/docs/cloud-in-a-box/',
+            from: '/docs/guides/other-guides/cloud-in-a-box/',
+          },
+        ],
+      },
       '@docusaurus/plugin-content-docs',
       {
         id: 'users',
