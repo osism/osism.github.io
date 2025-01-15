@@ -68,6 +68,10 @@ const config = {
             to: '/docs/cloud-in-a-box/',
             from: '/docs/guides/other-guides/cloud-in-a-box/',
           },
+          {
+            to: '/docs/testbed/',
+            from: '/docs/guides/other-guides/testbed',
+          },
         ],
       },
     ],

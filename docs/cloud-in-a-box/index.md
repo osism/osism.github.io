@@ -1,6 +1,6 @@
 ---
 sidebar_label: Cloud in a Box
-sidebar_position: 80
+sidebar_position: 70
 ---
 
 # Cloud in a Box
