@@ -1,5 +1,6 @@
 ---
 sidebar_label: Developer Guide
+sidebar_position: 60
 ---
 
 # Developer Guide
