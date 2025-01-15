@@ -70,6 +70,8 @@ const config = {
           },
         ],
       },
+    ],
+    [
       '@docusaurus/plugin-content-docs',
       {
         id: 'users',
