@@ -17,4 +17,5 @@ sidebar_position: 50
 * The [Troubleshooting Guide](./troubleshooting-guide/) explains how to resolve problems.
   It is an extension of the Operations Guide.
 * The [User Guide](./user-guide/) is intended for users of the individual components. It contains
-  best practices, as well as other information.
+* The [Developer Guide](./developer-guide/) is intended for developers. It explains, for example,
+  how a new service can be added or what requirements we have for Ansible syntax.
