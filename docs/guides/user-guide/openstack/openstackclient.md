@@ -1,10 +1,12 @@
 ---
 sidebar_label: Client
+sidebar_position: 10
 ---
 
 # Client
 
-OpenStackClient looks for a `clouds.yaml` configuration file in the following locations:
+[OpenStackClient](https://docs.openstack.org/python-openstackclient/latest/) looks
+for a `clouds.yaml` configuration file in the following locations:
 
 - current directory
 - `~/.config/openstack`
