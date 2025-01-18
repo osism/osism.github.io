@@ -28,17 +28,15 @@ The `hw_rescue_device` and `hw_rescue_bus` properties may be omitted if you do n
 
 ### Using nova local storage
 
-Create an instance with a blank local boot device, e.g.:
-
-Until [this bug](https://bugs.launchpad.net/nova/+bug/2090926) is fixed, one cannot create an instance with a blank local boot device. As a workaround create an unbootable dummy image first, e.g.:
+One cannot create an instance with a blank local boot device. As a workaround create a blank image first, e.g.:
 
 ```
-DUMMY_IMAGE_NAME="dummy"
-dd if=/dev/zero of="$DUMMY_IMAGE_NAME" bs=1k count=1
+BLANK_IMAGE_NAME="blank"
+dd if=/dev/zero of="$BLANK_IMAGE_NAME" bs=1k count=1
 openstack image create \
-  --file "$DUMMY_IMAGE_NAME" \
-  "$DUMMY_IMAGE_NAME"
-rm  "$DUMMY_IMAGE_NAME"
+  --file "$BLANK_IMAGE_NAME" \
+  "$BLANK_IMAGE_NAME"
+rm  "$BLANK_IMAGE_NAME"
 ```
 
 Create the instance:
@@ -48,19 +46,7 @@ INSTANCE_NAME=""
 FLAVOR=""
 openstack server create \
   --flavor "$FLAVOR" \
-  --image "$DUMMY_IMAGE_NAME" \
-  --no-network \
-  "$INSTANCE_NAME"
-```
-
-Once the bug is fixed the instance may be created directly:
-
-```
-INSTANCE_NAME=""
-FLAVOR=""
-openstack server create \
-  --flavor "$FLAVOR" \
-  --block-device "source_type=blank,destination_type=local,guest_format=raw,boot_index=0" \
+  --image "$BLANK_IMAGE_NAME" \
   --no-network \
   "$INSTANCE_NAME"
 ```
