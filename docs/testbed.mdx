@@ -255,12 +255,12 @@ This section describes step by step how to deploy the OSISM Testbed.
    so that deployments do not have to be lengthy. Run this script **before** the deployment scripts.
 
    ```bash
-   /opt/configuration/scripts/deploy/001-helper-services.sh
-   /opt/configuration/scripts/deploy/005-kubernetes.sh
-   /opt/configuration/scripts/deploy/100-ceph-services.sh
-   /opt/configuration/scripts/deploy/200-infrastructure-services-basic.sh
-   /opt/configuration/scripts/deploy/300-openstack-services-basic.sh
-   /opt/configuration/scripts/deploy/400-monitoring-services.sh
+   /opt/configuration/scripts/deploy/001-helpers.sh
+   /opt/configuration/scripts/deploy/100-ceph-with-ansible.sh
+   /opt/configuration/scripts/deploy/200-infrastructure.sh
+   /opt/configuration/scripts/deploy/300-openstack.sh
+   /opt/configuration/scripts/deploy/400-monitoring.sh
+   /opt/configuration/scripts/deploy/500-kubernetes.sh
    ```
 
     Prepare OpenStack resources like public network, flavors and images by running
@@ -268,7 +268,7 @@ This section describes step by step how to deploy the OSISM Testbed.
 
    :::info
 
-   If you only want to deploy the monitoring services with `/opt/configuration/scripts/deploy/400-monitoring-services.sh`,
+   If you only want to deploy the monitoring services with `/opt/configuration/scripts/deploy/400-monitoring.sh`,
    a few dependencies must be deployed first. You can then use the monitoring services without having to install a
    complete OpenStack & Ceph environment.
 
@@ -574,29 +574,29 @@ of the other cloud is changed accordingly.
 
 ### Deploy services
 
-| Script                                                                    | Description                 |
-|:--------------------------------------------------------------------------|:----------------------------|
-| `/opt/configuration/scripts/deploy/000-manager-service.sh`                |                             |
-| `/opt/configuration/scripts/deploy/001-helper-services.sh`                |                             |
-| `/opt/configuration/scripts/deploy/100-ceph-services.sh`                  | Alternative to ceph-ansible |
-| `/opt/configuration/scripts/deploy/100-rook-services.sh`                  |                             |
-| `/opt/configuration/scripts/deploy/200-infrastructure-services.sh`        |                             |
-| `/opt/configuration/scripts/deploy/300-openstack-services.sh`             |                             |
-| `/opt/configuration/scripts/deploy/310-openstack-services-extended.sh`    |                             |
-| `/opt/configuration/scripts/deploy/400-monitoring-services.sh`            |                             |
-| `/opt/configuration/scripts/deploy/500-kubernetes.sh`                     |                             |
-| `/opt/configuration/scripts/deploy/510-clusterapi.sh`                     |                             |
+| Script                                                            | Description                 |
+|:------------------------------------------------------------------|:----------------------------|
+| `/opt/configuration/scripts/deploy/000-manager.sh`                |                             |
+| `/opt/configuration/scripts/deploy/001-helpers.sh`                |                             |
+| `/opt/configuration/scripts/deploy/100-ceph-with-ansible.sh`      | Ceph with Ansible           |
+| `/opt/configuration/scripts/deploy/100-ceph-with-rook.sh`         | Ceph with Rook              |
+| `/opt/configuration/scripts/deploy/200-infrastructure.sh`         |                             |
+| `/opt/configuration/scripts/deploy/300-openstack.sh`              |                             |
+| `/opt/configuration/scripts/deploy/310-openstack-extended.sh`     |                             |
+| `/opt/configuration/scripts/deploy/400-monitoring.sh`             |                             |
+| `/opt/configuration/scripts/deploy/500-kubernetes.sh`             |                             |
+| `/opt/configuration/scripts/deploy/510-clusterapi.sh`             |                             |
 
 ### Upgrade services
 
 | Script                                                                    | Description                 |
 |:--------------------------------------------------------------------------|:----------------------------|
-| `/opt/configuration/scripts/upgrade/100-ceph-services.sh`                 |                             |
-| `/opt/configuration/scripts/upgrade/100-rook-services.sh`                 | Alternative to ceph-ansible |
-| `/opt/configuration/scripts/upgrade/200-infrastructure-services.sh`       |                             |
-| `/opt/configuration/scripts/upgrade/300-openstack-services.sh`            |                             |
-| `/opt/configuration/scripts/upgrade/310-openstack-services-extended.sh`   |                             |
-| `/opt/configuration/scripts/upgrade/400-monitoring-services.sh`           |                             |
+| `/opt/configuration/scripts/upgrade/100-ceph-with-ansible.sh`             | Ceph with Ansible           |
+| `/opt/configuration/scripts/upgrade/100-ceph-with-rook.sh`                | Ceph with Rook              |
+| `/opt/configuration/scripts/upgrade/200-infrastructure.sh`                |                             |
+| `/opt/configuration/scripts/upgrade/300-openstack.sh`                     |                             |
+| `/opt/configuration/scripts/upgrade/310-openstack-extended.sh`            |                             |
+| `/opt/configuration/scripts/upgrade/400-monitoring.sh`                    |                             |
 | `/opt/configuration/scripts/upgrade/500-kubernetes.sh`                    |                             |
 | `/opt/configuration/scripts/upgrade/510-clusterapi.sh`                    |                             |
 
@@ -672,8 +672,8 @@ This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is l
 
 ```
 /opt/configuration/scripts/deploy-services.sh
-/opt/configuration/scripts/deploy-ceph-services.sh
-/opt/configuration/scripts/upgrade/100-rook-services.sh
+/opt/configuration/scripts/deploy-ceph.sh
+/opt/configuration/scripts/upgrade/100-ceph-with-rook.sh
 ```
 
 ## Using testbed for OpenStack development
