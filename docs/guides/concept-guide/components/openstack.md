@@ -31,7 +31,6 @@ Image source: [Introduction to Red Hat OpenStack Services on OpenShift](https://
 * Manila: Shared Filesystems
 * Octavia: Load balancer
 * Designate: DNS
-* Heat: Orchestration
 * Placement
 * Barbican: Key Management
 * Nova: Compute
