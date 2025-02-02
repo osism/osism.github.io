@@ -79,25 +79,24 @@ listed there will be queried during the execution of Cookiecutter.
    set the `openstack_version` and the `ceph_version` explicitly.
 
    ```
-   [1/19] with_ceph (1):
-   [2/19] with_keycloak (0):
-   [3/19] ceph_network(192.168.16.0/20):
-   [4/19] ceph_version (quincy):
-   [5/19] domain (osism.xyz):
-   [6/19] fqdn_external (api.osism.xyz):
-   [7/19] fqdn_internal (api-int.osism.xyz):
-   [8/19] git_host (github.com):
-   [9/19] git_port (22):
-   [10/19] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
-   [11/19] git_username (git):
-   [12/19] git_version (main):
-   [13/19] ip_external (192.168.16.254):
-   [14/19] ip_internal (192.168.16.9):
-   [15/19] manager_version (7.0.4):
-   [16/19] name_server (149.112.112.112):
-   [17/19] ntp_server (de.pool.ntp.org):
-   [18/19] openstack_version (2023.2):
-   [19/19] project_name (configuration):
+   [1/18] with_ceph (1):
+   [2/18] ceph_network(192.168.16.0/20):
+   [3/18] ceph_version (quincy):
+   [4/18] domain (osism.xyz):
+   [5/18] fqdn_external (api.osism.xyz):
+   [6/18] fqdn_internal (api-int.osism.xyz):
+   [7/18] git_host (github.com):
+   [8/18] git_port (22):
+   [9/18] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY):
+   [10/18] git_username (git):
+   [11/18] git_version (main):
+   [12/18] ip_external (192.168.16.254):
+   [13/18] ip_internal (192.168.16.9):
+   [14/18] manager_version (7.0.4):
+   [15/18] name_server (149.112.112.112):
+   [16/18] ntp_server (de.pool.ntp.org):
+   [17/18] openstack_version (2023.2):
+   [18/18] project_name (configuration):
    ```
 
 ### Step 3: Upload the new configuration to the remote git repository
@@ -436,7 +435,6 @@ set the `openstack_version` and the `ceph_version` explicitly.
 | `openstack_version`        | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                  |
 | `project_name`             | Name of the configuration repository directory                                                                                             | `configuration`                           |
 | `with_ceph`                | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                       |
-| `with_keycloak`            | `1` to prepare Keycloak integration , `0` to not prepare Keycloak integration                                                              | `0`                                       |
 
 ## Configuration repository layout
 
