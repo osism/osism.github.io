@@ -417,10 +417,8 @@ If you want to access the services please choose the URL from the following tabl
 | HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984   | openstack    | password     |                 |
 | HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984   | openstack    | password     |                 |
 | Homer                    | https://homer.testbed.osism.xyz                |              |              |                 |
-| Horizon (via Keycloak)   | https://api.testbed.osism.xyz                  | alice        | password     |                 |
 | Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin        | password     | domain: default |
 | Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test         | test         | domain: test    |
-| Keycloak                 | https://keycloak.testbed.osism.xyz/auth        | admin        | password     |                 |
 | Netbox                   | https://netbox.testbed.osism.xyz               | admin        | password     |                 |
 | Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |              |              |                 |
 | Nexus                    | https://nexus.testbed.osism.xyz                | admin        | password     |                 |
@@ -428,37 +426,6 @@ If you want to access the services please choose the URL from the following tabl
 | Prometheus               | https://api-int.testbed.osism.xyz:9091         | admin        | password     |                 |
 | RabbitMQ                 | https://api-int.testbed.osism.xyz:15672        | openstack    | password     |                 |
 | phpMyAdmin               | https://phpmyadmin.testbed.osism.xyz           | root         | password     |                 |
-
-### Authentication with OIDC
-
-Authentication with OpenID Connect (OIDC) is possible via Keycloak, which is automatically configured for the OIDC mechanism.
-
-#### OpenStack web dashboard (Horizon) login via OIDC
-
-For logging in via OIDC, open your browser at OpenStack Dashboard Login Page, select **Authenticate via Keycloak**, after being
-redirected to the Keycloak login page, perform the login with the credentials **alice** and **password**.
-After that you will be redirected back to the Horizon dashboard, where you will be logged in with the user **alice**.
-
-#### OpenStack web dashboard (Horizon) logout
-
-Keep in mind, that clicking **Sign Out** on the Horizon dashboard currently doesn't revoke your OIDC token, and any consequent
-attempt to **Authenticate via Keycloak** will succeed without providing the credentials.
-
-The expiration time of the Single Sign On tokens can be controlled on multiple levels in Keycloak.
-
-1. On realm level under *Realm Settings* > *Tokens*.
-   Assuming the *keycloak_realm* ansible variable is the default *osism*, and keycloak is listening on
-   [keycloak.testbed.osism.xyz](https://keycloak.testbed.osism.xyz), then the configuration form is available
-   [here](https://keycloak.testbed.osism.xyz/auth/admin/master/console/#/realms/osism/token-settings).
-
-   Detailed information is available in the Keycloak Server Administrator Documentation
-   [Session and Token Timeouts](https://www.keycloak.org/docs/latest/server_admin/#_timeouts) section.
-
-2. In a realm down on the [client level](https://keycloak.testbed.osism.xyz/auth/admin/master/console/#/realms/osism/clients)
-   select the client (keystone), and under *Settings* > *Advanced Settings*.
-
-   It is recommended to keep the *Access Token Lifespan* on a relatively low value, with the trend of blocking third party
-   cookies. For further information see the Keycloak documentation's [Browsers with Blocked Third-Party Cookies](https://www.keycloak.org/docs/latest/securing_apps/#browsers-with-blocked-third-party-cookies) section.
 
 #### Usage of the OpenStack CLI
 
@@ -469,67 +436,6 @@ cd environments/openstack
 export OS_CLOUD=<the cloud environment>  # i.e. admin
 openstack floating ip list
 ```
-
-#### OpenStack CLI operations with OpenID Connect password
-
-Using the OpenStack cli is also possible via OIDC, assuming you provisioned the user **alice** with password **password**,
-then you can perform a simple `project list` operation like this:
-
-See chapter "Usage the OpenStack CLI" for basic openstack usage.
-
-```bash
-openstack \
- --os-cacert /etc/ssl/certs/ca-certificates.crt \
- --os-auth-url https://api.testbed.osism.xyz:5000/v3 \
- --os-auth-type v3oidcpassword \
- --os-client-id keystone \
- --os-client-secret 0056b89c-030f-486b-a6ad-f0fa398fa4ad \
- --os-username alice \
- --os-password password \
- --os-identity-provider keycloak \
- --os-protocol openid \
- --os-identity-api-version 3 \
- --os-discovery-endpoint https://keycloak.testbed.osism.xyz/auth/realms/osism/.well-known/openid-configuration \
-project list
-```
-
-#### OpenStack CLI token issue with OpenID Connect
-
-It is also possible to exchange your username/password to a token, for further use with the cli.
-The `token issue` subcommand returns an SQL table, in which the `id` column's `value` field contains the token:
-
-See chapter "Usage the OpenStack CLI" for basic openstack usage.
-
-```bash
-openstack \
- --os-cacert /etc/ssl/certs/ca-certificates.crt \
- --os-auth-url https://api.testbed.osism.xyz:5000/v3 \
- --os-auth-type v3oidcpassword \
- --os-client-id keystone \
- --os-client-secret 0056b89c-030f-486b-a6ad-f0fa398fa4ad \
- --os-username alice \
- --os-password password \
- --os-identity-provider keycloak \
- --os-protocol openid \
- --os-identity-api-version 3 \
- --os-discovery-endpoint https://keycloak.testbed.osism.xyz/auth/realms/osism/.well-known/openid-configuration \
- --os-openid-scope "openid profile email" \
-token issue \
-  -c id
-  -f value
-```
-
-An example token is like:
-
-```sh
-gAAAAABhC98gL8nsQWknro3JWDXWLFCG3CDr3Mi9OIlvVAZMjy2mNgYtlXv_0yAIy-
-nSlLAaLIGhht17-mwf8uclKgRuNVsYLSmgUpB163l89-ch2w2_OFe9zNSQNWf4qfd8
-Cl7E7XvvUoFr1N8Gh09vaYLvRvYgCGV05xBUSs76qCHa0qElPUsk56s5ft4ALrSrzD
-4cEQRVb5PXNjywdZk9_gtJziz31A7sD4LPIy82O5N9NryDoDw
-```
-
-* TODO: OpenStack CLI operations with token
-* TODO: OpenStack CLI token revoke
 
 ## Advanced Usage
 
@@ -881,7 +787,6 @@ The following services can currently be used with the OSISM Testbed without furt
 * Grafana
 * Haproxy
 * Keepalived
-* Keycloak
 * Kubernetes
 * Mariadb
 * Memcached
