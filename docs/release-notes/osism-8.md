@@ -18,6 +18,15 @@ The release notes for 8.0.1 must then also be taken into account.
 | [8.0.1](#801-20240924)   | 24. September 2024  |
 | [8.0.0](#800-20240911)   | 11. September 2024  |
 
+## Next
+
+Release date: ???
+
+* The `osism.services.virtualbmc` role was removed. Tenks, a virtual bare metal cluster management,
+  will be used in the future. The related virtualbmc container images was also removed.
+
+* Ansible 11 is supported by all OSISM collections and will be used from now on.
+
 ## 8.1.0 (20250116)
 
 Release date: 17. January 2025
