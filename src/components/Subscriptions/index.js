@@ -222,12 +222,40 @@ export default function Subscriptions() {
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
+                  <td colspan="4" style={{"text-align": "left", "font-weight": "bold"}}>Managed Services</td>
+                </tr>
+                <tr>
                   <td style={{"text-align": "left"}}>Managed Health Monitor</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
                 <tr>
                   <td style={{"text-align": "left"}}>Managed <a href="https://www.sovereigncloudstack.org">SCS</a> Compliant Tests</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed Wazuh Server</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed NetBox</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed Container Registry</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed Keycloak</td>
+                  <td></td>
+                  <td><Checkmark className={styles.checkmark} /></td>
+                </tr>
+                <tr>
+                  <td style={{"text-align": "left"}}>Managed Teleport</td>
                   <td></td>
                   <td><Checkmark className={styles.checkmark} /></td>
                 </tr>
