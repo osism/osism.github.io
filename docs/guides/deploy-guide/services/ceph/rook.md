@@ -19,7 +19,7 @@ production use yet.
 
    When using Rook, all services are deployed via a single helm chart and at the
    same time. This could be altered by passing custom CRDs. See
-   the [Rook Configuration Guide](../../../configuration-guide/rook).
+   the [Rook Configuration Guide](../../../configuration-guide/ceph/rook.md).
 
    * Deploy [Kubernetes Cluster](../../../deploy-guide/services/kubernetes.md)
 
@@ -75,7 +75,7 @@ production use yet.
    osism apply cephclient
    ```
 
-   You have to make sure the correct [Configuration Options for the Rook Ceph Client Wrapper](../../../configuration-guide/rook.md#client) are net.
+   You have to make sure the correct [Configuration Options for the Rook Ceph Client Wrapper](../../../configuration-guide/ceph/rook.md#client) are net.
 
 4. After getting the Ceph Keyrings, the [OpenStack Deployment](../../../deploy-guide/services/openstack.md) can optionally be done.
 

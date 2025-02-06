@@ -399,7 +399,7 @@ The extra keys can then be fetched and copied by calling `osism apply ceph-copy-
    ```
 
 7. Everything is now ready for the deployment of the OSDs.
-   Details on deploying Ceph in the [Ceph deploy guide](../deploy-guide/services/ceph).
+   Details on deploying Ceph in the [Ceph Deploy Guide](../../deploy-guide/services/ceph/index.mdx).
 
 ### Full examples
 
@@ -678,7 +678,7 @@ $ sudo lvs
    ```
 
 7. Everything is now ready for the deployment of the new OSD.
-   Details on deploying the OSD service in the [Ceph operations guide](../operations-guide/ceph#add-a-new-osd).
+   Details on deploying the OSD service in the [Ceph operations guide](../../operations-guide/ceph#add-a-new-osd).
 
 ## Dashboard
 

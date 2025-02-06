@@ -1,9 +1,9 @@
 ---
-sidebar_label: Ceph via Rook (technical preview)
+sidebar_label: Configuration for Rook
 sidebar_position: 31
 ---
 
-# Ceph via Rook (technical preview)
+# Configuration for Rook
 
 The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/configuration/
 
@@ -20,7 +20,7 @@ The File System ID is a unique identifier for the cluster.
 ~The identifier is set via the parameter `fsid` in `environments/rook/configuration.yml`~
 ~and must be unique. It can be generated with `uuidgen`.~
 
-It is generated automatically by the [Rook Deployment](../deploy-guide/services/ceph/rook.md).
+It is generated automatically by the [Rook Deployment](../../deploy-guide/services/ceph/rook.md).
 
 TODO: To evaluate if we want and can pass a `fsid`. This is no out-of-the-box Rook feature, though.
 
