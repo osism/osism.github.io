@@ -1,9 +1,9 @@
 ---
-sidebar_label: Rookify (technical preview)
+sidebar_label: Rookify
 sidebar_position: 31
 ---
 
-# Configure Rookify: Migrate from Ceph-Ansible to Rook (Technical Preview)
+# Migrate from Ceph-Ansible to Rook
 
 :::warning
 

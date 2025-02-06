@@ -57,7 +57,7 @@ Shiny new features aren't worth the risk of total or partial data loss/corruptio
 
 Please have a look at the [Rook Troubleshooting documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/ceph-toolbox/).
 
-The Rook toolbox is available via the `ceph` command on the manager node, after you deployed the wrapper via `osism apply cephclient`. You have to make sure the correct [Configuration Options for the Rook Ceph Client Wrapper](../configuration-guide/rook.md#client) are net.
+The Rook toolbox is available via the `ceph` command on the manager node, after you deployed the wrapper via `osism apply cephclient`. You have to make sure the correct [Configuration Options for the Rook Ceph Client Wrapper](../configuration-guide/ceph/rook.md#client) are net.
 
 ## Monitoring
 
@@ -461,7 +461,7 @@ $ ceph osd pool autoscale-status
 
 ### Create a replicated pool
 
-This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../configuration-guide/rook.md#extra-pool--cephblockpool-crd).
+This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../configuration-guide/ceph/rook.md#extra-pool--cephblockpool-crd).
 
 It also can be done by hand but Rook will not know about the pool in this case.
 
@@ -482,7 +482,7 @@ Typical application names are: rbd, rgw, cephfs
 
 ### Delete a pool
 
-This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../configuration-guide/rook.md#extra-pool--cephblockpool-crd).
+This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../configuration-guide/ceph/rook.md#extra-pool--cephblockpool-crd).
 
 It also can be done by hand but Rook will not know about the pool in this case.
 
