@@ -1,5 +1,5 @@
 ---
-sidebar_label: Rookify
+sidebar_label: Rook
 sidebar_position: 31
 ---
 
@@ -14,7 +14,7 @@ Nevertheless, it is **strongly advised** to test Rookify in a controlled environ
 
 For a condensed summary of the information covered here, refer to the [Rookify GitHub repository](https://github.com/SovereignCloudStack/rookify).
 
-## Config.yaml
+## Configuration
 
 The primary configuration file for Rookify is `config.yaml`. The repository includes an example file for general use, as well as one specifically tailored for OSISM based setups:
 
@@ -137,6 +137,29 @@ migration_modules:
 Rookify uses a modular structure, allowing you to migrate various parts of Ceph-Ansible to Rook. The `migration_modules` section specifies which modules need to be executed for the migration. Rookify contains more modules — check the [`src/rookify/module`](https://github.com/SovereignCloudStack/rookify/tree/main/src/rookify/modules) directory to see the currently implemented modules.
 
 :::note
-  Many modules depend on each other. For example, the `analyze_ceph` module will automatically run with all other modules, so
-  there is no need to specify it. It’s included here for clarity.
+
+Many modules depend on each other. For example, the `analyze_ceph` module will automatically run with all other modules, so
+there is no need to specify it. It’s included here for clarity.
+
 :::
+
+## Troubleshooting
+
+### SSH Issues
+
+
+**"Failed to load private key"**
+
+- Ensure the `id-rsa` keys are "clean" and do not contain unexpected strings like "\<\<EOF".
+- Clean the keys manually, or use the following command to reformat the keyfile: `ssh-keygen -p -N "" -f ssh.key`.
+
+
+**"Too many authentications error"**
+
+- This can occur if too many keys are loaded by the ssh-agent.
+- Disable the ssh-agent on your machine. You can do this manually or by allowing `direnv` to use `.envrc` with the command `direnv allow`. To install `direnv` on your machine refer to [Direnv's documentation](https://direnv.net/docs/installation.html)
+
+### Frozen State
+
+- If the Rookify process freezes, check your connections.
+- In the OSISM testbed, ensure the VPN connection is active. For help to setup the VPN connection for the Testbed refer to [OSISM's documentation for testbed setup](https://osism.tech/docs/guides/other-guides/testbed/#vpn-access).
