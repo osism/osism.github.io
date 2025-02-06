@@ -19,7 +19,7 @@ sidebar_label: Networks
 | `dnsdist_network`                  | `172.31.101.80/28`  |
 | `squid_network`                    | `172.31.101.144/28` |
 | `cgit_network`                     | `172.31.101.112/28` |
-| `dnsmasq_network`                  | `172.31.101.128/28` |
+| `httpd_network`                    | `172.31.101.128/28` |
 | `scaphandre_network`               | `172.31.101.160/28` |
 | `metering_network`                 | `172.31.101.176/28` |
 | `thanos_sidecar_network`           | `172.31.101.192/28` |
