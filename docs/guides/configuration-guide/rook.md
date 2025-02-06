@@ -20,7 +20,7 @@ The File System ID is a unique identifier for the cluster.
 ~The identifier is set via the parameter `fsid` in `environments/rook/configuration.yml`~
 ~and must be unique. It can be generated with `uuidgen`.~
 
-It is generated automatically by the [Rook Deployment](../deploy-guide/services/rook.md).
+It is generated automatically by the [Rook Deployment](../deploy-guide/services/ceph/rook.md).
 
 TODO: To evaluate if we want and can pass a `fsid`. This is no out-of-the-box Rook feature, though.
 
