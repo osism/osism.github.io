@@ -1,9 +1,9 @@
 ---
-sidebar_label: Layers in a cluster
+sidebar_label: Layers in a cloud pod
 sidebar_position: 20
 ---
 
-# Layers in a cluster
+# Layers in a cloud pod
 
 ## Compute Plane
 ## Control Plane

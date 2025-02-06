@@ -8,11 +8,11 @@ sidebar_position: 50
 :::info
 
 The brands, models and configurations listed are examples. There is no
-single best specification for building a cluster. It always depends very
-much on the requirements of the cluster and the situation. The examples
+single best specification for building a cloud pod. It always depends very
+much on the requirements of the cloud pod and the situation. The examples
 are not minimal and include various preferences of ours. The choice of
 hardware always depends very much on the requirements, the available budget
-and also the future plans of the cluster. There is no universal hardware
+and also the future plans of the cloud pod. There is no universal hardware
 recommendation that fits all cases. These are all just examples.
 
 :::
@@ -21,7 +21,7 @@ recommendation that fits all cases. These are all just examples.
 
 A control node is responsible for running all or most of the OpenStack
 services that manage API services and their associated runtimes. These
-nodes are essential for users to interact with the cluster and maintain
+nodes are essential for users to interact with the cloud pod and maintain
 its managed state.
 
 However, control nodes typically do not run user virtual machines. It is
@@ -89,7 +89,7 @@ Real world example:
 The manager node, also known as the deploy node or deployment node, is designated
 to manage the deployment process of all services. It is often also utilized to host
 components of the monitoring services. It serves as the operator's entry point into
-the cluster for operations.
+the cloud pod for operations.
 
 * 2x SSD or NVMe with at least 1.92 TByte for the operating system and the services
 * 64 GByte memory (it should be possible to upgrade to 128 GByte, or use 128 GByte directly)

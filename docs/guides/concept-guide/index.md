@@ -9,7 +9,7 @@ sidebar_position: 10
 
 ![OSISM overview](./images/overview.drawio.png)
 
-## Components in a cluster
+## Components in a cloud pod
 
 * [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack)
 * [Software Defined Storage (SDS) with Ceph](./components/ceph)
@@ -25,7 +25,7 @@ sidebar_position: 10
 
 ## Requirements
 
-## Layers in a cluster
+## Layers in a cloud pod
 
 * [Compute Plane](./layers#compute-plane)
 * [Control Plane](./layers#control-plane)

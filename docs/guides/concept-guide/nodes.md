@@ -1,9 +1,9 @@
 ---
-sidebar_label: Nodes in a cluster
+sidebar_label: Nodes in a cloud pod
 sidebar_position: 25
 ---
 
-# Nodes in a cluster
+# Nodes in a cloud pod
 
 ## Compute Node
 
