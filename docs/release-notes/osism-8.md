@@ -27,6 +27,10 @@ Release date: ???
 
 * Ansible 11 is supported by all OSISM collections and will be used from now on.
 
+* New `osism.services.dnsmasq` role was added.
+
+* New `osism.services.httpd` role was added.
+
 ## 8.1.0 (20250116)
 
 Release date: 17. January 2025
