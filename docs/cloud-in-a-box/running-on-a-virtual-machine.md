@@ -13,6 +13,23 @@ To enable nested virtualization the CPU configuration of the VM has to be `host-
 
 The linked guide can be used in other distributions as well.
 
+### EFI
+
+Chose an EFI firmware instead of classical BIOS to ensure the booting from the disk with the GPT
+partition table works.
+
+### SCSI
+
+Use the `-1.iso` variant that installs to a SCSI disk `/dev/sda` and chose the virtio-scsi controller
+in the VM configuration. In a libvirt configuration file, this will look like this (this bus number of
+course depends on the other virtual PCI devices):
+
+```xml
+    <controller type='scsi' index='0' model='virtio-scsi'>
+      <address type='pci' domain='0x0000' bus='0x07' slot='0x00' function='0x0'/>
+    </controller>
+```
+
 ### Disk space saving
 
 When using Cloud in a Box in a VM, you can utilize the qcow2 disk image or similar technology to save space.
