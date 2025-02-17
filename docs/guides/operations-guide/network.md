@@ -4,6 +4,43 @@ sidebar_label: Network
 
 # Network
 
+## Modifying the network configuration
+
+While the network layout of a production environment is mostly static,
+sometimes it is necessary to make changes. There is however no guarantee that
+the transition from one network configuration state to the next does not cause
+interruptions to existing network flows. E.g. even very short down/up cycles of
+interfaces may cause additional disturbances to SDN networks in upper layers,
+which are not reconciled immediately or never at all.
+Therefore it is required to move any existing payload when modifying the
+network configuration of compute nodes. You may use the `osism` command
+to achieve this, e.g.:
+
+```
+osism manage compute migrate $COMPUTE_NODE
+```
+
+Applying the network change is then limited to the empty compute node, e.g.:
+
+```
+osism apply network --limit $COMPUTE_NODE
+```
+
+While it is possible to make the changes effective immediately by appending
+`--extra-vars network_allow_service_restart=true` to the command above, it is
+recommended to make changes effective through restart of the node. The reason
+for this is that some changes, like e.g. removal of an interface from
+configuration, will not necessarily lead to it being removed, but just to it
+being unmanaged. A reboot will ensure that only the actually defined network
+configuration will be set up. You may use `osism` to reboot the node and wait
+for it to come back up:
+
+```
+osism apply reboot --limit $COMPUTE_NODE --extra-vars reboot_wait=true --extra-vars ireallymeanit=yes
+```
+
+## Internal components 
+
 OpenStack, OVN, and Open vSwitch all really like UUIDs.
 
 ```
