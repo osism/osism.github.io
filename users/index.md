@@ -7,13 +7,13 @@ sidebar_position: 10
 ## Public Clouds
 
 | Environment        | Operating company                  | Short Description                                                                                                                                                     |
-|:-------------------|:-----------------------------------|:-----------------------------------------------------------------------------------------------------------|
-| CNDS               | artcodix GmbH                      |                                                                                                            |
-| pluscloud open     | plusserver GmbH                    | Currently 4 regions, used for example for the [BayernCloud School (ByCS)](https://www.bycs.de/index.html)  |
-| REGIO.cloud        | OSISM GmbH                         |                                                                                                            |
-| ScaleUp Open Cloud | ScaleUp Technologies GmbH & Co. KG |                                                                                                            |
-| Wavestack          | Wavecon GmbH                       |                                                                                                            |
-| exigo.cloud        | exigo ag                           | Fundation for Kubernetes as a Service [exikube](https://www.exigo.ch/produkte/kubernetes-und-mehr/exikube) |
+|:-------------------|:-----------------------------------|:------------------------------------------------------------------------------------------------------------------|
+| CNDS               | artcodix GmbH                      |                                                                                                                   |
+| pluscloud open     | plusserver GmbH                    | Currently 4 regions, used for example for the [BayernCloud School (ByCS)](https://www.bycs.de/index.html)         |
+| REGIO.cloud        | OSISM GmbH                         |                                                                                                                   |
+| ScaleUp Open Cloud | ScaleUp Technologies GmbH & Co. KG |                                                                                                                   |
+| Wavestack          | Wavecon GmbH                       |                                                                                                                   |
+| exigo.cloud        | exigo ag                           | Foundation for [exikube](https://www.exigo.ch/produkte/kubernetes-und-mehr/exikube), a Managed Kubernetes Service |
 
 ## Private Clouds
 
