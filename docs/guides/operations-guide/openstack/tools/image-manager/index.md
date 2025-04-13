@@ -5,38 +5,45 @@ sidebar_position: 50
 
 # Image Manager
 
-The [OpenStack Image Manager](https://pypi.org/project/openstack-image-manager/) is a tool for managing all
-images on an OpenStack environment
+The [OpenStack Image Manager](https://pypi.org/project/openstack-image-manager/) is
+a tool for managing all machine images on an OpenStack environment.
 
 ## Requirements
 
-This information is only relevant for the operator of an OpenStack environment. You can skip this section if
-you want to use OpenStack Image Manager as a normal user and you are not an operator of an openStack environment.
+:::info
 
-### OpenStack Image Service (Glance)
+This information is only relevant for the operator of an OpenStack environment. You
+can skip this section if you want to use OpenStack Image Manager as a normal user
+and you are not an operator of an OpenStack environment.
 
-The OpenStack Image Service (Glance) is required to upload and discover data assets that are used by other
-services.
+:::
 
-Since this script stores many images in a single project, the Glance quota must be set accordingly high or to unlimited.
+The OpenStack Image Service (Glance) is required to upload and discover data assets
+that are used by other services.
 
-```ini
+Since this script stores many images in a single project, the Glance quota must be set
+accordingly high or to unlimited.
+
+```ini file="environments/kolla/files/overlays/glance/glance-api.conf"
 [DEFAULT]
 user_storage_quota = 1TB
 ```
 
-With most storage backends it makes sense to convert the imported images directly to RAW. So it is required for using Ceph and it's
-features too. Recited from the Ceph documentation [QEMU and block devices](https://docs.ceph.com/en/latest/rbd/qemu-rbd/) and
+With most storage backends it makes sense to convert the imported images directly to RAW.
+So it is required for using Ceph and it's features too. Recited from the Ceph documentation
+[QEMU and block devices](https://docs.ceph.com/en/latest/rbd/qemu-rbd/) and
 [Block devices and OpenStack](https://docs.ceph.com/en/latest/rbd/rbd-openstack/).
 
 :::info
 
-The raw data format is really the only sensible format option to use with RBD. Technically, you could use other QEMU-supported formats
-(such as qcow2 or vmdk), but doing so would add additional overhead, and would also render the volume unsafe for virtual machine live
+The raw data format is really the only sensible format option to use with RBD. Technically,
+you could use other QEMU-supported formats (such as qcow2 or vmdk), but doing so would add
+additional overhead, and would also render the volume unsafe for virtual machine live
 migration when caching (see below) is enabled.
 
-Important Ceph doesn't support QCOW2 for hosting a virtual machine disk. Thus if you want to boot virtual machines in Ceph (ephemeral
-backend or boot from volume), the Glance image format must be RAW.
+Important Ceph doesn't support QCOW2 for hosting a virtual machine disk. Thus if you want
+to boot virtual machines in Ceph (ephemeral backend or boot from volume), the Glance image
+format must be RAW.
 
 See the [OpenStack Glance documentation](https://docs.openstack.org/glance/latest/configuration/sample-configuration.html)
 for more details.
@@ -45,7 +52,7 @@ for more details.
 
 This requires the following parameter for the image import workflow.
 
-```ini
+```ini file="environments/kolla/files/overlays/glance/glance-api.conf"
 [taskflow_executor]
 conversion_format = raw
 
@@ -56,18 +63,13 @@ image_import_plugins = ['image_decompression', 'image_conversion']
 output_format = raw
 ```
 
-### Object storage backend
-
-If the mirror functionality is used, an object storage backend is required. The use of the mirror functionality
-is optional and is not used by default.
-
 ## Getting started
 
 This **Getting started** will upload a private image to your OpenStack environment with
 the help of the OpenStack Image Manager.
 
-1. Install the [openstack-image-manager](https://pypi.org/project/openstack-image-manager/) package with
-   [pip](https://pypi.org/project/pip/).
+1. Install the [openstack-image-manager](https://pypi.org/project/openstack-image-manager/)
+   package with [pip](https://pypi.org/project/pip/).
 
    ```sh
    pip3 install openstack-image-manager
@@ -85,7 +87,7 @@ the help of the OpenStack Image Manager.
    name = "pypi"
 
    [packages]
-   openstack-image-manager = "==0.20240403.0"
+   openstack-image-manager = "==0.20250413.0"
 
    [dev-packages]
 
@@ -155,9 +157,12 @@ for all parameters. After a change to the configuration, validate it with
 ### SCS image standard
 
 * The value of `login` is stored as `image_original_user` in the metadata of an image.
-* If `image_description` is not set as meta information, `image_description` is set to the name of the image.
-* The value of `build_date` of a specific version of an image is stored as `image_build_date` in the metadata of an image.
-* The value of `url` of a specific version of an image is stored as `image_source` in the metadata of an image.
+* If `image_description` is not set as meta information, `image_description` is set
+  to the name of the image.
+* The value of `build_date` of a specific version of an image is stored as `image_build_date`
+  in the metadata of an image.
+* The value of `url` of a specific version of an image is stored as `image_source`
+  in the metadata of an image.
 
 ### Image with regular rebuilds
 
@@ -286,23 +291,3 @@ A full documentation about the visibility of images can be found in the **Image 
 * community: set ``visibility`` to ``community``
 * shared: set ``visibility`` to ``shared``
 * private: set ``visibility`` to ``private``
-
-## Usage
-
-### Mirroring images
-
-Since the upstreams often only keep their images for a short time, we mirror most of the images on REGIO.cloud.
-This makes us independent of the availability of the images in the individual upstreams.
-
-### Updating images
-
-Some of the images are automatically updated by a [CI job](update). The latest available build at the time of the CI job execution is mirrored and
-made available as the current version.
-
-Currently, the following images are updated once a week (every Sunday at 0 am):
-
-* Almalinux
-* CentOS
-* Debian
-* Rockylinux
-* Ubuntu
