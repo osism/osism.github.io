@@ -1,0 +1,73 @@
+---
+sidebar_label: Getting started
+sidebar_position: 1
+---
+
+# Prerequisites
+
+## Cloud access
+
+The usual prerequisite is to have an account on one of the supported OpenStack cloud providers.
+As the OSISM Testbed also virtualizes systems itself, the OpenStack cluster should provide
+the capabilities for nested virtualization.
+
+It is not part of this guide to describe the registration with the individual cloud
+providers. Please contact the respective cloud provider for this.
+
+| Provider        | Product             | Profile name     | Note                               |
+|:----------------|:--------------------|:-----------------|:-----------------------------------|
+| OSISM           | REGIO.cloud         | `regiocloud`     |                                    |
+| OSISM           | REGIO.cloud         | `regio-fast`     |  boot from NVMe SSD backed volumes |
+| Cleura          | Cleura              | `cleura`         |                                    |
+| FUGA            | Fuga Cloud          | `fuga`           |                                    |
+| HuaweiCloud     | HuaweiCloud         | `huaweicloud`    |                                    |
+| OVH             | OVH                 | `ovh`            |                                    |
+| T-Systems       | OpenTelekomCloud    | `otc`            |                                    |
+| plusserver      | pluscloud open      | `pluscloudopen`  |                                    |
+| plusserver      | pluscloud SCS Test  | `gx-scs`         |                                    |
+| noris network   | Wavestack           | `wavestack`      |                                    |
+| artcodix        | CNDS Cloud          | `artcodix`       |                                    |
+
+For each cloud provider listed in the table, a predefined profile is available in the
+`terraform/environments` directory. This profile contains the name of the public
+network, which flavors to use, etc.
+
+Here is an example from the profile for [REGIO.cloud](https://regio.digital).
+
+```text
+flavor_manager            = "SCS-4V-16-50"
+flavor_node               = "SCS-8V-32-50"
+volume_type               = "ssd"
+image                     = "Ubuntu 22.04"
+image_node                = "Ubuntu 22.04"
+public                    = "public"
+availability_zone         = "nova"
+volume_availability_zone  = "nova"
+network_availability_zone = "nova"
+```
+
+## Cloud resources
+
+The OSISM Testbed requires at least the following project quota when using the default flavors:
+
+| Resource              | Quantity  | Note                                          |
+|:----------------------|:----------|:----------------------------------------------|
+| Instances             | 7         | 52 VCPUs + 208 GByte RAM (6 modes, 1 manager) |
+| Volumes               | 18        | 360 GByte volume storage                      |
+| Floating IP           | 1         |                                               |
+| Keypair               | 1         |                                               |
+| Security group        | 3         |                                               |
+| Security group rules  | 16        |                                               |
+| Network               | 1         |                                               |
+| Subnetwork            | 1         |                                               |
+| Ports                 | 6         |                                               |
+| Router                | 1         |                                               |
+
+## Software
+
+* `make` must be installed on the system
+* [Wireguard](https://wireguard.com) or [`sshuttle`](https://github.com/sshuttle/sshuttle) must be installed on your system for VPN access
+* Python must be installed, the Python version used must be at least 3.10, otherwise
+  the current Ansible release cannot be used (more details in the
+  [Ansible support matrix](https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix))
+* `python3-venv` must be installed for managing Python dependencies like Ansible
