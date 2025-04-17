@@ -1,0 +1,305 @@
+---
+sidebar_label: Usage
+sidebar_position: 3
+---
+
+# Usage
+
+Deployment must be completed at this point.
+
+## Custom CA
+
+The OSISM Testbed deployment currently uses hostnames in the domain `testbed.osism.xyz`. This is a real domain, and we provide the DNS records matching the addresses used in the OSISM Testbed, so that once you connect to your testbed via a direct link or Wireguard, you can access hosts and servers by their hostname (e.g. `ssh testbed-manager.testbed.osism.xyz`).
+
+We also provide a wildcard TLS certificate signed by a custom CA for `testbed.osism.xyz` and `*.testbed.osism.xyz`.
+This CA is always used for each testbed. The CA is not regenerated, and it is not planned to change this for the next 10 years.
+
+In order for these certificates to be recognized locally as valid, the CA
+[environments/kolla/certificates/ca/testbed.crt](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
+must be imported locally.
+
+## VPN access
+
+You can connect to [REGIO.cloud](https://regio.digital) either by using Wireguard, or sshuttle.
+
+### Wireguard
+
+Install [Wireguard](https://www.wireguard.com) on your workstation. For instructions on how to do
+it on your workstation, please have a look at the documentation of your used distribution.
+
+Start the wireguard tunnel. (Press `CTRL+C` to keep the tunnel running forever. The `make target` also launches a browser tab with references to all services.)
+
+```bash
+make vpn-wireguard ENVIRONMENT=regiocloud
+```
+
+If you want to connect to the OSISM Testbed from multiple clients, change the client IP
+address in the downloaded configuration file to be different on each client.
+
+If you only want to download the Wireguard configuration, you can use the `vpn-wireguard-config`
+target. The configuration is then available in the file `wg-testbed-regiocloud.conf`, for example.
+
+```bash
+make vpn-wireguard-config ENVIRONMENT=regiocloud
+```
+
+### sshuttle
+
+Install [sshuttle](https://github.com/sshuttle/sshuttle) on your workstation, then start the sshuttle tunnel. 
+
+```bash
+make vpn-sshuttle ENVIRONMENT=regiocloud
+killall sshuttle
+```
+
+## Webinterfaces
+
+All SSL-enabled services within the OSISM Testbed use certs which are signed by the self-signed
+[OSISM Testbed CA](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
+(Download the file and import it as certification authority to your browser).
+
+If you want to access the services, please choose the URL from the following table:
+
+| Name                     | URL                                            | Username     | Password     | Note            |
+|:-------------------------|:-----------------------------------------------|:-------------|:-------------|:----------------|
+| ARA                      | https://ara.testbed.osism.xyz                  | ara          | password     |                 |
+| Ceph                     | https://api-int.testbed.osism.xyz:8140         | admin        | password     |                 |
+| Flower                   | https://flower.testbed.osism.xyz               |              |              |                 |
+| Grafana                  | https://api-int.testbed.osism.xyz:3000         | admin        | password     |                 |
+| HAProxy (testbed-node-0) | http://testbed-node-0.testbed.osism.xyz:1984   | openstack    | password     |                 |
+| HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984   | openstack    | password     |                 |
+| HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984   | openstack    | password     |                 |
+| Homer                    | https://homer.testbed.osism.xyz                |              |              |                 |
+| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin        | password     | domain: default |
+| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test         | test         | domain: test    |
+| Netbox                   | https://netbox.testbed.osism.xyz               | admin        | password     |                 |
+| Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |              |              |                 |
+| Nexus                    | https://nexus.testbed.osism.xyz                | admin        | password     |                 |
+| OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601             | opensearch   | password     |                 |
+| Prometheus               | https://api-int.testbed.osism.xyz:9091         | admin        | password     |                 |
+| RabbitMQ                 | https://api-int.testbed.osism.xyz:15672        | openstack    | password     |                 |
+| phpMyAdmin               | https://phpmyadmin.testbed.osism.xyz           | root         | password     |                 |
+
+### Usage of the OpenStack CLI
+
+The `environments/openstack` folder contains the needed files for the openstack client:
+
+```bash
+cd environments/openstack
+export OS_CLOUD=<the cloud environment>  # i.e. admin
+openstack floating ip list
+```
+
+## Advanced Usage
+
+### External API
+
+It is possible to provide the OpenStack APIs and the OpenStack Dashboard via the manager's public IP address.
+This is not enabled by default, except for the OTC profile. To provide the OpenStack APIs and the
+OpenStack dashboard via the public IP address of the manager, the following changes are necessary in the
+`terraform/environments/regiocloud.tfvars` file. If a cloud other than the REGIO.cloud is used, the profile
+of the other cloud is changed accordingly.
+
+1. Add the customization `external_api`. This customization makes sure that the required security group rules
+   are created for the various OpenStack APIs and the OpenStack dashboard.
+
+   ```
+   # customisation:external_api
+   ```
+
+2. Set parameter `external_api` to `true`. This makes sure that all necessary changes are made in the configuration repository when the manager service is deployed. It is correct that this is added as a comment.
+
+   ```
+   external_api = true
+   ```
+
+3. After the deployment of the manager service and the OpenStack services, the OpenStack APIs and the OpenStack dashboard can be reached via a DNS name. The service [traefik.me](https://traefik.me) is used for the DNS record. Run the following two commands on the manager node to get the DNS record.
+
+   ```
+   $ source /opt/manager-vars.sh
+   $ echo "api-${MANAGER_PUBLIC_IP_ADDRESS//./-}.traefik.me"
+   api-80-158-46-219.traefik.me
+   ```
+
+### Change versions
+
+1. Go to `/opt/configuration` on `testbed-manager`
+2. Run `./scripts/set-openstack-version.sh 2024.2` to set the OpenStack version to `2024.2`
+3. Run `./scripts/set-ceph-version.sh reef` to set the Ceph version to `reef`
+4. Run `osism update manager` to update the manager service
+
+### Deploy services
+
+| Script                                                            | Description                 |
+|:------------------------------------------------------------------|:----------------------------|
+| `/opt/configuration/scripts/deploy/000-manager.sh`                |                             |
+| `/opt/configuration/scripts/deploy/001-helpers.sh`                |                             |
+| `/opt/configuration/scripts/deploy/100-ceph-with-ansible.sh`      | Ceph with Ansible           |
+| `/opt/configuration/scripts/deploy/100-ceph-with-rook.sh`         | Ceph with Rook              |
+| `/opt/configuration/scripts/deploy/200-infrastructure.sh`         |                             |
+| `/opt/configuration/scripts/deploy/300-openstack.sh`              |                             |
+| `/opt/configuration/scripts/deploy/310-openstack-extended.sh`     |                             |
+| `/opt/configuration/scripts/deploy/400-monitoring.sh`             |                             |
+| `/opt/configuration/scripts/deploy/500-kubernetes.sh`             |                             |
+| `/opt/configuration/scripts/deploy/510-clusterapi.sh`             |                             |
+
+### Upgrade services
+
+| Script                                                                    | Description                 |
+|:--------------------------------------------------------------------------|:----------------------------|
+| `/opt/configuration/scripts/upgrade/100-ceph-with-ansible.sh`             | Ceph with Ansible           |
+| `/opt/configuration/scripts/upgrade/100-ceph-with-rook.sh`                | Ceph with Rook              |
+| `/opt/configuration/scripts/upgrade/200-infrastructure.sh`                |                             |
+| `/opt/configuration/scripts/upgrade/300-openstack.sh`                     |                             |
+| `/opt/configuration/scripts/upgrade/310-openstack-extended.sh`            |                             |
+| `/opt/configuration/scripts/upgrade/400-monitoring.sh`                    |                             |
+| `/opt/configuration/scripts/upgrade/500-kubernetes.sh`                    |                             |
+| `/opt/configuration/scripts/upgrade/510-clusterapi.sh`                    |                             |
+
+### Add new OSD in Ceph
+
+In the testbed, three volumes per node are provided for use by Ceph by default. Two of
+these devices are used as OSDs during the initial deployment. The third device is intended
+for testing the addition of a further OSD to the Ceph cluster.
+
+1. Add `sdd` to `ceph_osd_devices` in `/opt/configuration/inventory/host_vars/testbed-node-0/ceph-lvm-configuration.yml`. 
+
+:::info
+
+The following content is an example, the IDs look different everywhere. Do not copy 1:1 but only add `sdd` to the file.
+
+:::
+
+```yaml
+---
+#
+# This is Ceph LVM configuration for testbed-node-0
+# generated by ceph-configure-lvm-volumes playbook.
+#
+ceph_osd_devices:
+  sdb:
+    osd_lvm_uuid: 95a9a2e0-b23f-55b2-a04f-e02ddfc0e82a
+  sdc:
+    osd_lvm_uuid: 29899765-42bf-557b-ae9c-5c7c984b2243
+  sdd:
+lvm_volumes:
+- data: osd-block-95a9a2e0-b23f-55b2-a04f-e02ddfc0e82a
+  data_vg: ceph-95a9a2e0-b23f-55b2-a04f-e02ddfc0e82a
+- data: osd-block-29899765-42bf-557b-ae9c-5c7c984b2243
+  data_vg: ceph-29899765-42bf-557b-ae9c-5c7c984b2243
+```
+
+2. Run `osism apply ceph-configure-lvm-volumes -l testbed-node-0`
+
+3. Run `cp /tmp/testbed-node-0-ceph-lvm-configuration.yml /opt/configuration/inventory/host_vars/testbed-node-0/ceph-lvm-configuration.yml`.
+
+4. Run `osism reconciler sync`
+
+5. Run `osism apply ceph-create-lvm-devices -l testbed-node-0`
+
+6. Run `osism apply ceph-osds -l testbed-node-0 -e ceph_handler_osds_restart=false`
+
+7. Check the OSD tree
+
+   ```
+   $ ceph osd tree
+   ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
+   -1         0.13640  root default
+   -3         0.05846      host testbed-node-0
+    2    hdd  0.01949          osd.2                up   1.00000  1.00000
+    4    hdd  0.01949          osd.4                up   1.00000  1.00000
+    6    hdd  0.01949          osd.6                up   1.00000  1.00000
+   -5         0.03897      host testbed-node-1
+    0    hdd  0.01949          osd.0                up   1.00000  1.00000
+    5    hdd  0.01949          osd.5                up   1.00000  1.00000
+   -7         0.03897      host testbed-node-2
+    1    hdd  0.01949          osd.1                up   1.00000  1.00000
+    3    hdd  0.01949          osd.3                up   1.00000  1.00000
+   ```
+
+### Ceph via Rook (technical preview)
+
+Please have a look at [Deploy Guide - Services - Rook](guides/deploy-guide/services/ceph/rook.md) and [Configuration Guide - Rook](guides/configuration-guide/ceph/rook.md) for details on how to configure Rook.
+
+To deploy this in the testbed, you can use an environment variable in your make target.
+
+```
+make CEPH_STACK=rook manager
+make CEPH_STACK=rook ceph
+```
+
+This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is later being used by:
+
+```
+/opt/configuration/scripts/deploy-services.sh
+/opt/configuration/scripts/deploy-ceph.sh
+/opt/configuration/scripts/upgrade/100-ceph-with-rook.sh
+```
+
+## Using testbed for OpenStack development
+
+Testbed may be used for doing development on OpenStack services through [`kolla_dev_mode`](https://docs.openstack.org/kolla-ansible/latest/contributor/kolla-for-openstack-development.html).
+`kolla_dev_mode` may be activated for all supported service by adding
+
+```
+kolla_dev_mode: true
+```
+
+to `environments/kolla/configuration.yml`. This will check out the `git` repositories of all supported and enabled OpenStack services under `/opt/stack`, and bind mount them into the appropriate containers.
+Since this will fetch a lot of repositories it is advisable to enable this only selectively for the services you are going to work on. You can do so by adding a boolean variable to `environments/kolla/configuration.yml` consisting of the service name and the suffix `_dev_mode`, e.g.:
+
+```
+cinder_dev_mode: true
+```
+
+You may customise the used `git` repository by adding `kolla_repos_git` to `environments/kolla/configuration.yml` to specify a common root for the repositories of all services, which will be completed by the service's name, e.g.:
+
+```
+kolla_repos_git: "https://github.com/openstack"
+```
+
+This will pull services from their `github` mirror. E.g. pull nova from https://github.com/openstack/nova
+The complete repository of a single service may be changed by adding a variable consisting of the service name and the suffix `_git_repository`, e.g.:
+
+```
+cinder_git_repository: "https://github.com/myorg/my_custom_cinder_fork"
+```
+
+You may specify the `git` reference globally by setting
+
+```
+kolla_source_version: my_feature_branch
+```
+
+in `environments/kolla/configuration.yml`, or for specific services, via service name and suffix `_source_version`, e.g.:
+
+```
+cinder_source_version: my_cinder_feature
+```
+
+In order to update the `git` repositories on `kolla-ansible` deployments set either 
+
+```
+kolla_dev_repos_pull: true
+```
+
+or
+
+```
+cinder_dev_repos_pull: true
+```
+
+in `environments/kolla/configuration.yml` to set the setting for all repositories, or a service specific one.
+
+### Example workflow
+
+Thus, as an example for a development workflow:
+* Create a `git` mirror of the OpenStack service you want to work on
+* In `environments/kolla/configuration.yml`:
+  * Set the corresponding `<service name>_dev_mode` variable to `true`
+  * Set the corresponding `<service name>_git_repository` variable to your development mirror created above
+  * Set the corresponding `<service name>_source_version` variable to a branch name you intend to push your changes to
+  * Set the corresponding `<service name>_dev_repos_pull` variable to `true`
+* Commit your changes and push them to the specified branch in the specified mirror
+* Run `osism apply <service name>` on the manager to checkout the code on every testbed node
+* Restart the service containers to actually pick up the new code

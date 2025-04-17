@@ -1,0 +1,70 @@
+---
+sidebar_label: Troubleshooting
+sidebar_position: 4
+---
+
+# Troubleshooting
+
+## Ansible errors
+
+Ansible errors that have something to do with undefined variables (e.g. `AnsibleUndefined`) are most likely due to cached facts that are no longer valid. The facts can be updated by running `osism apply facts`.
+
+## Unsupported locale setting
+
+```bash
+$ make prepare
+ansible-playbook -i localhost, ansible/check-local-versions.yml
+ERROR: Ansible could not initialize the preferred locale: unsupported locale setting
+make: *** [prepare] Error 1
+```
+
+To solve the problem you have to modify the `Makefile`. Change the 1st line as follows.
+
+```bash
+export LC_ALL=en_US.UTF-8
+```
+
+To find out the locale used on the system `printenv` can be used.
+
+```bash
+$ printenv | grep -i lang|locale
+LANG="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_CTYPE="UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_ALL=
+```
+
+## Static entries in `/etc/hosts`
+
+If you are unable to access the following domains, you can customize your local `/etc/hosts`
+with the following static entries. This may be necessary, for example, if you use Pi-hole and
+all DNS entries from a public DNS with a non-public IP address are filtered.
+
+```bash
+# OSISM Testbed hosts
+192.168.16.5   ara.testbed.osism.xyz             ara
+192.168.16.5   cgit.testbed.osism.xyz            cgit
+192.168.16.5   flower.testbed.osism.xyz          flower
+192.168.16.5   homer.testbed.osism.xyz           homer
+192.168.16.5   netbox.testbed.osism.xyz          netbox
+192.168.16.5   testbed-manager.testbed.osism.xyz testbed-manager
+192.168.16.5   nexus.testbed.osism.xyz           nexus
+192.168.16.5   phpmyadmin.testbed.osism.xyz      phpmyadmin
+192.168.16.9   api-int.testbed.osism.xyz         api-int
+192.168.16.10  testbed-node-0.testbed.osism.xyz  testbed-node-0
+192.168.16.11  testbed-node-1.testbed.osism.xyz  testbed-node-1
+192.168.16.12  testbed-node-2.testbed.osism.xyz  testbed-node-2
+192.168.16.13  testbed-node-3.testbed.osism.xyz  testbed-node-3
+192.168.16.14  testbed-node-4.testbed.osism.xyz  testbed-node-4
+192.168.16.15  testbed-node-5.testbed.osism.xyz  testbed-node-5
+192.168.16.16  testbed-node-6.testbed.osism.xyz  testbed-node-6
+192.168.16.17  testbed-node-7.testbed.osism.xyz  testbed-node-7
+192.168.16.18  testbed-node-8.testbed.osism.xyz  testbed-node-8
+192.168.16.19  testbed-node-9.testbed.osism.xyz  testbed-node-9
+192.168.16.100 keycloak.testbed.osism.xyz        keycloak
+192.168.16.254 api.testbed.osism.xyz             api
+```

@@ -1,0 +1,239 @@
+---
+sidebar_label: Deployement
+sidebar_position: 2
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Deployment
+
+This section describes step by step how to deploy the OSISM Testbed.
+
+## Initializing
+
+1. Request access from the administrator of the respective cloud or get access to an OpenStack cloud.
+
+2. Clone the [osism/testbed](https://github.com/osism/testbed) repository.
+
+   The repository can also be cloned to any other location.
+
+   ```bash
+   mkdir -p ~/src/github.com/osism
+   git clone https://github.com/osism/testbed ~/src/github.com/osism/testbed
+   cd ~/src/github.com/osism/testbed
+   ```
+
+3. Configure your cloud access profile
+
+   The access data for the cloud provider used is stored in `terraform/clouds.yaml` and (optionally) in `terraform/secure.yaml` (same structure, if you want to store credentials in a separate place).
+
+   In file [terraform/clouds.yaml.sample](https://github.com/osism/testbed/blob/main/terraform/clouds.yaml.sample) you will find examples of typical setups. Settings that are identical for all users of a cloud can be defined centrally via the profiles of the file [terraform/clouds-public.yaml](https://github.com/osism/testbed/blob/main/terraform/clouds-public.yaml). You can reference these settings by using the `profile` parameter in the cloud-specific definition in `terraform/clouds.yaml`.
+
+   The user-specific settings of the `clouds.yaml` file are provided by the cloud provider. Please check the
+   documentation of the cloud provider you are using or their support for details.
+
+   [REGIO.cloud](https://regio.digital) is used as an example here. The cloud name in `clouds.yaml`
+   and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. It is important that
+   the name of the cloud in `clouds.yaml` matches the name of the environment to be used. The names must
+   be identical. It is currently not possible to name the cloud `regiocloud-123` in `clouds.yaml` if the
+   environment is `regiocloud`.
+
+   If another cloud is used, replace `regiocloud` with the respective profile name [from the table above](#cloud-access).
+
+   <Tabs>
+   <TabItem value="testbed-cloud-access-with-app-credentials" label="Application Credentials">
+   The use of application credentials is preferred. This way it is not necessary to store
+   details like username, project name or sensitive information like the password in the
+   `clouds.yaml` file.
+
+   The application credentials can be found in Horizon under **Identity**. Use `OSISM Testbed` as
+   name and click `Create Application Credential`.
+
+   ```yaml title="terraform/clouds.yaml"
+   clouds:
+     regiocloud:
+       profile: regiocloud
+       auth:
+         application_credential_id: ID
+         application_credential_secret: SECRET
+       auth_type: "v3applicationcredential"
+   ```
+
+   If you want to make use of `terraform/secure.yaml` add your application credential secret there
+   instead of `terraform/clouds.yaml`.
+
+   ```yaml title="terraform/secure.yaml"
+   clouds:
+     regiocloud:
+       auth:
+         application_credential_secret: SECRET
+   ```
+
+
+   </TabItem>
+   <TabItem value="testbed-cloud-access-with-username-password" label="Username/Password">
+   ```yaml title="terraform/clouds.yaml"
+   clouds:
+     regiocloud:
+       profile: regiocloud
+       auth:
+         project_name: PROJECT
+         username: USERNAME
+         project_domain_name: DOMAIN
+         user_domain_name: DOMAIN
+   ```
+
+   If you want to make use of `terraform/secure.yaml` add your password there instead of `terraform/clouds.yaml`.
+
+   ```yaml title="terraform/secure.yaml"
+   clouds:
+     regiocloud:
+       auth:
+         password: PASSWORD
+   ```
+
+   </TabItem>
+   </Tabs>
+
+4. Prepare for the deployment.
+
+   The versions of Ansible and [OpenTofu](https://opentofu.org) are managed
+   automatically, and necessary dependencies are cloned.
+
+   ```bash
+   make prepare
+   ```
+
+   :::tip
+   
+   If any error occurs during preparation, and you want to run the preparation
+   again, it is important to run `make wipe-local-install` first. Otherwise, the
+   preparation will not be redone completely, and necessary parts will be missing
+   later on.
+   
+   :::
+   
+## Start deployement 
+
+1. Create the infrastructure with OpenTofu.
+
+   ```bash
+   make ENVIRONMENT=regiocloud create
+   ```
+
+2. Deploy the OSISM manager and bootstrap all nodes.
+
+   <Tabs>
+   <TabItem value="testbed-deploy-latst" label="Deploy latest manager version">
+   ```bash
+   make ENVIRONMENT=regiocloud manager
+   ```
+   </TabItem>
+   <TabItem value="testbed-deploy-stable" label="Deploy a stable manager version">
+   ```bash
+   make ENVIRONMENT=regiocloud VERSION_MANAGER=8.0.1 manager
+   ```
+   </TabItem>
+   </Tabs>
+   Replace the version with the version you prefer.
+   Check the [OSISM release notes](https://osism.tech/docs/release-notes/)
+   to find out what's available.
+
+3. After the bootstrap, you can log in to the manager via SSH.
+
+   ```bash
+   make ENVIRONMENT=regiocloud login
+   ```
+
+   Yo can log in to the nodes of the cluster via the manager.
+
+   ```bash
+   osism console testbed-node-0
+   ```
+
+4. Deploy all services.
+
+   <Tabs>
+   <TabItem value="testbed-deploy-multi-steps" label="Deployment in single steps">
+   It is also possible to deploy the services step by step on the
+   manager. To do this, first log in to the manager with `make ENVIRONMENT=regiocloud login`
+   and then execute the deployment scripts one after the other. It is recommended to do this
+   within a screen session.
+
+   Deploying the services takes some time and depends on how much bandwidth is available,
+   how the instances are equipped, etc. 90–120 minutes is not unusual when Ceph and OpenStack
+   are fully deployed.
+
+   To speed up the Ansible playbooks, [ARA](https://ara.recordsansible.org) can be disabled. This
+   is done by executing `/opt/configuration/scripts/disable-ara.sh`. Run this script **before** the deployment scripts.
+   Afterwards, no more logs are available in the ARA web
+   interface. To re-enable ARA use `/opt/configuration/scripts/enable-ara.sh`.
+
+   There is also the option of pre-population of images with `/opt/configuration/scripts/pull-images.sh`
+   so that deployments do not have to be lengthy. Run this script **before** the deployment scripts.
+
+   ```bash
+   /opt/configuration/scripts/deploy/001-helpers.sh
+   /opt/configuration/scripts/deploy/100-ceph-with-ansible.sh
+   /opt/configuration/scripts/deploy/200-infrastructure.sh
+   /opt/configuration/scripts/deploy/300-openstack.sh
+   /opt/configuration/scripts/deploy/400-monitoring.sh
+   /opt/configuration/scripts/deploy/500-kubernetes.sh
+   ```
+
+    Prepare OpenStack resources like public network, flavors and images by running
+   `/opt/configuration/scripts/bootstrap.sh`. Run this script **after** the deployment scripts.
+
+   :::info
+
+   If you only want to deploy the monitoring services with `/opt/configuration/scripts/deploy/400-monitoring.sh`,
+   a few dependencies must be deployed first. You can then use the monitoring services without having to install a
+   complete OpenStack & Ceph environment.
+
+   ```bash
+   osism apply common
+   osism apply loadbalancer
+   osism apply opensearch
+   osism apply mariadb
+   ```
+
+   :::
+   </TabItem>
+   <TabItem value="testbed-deploy-single-step" label="Deployment of all services">
+   In this single-step deployment, Ceph, OpenStack and all necessary
+   infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
+   Depending on the cloud, the deployment will take some time. Up to two hours is not unusual. 
+
+   ```bash
+   make ENVIRONMENT=regiocloud deploy
+   ```
+   </TabItem>
+   </Tabs>
+
+## Verify and adjust deployment
+
+1. If you want to verify the deployment with [refstack](https://opendev.org/openinfra/refstack) run
+   `/opt/configuration/scripts/check.sh`. This step will take some time and is optional.
+
+2. The machine images required for the use of Kubernetes Cluster API and the amphora driver of OpenStack Octavia
+    service are not provided by default to save resources on the OSISM Testbed and improve deployment time.
+    These can be provisioned if required.
+
+    ```bash
+    /opt/configuration/scripts/bootstrap/301-openstack-octavia-amhpora-image.sh
+    /opt/configuration/scripts/bootstrap/302-openstack-k8s-clusterapi-images.sh
+    ```
+
+3. If you want, you can create a test project with a test user after login. It also
+    creates an instance with a volume attached to a network with a router. This step is optional.
+
+    ```bash
+    osism apply --environment openstack test
+    ```
+
+4. When the OSISM Testbed is no longer needed, it can be deleted.
+
+    ```bash
+    make ENVIRONMENT=regiocloud clean
+    ```

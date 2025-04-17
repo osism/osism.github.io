@@ -1,0 +1,164 @@
+---
+sidebar_label: Appendix
+sidebar_position: 5
+---
+
+# Appendix
+
+## Configuration
+
+This section describes how to configure and customise the OSISM Testbed.
+
+### Variables
+
+The defaults for the OpenTofu variables are intended for [REGIO.cloud](https://regio.digital).
+
+| Variable                  | Default                  | Note                                     |
+|:--------------------------|:-------------------------|:-----------------------------------------|
+| availability_zone         | `nova`                   |                                          |
+| ceph_version              | `quincy`                 |                                          |
+| cloud_provider            | `regiocloud`             |                                          |
+| configuration_version     | `main`                   |                                          |
+| deploy_monitoring         | `false`                  |                                          |
+| dns_nameservers           | `["8.8.8.8", "9.9.9.9"]` |                                          |
+| enable_config_drive       | `true`                   |                                          |
+| external_api              | `false`                  |                                          |
+| flavor_manager            | `SCS-4V-16-50`           |                                          |
+| flavor_node               | `SCS-8V-32-50`           |                                          |
+| image                     | `Ubuntu 22.04`           | Only Ubuntu 22.04 is currently supported |
+| image_node                | `Ubuntu 22.04`           | Only Ubuntu 22.04 is currently supported |
+| keypair                   | `testbed`                |                                          |
+| manager_version           | `latest`                 |                                          |
+| network_availability_zone | `nova`                   |                                          |
+| number_of_nodes           | `3`                      |                                          |
+| number_of_volumes         | `3`                      |                                          |
+| openstack_version         | `2023.2`                 |                                          |
+| prefix                    | `testbed`                |                                          |
+| public                    | `external`               |                                          |
+| refstack                  | `false`                  |                                          |
+| volume_availability_zone  | `nova`                   |                                          |
+| volume_size_base          | `30`                     |                                          |
+| volume_size_storage       | `10`                     |                                          |
+| volume_type               | `__DEFAULT__`            |                                          |
+
+### Overrides
+
+| Name                                       | Description      |
+|:-------------------------------------------|:-----------------|
+| `manager_boot_from_image`                  |                  |
+| `manager_boot_from_volume`                 |                  |
+| `neutron_availability_zone_hints_network`  |                  |
+| `neutron_availability_zone_hints_router`   |                  |
+| `neutron_router_enable_snat`               |                  |
+| `nodes_boot_from_image`                    |                  |
+| `nodes_boot_from_volume`                   |                  |
+| `nodes_use_ephemeral_storage`              |                  |
+
+### Customisations
+
+| Name                  | Description      |
+|:----------------------|:-----------------|
+| `access_floatingip`   |                  |
+| `access_ipv4`         |                  |
+| `access_ipv6`         |                  |
+| `default`             |                  |
+| `external_api`        |                  |
+| `neutron_floatingip`  |                  |
+
+
+## Notes
+
+* The configuration is intentionally kept quite static. Please create no PRs to make the configuration more flexible/dynamic.
+* The OSISM documentation uses hostnames, examples, addresses etc. from OSISM Testbed.
+* The third volume (`/dev/sdd`) is not enabled for Ceph by default. This is to test the scaling of Ceph.
+* The manager is used as pull through cache for Docker images and Ubuntu packages. This reduces the amount of traffic consumed.
+
+## Supported releases
+
+The following stable Ceph and OpenStack releases are supported.
+
+The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ansible/).
+
+* Ceph Quincy (**default**)
+* Ceph Reef
+* Ceph Squid
+
+The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
+
+* OpenStack 2023.1
+* OpenStack 2023.2
+* OpenStack 2024.1 (**default**)
+
+The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
+
+* Kubernetes v1.30 (**default**)
+
+## Included services
+
+The following services can currently be used with the OSISM Testbed without further adjustments.
+
+### Infrastructure
+
+* Ceph
+* Cluster API Management Cluster
+* Fluentd
+* Gnocchi
+* Grafana
+* Haproxy
+* Keepalived
+* Kubernetes
+* Mariadb
+* Memcached
+* Netbox
+* Netdata
+* Opensearch
+* Openvswitch
+* Prometheus exporters
+* Rabbitmq
+* Redis
+
+### OpenStack
+
+* Barbican
+* Ceilometer
+* Cinder
+* Designate
+* Glance
+* Horizon
+* Ironic
+* Keystone
+* Magnum
+* Manila
+* Neutron
+* Nova (with Libvirt/KVM)
+* Octavia
+* Skyline
+
+## Makefile reference
+
+```bash
+$ make help
+
+Usage:
+  make <target>
+  help                  Display this help.
+  clean                 Destroy infrastructure with OpenTofu.
+  wipe-local-install    Wipe the software dependencies in `venv`.
+  create                Create required infrastructure with OpenTofu.
+  login                 Log in on the manager.
+  vpn-wireguard         Establish a wireguard vpn tunnel.
+  vpn-sshuttle          Establish a sshuttle vpn tunnel.
+  bootstrap             Bootstrap everything.
+  manager               Deploy only the manager service.
+  identity              Deploy only identity services.
+  ceph                  Deploy only ceph services.
+  deploy                Deploy everything and then check it.
+  prepare               Run local preperations.
+  deps                  Install software preconditions to `venv`.
+
+$ make <TAB> <TAB>
+```
+
+## CI jobs
+
+You can inspect the [results of the daily zuul jobs](https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0).
