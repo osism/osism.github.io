@@ -37,7 +37,7 @@ osism noset bootstrap NODE
 
 ```
 osism apply manage-service \
-  -e service_name=rsysloc \
+  -e service_name=rsyslog \
   -e service_state=restarted
 ```
 
