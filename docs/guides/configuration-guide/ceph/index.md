@@ -141,8 +141,9 @@ repository:
 :::warning
 
 The autoscaler for pools is not enabled by default and the number of PGs used when creating
-a pool is very low. Either you enable the autoscaler by default or you have to adjust the
-number of PGs accordingly after the initial creation of the pools.
+a pool is very low. Either you enable the autoscaler by default or you have to
+[adjust the number of PGs](../../operations-guide/ceph/index.md#set-number-of-pgs-for-a-pool)
+accordingly after the initial creation of the pools.
 
 :::
 
