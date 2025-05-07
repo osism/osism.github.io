@@ -138,7 +138,7 @@ repository:
 | `openstack_pool_default_rule_name`         | `replicated_rule` |
 | `openstack_pool_default_size`              | 3                 |
 
-::::warning
+:::warning
 
 The autoscaler for pools is not enabled by default and the number of PGs used when creating
 a pool is very low. Either you enable the autoscaler by default or you have to adjust the
@@ -173,7 +173,7 @@ parameters in `environments/ceph/configuration.yml` but in a corresponding file.
 
 The extra pools can then be created by calling `osism apply ceph-pools`.
 
-## Extra keys
+### Extra keys
 
 Extra keys can be defined via the `openstack_keys_extra` parameter.
 
