@@ -125,7 +125,28 @@ vm.min_free_kbytes=4194303
    ceph-control
    ```
 
-## Extra pools
+## Pools and Keys
+
+The defaults for pools are defined in the [osism/defaults](https://github.com/osism/defaults/blob/main/all/099-ceph.yml)
+repository:
+
+| Parameter                                  | Default value     |
+|:-------------------------------------------|:------------------|
+| `openstack_pool_default_min_size`          | 0                 |
+| `openstack_pool_default_pg_autoscale_mode` | false             |
+| `openstack_pool_default_pg_num`            | 64                |
+| `openstack_pool_default_rule_name`         | `replicated_rule` |
+| `openstack_pool_default_size`              | 3                 |
+
+::::warning
+
+The autoscaler for pools is not enabled by default and the number of PGs used when creating
+a pool is very low. Either you enable the autoscaler by default or you have to adjust the
+number of PGs accordingly after the initial creation of the pools.
+
+:::
+
+### Extra pools
 
 Extra pools can be defined via the `openstack_pools_extra` parameter.
 
@@ -141,7 +162,7 @@ openstack_extra001_pool:
   application: "rbd"
   size: "{{ openstack_pool_default_size }}"
   min_size: "{{ openstack_pool_default_min_size }}"
-  pg_autoscale_mode: false
+  pg_autoscale_mode: "{{ openstack_pool_default_pg_autoscale_mode }}"
 
 openstack_pools_extra:
   - "{{ openstack_extra001_pool }}"
@@ -149,15 +170,6 @@ openstack_pools_extra:
 
 If more than one Ceph cluster is managed with one manager, do not place the
 parameters in `environments/ceph/configuration.yml` but in a corresponding file.
-
-The defaults for these parameters are defined in the osism/defaults repository
-as follows:
-
-| Parameter                         | Default value |
-|:----------------------------------|:--------------|
-| `openstack_pool_default_min_size` | 0             |
-| `openstack_pool_default_pg_num`   | 64            |
-| `openstack_pool_default_size`     | 3             |
 
 The extra pools can then be created by calling `osism apply ceph-pools`.
 
