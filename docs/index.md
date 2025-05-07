@@ -46,20 +46,26 @@ This documentation is organized into guides:
 * The [User Guide](./guides/user-guide/) is intended for users of the individual components. It contains
   best practices, as well as other information.
 
-## Required knowledge
+## Prerequisites
 
-We try to make deployment, upgrade, day2 operations etc. as easy as possible for everyone
-to use. However, knowledge is still required that we do not cover in our documentation.
-Wherever possible, we try to refer to existing documentation from e.g. Ansible or Docker.
+We aim to make each step as accessible as possible - from deployment, upgrade, to day2 operations and more. However, pre-existing knowledge is still required to work with our technology stack, which we do not cover in our documentation. Throughout our documentation we provide and refer to existing guides from e.g. Ansible and Docker.
+
+### Linux
+We assume the reader is familiar with [Linux (LPIC2 level)](https://www.lpi.org/our-certifications/lpic-2-overview/). This includes advanced system administration like networking, system services and automation, troubleshooting and security, and maintenance.
+
+### Ansible
+We assume the reader has understood the basic concepts of [Ansible](https://docs.ansible.com/). This includes understanding the YAML-syntax, reading, modifying and running playbooks, managing inventories, and using variables and templates.
+
+### Docker
+We assume that the reader has intermediate CLI skills of [Docker](https://docs.docker.com/), and knows how to view logs, restart containers, and inspect errors.
+
+### Kubernetes
+We assume that the reader has understood the concepts of [Kubernetes](https://kubernetes.io/docs/home/). Including inspecting clusters, and troubleshooting pods/services.
+
+:::note
 
 If you are not sure whether you already have the required knowledge, need support in
 gaining the knowledge or would like a guided introduction, you are welcome to contact
 us at [info@osism.tech](mailto:info@osism.tech). We are happy to help.
 
-* We assume that the reader is well familiar with Linux (LPIC2 level).
-* We assume that the reader has understood the basic concepts of Ansible
-  and can use Ansible in a basic way.
-* We assume that the reader has understood the basic concepts of Docker
-  and can use Docker in a basic way.
-* We assume that the reader has understood the basic concepts of Kubernetes
-  and can use Kubernetes in a basic way.
+:::
