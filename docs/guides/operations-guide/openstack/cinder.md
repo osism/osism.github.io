@@ -4,6 +4,16 @@ sidebar_label: Cinder
 
 # Cinder
 
+## Cleanup database
+
+Purge database entries that are marked as deleted, that are older than
+the number of days specified.
+
+```
+docker exec -it cinder_api bash
+(cinder-api)[root@testbed-node-0/]# cinder-manage db purge 30
+```
+
 ## Remove service
 
 ```
