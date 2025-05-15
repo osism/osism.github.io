@@ -3,6 +3,17 @@ sidebar_label: Nova
 ---
 # Nova
 
+## Cleanup database
+
+Purge database entries that are marked as deleted, that are older than
+the date specified.
+
+```
+docker exec -it nova_conductor bash
+(nova-conductor)[root@testbed-node-0/]# nova-manage db archive_deleted_rows --before 2025-01-01
+(nova-conductor)[root@testbed-node-0/]# nova-manage db purge --before 2025-01-01
+```
+
 ## Get all servers on a node
 
 ```
