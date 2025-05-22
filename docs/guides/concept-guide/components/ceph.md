@@ -19,3 +19,11 @@ Key benefits of Ceph include:
   on a single platform, simplifying storage management and reducing operational complexity.
 
 ## Lifecycle Management of Ceph in OSISM
+
+The Ceph Lifecycle Management starts with the initial provisioning and
+deployment of the system. After that configuration of Ceph takes place, with
+automated adjustments where needed. Ceph runs smoothly at this point.
+Maintenance with self healing recovering modes, as well as upgrades and patches
+with automated and controlled restarts, run whenever necessary.
+
+![Ceph Lifecycle Management](./images/ceph-lifecycle.png)
