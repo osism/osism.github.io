@@ -15,13 +15,44 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## 9.0.0 (20250408)
 
-### Other and References
+## Other and References
 
-#### Ceph 18.2 (Reef)
+### New container registry
+
+Container images are no longer pushed to Quay.io and are only made available on our own
+container registry. During the transition phase, the new container registry must be made
+known in the configuration repository. In the future ( likely with the release of OSISM 10),
+these parameters can be removed again.
+
+```yaml title="environments/kolla/configuration.yml
+kolla_namespace: kolla/release
+```
+
+```yaml title="environments/manager/configuration.yml
+docker_registry: index.docker.io
+docker_registry_ansible: registry.osism.tech
+docker_registry_netbox: registry.osism.tech
+```
+
+```yaml title="inventory/group_vars/all/registries.yml
+ceph_docker_registry: registry.osism.tech
+dnsmasq_docker_registry: registry.osism.tech
+docker_registry_ansible: registry.osism.tech
+docker_registry_cephclient: registry.osism.tech
+docker_registry_cgit: registry.osism.tech
+docker_registry_dnsdist: registry.osism.tech
+docker_registry_homer: registry.osism.tech
+docker_registry_kolla: registry.osism.tech
+docker_registry_netbox: registry.osism.tech
+docker_registry_nexus: registry.osism.tech
+docker_registry_openstackclient: registry.osism.tech
+```
+
+### Ceph 18.2 (Reef)
 
 Ceph 18.2 release notes: https://docs.ceph.com/en/latest/releases/reef/
 
-#### OpenStack 2024.2 (Dalmatian)
+### OpenStack 2024.2 (Dalmatian)
 
 OpenStack 2024.2 release notes: https://releases.openstack.org/dalmatian/index.html
 
