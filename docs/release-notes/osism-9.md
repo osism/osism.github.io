@@ -13,6 +13,10 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## 9.1.0 (20250530)
 
+### Known issues
+
+* Incremental MariaDB backups are not working [lp#2111620](https://bugs.launchpad.net/kolla/+bug/2111620)
+
 ## 9.0.0 (20250408)
 
 ## Other and References
