@@ -28,17 +28,17 @@ container registry. During the transition phase, the new container registry must
 known in the configuration repository. In the future ( likely with the release of OSISM 10),
 these parameters can be removed again.
 
-```yaml title="environments/kolla/configuration.yml
+```yaml title="environments/kolla/configuration.yml"
 kolla_namespace: kolla/release
 ```
 
-```yaml title="environments/manager/configuration.yml
+```yaml title="environments/manager/configuration.yml"
 docker_registry: index.docker.io
 docker_registry_ansible: registry.osism.tech
 docker_registry_netbox: registry.osism.tech
 ```
 
-```yaml title="inventory/group_vars/all/registries.yml
+```yaml title="inventory/group_vars/all/registries.yml"
 ceph_docker_registry: registry.osism.tech
 dnsmasq_docker_registry: registry.osism.tech
 docker_registry_ansible: registry.osism.tech
