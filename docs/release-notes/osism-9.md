@@ -29,7 +29,7 @@ known in the configuration repository. In the future ( likely with the release o
 these parameters can be removed again.
 
 ```yaml title="environments/kolla/configuration.yml"
-kolla_namespace: kolla/release
+docker_namespace: kolla/release
 ```
 
 ```yaml title="environments/manager/configuration.yml"
