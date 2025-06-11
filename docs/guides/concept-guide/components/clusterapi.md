@@ -7,7 +7,7 @@ complexities of cluster management. One of the most powerful tools for implement
 is the Cluster API, an official Kubernetes project that provides declarative APIs and tools
 for managing the lifecycle of Kubernetes clusters.
 
-Key benefits of Cluster API include:
+## Benefits of Cluster API
 
 * Declarative Cluster Management: Cluster API allows users to define the desired state of
   clusters using YAML manifests. This declarative approach simplifies the process of creating,
@@ -38,4 +38,19 @@ complexities of managing Kubernetes infrastructure.
 
 ### Cluster API with OpenStack Magnum
 
+In an OpenStack environment, Magnum takes YAML-manifests to define and deploy
+specifications for Kubernetes clusters. First, Cluster Resources get defined.
+After that, Control Plane Nodes and Worker Nodes are configured. If there are
+changes to the YAML-Manifests, Magnum will adjust the Nodes accordingly.
+
+![Cluster API Magnum](./images/cluster-api-magnum.png)
+
 ### Cluster API with SCS Cluster Stacks
+
+SCS Cluster Stacks works in multiple cloud environments. It takes YAML-manifests
+to define and deploy specifications for Kubernetes clusters. First, Cluster
+Resources get defined. After that, Control Plane Nodes and Worker Nodes are
+configured. If there are changes to the YAML-Manifests, SCS Cluster Stacks will
+adjust the Nodes accordingly.
+
+![Cluster API SCS](./images/cluster-api-scs.png)
