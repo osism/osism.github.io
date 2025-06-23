@@ -6,7 +6,7 @@ an advanced KaaS solution that leverages a Kubernetes-native approach to manage
 Kubernetes clusters at scale. Gardener is designed to provide consistent and efficient
 cluster management across various cloud environments and on-premises data centers.
 
-Key benefits of Gardener include:
+## Key benefits of Gardener
 
 * Kubernetes-Native Design: Gardener operates by treating Kubernetes clusters as first-class
   citizens. It uses Kubernetes itself to orchestrate the deployment and management of other
@@ -38,3 +38,8 @@ This allows them to focus on delivering business value through their application
 than dealing with the complexities of cluster management.
 
 ## Lifecycle Management of Gardener in OSISM
+
+Gardener takes the input from kubectl (or any other input source), and builds
+and deploys a Kubernetes cluster based off the provided parameters.
+
+![Gardener Lifecycle in OSISM](./images/gardener-lifecycle.png)
