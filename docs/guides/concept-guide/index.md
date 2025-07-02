@@ -5,6 +5,17 @@ sidebar_position: 10
 
 # Concept Guide
 
+:::info
+
+The Concept Guide is currently under construction. Therefore, there are still
+many empty sections that have already been created for the overall structure.
+If there are requests for certain sections or if existing sections are not
+understandable or need more details, please open an [issue](https://github.com/osism/issues/issues).
+Contributions are welcome, and they are greatly appreciated. Open Source Software
+and Documentation relies on contributions.
+
+:::
+
 ## Highlevel Overview
 
 ![OSISM overview](./images/overview.drawio.png)
