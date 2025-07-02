@@ -6,8 +6,7 @@ sidebar_position: 30
 # Provisioning of bare-metal nodes
 
 For the initial deployment of the management plane and the control plane of OSISM,
-the nodes must be pre-provisioned with Ubuntu 22.04. Currently, only Ubuntu 22.04 is supported
-by OSISM.
+the nodes must be pre-provisioned with Ubuntu 24.04.
 
 Data plane nodes can be automatically provisioned after the initial deployment and
 do not need to be pre-provisioned.
@@ -49,12 +48,12 @@ The procedures for building custom images are described in the
 ## Manual provisioning
 
 If none of the provided variants is suitable, this section describes the manual
-installation with the help of the Ubuntu 22.04 live ISO image. The manual installation
+installation with the help of the Ubuntu 24.04 live ISO image. The manual installation
 is possible without network connectivity.
 
-* Download the latest ISO image for Ubuntu 22.04 from [releases.ubuntu.com](https://www.releases.ubuntu.com/22.04/).
-  * Use the `ubuntu-22.04.1-live-server-amd64.iso` image.
-  * The version number may be different, always use the latest available version of 22.04 LTS.
+* Download the latest ISO image for Ubuntu 24.04 from [releases.ubuntu.com](https://www.releases.ubuntu.com/24.04/).
+  * Use the `ubuntu-24.04.2-live-server-amd64.iso` image.
+  * The version number may be different, always use the latest available version of 24.04 LTS.
 * Choose `English` as language.
 * Choose `Install Ubuntu Server`.
 * Choose `English as language` (again).
