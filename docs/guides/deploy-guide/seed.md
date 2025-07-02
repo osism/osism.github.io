@@ -22,7 +22,7 @@ that no packages are installed manually on the manager. Especially not Docker.
 
 
 The use of Linux on the seed node is recommended. Other operating systems should also
-work without problems. It is assumed in this documentation that Ubuntu 22.04 is used on
+work without problems. It is assumed in this documentation that Ubuntu 24.04 is used on
 the seed node.
 
 ## Install required packages
