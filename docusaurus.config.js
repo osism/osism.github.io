@@ -104,7 +104,6 @@ const config = {
             label: 'Documentation',
           },
           { to: "/users", label: "Users", position: "left" },
-          { to: "/partners", label: "Partners", position: "left" },
           {
 	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
             label: 'Schedule a demo',
@@ -133,10 +132,6 @@ const config = {
               {
                 label: 'Users',
                 href: '/users',
-              },
-              {
-                label: 'Partners',
-                href: '/partners',
               },
 	    ],
           },
