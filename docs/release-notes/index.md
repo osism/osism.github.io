@@ -12,8 +12,6 @@ The old release notes (before OSISM 7) can be found on the archived page
 
 :::
 
-**The latest available release of OSISM is `9.1.0`.**
-
 | Series               | Status               | Initial Release Date | Next Phase           | EOL Date         |
 |:---------------------|:---------------------|:---------------------|:---------------------|:-----------------|
 | [OSISM 9](./osism-9) | Maintained           | 8. April 2025        | Extended Maintenance |                  |

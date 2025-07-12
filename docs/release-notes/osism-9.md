@@ -8,10 +8,33 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|
+| [9.2.0](#920-20250711)   | 11. July 2025       |
 | [9.1.0](#910-20250530)   | 30. May 2025        |
 | [9.0.0](#900-20250408)   | 8. April 2025       |
 
+## 9.2.0 (20250711)
+
+* All OpenStack service images have been rebuilt. An upgrade of OpenStack services is recommended.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have been rebuilt. An upgrade is recommended.
+
+* The network service images (OVN, OVS) have been rebuilt. An upgrade is recommended.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have been rebuilt. An upgrade is recommended.
+
+* The logging service images (OpenSearch, Fluentd) have been rebuilt. An upgrade is recommended.
+
 ## 9.1.0 (20250530)
+
+* All OpenStack service images have been rebuilt. An upgrade of OpenStack services is recommended.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have been rebuilt. An upgrade is recommended.
+
+* The network service images (OVN, OVS) have been rebuilt. An upgrade is recommended.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have been rebuilt. An upgrade is recommended.
+
+* The logging service images (OpenSearch, Fluentd) have been rebuilt. An upgrade is recommended.
 
 ### Known issues
 
@@ -19,9 +42,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## 9.0.0 (20250408)
 
-## Other and References
-
-### New container registry
+## New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own
 container registry. During the transition phase, the new container registry must be made
@@ -51,6 +72,8 @@ docker_registry_netbox: registry.osism.tech
 docker_registry_nexus: registry.osism.tech
 docker_registry_openstackclient: registry.osism.tech
 ```
+
+## References
 
 ### Ceph 18.2 (Reef)
 
