@@ -109,18 +109,72 @@ EOF
 
 ### Restore
 
-* Stop all MariaDb Instances
-
+* Gather the image and tag the current mariadb container
+  * Opetion 1: Evaluate variables
+    (Follow the references. TODO: Is there a more conventient way to get the right image/tag?
+    ```
+    osism dump inventory <host> mariadb_image
+    osism dump inventory <host> mariadb_tag
+    osism dump inventory <host> kolla_mariadb_version
+    ```
+  * Opetion 2: Get image refernce from running container
+    ```
+    ssh <first controller node>
+    docker ps|grep mariadb-server
+    ```
+* Stop all MariaDB Instances
   ```
-  osism apply -s stop maria
+  osism apply -a stop mariadb
   ```
-
-* Follow the [restore procedure described in the kolla-ansible manual](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html#restoring-backups)
+* Perform restore operation
+  (Based on the the [restore procedure described in the kolla-ansible manual](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html#restoring-backups))
+  * Login to the first controller nodes where the backups reside
+    ```
+    ssh ${THE_NAME_OF_THE_RESTORE_NODE?}
+    # example: "quay.io/osism/mariadb-server:10.11.9.20240909"
+    IMAGE_REFERENCE="..."
+    docker run --rm -it --volumes-from mariadb --name dbrestore \
+     --volume mariadb_backup:/backup \
+     ${IMAGE_REFERENCE?} \
+     /bin/bash
+    ```
+  * Docker: Perform restore operation
+    ```
+    cd /backup
+    ls -latr
+    rm -rf /backup/restore # remove old restore dir
+    mkdir -p /backup/restore/full
+    zcat mysqlbackup-18-12-2024-1734505244.qp.xbc.xbs.gz | mbstream -x -C /backup/restore/full/
+    mariabackup --prepare --target-dir /backup/restore/full
+    ```
+  * Docker: Eliminate old files
+    ```
+    OLD_DATA_FILES_DIR="/backup/restore/old_data_files_$(date --date="today" "+%Y-%m-%d_%H-%M-%S")"
+    mkdir -p ${OLD_DATA_FILES_DIR?}
+    mv /var/lib/mysql/\.[^\.]* ${OLD_DATA_FILES_DIR?}/
+    ```
+  * Docker: Restore backup into place
+    ```
+    mariabackup --copy-back --target-dir /backup/restore/full
+    exit
+    ```
+  * TODO: Fix grastate.dat, already seems to be part of the mariadb_recovery playbook, but recovery procedure not seems to work
+    ```
+    sed  -i '~s,safe_to_bootstrap: .*,safe_to_bootstrap: 1,' /var/lib/mysql/grastate.dat
+    ```
+  * Start container
+    ```
+    exit
+    docker start mariadb
+    docker logs mariadb
+    tail -f /var/log/kolla/mariadb/mariadb.log
+    grep -P "Running position recovery with|Recovered position" /var/log/kolla/mariadb/mariadb.log
+    ```
 
 * Execute the recovery procedure with the node name where you executed the recovery
 
   ```
-  osism apply mariadb_recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE
+  osism apply mariadb_recovery -e mariadb_recover_inventory_name=${THE_NAME_OF_THE_RESTORE_NODE?}
   ```
 
 ### Recovery
@@ -130,6 +184,7 @@ to start a recovery.
 
 ```
 osism apply mariadb_recovery
+osism apply mariadb_recovery -e mariadb_recover_inventory_name=${THE_NAME_OF_THE_RECOVERY_NODE_OF_YOUR_CHOICE?}
 ```
 
 ### Create database & user
