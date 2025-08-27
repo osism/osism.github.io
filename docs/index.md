@@ -3,6 +3,27 @@ sidebar_label: Getting started
 sidebar_position: 10
 ---
 
+:::info
+
+This documentation is constantly being updated, is incomplete in some places
+and may contain inaccuracies. We are always happy to provide support without
+any commitment, as we know that the barrier to entry for OSISM is not necessarily
+low.
+
+For newcomers, we offer [Cloud in a Box](./cloud-in-a-box/) and a
+[virtual testbed](./testbed/) for a quick and easy start. For this purpose,
+we also offer regular on-site workshops near Stuttgart if there is sufficient demand.
+
+If there are requests for certain sections or if existing sections are not
+understandable or need more details, please open an [issue](https://github.com/osism/issues/issues).
+You are also welcome to contact us by email at [info@osism.tech](mailto:info@osism.tech).
+
+Contributions are welcome, and they are greatly appreciated. Open Source Software
+and Documentation relies on contributions. This documentation cannot be improved
+without your feedback and help.
+
+:::
+
 # Getting started
 
 OSISM is a comprehensive platform for managing software-defined cloud infrastructure that goes far beyond being a simple deployment tool for OpenStack. While OSISM does support the deployment and management of OpenStack as a key component, its capabilities extend to orchestrating a wide array of services and tools needed to build and operate a modern private cloud. By leveraging OSISM, organizations gain a powerful toolset for building, managing, and scaling private cloud infrastructures tailored to their specific needs, while also maintaining full control over their data and operations.
