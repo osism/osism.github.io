@@ -3,6 +3,8 @@ sidebar_label: Getting started
 sidebar_position: 10
 ---
 
+# Getting started
+
 :::info
 
 This documentation is constantly being updated, is incomplete in some places
@@ -23,8 +25,6 @@ and Documentation relies on contributions. This documentation cannot be improved
 without your feedback and help.
 
 :::
-
-# Getting started
 
 OSISM is a comprehensive platform for managing software-defined cloud infrastructure that goes far beyond being a simple deployment tool for OpenStack. While OSISM does support the deployment and management of OpenStack as a key component, its capabilities extend to orchestrating a wide array of services and tools needed to build and operate a modern private cloud. By leveraging OSISM, organizations gain a powerful toolset for building, managing, and scaling private cloud infrastructures tailored to their specific needs, while also maintaining full control over their data and operations.
 
