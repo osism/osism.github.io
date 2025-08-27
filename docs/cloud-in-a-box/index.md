@@ -5,6 +5,17 @@ sidebar_position: 70
 
 # Cloud in a Box
 
+:::info
+
+We are always happy to provide support without any commitment, as we know that the
+barrier to entry for OSISM is not necessarily low.
+
+If there are requests for certain sections or if existing sections are not
+understandable or need more details, please open an [issue](https://github.com/osism/issues/issues).
+You are also welcome to contact us by email at [info@osism.tech](mailto:info@osism.tech).
+
+:::
+
 💡 Cloud in a Box (CiaB) is a minimalistic installation of the latest stable OSISM release with only services which are needed to
 make it work with Kubernetes. It is intended for use as a development system on bare-metal or for use in edge environments or for
 training purposes. Its flexibility makes it ideal for building, testing, and refining cloud infrastructure setups in controlled

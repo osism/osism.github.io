@@ -5,6 +5,17 @@ sidebar_position: 80
 
 # Testbed
 
+:::info
+
+We are always happy to provide support without any commitment, as we know that the
+barrier to entry for OSISM is not necessarily low.
+
+If there are requests for certain sections or if existing sections are not
+understandable or need more details, please open an [issue](https://github.com/osism/issues/issues).
+You are also welcome to contact us by email at [info@osism.tech](mailto:info@osism.tech).
+
+:::
+
 With the OSISM Testbed, it is possible to run a full Sovereign Cloud Stack
 deployment on an existing OpenStack environment such as Cleura or [REGIO.cloud](https://regio.digital).
 
