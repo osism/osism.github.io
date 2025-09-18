@@ -3,6 +3,9 @@ sidebar_label: Ceph
 sidebar_position: 30
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Ceph
 
 The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/configuration/
@@ -60,6 +63,30 @@ vm.min_free_kbytes=4194303
 
 1. Add following configuration in `environments/ceph/configuration.yml`
 
+   <Tabs>
+   <TabItem value="osism-9" label="OSISM >= 9.0.0">
+   ```yaml title="environments/ceph/configuration.yml"
+   ceph_conf_overrides:
+     "client.rgw.{{ rgw_zone }}.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
+       "rgw content length compat": "true"
+       "rgw enable apis": "swift, s3, admin"
+       "rgw keystone accepted roles": "member, admin"
+       "rgw keystone accepted admin roles": "admin"
+       "rgw keystone admin domain": "default"
+       "rgw keystone admin password": "{{ ceph_rgw_keystone_password }}"
+       "rgw keystone admin project": "service"
+       "rgw keystone admin tenant": "service"
+       "rgw keystone admin user": "ceph_rgw"
+       "rgw keystone api version": "3"
+       "rgw keystone url": "https://api-int.testbed.osism.xyz:5000"
+       "rgw keystone verify ssl": "false"
+       "rgw keystone implicit tenants": "true"
+       "rgw s3 auth use keystone": "true"
+       "rgw swift account in url": "true"
+       "rgw swift versioning enabled": "true"
+   ```
+   </TabItem>
+   <TabItem value="osism-8" label="OSISM < 9.0.0">
    ```yaml title="environments/ceph/configuration.yml"
    ceph_conf_overrides:
      "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
@@ -80,6 +107,8 @@ vm.min_free_kbytes=4194303
        "rgw swift account in url": "true"
        "rgw swift versioning enabled": "true"
    ```
+   </TabItem>
+   </Tabs>
 
    If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
    expand it and do not overwrite it.
