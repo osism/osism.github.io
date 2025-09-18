@@ -73,6 +73,35 @@ docker_registry_nexus: registry.osism.tech
 docker_registry_openstackclient: registry.osism.tech
 ```
 
+## New service names for RadosGW in Ceph Reef
+
+The naming scheme for the Ceph RadosGW service was changed from
+
+```
+rgw.$HOSTNAME.$INSTANCE
+```
+
+to
+
+```
+rgw.$ZONE.$HOSTNAME.$INSTANCE
+```
+
+Please adapt any `client` entries in `ceph_config_overrides` in `environments/ceph/configuration.yml` accordingly.
+E.g. if you previously had
+
+```yaml title="environments/ceph/configuration.yml"
+ceph_conf_overrides:
+  "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
+```
+
+change it to
+
+```yaml title="environments/ceph/configuration.yml"
+ceph_conf_overrides:
+  "client.rgw.{{ rgw_zone }}.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
+```
+
 ## References
 
 ### Ceph 18.2 (Reef)
