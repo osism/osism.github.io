@@ -8,11 +8,24 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|
+| [9.4.0](#940-20250928)   | 28. September 2025  |
 | [9.3.1](#931-20250920)   | 20. September 2025  |
 | [9.3.0](#930-20250917)   | 17. September 2025  |
 | [9.2.0](#920-20250711)   | 11. July 2025       |
 | [9.1.0](#910-20250530)   | 30. May 2025        |
 | [9.0.0](#900-20250408)   | 8. April 2025       |
+
+## 9.4.0 (20250928)
+
+* All OpenStack service images have been rebuilt. An upgrade of OpenStack services is recommended.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have been rebuilt. An upgrade is recommended.
+
+* The network service images (OVN, OVS) have been rebuilt. An upgrade is recommended.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have been rebuilt. An upgrade is recommended.
+
+* The logging service images (OpenSearch, Fluentd) have been rebuilt. An upgrade is recommended.
 
 ## 9.3.1 (20250920)
 
