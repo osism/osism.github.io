@@ -16,6 +16,7 @@ sidebar_label: Networks
 | `openstack_health_monitor_network` | `172.31.100.160/28` |
 | `netbox_network`                   | `172.31.100.176/28` |
 | `homer_network`                    | `172.31.100.208/28` |
+| `substation_network`               | `172.31.100.240/28` |
 | `manager_network`                  | `172.31.101.0/27`   |
 | `nexus_network`                    | `172.31.101.32/28`  |
 | `dnsdist_network`                  | `172.31.101.80/28`  |
