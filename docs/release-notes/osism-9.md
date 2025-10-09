@@ -4,7 +4,7 @@ sidebar_label: OSISM 9
 
 # OSISM 9
 
-Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager).
+Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
 
 | Release                  | Release Date        |
 |:-------------------------|:--------------------|

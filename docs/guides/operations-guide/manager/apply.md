@@ -7,7 +7,7 @@ sidebar_label: Apply
 With the `apply` command it is possible to run Ansible plays. These are executed as
 background activity via a queuing system so that, for example, the loss of an SSH connection
 does not result in the execution being aborted. In this case, the logs can also be analyzed
-[retrospectively](./log).
+[retrospectively](./log.md).
 
 ## List all plays
 

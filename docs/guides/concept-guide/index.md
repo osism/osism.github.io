@@ -22,53 +22,53 @@ and Documentation relies on contributions.
 
 ## Components in a cloud pod
 
-* [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack)
-* [Software Defined Storage (SDS) with Ceph](./components/ceph)
-* [Bare Metal as a Service (BMaaS) with Ironic](./components/ironic)
-* [Software Defined Networking (SDN) with SONiC & OVN](./components/sonic)
-* [Kubernetes (K8s) with K3S](./components/k3s)
-* [Kubernetes as a Service (KaaS) with Gardener](./components/gardener)
-* [Kubernetes as a Service (KaaS) with Cluster API](./components/clusterapi)
-* [Identity & Access Management with Keycloak](./components/keycloak)
-* [Privileged Access Management (PAM) to all infrastructure with Teleport](./components/teleport)
-* [Logging, Monitoring & Telemetry with Prometheus & Grafana](./components/prometheus)
-* [Realtime insights with Netdata](./components/netdata)
+* [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack.md)
+* [Software Defined Storage (SDS) with Ceph](./components/ceph.md)
+* [Bare Metal as a Service (BMaaS) with Ironic](./components/ironic.md)
+* [Software Defined Networking (SDN) with SONiC & OVN](./components/sonic.md)
+* [Kubernetes (K8s) with K3S](./components/k3s.md)
+* [Kubernetes as a Service (KaaS) with Gardener](./components/gardener.md)
+* [Kubernetes as a Service (KaaS) with Cluster API](./components/clusterapi.md)
+* [Identity & Access Management with Keycloak](./components/keycloak.md)
+* [Privileged Access Management (PAM) to all infrastructure with Teleport](./components/teleport.md)
+* [Logging, Monitoring & Telemetry with Prometheus & Grafana](./components/prometheus.md)
+* [Realtime insights with Netdata](./components/netdata.md)
 
 ## Requirements
 
 ## Layers in a cloud pod
 
-* [Compute Plane](./layers#compute-plane)
-* [Control Plane](./layers#control-plane)
-* [Data Plane](./layers#data-plane)
-* [Management Plane](./layers#management-plane)
-* [Monitoring Plane](./layers#monitoring-plane)
-* [Network Plane](./layers#network-plane)
+* [Compute Plane](./layers.md#compute-plane)
+* [Control Plane](./layers.md#control-plane)
+* [Data Plane](./layers.md#data-plane)
+* [Management Plane](./layers.md#management-plane)
+* [Monitoring Plane](./layers.md#monitoring-plane)
+* [Network Plane](./layers.md#network-plane)
 
 ## Reference architecture
 
-* [Manager architecture](./architecture#manager-architexture)
-* [Control architecture](./architecture#control-architecture)
-* [Compute architecture](./architecture#compute-architecture)
-* [Storage architecture](./architecture#storage-architecture)
-* [Network architecture](./architecture#network-architecture)
-* [Routing architecture](./architecture#routing-architecture)
-* [Firewall architecture](./architecture#firewall-architecture)
-* [Loadbalancer architecture](./architecture#loadbalancer-architecture)
-* [Logging architecture](./architecture#logging-architecture)
-* [Monitoring architecture](./architecture#monitoring-architecture)
-* [Identity architecture](./architecture#identity-architecture)
+* [Manager architecture](./architecture.md#manager-architecture)
+* [Control architecture](./architecture.md#control-architecture)
+* [Compute architecture](./architecture.md#compute-architecture)
+* [Storage architecture](./architecture.md#storage-architecture)
+* [Network architecture](./architecture.md#network-architecture)
+* [Routing architecture](./architecture.md#routing-architecture)
+* [Firewall architecture](./architecture.md#firewall-architecture)
+* [Loadbalancer architecture](./architecture.md#loadbalancer-architecture)
+* [Logging architecture](./architecture.md#logging-architecture)
+* [Monitoring architecture](./architecture.md#monitoring-architecture)
+* [Identity architecture](./architecture.md#identity-architecture)
 
 ## Use cases
 
-* [Hyper-converged infrastructure (HCI)](./use-cases#hyper-converged-infrastructure-hci)
+* [Hyper-converged infrastructure (HCI)](./use-cases.md#hyper-converged-infrastructure-hci)
 
 ## Bill of Materials
 
-* [Control nodes](./bom#control-nodes)
-* [Compute nodes](./bom#compute-nodes)
-* [Storage nodes](./bom#storage-nodes)
-* [Network nodes](./bom#network-nodes)
-* [Manager nodes](./bom#manager-nodes)
-* [Switches](./bom#switches)
-* [Network interface cards](./bom#network-interface-cards)
+* [Control nodes](./bom.md#control-nodes)
+* [Compute nodes](./bom.md#compute-nodes)
+* [Storage nodes](./bom.md#storage-nodes)
+* [Network nodes](./bom.md#network-nodes)
+* [Manager nodes](./bom.md#manager-nodes)
+* [Switches](./bom.md#switches)
+* [Network interface cards](./bom.md#network-interface-cards)

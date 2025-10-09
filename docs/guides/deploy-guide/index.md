@@ -15,10 +15,10 @@ What a configuration repository is and how it is created is described in the
 
 :::
 
-* Step 1: [Creation of a configuration repository](../configuration-guide/configuration-repository#creating-a-new-configuration-repository)
-* Step 2: [Preparation of the seed node](./seed)
-* Step 3: [Preparation of the manager node](./manager)
-* Step 4: [Provisioning of the bare-metal nodes](./provisioning)
-* Step 5: [Bootstrap of the bare-metal nodes](./bootstrap)
+* Step 1: [Creation of a configuration repository](../configuration-guide/configuration-repository.md#creating-a-new-configuration-repository)
+* Step 2: [Preparation of the seed node](./seed.md)
+* Step 3: [Preparation of the manager node](./manager.md)
+* Step 4: [Provisioning of the bare-metal nodes](./provisioning.md)
+* Step 5: [Bootstrap of the bare-metal nodes](./bootstrap.md)
 * Step 6: [Deployment of the services](./services)
 
