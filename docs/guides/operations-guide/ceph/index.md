@@ -321,7 +321,7 @@ Interesting fields:
 ### Add a new OSD
 
 1. Prepare the configuration for the new OSD first. Details on adding the configuration
-   for a new OSD in the [Ceph configuration guide](../../configuration-guide/ceph/#add-a-new-osd).
+   for a new OSD in the [Ceph configuration guide](../../configuration-guide/ceph/index.mdx#add-a-new-osd).
 
 2. Deploy the new OSD service on `<nodename>`.
 
