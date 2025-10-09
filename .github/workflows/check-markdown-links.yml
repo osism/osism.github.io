@@ -11,9 +11,7 @@ jobs:
       - name: Run linkspector
         uses: umbrelladocs/action-linkspector@v1
         with:
-          config_file: .github/linkspector.yml
+          config-file: .github/linkspector.yml
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
           fail_level: any
           filter_mode: nofilter
-          show_stats: true
