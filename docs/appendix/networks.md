@@ -27,6 +27,7 @@ sidebar_label: Networks
 | `metering_network`                 | `172.31.101.176/28` |
 | `thanos_sidecar_network`           | `172.31.101.192/28` |
 | `gnmic_network`                    | `172.31.101.208/28` |
+| `opentelemetry_collector_network`  | `172.31.101.240/28` |
 | `zuul_network`                     | `172.31.102.0/28`   |
 | `zuul_internal_network`            | `172.31.102.16/28`  |
 | `traefik_external_network_cidr`    | `172.31.254.0/24`   |
