@@ -30,6 +30,7 @@ sidebar_label: Networks
 | `opentelemetry_collector_network`  | `172.31.101.240/28` |
 | `zuul_network`                     | `172.31.102.0/28`   |
 | `zuul_internal_network`            | `172.31.102.16/28`  |
+| `stepca_internal_network`          | `172.31.102.32/28`  |
 | `traefik_external_network_cidr`    | `172.31.254.0/24`   |
 
 ## IPv6
