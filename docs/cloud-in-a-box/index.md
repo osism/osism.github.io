@@ -67,8 +67,8 @@ therefore it is mandatory to update the installation media at least when the und
 system release changes. The installation of older releases is currently not supported.
 
 1. Download one of the Cloud in a Box images of type sandbox
-   * [ubuntu-autoinstall-cloud-in-a-box-1.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-1.iso) (with first block device as `/dev/sda`)
-   * [ubuntu-autoinstall-cloud-in-a-box-2.iso](https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/osism-node-image/ubuntu-autoinstall-cloud-in-a-box-2.iso) (with first block device as `/dev/nvme0n1`)
+   * [ubuntu-autoinstall-cloud-in-a-box-1.iso](https://nbg1.your-objectstorage.com/osism/node-image/ubuntu-autoinstall-cloud-in-a-box-1.iso) (with first block device as `/dev/sda`)
+   * [ubuntu-autoinstall-cloud-in-a-box-2.iso](https://nbg1.your-objectstorage.com/osism/node-image/ubuntu-autoinstall-cloud-in-a-box-2.iso) (with first block device as `/dev/nvme0n1`)
 
 2. Use a tool like [balenaEtcher](https://etcher.balena.io) or `dd` to create a bootable USB stick with the Cloud
    in a Box image.
