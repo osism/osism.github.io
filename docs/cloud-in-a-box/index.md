@@ -82,7 +82,7 @@ system release changes. The installation of older releases is currently not supp
 
    :::
 
-4. The installation of the operating system (Ubuntu 22.04) will start and take a few minutes. After that the system
+4. The installation of the operating system (Ubuntu 24.04) will start and take a few minutes. After that the system
    will shutdown.
 
 5. The first start of the system
