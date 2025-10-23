@@ -51,7 +51,7 @@ The operator user is created on each node. It is used as a service account for O
 containers run with this user. Ansible also uses this user to access the nodes. Commands
 on the manager node need to be run as this user. The name of the operator user is always `dragon`.
 
-With `ANSIBLE_USER` the existing user account is set after the provsioning of the management
+With `ANSIBLE_USER` the existing user account is set after the provisioning of the management
 node. When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
 and the password of this user is `password`. If you install Ubuntu manually the user usually
 is `ubuntu`. If you want to use any other user here, that's no problem. It is important that

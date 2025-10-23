@@ -89,7 +89,7 @@ Release date: 6. October 2024
 
 * The generic inventory group is now used as the default for the FRR service.
 
-* In the inventory reconciler, the handling of inventory groups from the configuration repoistory
+* In the inventory reconciler, the handling of inventory groups from the configuration repository
   and the Netbox has been improved. Groups that exist both in the configuration repository and in
   the Netbox are now merged and do not overwrite each other.
 
@@ -99,7 +99,7 @@ Release date: 6. October 2024
   specific hosts.
 
 * The `osism.commons.repository` role now supports the newer DEB822 format and is now also
-  usuable on Ubuntu 24.04 based ARM nodes.
+  usable on Ubuntu 24.04 based ARM nodes.
 
 * With the `nexus_force_init` parameter of `osism.services.nexus` it is possible to force the
   initialisation of the Nexus service.
@@ -167,10 +167,10 @@ Release date: 24. September 2024
   ```
 
 * Both Ceph play (`osism apply ceph`)  and the validation of Ceph OSD services
-  (`osism validate ceph-osds`) have been fixed for non-HCI environments.  
+  (`osism validate ceph-osds`) have been fixed for non-HCI environments.
 
 * Inventory groups in `inventory/20-roles` now also overwrite groups in all other files
-  (with exception of `inventory/99-ovewrite`). The same applies to groups that are set
+  (with exception of `inventory/99-overwrite`). The same applies to groups that are set
   via labels in Netbox. This makes it possible, for example, to define the load balancers
   via the `loadbalancer` group directly via `inventory/20-roles` or a Netbox label.
 

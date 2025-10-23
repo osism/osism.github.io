@@ -61,7 +61,7 @@ required_packages_distribution:
   - ssh
 ```
 
-The `apt_cache_valid_time` parameter can be used to set the `cache_valid_time` paremter
+The `apt_cache_valid_time` parameter can be used to set the `cache_valid_time` parameter
 of the `ansible.builtin.apt` module. The module updates the apt cache if it is older than
 the `cache_valid_time`. The parameter is set in seconds and defaults to `3600`.
 

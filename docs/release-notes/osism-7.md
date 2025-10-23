@@ -165,7 +165,7 @@ Release date: 12. August 2024
   ```
 
 * The CAPI and CAPO versions have been changed to 1.7.4 and 0.10.4.. Run `osism apply clusterapi` if you use CAPI management cluster on the
-  ingegrated Kubernetes cluster.
+  integrated Kubernetes cluster.
 
 * New Kolla features.
 
@@ -179,7 +179,7 @@ Release date: 12. August 2024
   * `osism apply openvswitch-sflow` to manage an Open vSwitch sFlow collector
   * `osism apply zabbix_agent` for the deployment of the Zabbix agent
   * `osism validate ceph-connectivity` to validate Ceph network connectivity
-  * `osism validate kolla-connectivity` to valdate Kolla network connectivity
+  * `osism validate kolla-connectivity` to validate Kolla network connectivity
   * `osism validate ntp` to validate NTP synchronisation
 
 ## 7.1.0 (20240710)
@@ -290,7 +290,7 @@ Release date: 24. May 2024
   * The use of the Netbox as the primary inventory is now optional, even with existing Netbox
     integration. It is therefore important to set the parameter `manager_inventory_from_netbox`
     to `true` before updating the manager service if the Netbox was previously used as the
-    primary inventory. By default, the Netbox is not longer used as the primary inventory.
+    primary inventory. By default, the Netbox is no longer used as the primary inventory.
 
     ```yaml title="environments/manager/configuration.yml
     manager_inventory_from_netbox: true
@@ -336,7 +336,7 @@ Release date: 24. May 2024
     `api-81-163-192-117.traefik.me` to the service-horizon service.
 
     ```yaml
-    traefik_configuration_dyanmic:
+    traefik_configuration_dynamic:
       tcp:
         services:
           service-horizon:

@@ -8,7 +8,7 @@ sidebar_position: 30
 :::info
 
 Parts of this chapter are based on the [OpenStack Architecture Design Guide](https://docs.openstack.org/arch-design/index.html).
-The sources for this guide can be found in repostory [openstack/arch-design](https://github.com/openstack/arch-design)
+The sources for this guide can be found in repository [openstack/arch-design](https://github.com/openstack/arch-design)
 and have been published under the Apache Licence 2.0.
 
 :::

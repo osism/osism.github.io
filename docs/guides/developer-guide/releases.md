@@ -163,7 +163,7 @@ removed.
     testbed-upgrade-stable
     ```
 
-11. Add a new release notes file to `doc/sorce/notes`. Generate the versions table with the
+11. Add a new release notes file to `doc/source/notes`. Generate the versions table with the
     help of the `release-table.py` script in the `osism/sbom` repository.
 
 12. After all known issues are documented, a corresponding tag, e.g. `5.0.0`, is set on the

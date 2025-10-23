@@ -74,7 +74,7 @@ sidebar_position: 40
      osism validate kolla-connectivity
      ```
    * If networking is fine then as a last resort a reset of rabbitmq may be considered
-     Beware that this will destroy rabbitmq state which may result in inconsitent resource states
+     Beware that this will destroy rabbitmq state which may result in inconsistent resource states
      ```
      osism apply rabbitmq-reset-state
      ```

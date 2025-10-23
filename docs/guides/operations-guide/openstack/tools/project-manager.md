@@ -170,7 +170,7 @@ options:
                         Service network CIDR
 ```
 
-#### Create a Domain and inital project
+#### Create a Domain and initial project
 
 When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project `webshop`. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
 
@@ -218,7 +218,7 @@ $ python3 src/create.py --domain democompany --name styles --quota-class unlimit
 All quota information must be set as a property to the Openstack project within your Openstack Cluster, if no property is set, the `basic` quotaclass of `etc/classes.yml` will be applied.
 It is possible to set a quota multiplier for any project.
 
-The following command you set a multiplier of 256 of the basic quota:
+The following command sets a multiplier of 256 of the basic quota:
 ```
 $ openstack project set --property quotamultiplier=256 democompany-webshop
 ```

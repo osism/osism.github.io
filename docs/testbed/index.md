@@ -17,7 +17,7 @@ You are also welcome to contact us by email at [info@osism.tech](mailto:info@osi
 :::
 
 With the OSISM Testbed, it is possible to run a full Sovereign Cloud Stack
-deployment on an existing OpenStack environment such as Cleura or [REGIO.cloud](https://regio.digital).
+deployment on an existing OpenStack environment such as Cleura or [REGION.cloud](https://regio.digital).
 
 OSISM is the reference implementation for the Infrastructure as a Service (IaaS) layer in the
 [Sovereign Cloud Stack](https://www.sovereigncloudstack.org) (SCS) project. The OSISM Testbed is therefore

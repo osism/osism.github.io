@@ -35,7 +35,7 @@ As [Gitlab has described in 2021](https://about.gitlab.com/blog/2021/01/27/we-ne
 Furthermore, the documentation of certain implementations is not very clear in its statements.
 
 It usually makes sense to exclude all [private ipv4 networks](https://www.rfc-editor.org/rfc/rfc1918) when the involved technology supports this
-because these private networks or network areas are typicall relatively rarely accessed via a proxy anyway but there is a high potential that a network
+because these private networks or network areas are typically relatively rarely accessed via a proxy anyway but there is a high potential that a network
 which is required to be reached directly is overlooked.
 :::
 
@@ -90,7 +90,7 @@ proxy_no_proxy_extra:
 
 Proxy settings for containers such as Magnum that need internet access.
 
-Exclude all internal adresses, *especially* the internal api endpoint.
+Exclude all internal addresses, *especially* the internal api endpoint.
 
 ```yaml title="environments/kolla/configuration.yml"
 ##########################################################

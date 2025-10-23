@@ -63,7 +63,7 @@ Examples:
 
 If necessary, the configuration SSH key can be used for the initial transfer of the repository.
 
-For this, the following content is added in `~/.ssh/config` and the SSH privte key is stored in
+For this, the following content is added in `~/.ssh/config` and the SSH private key is stored in
 `~/.ssh/id_rsa.configuration`.
 
 

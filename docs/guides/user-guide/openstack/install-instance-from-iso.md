@@ -82,7 +82,7 @@ openstack server rescue \
   $INSTANCE_NAME
 ```
 
-Wait for the instance to be rescued. This will take a moment, as a soft reboot is tried before issueing a hard reboot.
+Wait for the instance to be rescued. This will take a moment, as a soft reboot is tried before issuing a hard reboot.
 Watch the instance `task_state` and `status` to see the latter change from `ACTIVE` to `RESCUE`.
 
 ```

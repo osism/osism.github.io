@@ -36,7 +36,7 @@ A good overview and comparison of VMWare resources and their OpenStack counterpa
   * access to the webinterface of the ESXi host
 * OpenStack credentials
 
-* Linux packages installed on the coverter, in this case it is an Ubuntu 22.04
+* Linux packages installed on the converter, in this case it is an Ubuntu 22.04
 
   ```sh
   apt-get install qemu-utils python3-openstackclient
@@ -46,7 +46,7 @@ A good overview and comparison of VMWare resources and their OpenStack counterpa
 
 ## Prechecks
 
-Check the `/etc/fstab` file of your VMware ESXi host you want to move. See how all the discs or paritions are mounted.
+Check the `/etc/fstab` file of your VMware ESXi host you want to move. See how all the discs or partitions are mounted.
 If they are all mounted by LVM or UUID you do not need to change anything.
 
 ```txt title="cat /etc/fstab"
@@ -88,7 +88,7 @@ Also check your NIC interface configuration as the devicenames can change to a n
 
 This depends on the udev or systemd setup of your specific system.
 
-It needs to be changed to either DCHP if you want to use floating IPs or static IP of the new network.
+It needs to be changed to either DHCP if you want to use floating IPs or static IP of the new network.
 
 ## Migration
 
@@ -101,7 +101,7 @@ Otherwise you will get corrupted disc files.
 
 You can use either the webinterface or SSH to identify and copy the `*.vmdk` files of your VMware ESXi host.
 
-While using the web interface you need to locate the datastore and the directoy where the disc files are
+While using the web interface you need to locate the datastore and the directory where the disc files are
 located and start downloading all vmdk files. You will always get files files for a disc, a smaller and a
 larger one, both are required.
 
@@ -154,7 +154,7 @@ This step is completely optional and you should have some Linux knowledge to do 
 
 :::
 
-After converting the images of a Linux host, you now have the possibilty to edit some settings offline before importing the images into OpenStack.
+After converting the images of a Linux host, you now have the possibility to edit some settings offline before importing the images into OpenStack.
 
 By mounting the raw image files you can edit the configuration files to, e.g.:
 - disable mountpoints at the fstab, like nfs server
@@ -304,4 +304,4 @@ another host with the same images.
 In this little guide, we only can give a sneak peak of what you need to do with a simple VMware ESXi host.
 More complex setups needs consulting, planning and testing as there a several scenarios out there which
 cannot be handled like this.
-Especially if you have terrabytes of data to move or graphics- or AIcards in you VMware ESXi hosts.
+Especially if you have terabytes of data to move or graphics- or AIcards in you VMware ESXi hosts.

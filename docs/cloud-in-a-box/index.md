@@ -473,6 +473,6 @@ you need to know the following.
 * The installation persists the kernel parameters of the initial boot to the file `/etc/.initial-kernel-commandline`
 * The status and activities of the deployment are logged in `/var/log/install-cloud-in-a-box.log`. For proper colors use `less -r`.
   Search for `OVERALL STATUS` to find the result of the specific installation steps.
-* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overriden
+* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overridden
   by setting the kernel parameters `ciab_repo_url` (a public repository address without authentication) and `ciab_branch`
   (a name of a branch, use only ASCII chars, `-`, and `_`).

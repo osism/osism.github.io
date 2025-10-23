@@ -175,7 +175,7 @@ novncproxy_base_url = https://console.services.a.regiocloud.tech/vnc_lite.html
 
 :::info
 
-The following content is based on the [kolla-ansible uptream documentation](https://docs.openstack.org/kolla-ansible/latest/admin/advanced-configuration.html#openstack-service-configuration-in-kolla).
+The following content is based on the [kolla-ansible upstream documentation](https://docs.openstack.org/kolla-ansible/latest/admin/advanced-configuration.html#openstack-service-configuration-in-kolla).
 
 :::
 
@@ -192,7 +192,7 @@ supported, assuming that you have services using `nova.conf` running on hosts ca
 * `environments/kolla/files/overlays/nova/nova-scheduler.conf`
 
 Using this mechanism, overrides can be configured per-project (Nova), per-project-service (Nova scheduler service) or
-per-project-service-on-specified-host (Nova servies on ctl1).
+per-project-service-on-specified-host (Nova services on ctl1).
 
 Overriding an option is as simple as setting the option under the relevant section. For example, to set
 override `scheduler_max_attempts` in the Nova scheduler service, the operator could create

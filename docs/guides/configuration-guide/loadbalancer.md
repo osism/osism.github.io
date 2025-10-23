@@ -162,7 +162,7 @@ must be accessible from the internet.
    osism apply loadbalancer
    ```
 
-For more details about this topic, we recommend the [offical kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
+For more details about this topic, we recommend the [official kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
 
 ## Second Loadbalancer
 
