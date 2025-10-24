@@ -460,7 +460,7 @@ Create a file `/etc/caddy/Caddyfile` with the following contents:
 
 ```text
 https://health.YOURCLOUD.osba.sovereignit.cloud:3000 {
-	reverse_proxy localhost:3003
+    reverse_proxy localhost:3003
 }
 ```
 

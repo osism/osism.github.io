@@ -2,7 +2,6 @@
 sidebar_label: Deployment with Rook
 sidebar_position: 51
 ---
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
