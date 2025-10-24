@@ -70,5 +70,5 @@ marked out osd.17.
 On the storage node disable the OSD service for the OSD.
 
 ```bash
-$ sudo systemctl stop ceph-osd@17.service
+sudo systemctl stop ceph-osd@17.service
 ```

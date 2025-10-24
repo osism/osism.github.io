@@ -20,14 +20,14 @@ For use independent of OSISM install the `openstack-flavor-manager` package with
 that additional dependencies such as `pkg-config` or `libssl-dev` must be installed in advance.
 
 ```bash
-$ pip install openstack-flavor-manager
+pip install openstack-flavor-manager
 ```
 
 Or clone the repository [osism/openstack-flavor-manager](https://github.com/osism/openstack-flavor-manager)
 and use the OpenStack Flavor Manager from source with tox.
 
 ```bash
-$ tox -- --help
+tox -- --help
 ```
 
 ## Usage
@@ -58,13 +58,13 @@ To create the mandatory flavors by the [SCS-0100: Flavor Naming](https://docs.sc
 standard, you run:
 
 ```bash
-$ openstack-flavor-manager
+openstack-flavor-manager
 ```
 
 To create the recommended flavors by the SCS Flavor Naming Standard, you run:
 
 ```bash
-$ openstack-flavor-manager --recommended
+openstack-flavor-manager --recommended
 ```
 
 The output should look like this:
@@ -78,10 +78,10 @@ The output should look like this:
 ```
 
 All recommended flavors are now be available in your OpenStack environment.
-Check yourself by running: 
+Check yourself by running:
 
 ```bash
-$ openstack --os-cloud admin flavor list
+openstack --os-cloud admin flavor list
 ```
 
 ```console
@@ -118,7 +118,7 @@ use the optional `--name` parameter. By default the [SCS-0100: Flavor Naming](ht
 standard definition will be used.
 
 ```bash
-$ openstack-flavor-manager --name osism
+openstack-flavor-manager --name osism
 ```
 
 ## Name parser and generator

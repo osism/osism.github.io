@@ -240,7 +240,7 @@ Release date: 10. July 2024
   * The `haproxy_socket_level_admin` parameter is now set to `yes` by default.
   * With the `kolla_handler_throttle` parameter it is possible to throttle the execution of handlers.
   * If the restart of a container fails in the loadbalancer play, the execution of the play is
-    interrupted immediately. This prevents the master container from being restarted if one of the 
+    interrupted immediately. This prevents the master container from being restarted if one of the
     backup containers fails to restart.
 
 * New roles & plays.
@@ -746,11 +746,11 @@ the resulting effort.
   of Ceph we still use the ceph-ansible project. For the next release a tool called [rookify](https://github.com/sovereigncloudstack/rookify) is planned to
   migrate the Ceph deployment from ceph-ansible to Rook.
 
-* CentOS 9 support in `osism.commons`` & `osism.services`` Ansible collection.
+* CentOS 9 support in `osism.commons` & `osism.services` Ansible collection.
 
-  * The roles of the `osism.commons`` collection are now usable with CentOS 9. The roles have been tested with
+  * The roles of the `osism.commons` collection are now usable with CentOS 9. The roles have been tested with
     CentOS 9.
-  * The roles of the `osism.services`` collection are now usable with CentOS 9. The roles have been tested with
+  * The roles of the `osism.services` collection are now usable with CentOS 9. The roles have been tested with
     CentOS 9.
 
 * With the [openstack-resource-manager](https://github.com/osism/openstack-resource-manager) it is now possible to
@@ -758,7 +758,7 @@ the resulting effort.
 
 * Kubernetes can now be deployed with [k3s-ansible](https://github.com/k3s-io/k3s-ansible) on the management plane and the control plane.
 
-* It is now possible to manage the Ceph pools independently of `ceph-osds`` play using the `ceph-pools` play.
+* It is now possible to manage the Ceph pools independently of `ceph-osds` play using the `ceph-pools` play.
 
 ### Upgrade notes
 
@@ -898,7 +898,7 @@ the resulting effort.
 
 * Due to the upgrade from Fluentd to version 5, some directory names within the container
   image for Fluentd have changed. If you have worked with overlay files in the Fluentd service,
-  check these in advance. Currently we know that ``/var/run/td-agent`` is now available as
+  check these in advance. Currently we know that `/var/run/td-agent` is now available as
   `/var/run/fluentd` (check [osism/issues#864](https://github.com/osism/issues/issues/864)
   for details).  We assume that other directory names have changed similarly.
 

@@ -60,14 +60,14 @@ sudo systemctl start qemu-guest-agent
 
 When running Cloud in a Box on a VMware vSphere/ESXi virtual machine, you can use the below specs to configure the virtual machine:
 
-### Guest OS:
+### Guest OS
 
 * Compatibility set to current running vSphere/ESXi version
 * Guest OS family set to "Linux"
 * Guest OS version set to "Ubuntu Linux (64-bit)"
 
 
-### Hardware:
+### Hardware
 
 * 32GB RAM
 * 8 vCores
@@ -83,12 +83,12 @@ This configuration has been successfully tested with VMware ESXi 7.0 U1.
 
 When running Cloud in a Box on a VirtualBox, you can use the the blow specs for configure the virtual machine:
 
-### General:
+### General
 
 * Type Linux
 * Version Ubuntu (64-bit)
 
-### System:
+### System
 
 * 32GB RAM
 * 8 Processors
@@ -96,7 +96,7 @@ When running Cloud in a Box on a VirtualBox, you can use the the blow specs for 
 * Enable Nested VT-x/AMD-v
 * Extended Feature: Enable EFI (special OSes only)
 
-### Storage:
+### Storage
 
 * Controller: SATA
 * Type AHCI
