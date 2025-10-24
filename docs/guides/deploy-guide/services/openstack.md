@@ -20,67 +20,67 @@ Not all of the services listed there are supported by OSISM.
 
 1. OpenStack client
 
-   ```
+   ```bash
    osism apply openstackclient
    ```
 
 2. Keystone
 
-   ```
+   ```bash
    osism apply -a pull keystone
    osism apply keystone
    ```
 
 3. Glance
 
-   ```
+   ```bash
    osism apply -a pull glance
    osism apply glance
    ```
 
 4. Designate
 
-   ```
+   ```bash
    osism apply -a pull designate
    osism apply designate
    ```
 
 5. Placement
 
-   ```
+   ```bash
    osism apply -a pull placement
    osism apply placement
    ```
 
 6. Cinder
 
-   ```
+   ```bash
    osism apply -a pull cinder
    osism apply cinder
    ```
 
 7. Neutron
 
-   ```
+   ```bash
    osism apply -a pull neutron
    osism apply neutron
    ```
 
 8. Nova
 
-   ```
+   ```bash
    osism apply -a pull nova
    osism apply nova
    ```
 
 9. Octavia
 
-   ```
+   ```bash
    osism apply octavia-certificates
    osism apply copy-octavia-certificates
    ```
 
-   ```
+   ```bash
    osism apply -a pull octavia
    osism apply octavia
    ```
@@ -118,7 +118,7 @@ Not all of the services listed there are supported by OSISM.
     `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
 
     Get the secret with
-    ```
+    ```bash
     make ansible_vault_show FILE=environments/kolla/secrets.yml |grep octavia_keystone_password
     ```
 
@@ -133,13 +133,13 @@ Not all of the services listed there are supported by OSISM.
 
   * Upload the correct and current image depending on the current Openstack release:
 
-    ```
+    ```bash
     osism manage image octavia
     ```
 
 11. Horizon
 
-    ```
+    ```bash
     osism apply -a pull horizon
     osism apply horizon
     ```

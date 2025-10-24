@@ -8,7 +8,7 @@ sidebar_label: Task
 
 All running or scheduled tasks can be listed with `osism task list`.
 
-```
+```console
 +----------------------+--------------------------------------+-------------------------+----------+----------------------------+-----------------------------------------------+
 | Worker               | ID                                   | Name                    | Status   | Start time                 | Arguments                                     |
 |----------------------+--------------------------------------+-------------------------+----------+----------------------------+-----------------------------------------------|
@@ -24,7 +24,7 @@ plays with the same name. Also it is currently not possible to cancel already ru
 (is on the todo list). The only way to unblock the situation is to stop the manager service
 and start it again.
 
-```
+```console
 cd /opt/manager
 docker compose down
 docker compose up -d
@@ -33,6 +33,6 @@ docker compose up -d
 In earlier versions of OSISM, the Redis service was not stateless. In these cases, it is
 necessary to delete the Redis service volume before restarting the manager service.
 
-```
+```console
 docker volume rm manager_redis
 ```

@@ -15,7 +15,7 @@ for a `clouds.yaml` configuration file in the following locations:
 With the OpenStack client you can specify the cloud profile specified in the `clouds.yaml`
 configuration file  by providing the `--os-cloud <cloud identifier>` parameter.
 
-```
+```bash
 openstack --os-cloud openstack network list
 ```
 
@@ -138,13 +138,13 @@ Source: [Adam Young's Web Log](https://adam.younglogic.com/2022/03/generating-a-
 
 First you need to source your `openrc` file so that the `OS_` variables are available.
 
-```
+```bash
 source PROJECT-openrc.sh
 ```
 
 Now you can execute the Python script and a `clouds.yaml` will be written.
 
-```
+```bash
 python3 clouds.py > clouds.yaml
 ```
 
@@ -153,7 +153,7 @@ python3 clouds.py > clouds.yaml
 You need to point the `source` line to your `openrc` file first. Then execute the Bash script.
 This will create the `clouds.yaml` file in your currect directory
 
-```
+```bash
 #!/bin/bash
 
 source PROJECT-openrc.sh

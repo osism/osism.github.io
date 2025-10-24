@@ -12,7 +12,7 @@ It is able to start a predefined amount of Servers in specific networks in paral
 ## Installation
 Prepare to use the Openstack Simple Stress.
 
-```
+```bash
 git clone https://github.com/osism/openstack-simple-stress
 cd openstack-simple-stress
 pipenv install
@@ -23,7 +23,7 @@ pipenv shell
 
 The `main.py` command and the default options while executing the command.
 
-```
+```text
  --cleanup       true
  --cloud         simple-stress
  --compute-zone  nova
@@ -53,7 +53,7 @@ There must be a `clouds.yml` and a `secure.yml` file in the directory where the 
 
 The cloud profile to be used can be specified via the optional `--cloud` parameter. By default, the cloud profile with the name `simple-stress` is used.
 
-```
+```console
 $ python src/main.py -h
 usage: main [-h] [--cleanup] [--cloud CLOUD] [--compute-zone COMPUTE_ZONE] [--config-dir DIR]
             [--config-file PATH] [--debug] [--delete] [--flavor FLAVOR] [--floating] [--image IMAGE]
@@ -107,7 +107,7 @@ options:
 
 Running a small and simple test on your Openstack environment, using Ubuntu_22.04 image with the flavor of 2VCPUs and 8Gigabytes of RAM, starting 6 servers, 2 parallel each with a volume size of 20Gigabytes.
 
-```
+```console
 $ python src/main.py --network test-net --flavor SCS-2V-8 --image Ubuntu_22.04 --number 6 --parallel 2 --volume-size 20
 2024-04-23 11:47:16 | INFO     | Checking flavor SCS-2V-8
 2024-04-23 11:47:17 | INFO     | flavor.id = 926f952f-0714-4c55-92c2-7514191fecce
@@ -163,7 +163,7 @@ arguments hence over-ridden options in the directory take precedence. This
 option must be set from the command-line.
 
 
-```
+```bash
 python src/main.py --config-dir /path/to/config-dir
 ```
 

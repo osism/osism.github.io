@@ -25,6 +25,6 @@ manually delete it from the compute service.
    you cannot access `/etc/kolla/octavia-worker/octavia_ssh_key` with the operator user
    account. Replace `lb_network_ip` with the local IP address of the amphora.
 
-   ```
+   ```bash
    sudo ssh -i /etc/kolla/octavia-worker/octavia_ssh_key ubuntu@lb_network_ip
    ```

@@ -65,7 +65,7 @@ By default changes to the network configuration are not applied automatically. T
 purpose to allow a manual check in advance. Changes to the network configuration can
 be applied either by rebooting or by executing `netplan apply`.
 
-```
+```console
 $ osism console --type clush all
 Enter 'quit' to leave this interactive mode
 Working with nodes: testbed-manager.testbed.osism.xyz,testbed-node-[0-2].testbed.osism.xyz

@@ -159,7 +159,7 @@ Release date: 12. August 2024
   If you do not want to upgrade from Docker 24.0.9 to 26.1.4 yet, make sure that the versions are pinned
   in `environments/configuration.yml`. Double check that the versions there are correct after the configuration repositoryhas been pulled on the manager.
 
-  ```
+  ```yaml
   docker_version: "5:24.0.9"
   docker_cli_version: "5:24.0.9"
   ```
@@ -336,7 +336,7 @@ Release date: 24. May 2024
     `api-81-163-192-117.traefik.me` to the service-horizon service.
 
     ```yaml
-    traefik_configuration_dyanmic:
+    traefik_configuration_dynamic:
       tcp:
         services:
           service-horizon:
@@ -461,7 +461,7 @@ the resulting effort.
   **To avoid the delay during an upgrade, a fix must be applied in advance for all service units from
   Kolla.**
 
-  ```
+  ```console
   osism apply fix-gh973
   ```
 * The Kubernetes Cluster API image for the Kubernetes (K8s) 1.30 series is available. The images are now provided directly with
@@ -483,7 +483,7 @@ the resulting effort.
 * When using the reboot play, it is now possible to wait for the reboot to be completed ([osism/issues#758](https://github.com/osism/issues/issues/758)).
 
 
-  ```
+  ```console
   osism apply reboot \
     -e reboot_wait=yes \
     -e ireallymeanit=yes
@@ -540,7 +540,7 @@ the resulting effort.
   The following example now makes it possible when adding new OSDs to really only start the OSDs that
   have been newly added and to avoid a restart of all OSDs in the cluster or on a node.
 
-  ```
+  ```console
   osism apply ceph-osds -e ceph_handler_osds_restart=False
   ```
 
@@ -637,7 +637,7 @@ the resulting effort.
 * With `ceph_serial` it is now possible to define how many hosts Ansible should manage at a single time
   in the Ceph plays.
 
-  ```
+  ```console
   osism apply ceph-mgrs -e ceph_serial=1
   ```
 
@@ -730,7 +730,7 @@ the resulting effort.
   This requires an additional database, which is only created when Octavia play is run in bootstrap mode
   first.
 
-  ```
+  ```console
   osism apply -a bootstrap octavia
   ```
 
@@ -786,7 +786,7 @@ the resulting effort.
   upgrade of the OpenStack services. To avoid problems during the upgrade, it is important
   to assign this role to all existing service accounts in advance.
 
-  ```
+  ```console
   # List all users in the project service with the admin role. The existing service
   # accounts depend on the deployed services and may vary.
   $ openstack --os-cloud admin role assignment list --names --role admin --project service
@@ -961,7 +961,7 @@ the resulting effort.
 
 Refstack 2022.11 results:
 
-```
+```text
 ======
 Totals
 ======

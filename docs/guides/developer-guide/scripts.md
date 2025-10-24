@@ -39,13 +39,13 @@ of targets depends on the container it is run in.
 In this example, the `main` branch of [osism/ansible-collection-services](https://github.com/osism/ansible-collection-services)
 is used in the `osism-ansible` container.
 
-```
+```bash
 docker exec -u root -it osism-ansible /change.sh services main
 ```
 
 The respective container should always be restarted after a change.
 
-```
+```bash
 docker restart osism-ansible
 ```
 
@@ -53,7 +53,7 @@ If something has been changed in the defaults and is to be tested, this must be
 changed in the inventory reconciler service. Regardless of which of the Ansible services
 the customised defaults are intended for.
 
-```
+```bash
 docker exec -u root -it manager-inventory_reconciler-1 /change.sh defaults main
 docker restart manager-inventory_reconciler-1
 ```

@@ -31,7 +31,7 @@ removed.
 1. On all repositories that are used, check that the versions to be used have an
    appropriate version tag (e.g. `v0.20230308.0`).
 
-   ```
+   ```text
    osism/ansible-collection-commons
    osism/ansible-collection-services
    osism/ansible-collection-validations
@@ -45,7 +45,7 @@ removed.
 
 2. Copy the `latest` directory. The release to be created is used as the new name.
 
-   ```
+   ```text
    latest -> 6.0.0b
    ```
 
@@ -57,7 +57,7 @@ removed.
 5. Ensure that the symlinks `openstack.yml` and `ceph.yml` point to the releases
    to be used in this pre-release.
 
-   ```
+   ```text
    base.yml
    ceph-pacific.yml
    ceph.yml -> ceph-pacific.yml
@@ -67,7 +67,7 @@ removed.
 
 6. Run `src/prepare-release.py`.
 
-   ```
+   ```bash
    RELEASE=6.0.0b python3 src/prepare-release.py
    ```
 
@@ -78,7 +78,7 @@ removed.
 1. Copy the directory of the last pre-release or the previous stable release.
    The release to be created is used as the new name.
 
-   ```
+   ```text
    5.0.0a -> 5.0.0b
    5.0.0b -> 5.0.0
    5.0.0  -> 5.1.0
@@ -95,7 +95,7 @@ removed.
 
 4. Add a tag with the name of the new release to the listed repositories.
 
-   ```
+   ```text
    osism/container-image-ceph-ansible
    osism/container-image-inventory-reconciler
    osism/container-image-osism-ansible
@@ -111,7 +111,7 @@ removed.
    Before the file is added, it is enhanced with the checksums of the images. The script
    is available in the `osism/sbom` repository.
 
-   ```
+   ```bash
    VERSION=5.0.0 python3 scripts/add-image-checksum.py
    ```
 
@@ -123,7 +123,7 @@ removed.
    The file are available as build artefacts of the ``Build container image`` action
    on the created tags.
 
-   ```
+   ```text
    osism/container-image-ceph-ansible
    osism/container-image-kolla-ansible
    osism/container-image-osism-ansible
@@ -156,7 +156,7 @@ removed.
     set on this repository in the next step. The temporary CI jobs (step 8)  are removed again with
     this PR.
 
-    ```
+    ```text
     testbed-deploy-stable
     testbed-update-stable
     testbed-update-stable
@@ -184,7 +184,7 @@ We use [Reno](https://docs.openstack.org/reno/latest/) to manage the release not
 
 Reno is provided as a [Python package](https://pypi.org/project/reno/) and can be installed with pip.
 
-```
+```bash
 pip3 install reno
 ```
 
@@ -194,7 +194,7 @@ For each change in a repository, a release note is created with Reno.
 Something meaningful is used as the name for the note. For example, if the
 requirements file for Ansible is removed, `remove-ansible-requirements` is a good name.
 
-```
+```console
 $ reno new remove-ansible-requirements
 no configuration file in: ./releasenotes/config.yaml, ./reno.yaml
 Created new notes file in releasenotes/notes/remove-ansible-requirements-6c6eba43f616bc6b.yaml

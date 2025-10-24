@@ -137,7 +137,7 @@ service itself is then done as usual.
 The role `manager` is created using the OpenStack CLI. Alternatively, the role can
 be added using Ansible or other tools.
 
-```
+```console
 $ openstack --os-cloud admin \
     role create \
     --or-show \
@@ -156,12 +156,12 @@ $ openstack --os-cloud admin \
 
 A user can then be made a domain manager for a particular domain by assigning this role.
 
-```
-$ openstack --os-cloud admin \
-    role add \
-    --user test \
-    --domain test \
-    manager
+```bash
+openstack --os-cloud admin \
+  role add \
+  --user test \
+  --domain test \
+  manager
 ```
 
 ## OIDC Federation

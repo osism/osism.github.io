@@ -22,7 +22,7 @@ In the example, OSISM release 7.0.5 is used.
 
     1.1. Set the new OSISM version in the configuration repository.
 
-         ```
+         ```bash
          MANAGER_VERSION=7.0.5
          sed -i -e "s/manager_version: .*/manager_version: ${MANAGER_VERSION}/g" environments/manager/configuration.yml
          ```
@@ -36,7 +36,7 @@ In the example, OSISM release 7.0.5 is used.
 
          <Tabs>
          <TabItem value="osism-7" label="OSISM >= 7.0.0">
-         ```
+         ```bash
          make sync
          ```
          </TabItem>
@@ -44,7 +44,7 @@ In the example, OSISM release 7.0.5 is used.
          If Gilt is not installed via the `requirements.txt` of the manager environment it is
          important to use a version smaller v2. The v2 of Gilt is not yet usable.
 
-         ```
+         ```bash
          gilt overlay  # you have to do this 2x, this is not a copy & paste error
          gilt overlay
          ```
@@ -64,20 +64,20 @@ In the example, OSISM release 7.0.5 is used.
     1.4. Commit and push all changes in the configuration repository. Since everyone here has their own
          workflows for changes to the configuration repository, only a generic example for Git.
 
-         ```
+         ```bash
          git commit -a -s -m "manager: use OSISM version 7.0.5"
          git push
          ```
 
 2. Update the configuration repository on the manager node.
 
-   ```
+   ```console
    osism apply configuration
    ```
 
 3. Update the manager service on the manager node.
 
-   ```
+   ```console
    osism update manager
    ```
 
@@ -88,19 +88,19 @@ In the example, OSISM release 7.0.5 is used.
 
 4. Refresh the facts cache.
 
-   ```
+   ```console
    osism apply facts
    ```
 
 5. If Traefik is used on the manager node (`traefik_enable: true` in `environments/infrastructure/configuration.yml`)
    then Traefik should also be upgraded.
 
-   ```
+   ```console
    osism apply traefik
    ```
 
 6. Finally, the Ansible vault password must be made known again.
 
-   ```
+   ```console
    osism set vault password
    ```

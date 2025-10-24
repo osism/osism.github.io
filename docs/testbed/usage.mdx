@@ -103,19 +103,19 @@ of the other cloud is changed accordingly.
 1. Add the customization `external_api`. This customization makes sure that the required security group rules
    are created for the various OpenStack APIs and the OpenStack dashboard.
 
-   ```
+   ```text
    # customisation:external_api
    ```
 
 2. Set parameter `external_api` to `true`. This makes sure that all necessary changes are made in the configuration repository when the manager service is deployed. It is correct that this is added as a comment.
 
-   ```
+   ```text
    external_api = true
    ```
 
 3. After the deployment of the manager service and the OpenStack services, the OpenStack APIs and the OpenStack dashboard can be reached via a DNS name. The service [traefik.me](https://traefik.me) is used for the DNS record. Run the following two commands on the manager node to get the DNS record.
 
-   ```
+   ```bash
    $ source /opt/manager-vars.sh
    $ echo "api-${MANAGER_PUBLIC_IP_ADDRESS//./-}.traefik.me"
    api-80-158-46-219.traefik.me
@@ -201,7 +201,7 @@ lvm_volumes:
 
 7. Check the OSD tree
 
-   ```
+   ```console
    $ ceph osd tree
    ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
    -1         0.13640  root default
@@ -223,14 +223,14 @@ Please have a look at [Deploy Guide - Services - Rook](guides/deploy-guide/servi
 
 To deploy this in the testbed, you can use an environment variable in your make target.
 
-```
+```bash
 make CEPH_STACK=rook manager
 make CEPH_STACK=rook ceph
 ```
 
 This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is later being used by:
 
-```
+```bash
 /opt/configuration/scripts/deploy-services.sh
 /opt/configuration/scripts/deploy-ceph.sh
 /opt/configuration/scripts/upgrade/100-ceph-with-rook.sh
@@ -241,51 +241,51 @@ This will make sure `/opt/manager-vars.sh` gets `CEPH_STACK=rook` set which is l
 Testbed may be used for doing development on OpenStack services through [`kolla_dev_mode`](https://docs.openstack.org/kolla-ansible/latest/contributor/kolla-for-openstack-development.html).
 `kolla_dev_mode` may be activated for all supported service by adding
 
-```
+```yaml
 kolla_dev_mode: true
 ```
 
 to `environments/kolla/configuration.yml`. This will check out the `git` repositories of all supported and enabled OpenStack services under `/opt/stack`, and bind mount them into the appropriate containers.
 Since this will fetch a lot of repositories it is advisable to enable this only selectively for the services you are going to work on. You can do so by adding a boolean variable to `environments/kolla/configuration.yml` consisting of the service name and the suffix `_dev_mode`, e.g.:
 
-```
+```yaml
 cinder_dev_mode: true
 ```
 
 You may customise the used `git` repository by adding `kolla_repos_git` to `environments/kolla/configuration.yml` to specify a common root for the repositories of all services, which will be completed by the service's name, e.g.:
 
-```
+```yaml
 kolla_repos_git: "https://github.com/openstack"
 ```
 
 This will pull services from their `github` mirror. E.g. pull nova from https://github.com/openstack/nova
 The complete repository of a single service may be changed by adding a variable consisting of the service name and the suffix `_git_repository`, e.g.:
 
-```
+```yaml
 cinder_git_repository: "https://github.com/myorg/my_custom_cinder_fork"
 ```
 
 You may specify the `git` reference globally by setting
 
-```
+```yaml
 kolla_source_version: my_feature_branch
 ```
 
 in `environments/kolla/configuration.yml`, or for specific services, via service name and suffix `_source_version`, e.g.:
 
-```
+```yaml
 cinder_source_version: my_cinder_feature
 ```
 
 In order to update the `git` repositories on `kolla-ansible` deployments set either 
 
-```
+```yaml
 kolla_dev_repos_pull: true
 ```
 
 or
 
-```
+```yaml
 cinder_dev_repos_pull: true
 ```
 

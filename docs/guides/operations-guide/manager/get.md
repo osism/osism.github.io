@@ -10,7 +10,7 @@ A `get` command is available in the OSISM CLI. This allows to gather specific in
 
 * Get all hosts defined in the inventory
 
-  ```
+  ```console
   $ osism get hosts
   +-----------------------------------+
   | Host                              |
@@ -24,7 +24,7 @@ A `get` command is available in the OSISM CLI. This allows to gather specific in
 
 * Get all hosts defined in the inventory that are member of a specific inventory group
 
-  ```
+  ```console
   $ osism get hosts -l manager
   +-----------------------------------+
   | Host                              |
@@ -46,13 +46,13 @@ A `get` command is available in the OSISM CLI. This allows to gather specific in
 
 * Get all host vars of a specific node
 
-  ```
+  ```bash
   osism get hostvars testbed-manager.testbed.osism.xyz
   ```
 
 * Get a specific host var of a specific node
 
-  ```
+  ```console
   $ osism get hostvars testbed-manager.testbed.osism.xyz ansible_host
   +-----------------------------------+--------------+----------------+
   | Host                              | Variable     | Value          |
@@ -65,13 +65,13 @@ A `get` command is available in the OSISM CLI. This allows to gather specific in
 
 * Get all facts of a specific node
 
-  ```
+  ```bash
   osism get facts testbed-manager.testbed.osism.xyz
   ```
 
 * Get a specific fact of a specific node
 
-  ```
+  ```console
   $ osism get facts testbed-manager.testbed.osism.xyz ansible_architecture
   +-----------------------------------+----------------------+----------+
   | Host                              | Fact                 | Value    |

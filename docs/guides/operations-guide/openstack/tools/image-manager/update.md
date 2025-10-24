@@ -16,7 +16,7 @@ These updated yaml files are later processed by the Image Manger itself.
 
 Prepare to use the `update.py` script.
 
-```
+```bash
 git clone https://github.com/osism/openstack-image-manager/
 cd openstack-image-manager
 pipenv install
@@ -25,7 +25,7 @@ pipenv shell
 
 ## Usage
 
-```
+```console
 python contrib/update.py --help
 
  Usage: update.py [OPTIONS]
@@ -56,7 +56,7 @@ Best run this script by cron or a CI job, to update all distribution files perio
 The distribution image yaml files must exist before running the script, you can use the files from the Github repo at `etc/images/` as template for your first run.
 
 
-```
+```console
 $ python contrib/update.py
 2024-04-24 09:29:44 | INFO     | main:300 - Processing file /etc/images/centos.yml
 2024-04-24 09:29:44 | INFO     | update_image:179 - Checking image CentOS Stream 9

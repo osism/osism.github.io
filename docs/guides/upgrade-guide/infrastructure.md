@@ -10,7 +10,7 @@ sidebar_position: 30
    This is only necessary if the internal Kubernetes cluster has also been deployed.
    This can be checked by executing `kubectl get nodes` on the manager node.
 
-   ```
+   ```bash
    osism apply k3s-upgrade
    ```
 
@@ -23,42 +23,42 @@ sidebar_position: 30
    environment, as parts of the other upgrades depend on the `kolla-toolbox`
    service.
 
-   ```
+   ```bash
    osism apply -a pull common
    osism apply -a upgrade common
    ```
 
 3. Loadbalancer
 
-   ```
+   ```bash
    osism apply -a pull loadbalancer
    osism apply -a upgrade loadbalancer
    ```
 
 4. Redis
 
-   ```
+   ```bash
    osism apply -a pull redis
    osism apply -a upgrade redis
    ```
 
 5. Memcached
 
-   ```
+   ```bash
    osism apply -a pull memcached
    osism apply -a upgrade memcached
    ```
 
 6. RabbitMQ
 
-   ```
+   ```bash
    osism apply -a pull rabbitmq
    osism apply -a upgrade rabbitmq
    ```
 
 7. MariaDB
 
-   ```
+   ```bash
    osism apply -a pull mariadb
    osism apply -a upgrade mariadb
    ```

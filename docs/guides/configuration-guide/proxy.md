@@ -17,7 +17,7 @@ can be used in the environment. The first manager node is then used by all other
 as a pass-through node. Please note that this is not a caching proxy or even an air gap.
 This is also possible with OSISM, but not with the help of the Squid service.
 
-```
+```bash
 osism apply squid
 ```
 

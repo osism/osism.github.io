@@ -7,7 +7,7 @@ sidebar_position: 15
 
 1. Open vSwitch (OVS)
 
-   ```
+   ```bash
    osism apply -a pull openvswitch
    osism apply openvswitch
    ```
@@ -24,7 +24,7 @@ sidebar_position: 15
 
    Before the deployment of OVN, the deployment of Open vSwitch must already have been done.
 
-   ```
+   ```bash
    osism apply -a pull ovn
    osism apply ovn
    ```

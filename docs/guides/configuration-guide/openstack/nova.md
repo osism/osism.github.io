@@ -12,7 +12,7 @@ sidebar_label: Nova
 
 ### AMD
 
-```
+```bash
 echo "options kvm-amd nested=y" | sudo tee /etc/modprobe.d/kvm-nested-virtualization.conf
 sudo modprobe -r kvm_amd
 sudo modprobe kvm_amd
@@ -23,7 +23,7 @@ docker restart nova_libvirt
 
 ### Intel
 
-```
+```bash
 echo "options kvm-intel nested=y" | sudo tee /etc/modprobe.d/kvm-nested-virtualization.conf
 sudo modprobe -r kvm_intel
 sudo modprobe kvm_intel
@@ -72,7 +72,7 @@ enabled_filters = ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,
 
 Apply the configuration using the osism CLI on the manager
 
-```
+```bash
 osism apply nova
 ```
 
@@ -98,7 +98,7 @@ cpu_dedicated_set=4-12,^8,15
 
 Apply the configuration using the osism CLI on the manager
 
-```
+```bash
 osism apply nova
 ```
 
@@ -106,14 +106,14 @@ osism apply nova
 
 To make the configured dedicated cores available to users, create flavors with property `hw:cpu_policy=dedicated`, so that the given `vcpus` will be pinned to the threads in the dedicated set specified on the compute node, e.g.:
 
-```
-openstack flavor create --ram 4096 --disk 10 --vcpus 2 --property hw:cpu_policy=dedicated $FLAVOR_NAME 
+```bash
+openstack flavor create --ram 4096 --disk 10 --vcpus 2 --property hw:cpu_policy=dedicated $FLAVOR_NAME
 ```
 
 Note that this configuration will pin the qemu emulator threads to the instances CPUs. This will be fine for most workloads, but might not be sufficient for real-time or latency sensitive workloads like loadbalancers. If you get reports of [CPU steal](https://docs.kernel.org/filesystems/proc.html#miscellaneous-kernel-statistics-in-proc-stat) on an instance with dedicated cores or know that you need this, you may pin the emulator threads to another dedicated core by setting the property `hw:emulator_threads_policy=isolate`.
 
-```
-openstack flavor set --property hw:emulator_threads_policy=isolate $FLAVOR_NAME 
+```bash
+openstack flavor set --property hw:emulator_threads_policy=isolate $FLAVOR_NAME
 ```
 
 ### Mixing dedicated and shared cores on a compute node
@@ -132,14 +132,14 @@ When a shared CPU set is specified setting the property `hw:emulator_threads_pol
 
 It is possible to create instances with a mixed set of dedicated and shared CPU cores. Set the property `hw:cpu_policy=mixed`:
 
-```
-openstack flavor set --property hw:cpu_policy=mixed $MIXED_FLAVOR_NAME 
+```bash
+openstack flavor set --property hw:cpu_policy=mixed $MIXED_FLAVOR_NAME
 ```
 
 and specify a mask for the instance cores which are to be pinned with property [hw:cpu_dedicated_mask](https://docs.openstack.org/nova/latest/configuration/extra-specs.html#hw:cpu_dedicated_mask). E.g.:
 
-```
-openstack flavor set --property hw:cpu_dedicated_mask=0-1 $MIXED_FLAVOR_NAME 
+```bash
+openstack flavor set --property hw:cpu_dedicated_mask=0-1 $MIXED_FLAVOR_NAME
 ```
 
 to pin instance cores 0 and 1.
@@ -173,19 +173,19 @@ Of course the same configuration may also be set by host using `host_vars` in `i
 
 Sync the variables with the inventory by running
 
-```
+```bash
 osism sync inventory
 ```
 
 and apply the configuration with
 
-```
+```bash
 osism apply grub
 ```
 
 After rebooting the nodes the hugepages will be allocated. You may check this by, e.g. looking at the corresponding values in `/proc/meminfo`
 
-```
+```console
 grep Huge /proc/meminfo
 AnonHugePages:         0 kB
 ShmemHugePages:        0 kB
@@ -202,7 +202,7 @@ If you require hugepages for services on the compute node, make sure to configur
 
 To back an instance's memory by hugepages add the property `hw:mem_page_size=large` to a flavor and create the instance from it, e.g.:
 
-```
+```bash
 openstack flavor set --property hw:mem_page_size=large $FLAVOR_NAME
 ```
 

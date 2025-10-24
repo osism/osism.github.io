@@ -40,7 +40,7 @@ The cloud profile to be used can be specified via the optional `--cloud` paramet
 By default the cloud profile with the name `admin` is used. It must be possible to create and delete
 flavors with the used cloud credentials.
 
-```
+```console
 $ openstack-flavor-manager --help
 
  Usage: openstack-flavor-manager [OPTIONS]
@@ -69,7 +69,7 @@ $ openstack-flavor-manager --recommended
 
 The output should look like this:
 
-```
+```console
 2023-09-20 13:03:14 | INFO     | Flavor SCS-1V-4 created
 2023-09-20 13:03:14 | INFO     | Flavor SCS-2V-8 created
 2023-09-20 13:03:14 | INFO     | Flavor SCS-4V-16 created
@@ -84,7 +84,7 @@ Check yourself by running:
 $ openstack --os-cloud admin flavor list
 ```
 
-```
+```console
 $ openstack --os-cloud admin flavor show SCS-2V-4-20s
 +----------------------------+---------------------------------------------------------------------------------------------------------------------------------+
 | Field                      | Value                                                                                                                           |
@@ -117,7 +117,7 @@ To run the OpenStack Flavor Manager with a specific definition, either `scs` or 
 use the optional `--name` parameter. By default the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
 standard definition will be used.
 
-```
+```bash
 $ openstack-flavor-manager --name osism
 ```
 

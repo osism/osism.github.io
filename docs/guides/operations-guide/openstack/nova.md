@@ -8,7 +8,7 @@ sidebar_label: Nova
 Purge database entries that are marked as deleted, that are older than
 the date specified.
 
-```
+```console
 docker exec -it nova_conductor bash
 (nova-conductor)[root@testbed-node-0/]# nova-manage db archive_deleted_rows --before 2025-01-01
 (nova-conductor)[root@testbed-node-0/]# nova-manage db purge --before 2025-01-01
@@ -16,13 +16,13 @@ docker exec -it nova_conductor bash
 
 ## Get all servers on a node
 
-```
+```bash
 openstack --os-cloud admin server list --all-projects --host testbed-node-0
 ```
 
 ## Stop all servers running on a node
 
-```
+```bash
 for server in $(openstack --os-cloud admin server list --all-projects --host testbed-node-0 --vm-state active -f value -c ID | tr -d '\r'); do
     echo stopping server $server
     openstack --os-cloud admin server stop $server
@@ -32,10 +32,11 @@ done
 
 ## Disable & enable a compute service
 
-```
+```bash
 openstack --os-cloud admin compute service set --disable --description MAINTENANCE testbed-node-0 nova-compute
 ```
-```
+
+```console
 openstack --os-cloud admin compute service list --long
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+----------------------------------------------------+-------------+
 | ID                                   | Binary         | Host            | Zone     | Status   | State | Updated At                 | Disabled Reason                                    | Forced Down |
@@ -44,11 +45,11 @@ openstack --os-cloud admin compute service list --long
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+----------------------------------------------------+-------------+
 ```
 
-```
+```bash
 openstack --os-cloud admin compute service set --enable testbed-node-0 nova-compute
 ```
 
-```
+```console
 openstack --os-cloud admin compute service list
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+
 | ID                                   | Binary         | Host            | Zone     | Status   | State | Updated At                 |
@@ -60,11 +61,11 @@ openstack --os-cloud admin compute service list
 
 ## Force down & up a compute service
 
-```
+```bash
 openstack --os-cloud admin --os-compute-api-version 2.12 compute service set --down testbed-node-0 nova-compute
 ```
 
-```
+```console
 openstack --os-cloud admin compute service list --long
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+----------------------------------------------------+-------------+
 | ID                                   | Binary         | Host            | Zone     | Status   | State | Updated At                 | Disabled Reason                                    | Forced Down |
@@ -73,11 +74,11 @@ openstack --os-cloud admin compute service list --long
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+----------------------------------------------------+-------------+
 ```
 
-```
+```bash
 openstack --os-cloud admin --os-compute-api-version 2.12 compute service set --up testbed-node-0 nova-compute
 ```
 
-```
+```console
 openstack --os-cloud admin compute service list --long
 +--------------------------------------+----------------+-----------------+----------+----------+-------+----------------------------+----------------------------------------------------+-------------+
 | ID                                   | Binary         | Host            | Zone     | Status   | State | Updated At                 | Disabled Reason                                    | Forced Down |
@@ -88,7 +89,7 @@ openstack --os-cloud admin compute service list --long
 
 ## Huge pages
 
-```
+```console
 $ grep Huge /proc/meminfo
 AnonHugePages:         0 kB
 ShmemHugePages:        0 kB
@@ -101,7 +102,7 @@ Hugepagesize:       2048 kB
 Hugetlb:               0 kB
 ```
 
-```
+```console
 $ sudo sudo hugeadm --pool-list
 libhugetlbfs: ERROR: Line too long when parsing mounts
       Size  Minimum  Current  Maximum  Default
@@ -109,17 +110,16 @@ libhugetlbfs: ERROR: Line too long when parsing mounts
 1073741824        0        0        0
 ```
 
-```
-/etc/default/grub
+```text title="/etc/default/grub"
 GRUB_CMDLINE_LINUX="default_hugepagesz=1G hugepagesz=1G hugepages=512 transparent_hugepage=never"
 ```
 
-```
+```bash
 update-grub
 reboot
 ```
 
-```
+```console
 $ grep Huge /proc/meminfo
 AnonHugePages:         0 kB
 ShmemHugePages:        0 kB
@@ -132,7 +132,7 @@ Hugepagesize:    1048576 kB
 Hugetlb:        536870912 kB
 ```
 
-```
+```console
 $ sudo hugeadm --pool-list
 libhugetlbfs: ERROR: Line too long when parsing mounts
       Size  Minimum  Current  Maximum  Default

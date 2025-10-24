@@ -21,7 +21,7 @@ In the example, OSISM release 7.0.5 is used.
 
 1. Set the new manager version in the configuration repository.
 
-   ```
+   ```bash
    MANAGER_VERSION="7.0.5"
    sed -i "~s,^manager_version:.*\$,manager_version: ${MANAGER_VERSION}," environments/manager/configuration.yml
    ```
@@ -34,14 +34,14 @@ In the example, OSISM release 7.0.5 is used.
 
    <Tabs>
    <TabItem value="osism-7" label="OSISM >= 7.0.0">
-   ```
+   ```bash
    make sync
    ```
    </TabItem>
    <TabItem value="osism-6" label="OSISM < 7.0.0">
    If Gilt is not installed via the `requirements.txt` of the manager environment it is
    important to use a version smaller v2. The v2 of Gilt is not yet usable.
-   ```
+   ```bash
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
@@ -63,7 +63,7 @@ In the example, OSISM release 7.0.5 is used.
 4. Commit and push changes in the configuration repository. Since everyone here has their own
    workflows for changes to the configuration repository, only a generic example for Git.
 
-   ```
+   ```bash
    git commit -a -s -m "manager: use OSISM version ${MANAGER_VERSION?}"
    git push
    ```
@@ -110,7 +110,7 @@ The Git branch can be changed in the following way:
 4. *Recommended:* Rebuild inventories and update facts
    (On changing branches there are oft potential changes in the inventory structure)
 
-   ```
+   ```bash
    osism reconciler sync
    osism apply facts
    ```

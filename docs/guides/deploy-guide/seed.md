@@ -27,7 +27,7 @@ the seed node.
 
 ## Install required packages
 
-```
+```bash
 sudo apt-get install git python3-pip python3-virtualenv sshpass libssh-dev
 ```
 
@@ -48,7 +48,7 @@ by us.
 The configuration repository to be used must be available on the seed node. In the following
 example, replace `YOUR_ORG` and `YOUR_NEW_CONFIGURATION_REPOSITORY` accordingly.
 
-```
+```bash
 git clone ssh://git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git
 ```
 
@@ -67,7 +67,7 @@ For this, the following content is added in `~/.ssh/config` and the SSH privte k
 `~/.ssh/id_rsa.configuration`.
 
 
-```
+```text
 Host github.com
   HostName github.com
   User git

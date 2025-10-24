@@ -12,21 +12,21 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
 
    OpenSearch dashboards is also deployed with the `opensearch` role.
 
-   ```
+   ```bash
    osism apply -a pull opensearch
    osism apply opensearch
    ```
 
 2. Prometheus
 
-   ```
+   ```bash
    osism apply -a pull prometheus
    osism apply prometheus
    ```
 
 3. Grafana
 
-   ```
+   ```bash
    osism apply -a pull grafana
    osism apply grafana
    ```

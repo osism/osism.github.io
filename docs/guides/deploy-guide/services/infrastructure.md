@@ -11,7 +11,8 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
 
 1. Optional: In order to reduce the active observation time for the deployment of the components, 
    the container images for the following services can be downloaded in advance with the argument `-a pull`.
-   ```
+
+   ```bash
    osism apply -a pull common
    osism apply -a pull loadbalancer
    osism apply -a pull redis
@@ -29,14 +30,15 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
    environment, as parts of the other deployments depend on the `kolla-toolbox`
    service.
 
-   ```
+   ```bash
    osism apply common
    ```
 
 3. Loadbalancer
 
    Have a look to the [loadbalancer documentation](../../configuration-guide/loadbalancer.md) and configure it before deploying the service.
-   ```
+
+   ```bash
    osism apply loadbalancer
    ```
 
@@ -46,24 +48,24 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
 
 4. Redis
 
-   ```
+   ```bash
    osism apply redis
    ```
 
 5. Memcached
 
-   ```
+   ```bash
    osism apply memcached
    ```
 
 6. RabbitMQ
 
-   ```
+   ```bash
    osism apply rabbitmq
    ```
 
 7. MariaDB
 
-   ```
+   ```bash
    osism apply mariadb
    ```
