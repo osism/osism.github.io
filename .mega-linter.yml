@@ -15,6 +15,7 @@ APPLY_FIXES: none
 # ENABLE_LINTERS:
 
 DISABLE_LINTERS:
+  - CSS_STYLELINT # we focus on the documentation for now
   - REPOSITORY_GITLEAKS # avoid false positives in documentation repo
   - REPOSITORY_GRYPE # not needed
   - REPOSITORY_TRIVY # not needed
