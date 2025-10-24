@@ -11,7 +11,7 @@ environment to be operated interactively.
 
 Used tool: [ansible-console](https://docs.ansible.com/ansible/latest/cli/ansible-console.html)
 
-```
+```console
 $ osism console --type ansible testbed-node-0
 Welcome to the ansible console. Type help or ? to list commands.
 
@@ -29,7 +29,7 @@ Used tool: [ClusterShell](https://clustershell.readthedocs.io)
 
 The same groups as defined in the Ansible Inventory can be used.
 
-```
+```console
 $ osism console --type clush control
 Enter 'quit' to leave this interactive mode
 Working with nodes: testbed-node-[0-2]
@@ -42,7 +42,7 @@ Shortcut: `osism console :control`
 
 Used tool: [Python Prompt Toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/index.html)
 
-```
+```console
 $ osism console --type container testbed-node-0/fluentd
 (fluentd)[td-agent@testbed-node-0 /]$ ps ax
     PID TTY      STAT   TIME COMMAND
@@ -59,7 +59,7 @@ Shortcut: `osism console testbed-node-0/fluentd`
 
 Used tool: [OpenSSH](https://www.openssh.com)
 
-```
+```console
 $ osism console --type ssh testbed-node-0
 You have new mail.
 Last login: Wed Sep 27 18:15:39 2023 from 192.168.16.5

@@ -12,15 +12,15 @@ Each Ansible service has its own local Ansible log file. These log files are not
 used for the persistence of Ansible logs. The log files can be used to view currently running Ansible Plays,
 for example if they are running as a background task.
 
-```
-$ docker exec -it osism-ansible tail -f /ansible/logs/ansible.log
-$ docker exec -it ceph-ansible tail -f /ansible/logs/ansible.log
-$ docker exec -it kolla-ansible tail -f /ansible/logs/ansible.log
+```bash
+docker exec -it osism-ansible tail -f /ansible/logs/ansible.log
+docker exec -it ceph-ansible tail -f /ansible/logs/ansible.log
+docker exec -it kolla-ansible tail -f /ansible/logs/ansible.log
 ```
 
 ### ARA - ARA Records Ansible
 
-```
+```console
 $ osism log ansible
 (ara) help
 
@@ -42,15 +42,15 @@ host list    play show     playbook show     result list    task show
 
 As an example, the role common is run. Irrelevant parts of outputs have been removed.
 
-```
-$ osism apply common
-```
-
-```
-$ osism log ansible
+```bash
+osism apply common
 ```
 
+```bash
+osism log ansible
 ```
+
+```console
 (ara) play list
 +----+-----------+-------------------------------------------------------+----------+-------+---------+-----------------------------+-----------------+
 | id | status    | name                                                  | playbook | tasks | results | started                     | duration        |
@@ -59,7 +59,7 @@ $ osism log ansible
 +----+-----------+-------------------------------------------------------+----------+-------+---------+-----------------------------+-----------------+
 ```
 
-```
+```console
 (ara) play show 69
 +----------+------------------------------------------+
 | Field    | Value                                    |
@@ -76,7 +76,7 @@ $ osism log ansible
 +----------+------------------------------------------+
 ```
 
-```
+```console
 (ara) task list
 +-----+-----------+---------+---------------------------------+----------------------------------------------------------------------------+----------+-----------------------------+-----------------+
 |  id | status    | results | action                          | name                                                                       | playbook | started                     | duration        |
@@ -105,7 +105,7 @@ $ osism log ansible
 +-----+-----------+---------+---------------------------------+----------------------------------------------------------------------------+----------+-----------------------------+-----------------+
 ```
 
-```
+```console
 (ara) task show 910
 +----------+------------------------------------------+
 | Field    | Value                                    |
@@ -126,7 +126,7 @@ $ osism log ansible
 +----------+------------------------------------------+
 ```
 
-```
+```console
 (ara) playbook list
 +----+-----------+-------------------------------+--------+-----------------+---------------------------------------------------+-------+---------+-------+-----------------------------+-----------------+
 | id | status    | controller                    | user   | ansible_version | path                                              | tasks | results | hosts | started                     | duration        |
@@ -135,7 +135,7 @@ $ osism log ansible
 +----+-----------+-------------------------------+--------+-----------------+---------------------------------------------------+-------+---------+-------+-----------------------------+-----------------+
 ```
 
-```
+```console
 (ara) playbook metrics
 +---------------------------------------------------+-------+----------------+----------------+-------+---------+-------+-----------+--------+---------+
 | aggregate                                         | count | duration_total | duration_avg   | tasks | results | hosts | completed | failed | running |
@@ -144,7 +144,7 @@ $ osism log ansible
 +---------------------------------------------------+-------+----------------+----------------+-------+---------+-------+-----------+--------+---------+
 ```
 
-```
+```console
 (ara) host list
 +-----+-----------------------------------+----------+---------+--------+----+---------+-------------+-----------------------------+
 |  id | name                              | playbook | changed | failed | ok | skipped | unreachable | updated                     |
@@ -157,7 +157,7 @@ $ osism log ansible
 +-----+-----------------------------------+----------+---------+--------+----+---------+-------------+-----------------------------+
 ```
 
-```
+```console
 (ara) host show 164
 +-------------+------------------------------------------+
 | Field       | Value                                    |
@@ -176,7 +176,7 @@ $ osism log ansible
 
 ## Container
 
-```
+```console
 $ osism log container testbed-node-0 horizon
 [...]
 ++++ APACHE_LOCK_DIR=/var/lock/apache2
@@ -197,7 +197,7 @@ AH00558: apache2: Could not reliably determine the server's fully qualified doma
 
 OpenSearch can be queried with [SQL](https://opensearch.org/docs/latest/search-plugins/sql/sql/index/).
 
-```
+```console
 $ osism log opensearch
 >>> SELECT * FROM flog-2023.10.31 LIMIT 1;
 Oct 31 10:45:36 testbed-node-0 docker[847573]: cluster 2023-10-31T10:45:35.498718+0000 mgr.testbed-node-0 (mgr.5184) 24194 : cluster [DBG] pgmap v24196: 321 pgs: 321 active+clean; 577 KiB data, 270 MiB used, 60 GiB / 60 GiB avail

@@ -9,14 +9,14 @@ sidebar_label: Cinder
 Purge database entries that are marked as deleted, that are older than
 the number of days specified.
 
-```
+```console
 docker exec -it cinder_api bash
 (cinder-api)[root@testbed-node-0/]# cinder-manage db purge 30
 ```
 
 ## Remove service
 
-```
+```console
 $ openstack --os-cloud admin volume service list
 +------------------+-----------------------------------+----------+---------+-------+----------------------------+
 | Binary           | Host                              | Zone     | Status  | State | Updated At                 |
@@ -30,7 +30,7 @@ $ openstack --os-cloud admin volume service list
 +------------------+-----------------------------------+----------+---------+-------+----------------------------+
 ```
 
-```
+```console
 $ docker exec -it cinder_api cinder-manage service remove cinder-volume testbed-node-0@rbd-1
 Service cinder-volume on host testbed-node-0@rbd-1 removed.
 $ docker exec -it cinder_api cinder-manage service remove cinder-volume testbed-node-1@rbd-1
@@ -39,7 +39,7 @@ $ docker exec -it cinder_api cinder-manage service remove cinder-volume testbed-
 Service cinder-volume on host testbed-node-2@rbd-1 removed.
 ```
 
-```
+```console
 $ openstack --os-cloud admin volume service list
 +------------------+-----------------------------------+----------+---------+-------+----------------------------+
 | Binary           | Host                              | Zone     | Status  | State | Updated At                 |
@@ -57,14 +57,14 @@ is actually used. This can be corrected using [cinder-manage](https://docs.opens
 
 For all projects:
 
-```
-$ docker exec -it cinder_api cinder-manage quota sync
+```bash
+docker exec -it cinder_api cinder-manage quota sync
 ```
 
 Only for a specific project:
 
-```
-$ docker exec -it cinder_api cinder-manage quota sync --project-id PROJECT_ID
+```bash
+docker exec -it cinder_api cinder-manage quota sync --project-id PROJECT_ID
 ```
 
 ## Quality of Service (QoS)
@@ -73,7 +73,7 @@ $ docker exec -it cinder_api cinder-manage quota sync --project-id PROJECT_ID
 
 Create `default` volume QoS policy that allows 1000 read IOPS and 1000 write IOPS.
 
-```
+```console
 $ openstack --os-cloud admin volume qos create \
     --consumer both \
     --property read_iops_sec=1000 \
@@ -89,7 +89,7 @@ $ openstack --os-cloud admin volume qos create \
 +------------+---------------------------------------------+
 ```
 
-```
+```console
 $ openstack --os-cloud admin volume qos list
 +--------------------------------------+---------+----------+--------------+---------------------------------------------+
 | ID                                   | Name    | Consumer | Associations | Properties                                  |
@@ -100,11 +100,11 @@ $ openstack --os-cloud admin volume qos list
 
 Assign the `default` volume QoS policy to the `__DEFAULT` volume type.
 
-```
-$ openstack --os-cloud admin volume qos associate default __DEFAULT__
+```bash
+openstack --os-cloud admin volume qos associate default __DEFAULT__
 ```
 
-```
+```console
 $ openstack --os-cloud admin volume qos list
 +--------------------------------------+---------+----------+--------------+---------------------------------------------+
 | ID                                   | Name    | Consumer | Associations | Properties                                  |
@@ -115,14 +115,14 @@ $ openstack --os-cloud admin volume qos list
 
 Change the read IOPS from 1000 to 2000 and the write IOPS from 1000 to 2000 of the `default` volume QoS policy.
 
-```
-$ openstack --os-cloud admin volume qos set \
-    --property read_iops_sec=2000 \
-    --property write_iops_sec=2000 \
-    default
+```bash
+openstack --os-cloud admin volume qos set \
+  --property read_iops_sec=2000 \
+  --property write_iops_sec=2000 \
+  default
 ```
 
-```
+```console
 $ openstack --os-cloud admin volume qos list
 +--------------------------------------+---------+----------+--------------+---------------------------------------------+
 | ID                                   | Name    | Consumer | Associations | Properties                                  |

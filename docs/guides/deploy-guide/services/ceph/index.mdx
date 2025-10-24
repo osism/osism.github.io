@@ -34,31 +34,31 @@ OSD devices must be completed. The steps that are required for this can be found
 
    * Deploy [ceph-mon](https://docs.ceph.com/en/quincy/man/8/ceph-mon/) services
 
-     ```
+     ```bash
      osism apply ceph-mons
      ```
 
    * Deploy ceph-mgr services
 
-     ```
+     ```bash
      osism apply ceph-mgrs
      ```
 
    * Deploy [ceph-osd](https://docs.ceph.com/en/quincy/man/8/ceph-osd/) services
 
-     ```
+     ```bash
      osism apply ceph-osds
      ```
 
    * Generate pools and keys. This step is only necessary for OSISM >= 7.0.0.
 
-     ```
+     ```bash
      osism apply ceph-pools
      ```
 
    * Deploy ceph-crash services
 
-     ```
+     ```bash
      osism apply ceph-crash
      ```
 
@@ -70,18 +70,18 @@ OSD devices must be completed. The steps that are required for this can be found
 
    <Tabs>
    <TabItem value="osism-7" label="OSISM >= 7.0.0">
-   ```
+   ```bash
    osism apply ceph
    ```
 
    Generate pools and keys.
 
-   ```
+   ```bash
    osism apply ceph-pools
    ```
    </TabItem>
    <TabItem value="osism-6" label="OSISM < 7.0.0">
-   ```
+   ```bash
    osism apply ceph-base
    ```
    </TabItem>
@@ -91,14 +91,14 @@ OSD devices must be completed. The steps that are required for this can be found
 
 2. Get ceph keys. This places the necessary keys in `/opt/configuration`.
 
-   ```
+   ```bash
    osism apply copy-ceph-keys
    ```
 
    After run, these keys must be permanently added to the configuration repository
    via Git.
 
-   ```
+   ```console
    environments/infrastructure/files/ceph/ceph.client.admin.keyring
    environments/kolla/files/overlays/gnocchi/ceph.client.gnocchi.keyring
    environments/kolla/files/overlays/nova/ceph.client.cinder.keyring
@@ -123,13 +123,13 @@ OSD devices must be completed. The steps that are required for this can be found
 3. After the Ceph keys have been persisted in the configuration repository, the Ceph
    client can be deployed.
 
-   ```
+   ```bash
    osism apply cephclient
    ```
 
 4. Enable and prepare the use of the Ceph dashboard.
 
-   ```
+   ```bash
    osism apply ceph-bootstrap-dashboard
    ```
 
@@ -151,7 +151,7 @@ Step 3 is then performed **later after** the OpenStack Keystone service has been
 
 2. Apply role `ceph-rgws` to deploy the Ceph RGW services.
 
-   ```
+   ```bash
    osism apply ceph-rgws
    ```
 
@@ -160,19 +160,19 @@ Step 3 is then performed **later after** the OpenStack Keystone service has been
    to an existing deployment run this step later after the OpenStack
    Keystone service has been deployed.
 
-   ```
+   ```bash
    osism apply kolla-ceph-rgw
    ```
 
 4. Apply role `loadbalancer` to add the HAProxy backend and frontend.
 
-   ```
+   ```bash
    osism apply loadbalancer
    ```
 
 5. Apply role `horizon` to enable the Swift dashboard.
 
-   ```
+   ```bash
    osism apply horizon
    ```
 
@@ -188,13 +188,13 @@ added.
 
 The Ceph RGW services are deployed here without restarting the Ceph OSD services.
 
-```
+```bash
 osism apply ceph-rgws -e ceph_handler_osds_restart=False
 ```
 
 The following parameters are available. Any number of parameters can be used with a single command.
 
-```
+```console
 ceph_handler_crash_restart
 ceph_handler_mdss_restart
 ceph_handler_mgrs_restart
@@ -222,7 +222,7 @@ that are already running, these restarts are executed on a maximum of 2 nodes at
 same time. The OSD services themselves on a node are always restarted one after the other
 and never all at the same time.
 
-```
+```bash
 osism apply ceph-osds -e ceph_handler_osds_restart_throttle=2
 ```
 
@@ -231,7 +231,7 @@ can be used.
 
 The following parameters are available. Any number of parameters can be used with a single command.
 
-```
+```console
 ceph_handler_crash_restart_throttle
 ceph_handler_mdss_restart_throttle
 ceph_handler_mgrs_restart_throttle

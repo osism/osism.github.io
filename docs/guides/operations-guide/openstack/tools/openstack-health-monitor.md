@@ -42,7 +42,7 @@ The author prefers to setup the VM via `openstack` CLI tooling. He has working e
 So here we go
 
 1. Create the network setup for a VM in a network `oshm-network` with an IPv4 subnet, connected to a router that connects (and by default SNATs) to the public network.
-```
+```bash
 PUBLIC=$(openstack network list --external -f value -c Name)
 openstack router create oshm-router
 openstack router set --external-gateway $PUBLIC oshm-driver-router
@@ -52,45 +52,45 @@ openstack router add subnet oshm-router oshm-subnet
 ```
 
 2. Create a security group that allows ssh and ping access
-```
+```bash
 openstack security group create sshping
 openstack security group rule create --ingress --ethertype ipv4 --protocol tcp --dst-port 22 sshping
 openstack security group rule create --ingress --ethertype ipv4 --protocol icmp --icmp-type 8 sshping
 ```
 
 3. Being at it, we also create the security group for grafana
-```
+```bash
 openstack security group create grafana
 openstack security group rule create --ingress --ethertype ipv4 --protocol tcp --dst-port 3000 grafana
 ```
 
 4. To connect to the VM via ssh later, we create an SSH keypair
-```
+```bash
 openstack keypair create --private-key ~/.ssh/oshm-key.pem oshm-key
-chmod og-r ~/.ssh/oshm-key.pem 
+chmod og-r ~/.ssh/oshm-key.pem
 ```
 Rather than creating a new key (and storing and protecting the private key), we could have passed `--public-key` and used an existing keypair.
 
 5. Look up Debian 12 image UUID.
-```
+```bash
 IMGUUID=$(openstack image list --name "Debian 12" -f value -c ID | tr -d '\r')
 echo $IMGUUID
 ```
 Sidenote: The `tr` command is there to handle broken tooling that embeds a trailing `\r` in the output.
 
 6. Boot the driver VM
-```
+```bash
 openstack server create --network oshm-network --key-name oshm-key --security-group default --security-group sshping --security-group grafana --flavor SCS-2V-4 --block-device boot_index=0,uuid=$IMGUUID,source_type=image,volume_size=10,destination_type=volume,delete_on_termination=true oshm-driver
 ```
 Chose a flavor that exists on your cloud. Here we have used  one without root disk and asked nova to create a volume on the fly by passing `--block-device`. See [diskless flavor blog article](https://scs.community/2023/08/21/diskless-flavors/). For flavors with local root disks, you could have used the `--image $IMGUUID` parameter instead.
 
 7. Wait for it to boot (optional)
 You can look at the boot log with `openstack console log show oshm-driver` or connect to it via VNC at the URL given by `openstack console url show oshm-driver`. You can of course also query openstack on the status `openstack server list` or `openstack server show oshm-driver`. You can also just create a simple loop:
-```
+```bash
 declare -i ctr=0 RC=0
 while [ $ctr -le 120 ]; do
   STATUS="$(openstack server list --name oshm-driver -f value -c Status)"
-  if [ "$STATUS" = "ACTIVE" ]; then echo "$STATUS"; break; fi 
+  if [ "$STATUS" = "ACTIVE" ]; then echo "$STATUS"; break; fi
   if [ "$STATUS" = "ERROR" ]; then echo "$STATUS"; RC=1; break; fi
   if [ -z "$STATUS" ]; then echo "No such VM"; RC=2; break; fi
   sleep 2
@@ -101,7 +101,7 @@ if [ $RC != 0 ]; then false; fi
 ```
 
 8. Attach a floating IP so it's reachable from the outside.
-```
+```bash
 FIXEDIP=$(openstack server list --name oshm-driver -f value -c Networks |  sed "s@^[^:]*:[^']*'\([0-9\.]*\)'.*\$@\1@")
 FIXEDPORT=$(openstack port list --fixed-ip ip-address=$FIXEDIP,subnet=oshm-subnet -f value -c ID)
 echo $FIXEDIP $FIXEDPORT
@@ -112,7 +112,7 @@ echo "Floating IP: $FLOATINGIP"
 Remember this floating IP address.
 
 9. Connect to it via ssh
-```
+```bash
 ssh -i ~/.ssh/oshm-key.pem debian@$FLOATINGIP
 ```
 On the first connection, you need to accept the new ssh host key. (Very careful people would compare the fingerprint with the console log output.)
@@ -122,7 +122,7 @@ On the first connection, you need to accept the new ssh host key. (Very careful 
 ### Configuring openstack CLI on the driver VM
 
 We need to install the openstack client utilities.
-```
+```bash
 sudo apt-get update
 sudo apt-get install python3-openstackclient
 sudo apt-get install python3-cinderclient python3-octaviaclient python3-swiftclient python3-designateclient
@@ -171,7 +171,7 @@ export OS_CLOUD=CLOUDNAME
 You might consider adding this to your `~/.bashrc` for convenience. Being at it, you might want to add `export CLIFF_FIT_WIDTH=1` there as well to make openstack command output tables more readable (but sometimes less easy to cut'n'paste).
 
 Verify that your openstack CLI works:
-```
+```bash
 openstack catalog list
 openstack server list
 ```
@@ -225,7 +225,7 @@ Feel free to study the meaning of all the command line parameters by looking at 
 This will run for ~7 minutes, depending on the performance of your OpenStack environment. You should not get any error. (The amber-colored outputs `DOWN`, `BUILD`, `creating` are not errors. Nothing in red should be displayed.) Studying the console output may be instructive to follow the script's progress. You may also open another window (remember the tmux recommendation above) and look at the resources with the usual `openstack RESOURCE list` and `openstack RESOURCE show NAME` and `RESOURCE` being something like `router`, `network`, `subnet`, `port`, `volume`, `server`, `floating ip`, `loadbalancer`, `loadbalancer pool`, `loadbalancer listener`, `security group`, `keypair`, `image`, ...)
 
 The `api_monitor.sh` uses and `APIMonitor_TIMESTAMP` prefix for all OpenStack resource names. This allows to identify the created resources and clean them up even if things go wrong.
-`TIMESTAMP` is an integer number representing the seconds after 1970-01-01 00:00:00 UTC (Unix time). 
+`TIMESTAMP` is an integer number representing the seconds after 1970-01-01 00:00:00 UTC (Unix time).
 
 This may be the time to check that you have sufficient quota to create the resources. While we only create 6+N VMs (and volumes) with the above call (N being the number of AZs), we would want to increase this number for larger clouds. For single-AZ deployments, we would want to still use 2 networks at least `-N 2` to test the ability of the router to route traffic between networks. So expect `-n 6` to become `-N 2 -n 6` for a very small single-AZ cloud or `-n 12` for a large 3 AZ cloud region. So, re-run the `api_monitor.sh` with the target sizing.
 
@@ -244,7 +244,7 @@ Once you have single iterations working nicely, we can proceed.
 ## Automating startup and cleanup
 Typically, we run `api_monitor.sh` with a limited amount of iterations (200) and then restart it. For each restart, we also output some statistics, compress the log file and look at any leftovers that did not get cleaned up. The latter happens in the start script that we create here.
 
-```
+```bash
 #!/bin/bash
 # run_CLOUDNAME.sh
 # Do some global settings
@@ -304,12 +304,12 @@ done
 #exec ./api_monitor.sh -O -C -D -N 2 -n 6 -s -M -LO -b -B -a 2 -t -T -R -S ciab "$@"
 exec ./api_monitor.sh -O -C -D -N 2 -n 6 -s -M -LO -b -B -T "$@"
 ```
-Compared to the previous run, we have explicitly set two networks here `-N 2` and rely on the iterations being passed in as command line arguments. Add parameter `-t` if your cloud is slow to increase timeouts. We have enabled the ovtavia loadbalancer (`-LO`) in this example rather than the amphora based one (`-LL`).
+Compared to the previous run, we have explicitly set two networks here `-N 2` and rely on the iterations being passed in as command line arguments. Add parameter `-t` if your cloud is slow to increase timeouts. We have enabled the octavia loadbalancer (`-LO`) in this example rather than the amphora based one (`-LL`).
 
 You may use one of the existing `run_XXXX.sh` scripts as example. Beware: eMail alerting with `ALARM_EMAIL_ADDRESS` and `NOTE_EMAIL_ADDRESS` (and limiting with `-a` and `-R` ) and reporting data to telegraf (option `-S`) may be present in the samples. Make this script executable (`chmod +x run_CLOUDNAME.sh`).
 
 We wrap a loop around this in `run_in_loop.sh`:
-```
+```bash
 #!/bin/bash
 # run_in_loop.sh
 rm stop-os-hm 2>/dev/null
@@ -327,7 +327,7 @@ To run this automatically in a tmux window whenever the system starts, we follow
 Change `OS_CLOUD` in `startup/run-apimon-in-tmux.sh`. (If you need to set `OS_CACERT`, also add it in this file and pass it into the windows.)
 
 Activate everything:
-```
+```bash
 mkdir -p ~/.config/systemd/user/
 cp -p startup/apimon.service ~/.config/systemd/user/
 systemctl --user enable apimon
@@ -349,7 +349,7 @@ After waiting for that to complete, you can start it again with `systemctl --use
 
 ### Multiple instances
 
-You can run multiple instances of `api_monitor.sh` on the same driver VM. In this case, you should rename `run_in_loop.sh` to e.g. `run_in_loop_CLOUDNAME1.sh` and call `run_CLOUDNAME1.sh` from there. Don't forget to adjust `startup/run-apimon-in-tmux.sh` and `startup/kill-apimon-in-tmux.sh` to start more windows. 
+You can run multiple instances of `api_monitor.sh` on the same driver VM. In this case, you should rename `run_in_loop.sh` to e.g. `run_in_loop_CLOUDNAME1.sh` and call `run_CLOUDNAME1.sh` from there. Don't forget to adjust `startup/run-apimon-in-tmux.sh` and `startup/kill-apimon-in-tmux.sh` to start more windows.
 
 It is not recommended to run multiple instances against the same OpenStack project however. While the `api_monitor.sh` script carefully keeps track of its own resources and avoids to delete things it has not created, this is not the case for the `run_CLOUDNAME.sh` script, which is explicitly meant to identify anything in the target project that was created by a health monitor and clean it up. If it hits the resources that are currently in use by another health mon instance, this will create spurious errors. This will happen every ~200 iterations, so you could still have some short-term coexistence when you are performing debug operations.
 
@@ -364,7 +364,7 @@ Once you have configured `postfix`, you can enable eMail notifications using the
 
 Note that `api_monitor.sh` does take some care not to expose secrets -- since v1.99, it does also redact issued tokens (which would otherwise give you up to 24hrs of access). But the Log files still may contain moderately sensitive information, so we suggest to not share it with untrusted parties.
 
-The log file is written to the file system. After finishing the 200 iterations, the log file is compressed. If the environment variable `SWIFTCONTAINER` has been set (in `run_COULDNAME.sh`) when starting `api_monitor.sh`. the log file will be uploaded to a container with that name if it exists and if the swift object storage service is supported by the cloud. So create the container (a bucket in S3 speak) before if you want to use this: `export SWIFTCONTAINER=OSHM_Logs; openstack container create $SWIFTCONTAINER`
+The log file is written to the file system. After finishing the 200 iterations, the log file is compressed. If the environment variable `SWIFTCONTAINER` has been set (in `run_CLOUDNAME.sh`) when starting `api_monitor.sh`. the log file will be uploaded to a container with that name if it exists and if the swift object storage service is supported by the cloud. So create the container (a bucket in S3 speak) before if you want to use this: `export SWIFTCONTAINER=OSHM_Logs; openstack container create $SWIFTCONTAINER`
 
 After the 200 iterations, a `.psv` file (pipe-separated values) is created `Stats.STARTTIME-ENDTIME.psv` (with times as calendar dates) which contains a bit of statistics on the last 200 iterations. This one will also be uploaded to $SWIFTCONTAINER (if configured).
 
@@ -458,7 +458,7 @@ openstack server add security group oshm-driver http
 
 Create a file `/etc/caddy/Caddyfile` with the following contents:
 
-```
+```text
 https://health.YOURCLOUD.osba.sovereignit.cloud:3000 {
 	reverse_proxy localhost:3003
 }
@@ -621,7 +621,7 @@ If you use `unattended-upgrades`, you should review your settings in `/etc/apt/a
 especially `Unattended-Upgrade::Origins-Pattern`. It controls which packages are upgraded. If you want Caddy to be
 part of the automated updates, add an entry like the following:
 
-```
+```text
 Unattended-Upgrade::Origins-Pattern {
     // ...
     "origin=cloudsmith/caddy/stable";
@@ -635,13 +635,13 @@ Unattended-Upgrade::Origins-Pattern {
 If you already use SSH keys to sign in to the driver VM, consider setting the following in your `/etc/ssh/sshd_config`
 if not already set:
 
-```
+```text
 PasswordAuthentication no
 ```
 
 Debian's `openssh-server`, by default, is also very open about its version, so you might consider disabling this via:
 
-```
+```text
 DebianBanner no
 ```
 

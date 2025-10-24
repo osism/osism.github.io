@@ -8,23 +8,23 @@ sidebar_label: OpenStack
 
 The play `network-external` is available and usable as of OSISM 7.0.6.
 
-```
+```bash
 osism apply network-external
 ```
 
 Available parameters for the OpenStack Environment (`environments/openstack/configuration.yml`).
 
-| Parameter                                   | Default                  |
-|:--------------------------------------------|:-------------------------|
-| network_external_allocation_pool_end        | "192.168.112.200"        |
-| network_external_allocation_pool_start      | "192.168.112.100"        |
-| network_external_cidr                       | "192.168.112.0/20"       |
-| network_external_cloud                      | admin                    |
-| network_external_gateway_ip                 | "192.168.112.5"          |
-| network_external_name                       | public                   |
-| network_external_provider_network_type      | flat                     |
-| network_external_provider_physical_network  | physnet1                 |
-| network_external_state                      | present                  |
+| Parameter                                  | Default            |
+|:-------------------------------------------|:-------------------|
+| network_external_allocation_pool_end       | "192.168.112.200"  |
+| network_external_allocation_pool_start     | "192.168.112.100"  |
+| network_external_cidr                      | "192.168.112.0/20" |
+| network_external_cloud                     | admin              |
+| network_external_gateway_ip                | "192.168.112.5"    |
+| network_external_name                      | public             |
+| network_external_provider_network_type     | flat               |
+| network_external_provider_physical_network | physnet1           |
+| network_external_state                     | present            |
 
 ## Reboot a compute node
 
@@ -33,13 +33,13 @@ Available parameters for the OpenStack Environment (`environments/openstack/conf
 
 2. Ensure that no more instances are running on the compute node
 
-   ```
+   ```bash
    ps ax | grep qemu
    ```
 
 3. Reboot the compute node
 
-   ```
+   ```bash
    osism apply reboot -l NODE -e ireallymeanit=yes
    ```
 
@@ -47,39 +47,39 @@ Available parameters for the OpenStack Environment (`environments/openstack/conf
 
 5. Re-enable the compute service
 
-   ```
+   ```bash
    openstack --os-cloud admin compute service set --enable --disable-reason "" NODE nova-compute
    ```
 
 6. Check compute service
 
-   ```
+   ```bash
    openstack --os-cloud admin compute service list --host NODE --service nova-compute
    ```
 
 ## Add a new compute node
 
-1. Add the operater user
+1. Add the operator user
 
-   ```
+   ```bash
    osism apply operator -u osism -l NODE
    ```
 
 2. Run the bootstrap
 
-   ```
+   ```bash
    osism apply bootstrap -l NODE
    ```
 
 3. When a routed network fabric is used deploy the FRR service (optional)
 
-   ```
+   ```bash
    osism apply frr -l NODE
    ```
 
 4. Deploy logging service and Prometheus exporters
 
-   ```
+   ```bash
    osism apply common -l NODE
    osism apply prometheus -l NODE
    osism apply scaphandre -l NODE
@@ -87,7 +87,7 @@ Available parameters for the OpenStack Environment (`environments/openstack/conf
 
 5. Deploy network services
 
-   ```
+   ```bash
    osism apply openvswitch -l NODE
    osism apply ovn -l NODE
    osism apply neutron -l NODE
@@ -97,50 +97,50 @@ Available parameters for the OpenStack Environment (`environments/openstack/conf
 
 6. Deploy compute services
 
-   ```
+   ```bash
    osism apply nova -l NODE
    ```
 
 7. Deploy telemetry services (optional)
 
-   ```
+   ```bash
    osism apply ceilometer -l NODE
    ```
 
 8. Deploy Netdata service (optional)
 
-   ```
+   ```bash
    osism apply netdata -l NODE
    ```
 
 9. Add compute node to Prometheus monitoring
 
-   ```
+   ```bash
    osism apply prometheus -l monitoring
    ```
 
 10. Refresh the `/etc/hosts` file
 
-    ```
+    ```bash
     osism apply hosts
     ```
 
 11. Refresh the SSH client configuration file
 
-    ```
+    ```bash
     osism apply sshconfig
     ```
 
 12. Add compute node to the known hosts file
 
-    ```
+    ```bash
     osism apply known-hosts
     ```
 
 Containers that run on a compute node. Versions may differ. There is no `ceilometer_compute` container
 if you have not deployed the optional OpenStack telemetry service.
 
-```
+```console
 $ docker ps
 CONTAINER ID   IMAGE                                                      COMMAND                  CREATED         STATUS                   PORTS                         NAMES
 559e5176695c   quay.io/osism/nova-compute:27.1.1.20230919                 "dumb-init --single-…"   5 minutes ago   Up 5 minutes (healthy)                                 nova_compute
@@ -173,13 +173,13 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
 
 4. Ensure that no more instances are running on the compute node
 
-   ```
+   ```bash
    ps ax | grep qemu
    ```
 
 5. Stop all OpenStack compute services on the compute node
 
-   ```
+   ```bash
    systemctl stop kolla-nova_ssh-container.service
    systemctl stop kolla-nova_libvirt-container.service
    systemctl stop kolla-nova_compute-container.service
@@ -187,7 +187,7 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
 
 6. Delete the compute service
 
-   ```
+   ```console
    $ openstack --os-cloud admin compute service list --host NODE
    +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
    | ID                                   | Binary         | Host    | Zone     | Status   | State | Updated At                 |
@@ -196,20 +196,20 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    +--------------------------------------+----------------+---------+----------+----------+-------+----------------------------+
    ```
 
-   ```
-   $ openstack --os-cloud admin compute service delete 90345eb5-cf2f-47ef-becc-758ee36fb132
+   ```bash
+   openstack --os-cloud admin compute service delete 90345eb5-cf2f-47ef-becc-758ee36fb132
    ```
 
 7. Stop all OpenStack network services on the compute node
 
-   ```
+   ```bash
    systemctl stop kolla-neutron_ovn_metadata_agent-container.service
    systemctl stop kolla-ovn_controller-container.service
    ```
 
 8. Delete the network services
 
-   ```
+   ```console
    $ openstack --os-cloud admin network agent list --host NODE
    +--------------------------------------+----------------------+---------+-------------------+-------+-------+----------------------------+
    | ID                                   | Agent Type           | Host    | Availability Zone | Alive | State | Binary                     |
@@ -224,30 +224,30 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
 
 9. Refresh the facts
 
-   ```
+   ```bash
    osism apply facts
    ```
 
 10. Refresh the `/etc/hosts` file
 
-    ```
+    ```bash
     osism apply hosts
     ```
 
 11. Refresh the SSH client configuration file
 
-    ```
+    ```bash
     osism apply sshconfig
     ```
 
 12. Remove compute node from Prometheus monitoring
 
-    ```
+    ```bash
     osism apply prometheus -l monitoring
     ```
 
 13. Remove compute node from the known hosts file
 
-    ```
+    ```bash
     osism apply known-hosts
     ```

@@ -32,7 +32,7 @@ Host and path to the Git repository are specified by the `git_` parameters. Thes
 requested in step 2. The `git_` parameters do not specify the path to the cookiecutter
 to use.
 
-```
+```console
   [8/20] git_host (github.com):
   [9/20] git_port (22):
   [10/20] git_repository (YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY): regiocloud/configuration
@@ -51,14 +51,14 @@ listed there will be queried during the execution of Cookiecutter.
 1. The directory `output` is created and used as output volume. It is only necessary to create the empty
    directory here.
 
-   ```
+   ```bash
    mkdir output
    ```
 
 2. The Cookiecutter runs inside a container. [Docker must be usable on the system](https://docs.docker.com/engine/install/)
    where the Cookiecutter will be used. It should also work with Podman.
 
-   ```
+   ```bash
    docker run \
      -e TARGET_UID="$(id -u)" \
      -e TARGET_GID="$(id -g)" \
@@ -71,14 +71,14 @@ listed there will be queried during the execution of Cookiecutter.
    If you want to use the `latest` version, this is done using the `manager_version` parameter. By default,
    this is always set to the latest stable version.
 
-   ```
+   ```yaml
    manager_version [7.0.4]: latest
    ```
 
    If the `manager_version` parameter is set to `latest` it is also possible to explicitly
    set the `openstack_version` and the `ceph_version` explicitly.
 
-   ```
+   ```console
    [1/18] with_ceph (1):
    [2/18] ceph_network(192.168.16.0/20):
    [3/18] ceph_version (quincy):
@@ -105,13 +105,13 @@ Add the initial configuration state to the repository. How to add a deploy key o
 [Managing deploy keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys).
 Read permissions are sufficient.
 
-```
-$ git clone git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git YOUR_NEW_CONFIGURATION_REPOSITORY
-$ cp -r output/configuration/{*,.gitignore} YOUR_NEW_CONFIGURATION_REPOSITORY
-$ cd YOUR_NEW_CONFIGURATION_REPOSITORY
-$ git add -A .
-$ git commit -m "Initial commit after bootstrap"
-$ git push
+```bash
+git clone git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git YOUR_NEW_CONFIGURATION_REPOSITORY
+cp -r output/configuration/{*,.gitignore} YOUR_NEW_CONFIGURATION_REPOSITORY
+cd YOUR_NEW_CONFIGURATION_REPOSITORY
+git add -A .
+git commit -m "Initial commit after bootstrap"
+git push
 ```
 
 The content is now committed to the Git repository that was created earlier in the process.
@@ -406,7 +406,7 @@ kolla_enable_tls_internal: "yes"
 If you want to use the latest version, this is done using the `manager_version` parameter. By default,
 this is always set to the latest stable version.
 
-```
+```yaml
 manager_version [7.0.0]: latest
 ```
 
@@ -415,26 +415,26 @@ set the `openstack_version` and the `ceph_version` explicitly.
 
 ## Parameter reference
 
-| Parameter                  | Description                                                                                                                                | Default                                   |
-|:---------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------|
-| `ceph_network`             | Address range for Ceph's network                                                                                                           | `192.168.16.0/20`                         |
-| `ceph_version`             | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                  |
-| `domain`                   | The domain used by hostnames                                                                                                               | `osism.xyz`                               |
-| `fqdn_external`            | External API FQDN                                                                                                                          | `api.osism.xyz`                           |
-| `fqdn_internal`            | Internal API FQDN                                                                                                                          | `api-int.osism.xyz`                       |
-| `git_host`                 | Address of the used Git server                                                                                                             | `github.com`                              |
-| `git_port`                 | Port of the used Git server                                                                                                                | `22`                                      |
-| `git_repository`           | Path to the git configuration repository                                                                                                   | `YOUR_ORG/YOUR_CONFIGURATION_REPOSITORY`  |
-| `git_username`             | Username of the git repository                                                                                                             | `git`                                     |
-| `git_version`              | Git branch name                                                                                                                            | `main`                                    |
-| `ip_external`              | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                          |
-| `ip_internal`              | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                            |
-| `manager_version`          | The version of OSISM. An overview of available OSISM releases can be found [here](https://osism.tech/docs/release-notes/)                  | `7.0.4`                                   |
-| `name_server`              | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                         |
-| `ntp_server`               | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                         |
-| `openstack_version`        | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                  |
-| `project_name`             | Name of the configuration repository directory                                                                                             | `configuration`                           |
-| `with_ceph`                | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                       |
+| Parameter           | Description                                                                                                                                | Default                                  |
+|:--------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
+| `ceph_network`      | Address range for Ceph's network                                                                                                           | `192.168.16.0/20`                        |
+| `ceph_version`      | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                 |
+| `domain`            | The domain used by hostnames                                                                                                               | `osism.xyz`                              |
+| `fqdn_external`     | External API FQDN                                                                                                                          | `api.osism.xyz`                          |
+| `fqdn_internal`     | Internal API FQDN                                                                                                                          | `api-int.osism.xyz`                      |
+| `git_host`          | Address of the used Git server                                                                                                             | `github.com`                             |
+| `git_port`          | Port of the used Git server                                                                                                                | `22`                                     |
+| `git_repository`    | Path to the git configuration repository                                                                                                   | `YOUR_ORG/YOUR_CONFIGURATION_REPOSITORY` |
+| `git_username`      | Username of the git repository                                                                                                             | `git`                                    |
+| `git_version`       | Git branch name                                                                                                                            | `main`                                   |
+| `ip_external`       | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                         |
+| `ip_internal`       | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                           |
+| `manager_version`   | The version of OSISM. An overview of available OSISM releases can be found on the [release page](https://osism.tech/docs/release-notes/)   | `7.0.4`                                  |
+| `name_server`       | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                        |
+| `ntp_server`        | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                        |
+| `openstack_version` | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                 |
+| `project_name`      | Name of the configuration repository directory                                                                                             | `configuration`                          |
+| `with_ceph`         | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                      |
 
 ## Configuration repository layout
 
@@ -443,17 +443,17 @@ the content available in a configuration repository. In the section
 [Creating a new configuration repository](#creating-a-new-configuration-repository) is the creation
 of a new configuration repository documented.
 
-| Directory/File                   | Description                                                                                                                                                                            |
-|:---------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `environments`                   |                                                                                                                                                                                        |
-| `inventory`                      |                                                                                                                                                                                        |
-| `netbox`                         | optional                                                                                                                                                                               |
-| `requirements.txt`               | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                            |
-| `gilt.yml`                       |                                                                                                                                                                                        |
-| `Makefile`                       |                                                                                                                                                                                        |
-| `gilt.yaml`                      | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
+| Directory/File     | Description                                                                                                                                                                            |
+|:-------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `environments`     |                                                                                                                                                                                        |
+| `inventory`        |                                                                                                                                                                                        |
+| `netbox`           | optional                                                                                                                                                                               |
+| `requirements.txt` | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                            |
+| `gilt.yml`         |                                                                                                                                                                                        |
+| `Makefile`         |                                                                                                                                                                                        |
+| `gilt.yaml`        | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
 
-## Synchronising the configuration repository
+## Synchronizing the configuration repository
 
 Once the manager has been deployed and the configuration repository has been initially
 transferred to the manager node, the configuration repository can be updated using
@@ -473,7 +473,7 @@ For example, the file `environments/kolla/.lock` locks the Kolla environment.
 
 If you try to execute a play in the Kolla environment, an error message is displayed.
 
-```
+```console
 $ osism apply common
 2024-06-02 10:52:44 | INFO     | Task 2f25f55f-96ae-4a6c-aeb4-c1c01e716d91 (common) was prepared for execution.
 2024-06-02 10:52:44 | INFO     | It takes a moment until task 2f25f55f-96ae-4a6c-aeb4-c1c01e716d91 (common) has been started and output is visible here.
@@ -484,7 +484,7 @@ File `environments/.lock` is created to lock everything.
 
 If you try to execute a play, an error message is displayed.
 
-```
+```console
 $ osism apply facts
 2024-06-02 10:53:08 | INFO     | Task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) was prepared for execution.
 2024-06-02 10:53:08 | INFO     | It takes a moment until task 6ac9a526-f88d-4756-bf46-2179636dfb42 (facts) has been started and output is visible here.
@@ -500,14 +500,14 @@ targets that can be used to view encrypted files and to edit encrypted files.
 
   This opens a pager, e.g. less, and you can search with `/` for specific files, keys and passwords.
 
-  ```
+  ```bash
   make ansible_vault_show FILE=all
   make ansible_vault_show FILE=environments/secrets.yml
   ```
 
-* Change or add secrets in an encrypted file with the editor set in ` $EDITOR`.
+* Change or add secrets in an encrypted file with the editor set in `$EDITOR`.
 
-  ```
+  ```bash
   make ansible_vault_edit FILE=environments/secrets.yml EDITOR=nano
   ```
 
@@ -516,6 +516,6 @@ targets that can be used to view encrypted files and to edit encrypted files.
   This creates a new `secrets/vaultpass` and creates backups of the old to
   `secrets/vaultpass_backup_<timestamp>`.
 
-  ```
+  ```bash
   make ansible_vault_rekey
   ```

@@ -60,7 +60,7 @@ Real world example:
 ## Storage nodes
 
 A dedicated storage node runs only storage services. This can be necessary in larger
-deployments to protect the storage services from ressource starvation through user
+deployments to protect the storage services from resource starvation through user
 workloads.
 
 Read the [Ceph hardware recommendations](https://docs.ceph.com/en/latest/start/hardware-recommendations/) first.

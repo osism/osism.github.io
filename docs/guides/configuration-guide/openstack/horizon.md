@@ -28,7 +28,7 @@ horizon_httpd_limitrequestbody: 2147483648  # 2 GiB
 ## Make clouds.yml file downloadable as an alternative to the RC file
 
 By default, only the `openrc` file is offered for download in Horizon. It makes sense to also add the
-`clouds.yaml` as a download. To do this, the menu is customised. The change can be deployed with
+`clouds.yaml` as a download. To do this, the menu is customized. The change can be deployed with
 `osism apply -a reconfigure horizon`.
 
 <Tabs>

@@ -43,7 +43,7 @@ python3 src/host-action.py --yes --action evacutate --host SOURCE --input TARGET
 
 Rotation of amphorae older than 30 days.
 
-```bash
+```console
 $ python3 src/amphora.py --rotate
 2023-10-12 21:00:38 | INFO     | Amphora 95a07c43-c0f9-44d2-bde8-a989e52427fa is older than 30 days
 2023-10-12 21:00:38 | INFO     | Amphora 95a07c43-c0f9-44d2-bde8-a989e52427fa of loadbalancer 9008d3d7-f593-4bc3-941c-a740c178148d is rotated by a loadbalancer failover
@@ -51,7 +51,7 @@ $ python3 src/amphora.py --rotate
 
 ## Cinder
 
-```bash
+```console
 $ python3 src/volume.py
 2023-12-11 23:09:44 | INFO     | Volume ad848454-ba1f-4c28-b9a8-edada17948b0 hangs in CREATING status for more than 2 hours
 Delete volume ad848454-ba1f-4c28-b9a8-edada17948b0 [yes/no]:
@@ -59,7 +59,7 @@ Delete volume ad848454-ba1f-4c28-b9a8-edada17948b0 [yes/no]:
 
 ## Orphans
 
-```bash
+```console
 $ python3 src/orphan.py
 2023-12-11 23:11:16 | INFO     | Checking nova / server
 2023-12-11 23:11:21 | INFO     | Checking neutron / port

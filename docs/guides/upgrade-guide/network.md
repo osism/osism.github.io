@@ -7,7 +7,7 @@ sidebar_position: 15
 
 1. Open vSwitch (OVS)
 
-   ```
+   ```bash
    osism apply -a pull openvswitch
    osism apply -a upgrade openvswitch
    ```
@@ -24,7 +24,7 @@ sidebar_position: 15
 
    Before the upgrade of OVN, the upgrade of Open vSwitch must already have been done.
 
-   ```
+   ```bash
    osism apply -a pull ovn
    osism apply -a upgrade ovn
    ```

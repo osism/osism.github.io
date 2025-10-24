@@ -83,29 +83,41 @@ syntax of Python. A job is running in the CI that checks, if Black has been appl
 format the files with Black accordingly in advance.
 
 ### Installation
-```pip install black```
+```bash
+pip install black
+```
 
 ### Formatting a Single File
-```black myfile.py```
+```bash
+black myfile.py
+```
 
 ### Formatting Multiple Files and/or directories
-```black file1.py file2.py dir/```
+```bash
+black file1.py file2.py dir/
+```
 
 ### Formatting an Entire Project
 This command will format all Python files in the current directory and its subdirectories:
 
-```black .```
+```bash
+black .
+```
 
 ### Check Mode (Dry Run)
 Running Black with the ```--check``` option performs a dry run and reports files that would be
 changed without actually modifying them:
 
-```black --check myfile.py```
+```bash
+black --check myfile.py
+```
 
 ### Excluding Files or Directories
 You can exclude files or directories from formatting using the ```--exclude``` option:
 
-```black --exclude=dir_to_exclude/ .```
+```bash
+black --exclude=dir_to_exclude/ .
+```
 
 ### Integration with Code Editors
 Many code editors have extensions or plugins that can automatically run Black on your code.
@@ -113,7 +125,7 @@ For example, if you're using VSCode or PyCharm, you can easily integrate it into
 
 ### Example of failed python-black Zuul job
 job-output.txt:
-```
+```text
 […]
 2023-11-16 14:38:14.149756 | TASK [python-black : Install pip module black]
 2023-11-16 14:38:18.717886 | ubuntu-jammy | changed

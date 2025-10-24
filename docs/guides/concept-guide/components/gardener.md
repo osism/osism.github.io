@@ -28,11 +28,11 @@ Key benefits of Gardener include:
 * High Availability and Resilience: Gardener ensures high availability by distributing control
   planes across multiple seed clusters and leveraging cloud provider features to enhance resilience.
   This design minimizes downtime and enhances the reliability of managed clusters.
-* Extensibility and Customization: Gardener’s architecture allows for customization and extensibility
+* Extensibility and Customization: Gardener's architecture allows for customization and extensibility
   through extensions and webhooks. This flexibility enables organizations to tailor the solution to
   meet specific requirements and integrate with existing tools and processes.
 
-By using Gardener by SAP for Kubernetes as a Service, organisations can achieve a scalable,
+By using Gardener by SAP for Kubernetes as a Service, organizations can achieve a scalable,
 automated and consistent approach to managing Kubernetes clusters across multiple environments.
 This allows them to focus on delivering business value through their applications, rather
 than dealing with the complexities of cluster management.

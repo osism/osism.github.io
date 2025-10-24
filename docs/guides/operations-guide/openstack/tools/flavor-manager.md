@@ -20,14 +20,14 @@ For use independent of OSISM install the `openstack-flavor-manager` package with
 that additional dependencies such as `pkg-config` or `libssl-dev` must be installed in advance.
 
 ```bash
-$ pip install openstack-flavor-manager
+pip install openstack-flavor-manager
 ```
 
 Or clone the repository [osism/openstack-flavor-manager](https://github.com/osism/openstack-flavor-manager)
 and use the OpenStack Flavor Manager from source with tox.
 
 ```bash
-$ tox -- --help
+tox -- --help
 ```
 
 ## Usage
@@ -40,7 +40,7 @@ The cloud profile to be used can be specified via the optional `--cloud` paramet
 By default the cloud profile with the name `admin` is used. It must be possible to create and delete
 flavors with the used cloud credentials.
 
-```
+```console
 $ openstack-flavor-manager --help
 
  Usage: openstack-flavor-manager [OPTIONS]
@@ -58,18 +58,18 @@ To create the mandatory flavors by the [SCS-0100: Flavor Naming](https://docs.sc
 standard, you run:
 
 ```bash
-$ openstack-flavor-manager
+openstack-flavor-manager
 ```
 
 To create the recommended flavors by the SCS Flavor Naming Standard, you run:
 
 ```bash
-$ openstack-flavor-manager --recommended
+openstack-flavor-manager --recommended
 ```
 
 The output should look like this:
 
-```
+```console
 2023-09-20 13:03:14 | INFO     | Flavor SCS-1V-4 created
 2023-09-20 13:03:14 | INFO     | Flavor SCS-2V-8 created
 2023-09-20 13:03:14 | INFO     | Flavor SCS-4V-16 created
@@ -78,13 +78,13 @@ The output should look like this:
 ```
 
 All recommended flavors are now be available in your OpenStack environment.
-Check yourself by running: 
+Check yourself by running:
 
 ```bash
-$ openstack --os-cloud admin flavor list
+openstack --os-cloud admin flavor list
 ```
 
-```
+```console
 $ openstack --os-cloud admin flavor show SCS-2V-4-20s
 +----------------------------+---------------------------------------------------------------------------------------------------------------------------------+
 | Field                      | Value                                                                                                                           |
@@ -117,8 +117,8 @@ To run the OpenStack Flavor Manager with a specific definition, either `scs` or 
 use the optional `--name` parameter. By default the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
 standard definition will be used.
 
-```
-$ openstack-flavor-manager --name osism
+```bash
+openstack-flavor-manager --name osism
 ```
 
 ## Name parser and generator

@@ -11,8 +11,8 @@ sidebar_label: Keystone
 
 **This policy is currently still in draft status. Its use in production is currently not recommended.**
 
-| SCS Standard Track | SCS Standard | SCS Documentation |
-|:-------------------|:-------------|:------------------|
+| SCS Standard Track                               | SCS Standard                                                                                                        | SCS Documentation                                                                                                  |
+|:-------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------|
 | [IAM](https://docs.scs.community/standards/iam/) | [scs-0302](https://github.com/SovereignCloudStack/standards/blob/main/Standards/scs-0302-v1-domain-manager-role.md) | [Domain Manager configuration for Keystone](https://docs.scs.community/standards/scs-0302-v1-domain-manager-role/) |
 
 To configure and use the domain manager role from the SCS project, the
@@ -24,7 +24,7 @@ service itself is then done as usual.
 ---
 # SCS Domain Manager policy configuration
 
-# Section A: OpenStack base definitons
+# Section A: OpenStack base definitions
 # The entries beginning with "base_<rule>" should be exact copies of the
 # default "identity:<rule>" definitions for the target OpenStack release.
 # They will be extended upon for the domain manager role below this section.
@@ -137,7 +137,7 @@ service itself is then done as usual.
 The role `manager` is created using the OpenStack CLI. Alternatively, the role can
 be added using Ansible or other tools.
 
-```
+```console
 $ openstack --os-cloud admin \
     role create \
     --or-show \
@@ -156,12 +156,12 @@ $ openstack --os-cloud admin \
 
 A user can then be made a domain manager for a particular domain by assigning this role.
 
-```
-$ openstack --os-cloud admin \
-    role add \
-    --user test \
-    --domain test \
-    manager
+```bash
+openstack --os-cloud admin \
+  role add \
+  --user test \
+  --domain test \
+  manager
 ```
 
 ## OIDC Federation

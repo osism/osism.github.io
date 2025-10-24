@@ -26,18 +26,18 @@ global
     stats socket /var/lib/kolla/haproxy/haproxy.sock group kolla mode 660 level admin
 ```
 
-* Disable the host `testbed-node-0` in all backends of the service `keystone `
+* Disable the host `testbed-node-0` in all backends of the service `keystone`
 
-  ```
+  ```bash
   osism apply manage-loadbalancer \
     -e manage_loadbalancer_action=disable \
     -e manage_loadbalancer_service=keystone \
     -e manage_loadbalancer_host=testbed-node-0
   ```
 
-* Enable the host `testbed-node-0` in all backends of the service `keystone `
+* Enable the host `testbed-node-0` in all backends of the service `keystone`
 
-  ```
+  ```bash
   osism apply manage-loadbalancer \
     -e manage_loadbalancer_action=enable \
     -e manage_loadbalancer_service=keystone \
@@ -46,7 +46,7 @@ global
 
 * Disable the host `testbed-node-0` in all backends
 
-  ```
+  ```bash
   osism apply manage-loadbalancer \
     -e manage_loadbalancer_action=disable \
     -e manage_loadbalancer_service=all \
@@ -55,7 +55,7 @@ global
 
 * Enable the host `testbed-node-0` in all backends
 
-  ```
+  ```bash
   osism apply manage-loadbalancer \
     -e manage_loadbalancer_action=enable \
     -e manage_loadbalancer_service=all \
@@ -67,18 +67,18 @@ global
 ### Backup
 
 [Mariabackup](https://mariadb.com/kb/en/mariabackup-overview/) is used to create backups
-of MariaDB. For more details about backups, you can use the offical
+of MariaDB. For more details about backups, you can use the official
 [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html) documentation.
 
 * Create a full backup
 
-  ```
+  ```bash
   osism apply mariadb_backup
   ```
 
 * Create a incremental backup (supported as of OSISM 7.0.6)
 
-  ```
+  ```bash
   osism apply mariadb_backup -e mariadb_backup_type=incremental
   ```
 
@@ -88,7 +88,7 @@ of MariaDB. For more details about backups, you can use the offical
   are stored in this volume.
   (see also /var/lib/docker/volumes/mariadb_backup/)
 
-  ```
+  ```console
   $ docker run --rm -v mariadb_backup:/backup -it ubuntu:22.04 bash -c 'ls -la /backup'
   total 9728
   drwxr-xr-x 2 42434 42434    4096 Jun  3 18:46 .
@@ -98,10 +98,10 @@ of MariaDB. For more details about backups, you can use the offical
   -rw-r--r-- 1 42434 42434 5411763 Jun  3 18:45 mysqlbackup-03-06-2024-1717440342.qp.xbc.xbs.gz
   ```
 
-Currently there is no offical scheduling and houskeeping (disk space) for mariadb backups.
+Currently there is no official scheduling and housekeeping (disk space) for mariadb backups.
 You can create a simple cronjob on the manager or use your enterprise backup software.
 
-```
+```bash
 cat /etc/cron.d/mariadb_backup <<'EOF'
 0 7 * * * dragon osism apply mariadb_backup |logger -t mariadb_backup
 EOF
@@ -111,7 +111,7 @@ EOF
 
 * Stop all MariaDb Instances
 
-  ```
+  ```bash
   osism apply -s stop maria
   ```
 
@@ -119,16 +119,16 @@ EOF
 
 * Execute the recovery procedure with the node name where you executed the recovery
 
-  ```
+  ```bash
   osism apply mariadb_recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE
   ```
 
 ### Recovery
 
-If you stopped your mariadb galera cluster completly, you can use the following procedure
+If you stopped your mariadb galera cluster completely, you can use the following procedure
 to start a recovery.
 
-```
+```bash
 osism apply mariadb_recovery
 ```
 
@@ -190,7 +190,7 @@ osism apply mariadb_recovery
 
 ### Get all indices
 
-```
+```console
 $ curl https://api-int.testbed.osism.xyz:9200/_cat/indices?v
 health status index                          uuid                   pri rep docs.count docs.deleted store.size pri.store.size
 green  open   flog-2024.04.17                1rCP3NpUQSS5wmulCn6Y5g   1   1    1657832            0        1gb        654.4mb
@@ -202,7 +202,7 @@ green  open   .kibana_1                      v-aJ6ioSQsOwHQn_NNbeOg   1   1     
 
 ### Delete an index
 
-```
+```console
 $ curl -X DELETE https://api-int.testbed.osism.xyz:9200/flog-2024.04.17
 {"acknowledged":true}
 ```

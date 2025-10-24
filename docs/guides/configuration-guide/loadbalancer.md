@@ -50,28 +50,24 @@ are designed to to handle all possible configuration transitions on their own.
 To enable TLS encryption the following steps are needed.
 
 1. Activate tls encryption for both endpoints
-
   * To enable external TLS encryption:
-
     ```yaml title="environments/kolla/configuration.yml"
     kolla_enable_tls_external: "yes"
     ```
   * To enable internal TLS encryption:
-
     ```yaml title="environments/kolla/configuration.yml"
     kolla_enable_tls_internal: "yes"
      ```
-
 2. Add the combined server certificate and private key to the following locations in the configuration repository:
   * private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
   * private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`
 3. Encrypt the certificates using ansible vault:
-   ```
+   ```bash
    make ansible_vault_edit FILE=environments/kolla/certificates/haproxy.pem
    make ansible_vault_edit FILE=environments/kolla/certificates/haproxy-internal.pem
    ```
 4. Add the changes to the Git repository
-   ```
+   ```bash
    git add environments/kolla/certificates/haproxy.pem \
      environments/kolla/certificates/haproxy-internal.pem \
      environments/kolla/configuration.yml
@@ -81,7 +77,7 @@ To enable TLS encryption the following steps are needed.
      environments/kolla/configuration.yml
    ```
 5. Rollout changes
-   ```
+   ```bash
    osism apply loadbalancer
    ```
 
@@ -134,7 +130,7 @@ by the [general procedure](#general-procedure) described above.
      ```
 
 4. Import the ca certificate to all nodes so that the custom CA is known everywhere and the self-signed certificates are accepted as valid.
-   ```
+   ```bash
    osism apply certificates
    ```
 
@@ -145,7 +141,7 @@ by the [general procedure](#general-procedure) described above.
 Using Let's encrypt certificates is a good alternative to traditional certificate authorities and
 greatly simplifies the administration of TLS certificates.
 
-For a working Let's Encrypt configuration, the API endpoints (configured by `kolla_internal_fqdn` and `kolla_external_fqdn`) 
+For a working Let's Encrypt configuration, the API endpoints (configured by `kolla_internal_fqdn` and `kolla_external_fqdn`)
 must be accessible from the internet.
 
 1. Activate Let's Encrypt tls encryption for both endpoints
@@ -158,11 +154,11 @@ must be accessible from the internet.
    ```
 
 2. Rollout changes
-   ```
+   ```bash
    osism apply loadbalancer
    ```
 
-For more details about this topic, we recommend the [offical kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
+For more details about this topic, we recommend the [official kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
 
 ## Second Loadbalancer
 
@@ -182,11 +178,11 @@ the `configuration.yml`, `images.yml` and `secrets.yml` files as usual.
 
 The following directories and files are also required in a sub-environment for a loadbalancer.
 
-| File                                             | Description                                                           |
-|:-------------------------------------------------|:----------------------------------------------------------------------|
-| `certificates/ca/custom.crt`                     | The file is optional. If a custom CA is used, it must be added here.  |
-| `certificates/haproxy-internal.pem`              | SSL certificate to be used.                                           |
-| `files/overlays/haproxy/services.d/haproxy.cfg`  | HAProxy configuration to be used on the loadbalancer.                 |
+| File                                            | Description                                                          |
+|:------------------------------------------------|:---------------------------------------------------------------------|
+| `certificates/ca/custom.crt`                    | The file is optional. If a custom CA is used, it must be added here. |
+| `certificates/haproxy-internal.pem`             | SSL certificate to be used.                                          |
+| `files/overlays/haproxy/services.d/haproxy.cfg` | HAProxy configuration to be used on the loadbalancer.                |
 
 In this example, a sub-environment `kolla.external` is created, which is used for an outward facing
 loadbalancer that only offers certain API services.
@@ -206,7 +202,7 @@ testbed-node-2.testbed.osism.xyz
 It is also important to ensure that the nodes used for the second loadbalancer are not included in
 the `loadbalancer` group. This can be checked with `osism get hosts -l loadbalancer`. If the nodes of
 the second loadbalancer are also listed there, the `loadbalancer` group in the `99-overwrite` file of
-the global inventory must be overwritten. In this example, the `loadbalaner` group is overwritten so
+the global inventory must be overwritten. In this example, the `loadbalancer` group is overwritten so
 that only `testbed-node-0.testbed.osism.xyz` and `testbed-node-1.testbed.osism.xyz` are left in the
 `loadbalancer` group.
 
@@ -253,7 +249,7 @@ At the moment it is only possible to deploy the loadbalancer itself with its own
 not possible to use the integrated service configurations of Kolla itself (Nova, Cinder, ..) on an additional
 loadbalancer. This will be possible in the future.
 
-```
+```bash
 osism apply --sub external loadbalancer-without-service-config
 ```
 

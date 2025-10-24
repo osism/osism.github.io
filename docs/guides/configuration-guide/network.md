@@ -18,7 +18,7 @@ By default, all other files in `/etc/netplan` are removed. If you do not want th
 can set `network_netplan_remove_unmanaged_files` to `false`. It is also possible to explicitly
 list individual files that should not be deleted in `network_netplan_managed_files_extra`.
 
-An existing `/etc/intefaces` file is replaced with a placeholder file. It is not possible
+An existing `/etc/interfaces` file is replaced with a placeholder file. It is not possible
 to use `/etc/interfaces` and Netplan in parallel.
 
 ```yaml title="This template is used as the base for the configuration"
@@ -50,22 +50,22 @@ network:
 
 The parameters listed in the following table can be used in the template.
 
-| Parameter         | Default     | Description                                                                                             |
-|:------------------|:------------|:--------------------------------------------------------------------------------------------------------|
-| network_version   | `2`         | Defines what version of the configuration format is used. The only value supported at the moment is 2.  |
-| network_renderer  | `networkd`  | Defines what network configuration tool will be used to set up your configuration.                      |
-| network_bonds     | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bonds                 |
-| network_bridges   | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bridges               |
-| network_ethernets | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-ethernets             |
-| network_tunnels   | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-tunnels               |
-| network_vlans     | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vlans                 |
-| network_vrfs      | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vrfs                  |
+| Parameter         | Default    | Description                                                                                            |
+|:------------------|:-----------|:-------------------------------------------------------------------------------------------------------|
+| network_version   | `2`        | Defines what version of the configuration format is used. The only value supported at the moment is 2. |
+| network_renderer  | `networkd` | Defines what network configuration tool will be used to set up your configuration.                     |
+| network_bonds     | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bonds                |
+| network_bridges   | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bridges              |
+| network_ethernets | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-ethernets            |
+| network_tunnels   | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-tunnels              |
+| network_vlans     | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vlans                |
+| network_vrfs      | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vrfs                 |
 
 By default changes to the network configuration are not applied automatically. This is done on
 purpose to allow a manual check in advance. Changes to the network configuration can
 be applied either by rebooting or by executing `netplan apply`.
 
-```
+```console
 $ osism console --type clush all
 Enter 'quit' to leave this interactive mode
 Working with nodes: testbed-manager.testbed.osism.xyz,testbed-node-[0-2].testbed.osism.xyz
@@ -118,7 +118,7 @@ network_vlans:
 
 Dummy devices are created with the help of
 [systemd.netdev](https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html)
-and can then be used as a normal netowrk device in the Netplan configuration.
+and can then be used as a normal network device in the Netplan configuration.
 
 ```yaml
 network_dummy_interfaces:

@@ -206,7 +206,7 @@ scp dragon@IP_ADDRESS_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/
 
 Install Wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
-Wireguard documentation you will find [here](https://www.wireguard.com).
+Wireguard documentation can be found at [https://www.wireguard.com](https://www.wireguard.com).
 
 Start the Wireguard tunnel.
 
@@ -217,7 +217,7 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 Once the Wireguard tunnel has been set up, it is possible to access individual services on a name-based basis.
 As a test, you can try whether the name `api.in-a-box.cloud` resolves correctly to the IP address `192.168.16.254`.
 
-```
+```console
 dig +short A api.in-a-box.cloud
 192.168.16.254
 ```
@@ -226,46 +226,46 @@ If this does not work, a DNS filter such as Pi-hole or AdGuard will most likely 
 IP ranges such as `192.168.16.0/20` are not resolved via a public DNS server. If this is the case, the following
 entries must be added to the local `/etc/hosts` file for the name resolution to work.
 
-```
-192.166.16.10	cgit.services.in-a-box.cloud
-192.166.16.10	netbox.services.in-a-box.cloud
-192.168.16.10	ara.services.in-a-box.cloud
-192.168.16.10	flower.services.in-a-box.cloud
-192.168.16.10	homer.services.in-a-box.cloud
-192.168.16.10	phpmyadmin.services.in-a-box.cloud
-192.168.16.10   manager.systems.in-a-box.cloud
-192.168.16.254	api.in-a-box.cloud
+```text
+192.166.16.10  cgit.services.in-a-box.cloud
+192.166.16.10  netbox.services.in-a-box.cloud
+192.168.16.10  ara.services.in-a-box.cloud
+192.168.16.10  flower.services.in-a-box.cloud
+192.168.16.10  homer.services.in-a-box.cloud
+192.168.16.10  phpmyadmin.services.in-a-box.cloud
+192.168.16.10  manager.systems.in-a-box.cloud
+192.168.16.254 api.in-a-box.cloud
 ```
 
-### Webinterfaces
+### Web interfaces
 
 If you want to access the services please choose the URL from the following list:
 
-| Name                    | URL                                         | Username       | Password          | Note                                                            |
-|:------------------------|:--------------------------------------------|:---------------|:------------------|:----------------------------------------------------------------|
-| ARA                     | https://ara.services.in-a-box.cloud         | ara            | password          |                                                                 |
-| Ceph                    | http://manager.systems.in-a-box.cloud:7000  | admin          | password          |                                                                 |
-| Configuration           | https://cgit.services.in-a-box.cloud        | -              | -                 |                                                                 |
-| Flower                  | https://flower.services.in-a-box.cloud      | -              | -                 |                                                                 |
-| Grafana                 | https://api.in-a-box.cloud:3000             | admin          | password          |                                                                 |
-| HAProxy                 | http://manager.systems.in-a-box.cloud:1984  | openstack      | password          |                                                                 |
-| Homer                   | https://homer.services.in-a-box.cloud       | -              | -                 |                                                                 |
-| Horizon                 | https://api.in-a-box.cloud                  | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
-| Netbox                  | https://netbox.services.in-a-box.cloud      | admin          | password          |                                                                 |
-| Netdata                 | http://manager.systems.in-a-box.cloud:19999 | -              | -                 |                                                                 |
-| OpenSearch Dashboards   | https://api.in-a-box.cloud:5601             | opensearch     | password          |                                                                 |
-| RabbitMQ                | https://api.in-a-box.cloud:15672            | openstack      | password          |                                                                 |
-| Skyline                 | https://api.in-a-box.cloud:9999             | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
-| phpMyAdmin              | https://phpmyadmin.services.in-a-box.cloud  | root_shard_0   | password          |                                                                 |
+| Name                  | URL                                         | Username       | Password          | Note                                                            |
+|:----------------------|:--------------------------------------------|:---------------|:------------------|:----------------------------------------------------------------|
+| ARA                   | https://ara.services.in-a-box.cloud         | ara            | password          |                                                                 |
+| Ceph                  | http://manager.systems.in-a-box.cloud:7000  | admin          | password          |                                                                 |
+| Configuration         | https://cgit.services.in-a-box.cloud        | -              | -                 |                                                                 |
+| Flower                | https://flower.services.in-a-box.cloud      | -              | -                 |                                                                 |
+| Grafana               | https://api.in-a-box.cloud:3000             | admin          | password          |                                                                 |
+| HAProxy               | http://manager.systems.in-a-box.cloud:1984  | openstack      | password          |                                                                 |
+| Homer                 | https://homer.services.in-a-box.cloud       | -              | -                 |                                                                 |
+| Horizon               | https://api.in-a-box.cloud                  | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
+| Netbox                | https://netbox.services.in-a-box.cloud      | admin          | password          |                                                                 |
+| Netdata               | http://manager.systems.in-a-box.cloud:19999 | -              | -                 |                                                                 |
+| OpenSearch Dashboards | https://api.in-a-box.cloud:5601             | opensearch     | password          |                                                                 |
+| RabbitMQ              | https://api.in-a-box.cloud:15672            | openstack      | password          |                                                                 |
+| Skyline               | https://api.in-a-box.cloud:9999             | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
+| phpMyAdmin            | https://phpmyadmin.services.in-a-box.cloud  | root_shard_0   | password          |                                                                 |
 
 ### Command-line interfaces
 
 Login to Cloud in a Box as described in step 8 of the installation chapter.
 
 * Select one of the preconfigured environments:
-   - `system`
-   - `admin`
-   - `test`
+  * `system`
+  * `admin`
+  * `test`
 * Set the environment by exporting the environment variable: `OS_CLOUD`:
    ```bash
    export OS_CLOUD=admin
@@ -304,7 +304,7 @@ osism apply configuration
 docker system prune -a
 ```
 
-## Customisations
+## Customizations
 
 ### Use of 2nd NIC for external network
 
@@ -336,13 +336,13 @@ H/W path          Device          Class          Description
 In the following we use `eno7`. Activate the device manually with  `sudo ip link set up dev eno7`.
 Then check that a link is actually present.
 
-```
+```console
 dragon@manager:~$ ethtool eno7
 Settings for eno7:
-	Supported ports: [ FIBRE ]
-	Supported link modes:   10000baseT/Full
-[...]
-	Link detected: yes
+    Supported ports: [ FIBRE ]
+    Supported link modes:   10000baseT/Full
+    [...]
+    Link detected: yes
 ```
 
 Now this device is made permanently known in the network configuration. Select the MTU
@@ -440,12 +440,12 @@ is permitted there.
 After a reboot, there is a very high load for the first few minutes. Depending
 on which CPU is used, this can be over 100.
 
-```
+```console
 dragon@cumulus:~$ uptime
  16:58:12 up 1 min,  1 user,  load average: 101.44, 30.94, 10.78
 ```
 
-After about 5 minutes, when all services have been started, this normalises again
+After about 5 minutes, when all services have been started, this normalizes again
 and the load drops well below 10.
 
 ![Netdata System Load Average](./images/netdata-high-load.png)
@@ -473,6 +473,6 @@ you need to know the following.
 * The installation persists the kernel parameters of the initial boot to the file `/etc/.initial-kernel-commandline`
 * The status and activities of the deployment are logged in `/var/log/install-cloud-in-a-box.log`. For proper colors use `less -r`.
   Search for `OVERALL STATUS` to find the result of the specific installation steps.
-* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overriden
+* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overridden
   by setting the kernel parameters `ciab_repo_url` (a public repository address without authentication) and `ciab_branch`
   (a name of a branch, use only ASCII chars, `-`, and `_`).

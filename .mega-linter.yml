@@ -1,0 +1,27 @@
+# Configuration file for MegaLinter
+#
+# See all available variables at https://megalinter.io/latest/config-file/ and in
+# linters documentation
+
+# all, none, or list of linter keys
+APPLY_FIXES: none
+
+# If you use ENABLE variable, all other languages/formats/tooling-formats will
+# be disabled by default
+# ENABLE:
+
+# If you use ENABLE_LINTERS variable, all other linters will be disabled by
+# default
+# ENABLE_LINTERS:
+
+DISABLE_LINTERS:
+  - CSS_STYLELINT # we focus on the documentation for now
+  - REPOSITORY_GITLEAKS # avoid false positives in documentation repo
+  - REPOSITORY_GRYPE # not needed
+  - REPOSITORY_TRIVY # not needed
+  - REPOSITORY_TRIVY_SBOM # not needed
+  - REPOSITORY_SYFT # not needed
+
+SHOW_ELAPSED_TIME: true
+# Uncomment if you want MegaLinter to detect errors but not block CI to pass
+# DISABLE_ERRORS: true

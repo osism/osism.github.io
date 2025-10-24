@@ -15,62 +15,62 @@ of the APIs. This downtime is usually less than 1 minute.
 
 1. OpenStack client
 
-   ```
+   ```bash
    osism apply openstackclient
    ```
 
 2. Keystone
 
-   ```
+   ```bash
    osism apply -a pull keystone
    osism apply -a upgrade keystone
    ```
 
 3. Glance
 
-   ```
+   ```bash
    osism apply -a pull glance
    osism apply -a upgrade glance
    ```
 
 4. Designate
 
-   ```
+   ```bash
    osism apply -a pull designate
    osism apply -a upgrade designate
    ```
 
 5. Placement
 
-   ```
+   ```bash
    osism apply -a pull placement
    osism apply -a upgrade placement
    ```
 
 6. Cinder
 
-   ```
+   ```bash
    osism apply -a pull cinder
    osism apply -a upgrade cinder
    ```
 
 7. Neutron
 
-   ```
+   ```bash
    osism apply -a pull neutron
    osism apply -a upgrade neutron
    ```
 
 8. Nova
 
-   ```
+   ```bash
    osism apply -a pull nova
    osism apply -a upgrade nova
    ```
 
 9. Octavia
 
-   ```
+   ```bash
    osism apply -a pull octavia
    osism apply -a upgrade octavia
    ```
@@ -85,7 +85,7 @@ of the APIs. This downtime is usually less than 1 minute.
    The OSISM CLI can be used to upload the correct image depending on the OpenStack release
    used.
 
-   ```
+   ```bash
    osism manage image octavia
    ```
 
@@ -96,7 +96,7 @@ of the APIs. This downtime is usually less than 1 minute.
 
 10. Horizon
 
-    ```
+    ```bash
     osism apply -a pull horizon
     osism apply -a upgrade horizon
     ```

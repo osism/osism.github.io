@@ -18,14 +18,14 @@ of the ARA service.
 
 1. Stop the manager service
 
-   ```
+   ```bash
    sudo systemctl stop docker-compose@manager.service
    ```
 
 2. Files on the `/share` volume are backed up in advance and restored after
    the manager service is started.
 
-   ```
+   ```bash
    docker run --rm \
      --mount source=manager_share,target=/share \
      --volume $(pwd):/backup \
@@ -35,19 +35,19 @@ of the ARA service.
 
 3. Delete the manager service. **This is a disruptive action.**
 
-   ```
+   ```bash
    docker compose --project-directory /opt/manager down -v
    ```
 
 4. Start the manager service
 
-   ```
+   ```bash
    sudo systemctl start docker-compose@manager.service
    ```
 
 5. Restore the files on the `/share` volume.
 
-   ```
+   ```bash
    docker run --rm \
      --mount source=manager_share,target=/share \
      --volume $(pwd):/backup \
@@ -57,13 +57,13 @@ of the ARA service.
 
 6. Check that manager service is healthy
 
-   ```
+   ```bash
    docker compose --project-directory /opt/manager ps
    ```
 
    Depending on what the manager service looks like, this output may vary.
 
-   ```
+   ```console
    NAME                             IMAGE                                        COMMAND                  SERVICE                CREATED              STATUS                        PORTS
    ceph-ansible                     quay.io/osism/ceph-ansible:quincy            "/entrypoint.sh osis…"   ceph-ansible           About a minute ago   Up About a minute (healthy)
    kolla-ansible                    quay.io/osism/kolla-ansible:2023.2           "/entrypoint.sh osis…"   kolla-ansible          About a minute ago   Up About a minute (healthy)
@@ -86,7 +86,7 @@ of the ARA service.
 7. When the manager service is healthy, the inventory and the fact cache
    must be rebuilt.
 
-   ```
+   ```bash
    osism reconciler sync
    osism apply facts
    ```

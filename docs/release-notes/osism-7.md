@@ -11,18 +11,18 @@ therefore not only read and take into account the release notes for 7.0.4 but al
 previous release notes. The same applies to an update from, for example, 7.0.2 to 7.0.4.
 The release notes for 7.0.3 must then also be taken into account.
 
-| Release                  | Release Date      |
-|:-------------------------|:------------------|
-| [7.1.3](#713-20240908)   | 8. September 2024 |
-| [7.1.2](#712-20240818)   | 18. August 2024   |
-| [7.1.1](#711-20240812)   | 12. August 2024   |
-| [7.1.0](#710-20240710)   | 10. July 2024     |
-| [7.0.5](#705-20240524)   | 24. May 2024      |
-| [7.0.4](#704-20240507)   | 7. May 2024       |
-| [7.0.3](#703-20240503)   | 3. May 2024       |
-| [7.0.2](#702-20240407)   | 17. April 2024    |
-| [7.0.1](#701-20240327)   | 27. March 2024    |
-| [7.0.0](#700-20240320)   | 20. March 2024    |
+| Release                | Release Date      |
+|:-----------------------|:------------------|
+| [7.1.3](#713-20240908) | 8. September 2024 |
+| [7.1.2](#712-20240818) | 18. August 2024   |
+| [7.1.1](#711-20240812) | 12. August 2024   |
+| [7.1.0](#710-20240710) | 10. July 2024     |
+| [7.0.5](#705-20240524) | 24. May 2024      |
+| [7.0.4](#704-20240507) | 7. May 2024       |
+| [7.0.3](#703-20240503) | 3. May 2024       |
+| [7.0.2](#702-20240407) | 17. April 2024    |
+| [7.0.1](#701-20240327) | 27. March 2024    |
+| [7.0.0](#700-20240320) | 20. March 2024    |
 
 ## 7.1.3 (20240908)
 
@@ -104,7 +104,7 @@ Release date: 18. August 2024
 
 * New features in the `osism.commons.packages` role.
 
-  * The mode of the need start featore of APT can now be configured via the
+  * The mode of the need start feature of APT can now be configured via the
     `packages_needrestart_mode` parameter. By default, services that are to be
     restarted are only listed.
 
@@ -157,15 +157,15 @@ Release date: 12. August 2024
   be done node by node. The upgrade results in a restart of all containers.
 
   If you do not want to upgrade from Docker 24.0.9 to 26.1.4 yet, make sure that the versions are pinned
-  in `environments/configuration.yml`. Double check that the versions there are correct after the configuration repositoryhas been pulled on the manager.
+  in `environments/configuration.yml`. Double check that the versions there are correct after the configuration repository has been pulled on the manager.
 
-  ```
+  ```yaml
   docker_version: "5:24.0.9"
   docker_cli_version: "5:24.0.9"
   ```
 
 * The CAPI and CAPO versions have been changed to 1.7.4 and 0.10.4.. Run `osism apply clusterapi` if you use CAPI management cluster on the
-  ingegrated Kubernetes cluster.
+  integrated Kubernetes cluster.
 
 * New Kolla features.
 
@@ -179,8 +179,8 @@ Release date: 12. August 2024
   * `osism apply openvswitch-sflow` to manage an Open vSwitch sFlow collector
   * `osism apply zabbix_agent` for the deployment of the Zabbix agent
   * `osism validate ceph-connectivity` to validate Ceph network connectivity
-  * `osism validate kolla-connectivity` to valdate Kolla network connectivity
-  * `osism validate ntp` to validate NTP synchronisation
+  * `osism validate kolla-connectivity` to validate Kolla network connectivity
+  * `osism validate ntp` to validate NTP synchronization
 
 ## 7.1.0 (20240710)
 
@@ -220,14 +220,14 @@ Release date: 10. July 2024
 
   * The defaults for the `hosts_*` parameters have been changed from `all` to `generic` in all plays. The default
     for the `hosts_*` parameters has already been set to `generic` in [osism/defaults](https://github.com/osism/defaults).
-    This means that the behaviour does not change.
+    This means that the behavior does not change.
 
   * The old wrapper scripts, e.g. `osism-generic`, are no longer copied. They will be removed in the future.
 
   * There is a new manager service that is used to manage all services on the internal Kubernetes cluster.
     This has to be activated explicitly via the parameter `enable_osism_kubernetes` in `environments/manager/configuration.yml`.
 
-  * Host vars from the configuration repository are no longer synchronised to the Netbox. The config context of hosts
+  * Host vars from the configuration repository are no longer synchronized to the Netbox. The config context of hosts
     from the Netbox can still be used for host vars.
 
 * New Kolla features.
@@ -240,7 +240,7 @@ Release date: 10. July 2024
   * The `haproxy_socket_level_admin` parameter is now set to `yes` by default.
   * With the `kolla_handler_throttle` parameter it is possible to throttle the execution of handlers.
   * If the restart of a container fails in the loadbalancer play, the execution of the play is
-    interrupted immediately. This prevents the master container from being restarted if one of the 
+    interrupted immediately. This prevents the master container from being restarted if one of the
     backup containers fails to restart.
 
 * New roles & plays.
@@ -290,7 +290,7 @@ Release date: 24. May 2024
   * The use of the Netbox as the primary inventory is now optional, even with existing Netbox
     integration. It is therefore important to set the parameter `manager_inventory_from_netbox`
     to `true` before updating the manager service if the Netbox was previously used as the
-    primary inventory. By default, the Netbox is not longer used as the primary inventory.
+    primary inventory. By default, the Netbox is no longer used as the primary inventory.
 
     ```yaml title="environments/manager/configuration.yml
     manager_inventory_from_netbox: true
@@ -336,7 +336,7 @@ Release date: 24. May 2024
     `api-81-163-192-117.traefik.me` to the service-horizon service.
 
     ```yaml
-    traefik_configuration_dyanmic:
+    traefik_configuration_dynamic:
       tcp:
         services:
           service-horizon:
@@ -376,7 +376,7 @@ Release date: 24. May 2024
 
 * New features in the osism.commons.proxy role.
 
-  * Proxy settings are now removed when no proxy setings are set with the `proxy_proxies` parameter.
+  * Proxy settings are now removed when no proxy settings are set with the `proxy_proxies` parameter.
 
 * New playbooks and changes in the existing playbooks.
 
@@ -407,7 +407,7 @@ Release date: 24. May 2024
 * Changes in the Testbed.
 
   * It is now possible to provide the OpenStack APIs and the OpenStack Dashboard via a public IP address
-    with a public DNS record including Letsencrypt certificate via a customisation external-api via the
+    with a public DNS record including Letsencrypt certificate via a customization external-api via the
     manager node.
 
   * Ansible, which is required to initially deploy the Manager, is now installed in a virtual environment.
@@ -416,7 +416,7 @@ Release date: 24. May 2024
 * The CLI of the [Simple Stress tool](https://github.com/osism/openstack-simple-stress) has been changed
   to [Typer](https://typer.tiangolo.com). Units tests for improving code quality have been added.
 
-* New Kubernetes CAPI images for the Kubernetes serias 1.27, 1.28, 1.29, and 1.30 are available.
+* New Kubernetes CAPI images for the Kubernetes releases 1.27, 1.28, 1.29, and 1.30 are available.
 
 * To avoid confusion, `rolling-upgrade` has been removed as a supported action for the `osism apply`
   command. The `upgrade` action should always and exclusively be used.
@@ -430,7 +430,7 @@ originally stated in the release notes for OSISM 7.0.3. Therefore it was unfortu
 to release a 7.0.4 which contains the correct SBOM. In 7.0.4 nothing has changed except the SBOM.
 The correct images for Nova and Octavia are now included in 7.0.4 and the bugs listed below have
 been fixed. An update of the Manager Service must be done and then, if required, an update of Nova
-and Octavia can be updated as originally planned for OSISM 7.0.3. We apologise for the mistake and
+and Octavia can be updated as originally planned for OSISM 7.0.3. We apologize for the mistake and
 the resulting effort.
 
 * The OpenStack service images for Octavia and Nova have been rebuilt. Upgrades of the Octavia
@@ -461,7 +461,7 @@ the resulting effort.
   **To avoid the delay during an upgrade, a fix must be applied in advance for all service units from
   Kolla.**
 
-  ```
+  ```console
   osism apply fix-gh973
   ```
 * The Kubernetes Cluster API image for the Kubernetes (K8s) 1.30 series is available. The images are now provided directly with
@@ -483,7 +483,7 @@ the resulting effort.
 * When using the reboot play, it is now possible to wait for the reboot to be completed ([osism/issues#758](https://github.com/osism/issues/issues/758)).
 
 
-  ```
+  ```console
   osism apply reboot \
     -e reboot_wait=yes \
     -e ireallymeanit=yes
@@ -513,7 +513,7 @@ the resulting effort.
   The scripts must be executable.
 
 * Versions not yet pinned in the manager environment of the configuration repository (Ansible collections, `osism/cfg-generics`, ..)
-  are now automatically pinned during synchronisation with `gilt overlay`. This also applies to the
+  are now automatically pinned during synchronization with `gilt overlay`. This also applies to the
   `osism update manager` script.
 
 * The Docker version and the Docker CLI version can now also be managed via `osism/cfg-generics`.
@@ -540,7 +540,7 @@ the resulting effort.
   The following example now makes it possible when adding new OSDs to really only start the OSDs that
   have been newly added and to avoid a restart of all OSDs in the cluster or on a node.
 
-  ```
+  ```console
   osism apply ceph-osds -e ceph_handler_osds_restart=False
   ```
 
@@ -585,7 +585,7 @@ the resulting effort.
 * Use a single network for Ceph frontend & backend in the cookiecutter. More information in the
   [Ceph network configuration reference](https://docs.ceph.com/en/latest/rados/configuration/network-config-ref/).
 
-* When synchronising the configuration repository, it is now ensured that you are on the correct branch.
+* When synchronizing the configuration repository, it is now ensured that you are on the correct branch.
 
 * Senlin images available again as rolling tag for OpenStack 2023.2.
 
@@ -637,7 +637,7 @@ the resulting effort.
 * With `ceph_serial` it is now possible to define how many hosts Ansible should manage at a single time
   in the Ceph plays.
 
-  ```
+  ```console
   osism apply ceph-mgrs -e ceph_serial=1
   ```
 
@@ -691,7 +691,7 @@ the resulting effort.
 
 * Shortly before the release, [gilt](https://github.com/retr0h/gilt)
   made a major release which led to breaking changes. It is therefore important
-  for the moment to install `python-gilt < 2` when synchronising the
+  for the moment to install `python-gilt < 2` when synchronizing the
   configuration repository against the generics. In the CI and within the container
   images, we currently use `python-gilt == 1.2.3`. This is also the version that's
   currently installed in the container images and that's set in the `requirements.txt`.
@@ -730,7 +730,7 @@ the resulting effort.
   This requires an additional database, which is only created when Octavia play is run in bootstrap mode
   first.
 
-  ```
+  ```console
   osism apply -a bootstrap octavia
   ```
 
@@ -746,11 +746,11 @@ the resulting effort.
   of Ceph we still use the ceph-ansible project. For the next release a tool called [rookify](https://github.com/sovereigncloudstack/rookify) is planned to
   migrate the Ceph deployment from ceph-ansible to Rook.
 
-* CentOS 9 support in `osism.commons`` & `osism.services`` Ansible collection.
+* CentOS 9 support in `osism.commons` & `osism.services` Ansible collection.
 
-  * The roles of the `osism.commons`` collection are now usable with CentOS 9. The roles have been tested with
+  * The roles of the `osism.commons` collection are now usable with CentOS 9. The roles have been tested with
     CentOS 9.
-  * The roles of the `osism.services`` collection are now usable with CentOS 9. The roles have been tested with
+  * The roles of the `osism.services` collection are now usable with CentOS 9. The roles have been tested with
     CentOS 9.
 
 * With the [openstack-resource-manager](https://github.com/osism/openstack-resource-manager) it is now possible to
@@ -758,7 +758,7 @@ the resulting effort.
 
 * Kubernetes can now be deployed with [k3s-ansible](https://github.com/k3s-io/k3s-ansible) on the management plane and the control plane.
 
-* It is now possible to manage the Ceph pools independently of `ceph-osds`` play using the `ceph-pools` play.
+* It is now possible to manage the Ceph pools independently of `ceph-osds` play using the `ceph-pools` play.
 
 ### Upgrade notes
 
@@ -786,7 +786,7 @@ the resulting effort.
   upgrade of the OpenStack services. To avoid problems during the upgrade, it is important
   to assign this role to all existing service accounts in advance.
 
-  ```
+  ```console
   # List all users in the project service with the admin role. The existing service
   # accounts depend on the deployed services and may vary.
   $ openstack --os-cloud admin role assignment list --names --role admin --project service
@@ -892,13 +892,13 @@ the resulting effort.
 
 * The SSL certificate file `haproxy.pem` is now available in a different location in the
   `haproxy` container. Previously it was stored under `/etc/haproxy/haproxy.pem`. From
-  now on it is stored under `/etc/haproxy/certificates/haproxy.pem`. If you have customised
+  now on it is stored under `/etc/haproxy/certificates/haproxy.pem`. If you have customized
   the configuration for the haproxy service or use overlays for this, adjust the locations of
   the SSL certificate as required.
 
 * Due to the upgrade from Fluentd to version 5, some directory names within the container
   image for Fluentd have changed. If you have worked with overlay files in the Fluentd service,
-  check these in advance. Currently we know that ``/var/run/td-agent`` is now available as
+  check these in advance. Currently we know that `/var/run/td-agent` is now available as
   `/var/run/fluentd` (check [osism/issues#864](https://github.com/osism/issues/issues/864)
   for details).  We assume that other directory names have changed similarly.
 
@@ -961,7 +961,7 @@ the resulting effort.
 
 Refstack 2022.11 results:
 
-```
+```text
 ======
 Totals
 ======

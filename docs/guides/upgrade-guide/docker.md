@@ -14,7 +14,7 @@ docker_version: '5:20.10.24'
 
 All installable versions can be displayed with `apt-cache madison docker-ce`.
 
-```
+```console
 $ apt-cache madison docker-ce
  docker-ce | 5:24.0.6-1~ubuntu.22.04~jammy | https://download.docker.com/linux/ubuntu jammy/stable amd64 Packages
  docker-ce | 5:24.0.5-1~ubuntu.22.04~jammy | https://download.docker.com/linux/ubuntu jammy/stable amd64 Packages
@@ -51,7 +51,7 @@ The upgrade of Docker is then done with the OSISM CLI. Docker on the manager its
 This does not work on the manager itself because the Docker service may be started during the upgrade and
 individual containers may be started as a result. This would interrupt the run of the role itself.
 
-```
+```console
 osism apply docker -l 'docker:!manager'
 ```
 
@@ -73,12 +73,12 @@ On the manager itself, the `run.sh` script in the manager environment of the con
 currently be used to upgrade the Docker service. In a future release a dedicated `osism update docker`
 command will be available for this purpose.
 
-```
+```bash
 cd /opt/configuration/environments/manager
 ANSIBLE_ASK_VAULT_PASS=True ./run.sh docker
 ```
 
-## Restart behaviour
+## Restart behavior
 
 When upgrading, the Docker service is restarted. As a result, it can come to a restart of the
 running containers. This can lead to interruptions in individual services. A change in
@@ -100,7 +100,7 @@ to be restarted:
 
 There are two ways to prevent a restart of the Docker service during an upgrade.
 
-If the restart behaviour of the Docker service is changed, always make sure to restart the
+If the restart behavior of the Docker service is changed, always make sure to restart the
 Docker service manually afterwards (e.g. by a system reboot).
 
 1. A host group can be defined via the parameter `docker_ignore_restart_groupname`. The
@@ -118,6 +118,6 @@ Docker service manually afterwards (e.g. by a system reboot).
    this parameter only at runtime. Otherwise, the best place for the parameter is the
    `environments/configuration.yml` file.
 
-   ```
+   ```console
    osism apply docker -e docker_allow_restart=false
    ```

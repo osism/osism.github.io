@@ -26,7 +26,7 @@ A good overview and comparison of VMWare resources and their OpenStack counterpa
 * a Linux converter host is installed and ready, we also have root access to it
 * an IPv4 address (`10.50.40.230`) will be given manually out of a preconfigured network
 * we migrate one host with a kernel newer then 2.6.25 with two scsi harddrives attached and one networkcard
-* destination openstack using Libvirt/KVM as virtualisation
+* destination openstack using Libvirt/KVM as virtualization
 * the converter host has access to ESXi and the OpenStack environment over IP network
 
 ## Requirements
@@ -36,7 +36,7 @@ A good overview and comparison of VMWare resources and their OpenStack counterpa
   * access to the webinterface of the ESXi host
 * OpenStack credentials
 
-* Linux packages installed on the coverter, in this case it is an Ubuntu 22.04
+* Linux packages installed on the converter, in this case it is an Ubuntu 22.04
 
   ```sh
   apt-get install qemu-utils python3-openstackclient
@@ -46,7 +46,7 @@ A good overview and comparison of VMWare resources and their OpenStack counterpa
 
 ## Prechecks
 
-Check the `/etc/fstab` file of your VMware ESXi host you want to move. See how all the discs or paritions are mounted.
+Check the `/etc/fstab` file of your VMware ESXi host you want to move. See how all the discs or partitions are mounted.
 If they are all mounted by LVM or UUID you do not need to change anything.
 
 ```txt title="cat /etc/fstab"
@@ -88,7 +88,7 @@ Also check your NIC interface configuration as the devicenames can change to a n
 
 This depends on the udev or systemd setup of your specific system.
 
-It needs to be changed to either DCHP if you want to use floating IPs or static IP of the new network.
+It needs to be changed to either DHCP if you want to use floating IPs or static IP of the new network.
 
 ## Migration
 
@@ -101,7 +101,7 @@ Otherwise you will get corrupted disc files.
 
 You can use either the webinterface or SSH to identify and copy the `*.vmdk` files of your VMware ESXi host.
 
-While using the web interface you need to locate the datastore and the directoy where the disc files are
+While using the web interface you need to locate the datastore and the directory where the disc files are
 located and start downloading all vmdk files. You will always get files files for a disc, a smaller and a
 larger one, both are required.
 
@@ -112,14 +112,14 @@ files under `/vmfs/volumes/`.
 
 Example SSH copy and path of all vmdk files to the converter host using the scp command for our testing-host:
 
-```
+```bash
 scp user@vmhost:/vmfs/volumes/datastore1/testing-host/*.vmdk .
 ```
 
 After copying is finished, we find several vmdk files in our directory.
 We copied two disc images:
 
-```
+```console
 testing-host-disc0-flat.vmdk testing-host-disc1.vmdk
 testing-host-disc0.vmdk      testing-host-disc1-flat.vmdk
 ```
@@ -130,7 +130,7 @@ testing-host-disc0.vmdk      testing-host-disc1-flat.vmdk
 
 Now convert those vmdk files into raw images with the following flags:
 
-```
+```console
 -p show progress (optional)
 -f Input Format
 -O Output Format
@@ -140,7 +140,7 @@ Raw files are required to import images into OpenStack.
 
 :::
 
-```
+```bash
 qemu-img convert -p -f vmdk -O raw testing-host-disc0.vmdk testing-host-disc0.raw
 ```
 
@@ -154,7 +154,7 @@ This step is completely optional and you should have some Linux knowledge to do 
 
 :::
 
-After converting the images of a Linux host, you now have the possibilty to edit some settings offline before importing the images into OpenStack.
+After converting the images of a Linux host, you now have the possibility to edit some settings offline before importing the images into OpenStack.
 
 By mounting the raw image files you can edit the configuration files to, e.g.:
 - disable mountpoints at the fstab, like nfs server
@@ -164,13 +164,13 @@ By mounting the raw image files you can edit the configuration files to, e.g.:
 
 On Ubuntu you can use losetup to mount the raw image as a loopdevice to mount it somewhere you have access to.
 
-```txt example of mounting and raw image
+```bash
 losetup -f -P testing-host-disc0.raw
 losetup -l
 
 mount /dev/loop0p1 /mnt/test/
-or
-lvscan and mount the lvm volume
+# or
+lvscan # and mount the lvm volume
 ```
 
 ### How to import Images
@@ -181,13 +181,13 @@ The openstack cli client is now able to connect to the cloud environment and do 
 
 To get your credentials please check with your OpenStack provider.
 
-If you want to preserve the `/dev/sd*` device names of the mountpoints, you must inject the new image and add some properties while uploading it into the OpenStack environment or add them later on to the images with Horzion web interface or openstack cli client.
+If you want to preserve the `/dev/sd*` device names of the mountpoints, you must inject the new image and add some properties while uploading it into the OpenStack environment or add them later on to the images with Horizon web interface or openstack cli client.
 
-```
+```bash
 openstack image create --progress --property hw_disk_bus=scsi --property hw_scsi_model=virtio-scsi --property hw_watchdog_action=reset --disk-format raw --private --file testing-host-disc0.raw  testing-host-image-disc0
 ```
 
-```
+```console
 openstack image list
 +--------------------------------------+------------------------------+--------+
 | ID                                   | Name                         | Status |
@@ -209,7 +209,7 @@ As the images are 20GB, you tell openstack that you need a boot volume with a si
 
 In this guide there is already a security group which fits our needs, if not, create one or you will not be able to communicate with your new host.
 
-```
+```console
 openstack security group list
 +--------------------------------------+-----------------+------------------------------+----------------------------------+------+
 | ID                                   | Name            | Description                  | Project                          | Tags |
@@ -225,7 +225,7 @@ Now you need to tell which network you want to deploy your host on, optionally i
 
 You can repeat the `--nic` for additional nics in your server, in this guide it's the my_corp_net.
 
-```
+```console
 openstack network list
 +--------------------------------------+-------------------+--------------------------------------+
 | ID                                   | Name              | Subnets                              |
@@ -240,7 +240,7 @@ As last parameter, you give the server name of your migrated system.
 
 As we are starting an already configured system we do not need to inject SSH keys or passwords as they should already be present on the host.
 
-```
+```bash
 openstack server create --flavor SCS-8V-16 \
  --image 2a12b545-5d09-4ca1-9a76-b57f8d2489be --boot-from-volume 20 \
  --security-group 73967e73-e8d5-4318-b621-a06e7496fec3 \
@@ -251,7 +251,7 @@ openstack server create --flavor SCS-8V-16 \
 
 ### Show your new server
 
-```
+```console
 openstack server list
 +--------------------------------------+------------------+---------+----------------------------------+--------------------------+-----------+
 | ID                                   | Name             | Status  | Networks                         | Image                    | Flavor    |
@@ -261,7 +261,7 @@ openstack server list
 ```
 To see the attached volumes and their mountpoints:
 
-```
+```console
 openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc
 +----------+--------------------------------------+--------------------------------------+------+------------------------+--------------------------------------+--------------------------------------+
 | Device   | Server ID                            | Volume ID                            | Tag  | Delete On Termination? | Attachment ID                        | BlockDeviceMapping UUID              |
@@ -275,7 +275,7 @@ openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc
 
 To get the VNC URL for console login use:
 
-```
+```console
 openstack console url show 71a8b930-4212-434a-8891-afdeeb1802dc
 +----------+-------------------------------------------------------------------------------------------+
 | Field    | Value                                                                                     |
@@ -304,4 +304,4 @@ another host with the same images.
 In this little guide, we only can give a sneak peak of what you need to do with a simple VMware ESXi host.
 More complex setups needs consulting, planning and testing as there a several scenarios out there which
 cannot be handled like this.
-Especially if you have terrabytes of data to move or graphics- or AIcards in you VMware ESXi hosts.
+Especially if you have terabytes of data to move or graphics- or AIcards in you VMware ESXi hosts.

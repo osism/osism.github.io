@@ -77,7 +77,7 @@ the help of the OpenStack Image Manager.
 
    The installation can also be done via [pipenv](https://pypi.org/project/pipenv/).
 
-   A `Pipefile` file is created with this content. The [latest version of openstack-image-manager](https://pypi.org/project/openstack-image-manager/#history)
+   A `Pipfile` file is created with this content. The [latest version of openstack-image-manager](https://pypi.org/project/openstack-image-manager/#history)
    is used.
 
    ```ini
