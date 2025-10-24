@@ -14,9 +14,14 @@ APPLY_FIXES: none
 # default
 # ENABLE_LINTERS:
 
-# DISABLE:
-  # - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
-  # - SPELL # Uncomment to disable checks of spelling mistakes
+DISABLE_LINTERS:
+  - COPYPASTE_JSCPD # we copy paste a lot of things to keep pages easy to read
+  - CSS_STYLELINT # we focus on the documentation for now
+  - REPOSITORY_GITLEAKS # avoid false positives in documentation repo
+  - REPOSITORY_GRYPE # not needed
+  - REPOSITORY_TRIVY # not needed
+  - REPOSITORY_TRIVY_SBOM # not needed
+  - REPOSITORY_SYFT # not needed
 
 SHOW_ELAPSED_TIME: true
 
