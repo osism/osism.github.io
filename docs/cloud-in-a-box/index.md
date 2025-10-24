@@ -206,7 +206,7 @@ scp dragon@IP_ADDRESS_FROM_YOUR_SERVER:/home/dragon/wireguard-client.conf $HOME/
 
 Install Wireguard on your workstation, if you have not done this before. For instructions how to do
 it on your workstation, please have a look on the documentation of your used distribution. The
-Wireguard documentation you will find [here](https://www.wireguard.com).
+Wireguard documentation can be found at [https://www.wireguard.com](https://www.wireguard.com).
 
 Start the Wireguard tunnel.
 
@@ -263,9 +263,9 @@ If you want to access the services please choose the URL from the following list
 Login to Cloud in a Box as described in step 8 of the installation chapter.
 
 * Select one of the preconfigured environments:
-   - `system`
-   - `admin`
-   - `test`
+  * `system`
+  * `admin`
+  * `test`
 * Set the environment by exporting the environment variable: `OS_CLOUD`:
    ```bash
    export OS_CLOUD=admin
@@ -339,10 +339,10 @@ Then check that a link is actually present.
 ```console
 dragon@manager:~$ ethtool eno7
 Settings for eno7:
-	Supported ports: [ FIBRE ]
-	Supported link modes:   10000baseT/Full
-[...]
-	Link detected: yes
+    Supported ports: [ FIBRE ]
+    Supported link modes:   10000baseT/Full
+    [...]
+    Link detected: yes
 ```
 
 Now this device is made permanently known in the network configuration. Select the MTU

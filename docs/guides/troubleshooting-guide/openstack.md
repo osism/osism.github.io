@@ -69,15 +69,15 @@ sidebar_position: 40
       ```bash
       docker exec rabbitmq rabbitmqctl list_queues name type state consumers messages | grep -E '^cinder'
       ```
-   * If everything seems fine check network connectivity to rule out network issues
-     ```bash
-     osism validate kolla-connectivity
-     ```
-   * If networking is fine then as a last resort a reset of rabbitmq may be considered
-     Beware that this will destroy rabbitmq state which may result in inconsistent resource states
-     ```bash
-     osism apply rabbitmq-reset-state
-     ```
+    * If everything seems fine check network connectivity to rule out network issues
+      ```bash
+      osism validate kolla-connectivity
+      ```
+    * If networking is fine then as a last resort a reset of rabbitmq may be considered
+      Beware that this will destroy rabbitmq state which may result in inconsistent resource states
+      ```bash
+      osism apply rabbitmq-reset-state
+      ```
 
 ## Redeploying compute node results in nova-compute service startup error
 

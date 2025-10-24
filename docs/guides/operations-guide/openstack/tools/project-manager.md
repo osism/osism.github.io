@@ -27,6 +27,7 @@ pipenv shell
 
 
 ### create.py
+
 The `create.py` command and his default options while executing the command.
 
 ```text
@@ -86,7 +87,7 @@ The cloud profile to be used can be specified via the optional --cloud parameter
 The Openstack Project Manager essentially consists of two parts, the `create.py` and the `manage.py`, there are more scripts for handling users using ldap which needs more configuration setup.
 
 
-### create.py
+### Working with the create.py command
 
 This command is used to create and modify domains, projects, users and quotas. As default the domain is used as prefix for all projects and users created for easy allocation in Openstack.
 
@@ -284,7 +285,7 @@ $ python3 src/create.py --domain democompany --name service
 ```
 
 
-### manage.py
+### Working with the manage.py command
 
 :::warning
 

@@ -6,7 +6,7 @@ sidebar_label: Kubernetes
 
 ## Hubble
 
-## Get service IP address
+## Get service IP address of hubble-ui
 
 ```console
 $ kubectl get service -n kube-system hubble-ui
@@ -16,7 +16,7 @@ hubble-ui   LoadBalancer   10.43.136.133   172.31.252.0   80:31797/TCP   6h22m
 
 ## Headlamp
 
-## Get service IP address
+## Get service IP address of headlamp
 
 ```console
 $ kubectl get service -n kube-system headlamp

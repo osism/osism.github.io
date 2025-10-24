@@ -11,5 +11,9 @@
   "MD033": false,
   "MD034": false,
   "MD036": false,
+  "MD041": false,
+  "MD046": {
+    "style": "fenced"
+  },
   "blank_lines": false
 }

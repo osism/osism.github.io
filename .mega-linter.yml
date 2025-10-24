@@ -24,6 +24,13 @@ DISABLE_LINTERS:
   - REPOSITORY_SYFT # not needed
 
 SHOW_ELAPSED_TIME: true
-
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
 # DISABLE_ERRORS: true
+
+MARKDOWN_FILTER_REGEX_EXCLUDE: "src"
+MARKDOWN_MARKDOWNLINT_FILE_EXTENSIONS:
+  - ".md"
+  - ".mdx"
+MARKDOWN_MARKDOWN_TABLE_FORMATTER_FILE_EXTENSIONS:
+  - ".md"
+  - ".mdx"

@@ -2,13 +2,13 @@
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
-### Installation
+## Installation
 
 ```bash
 npm install --global yarn
 ```
 
-### Local Development
+## Local Development
 
 ```bash
 yarn start

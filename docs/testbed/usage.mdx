@@ -45,7 +45,7 @@ make vpn-wireguard-config ENVIRONMENT=regiocloud
 
 ### sshuttle
 
-Install [sshuttle](https://github.com/sshuttle/sshuttle) on your workstation, then start the sshuttle tunnel. 
+Install [sshuttle](https://github.com/sshuttle/sshuttle) on your workstation, then start the sshuttle tunnel.
 
 ```bash
 make vpn-sshuttle ENVIRONMENT=regiocloud
@@ -162,7 +162,7 @@ In the testbed, three volumes per node are provided for use by Ceph by default. 
 these devices are used as OSDs during the initial deployment. The third device is intended
 for testing the addition of a further OSD to the Ceph cluster.
 
-1. Add `sdd` to `ceph_osd_devices` in `/opt/configuration/inventory/host_vars/testbed-node-0/ceph-lvm-configuration.yml`. 
+1. Add `sdd` to `ceph_osd_devices` in `/opt/configuration/inventory/host_vars/testbed-node-0/ceph-lvm-configuration.yml`.
 
 :::info
 

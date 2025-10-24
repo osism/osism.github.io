@@ -429,7 +429,7 @@ set the `openstack_version` and the `ceph_version` explicitly.
 | `git_version`       | Git branch name                                                                                                                            | `main`                                   |
 | `ip_external`       | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                         |
 | `ip_internal`       | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                           |
-| `manager_version`   | The version of OSISM. An overview of available OSISM releases can be found [here](https://osism.tech/docs/release-notes/)                  | `7.0.4`                                  |
+| `manager_version`   | The version of OSISM. An overview of available OSISM releases can be found on the [release page](https://osism.tech/docs/release-notes/)   | `7.0.4`                                  |
 | `name_server`       | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                        |
 | `ntp_server`        | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                        |
 | `openstack_version` | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                 |

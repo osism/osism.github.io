@@ -2,7 +2,6 @@
 sidebar_label: Deployment
 sidebar_position: 2
 ---
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -39,7 +38,9 @@ This section describes step by step how to deploy the OSISM Testbed.
    be identical. It is currently not possible to name the cloud `regiocloud-123` in `clouds.yaml` if the
    environment is `regiocloud`.
 
-   If another cloud is used, replace `regiocloud` with the respective profile name [from the table above](#cloud-access).
+   If another cloud is used, replace `regiocloud` with the respective profile
+   name
+   [from the table on the prerequisites page](prerequisites.mdx#cloud-access).
 
    <Tabs>
    <TabItem value="testbed-cloud-access-with-app-credentials" label="Application Credentials">
@@ -106,15 +107,15 @@ This section describes step by step how to deploy the OSISM Testbed.
    ```
 
    :::tip
-   
+
    If any error occurs during preparation, and you want to run the preparation
    again, it is important to run `make wipe-local-install` first. Otherwise, the
    preparation will not be redone completely, and necessary parts will be missing
    later on.
-   
+
    :::
 
-## Start deployment 
+## Start deployment
 
 1. Create the infrastructure with OpenTofu.
 
@@ -203,7 +204,7 @@ This section describes step by step how to deploy the OSISM Testbed.
    <TabItem value="testbed-deploy-single-step" label="Deployment of all services">
    In this single-step deployment, Ceph, OpenStack and all necessary
    infrastructure services (MariaDB, RabbitMQ, ...) are deployed.
-   Depending on the cloud, the deployment will take some time. Up to two hours is not unusual. 
+   Depending on the cloud, the deployment will take some time. Up to two hours is not unusual.
 
    ```bash
    make ENVIRONMENT=regiocloud deploy

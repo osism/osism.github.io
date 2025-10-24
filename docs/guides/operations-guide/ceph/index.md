@@ -489,7 +489,7 @@ it can take some time for the scrub to start.
 
 :::
 
-### HEALTH_WARN - Large omap objects found...
+### HEALTH_WARN - Large omap objects found
 
 Finding PGs which have large OMAP objects:
 

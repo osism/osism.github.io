@@ -2,7 +2,6 @@
 sidebar_label: Ceph
 sidebar_position: 30
 ---
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -63,96 +62,97 @@ vm.min_free_kbytes=4194303
 
 1. Add following configuration in `environments/ceph/configuration.yml`
 
-   <Tabs>
-   <TabItem value="osism-9" label="OSISM >= 9.0.0">
-   ```yaml title="environments/ceph/configuration.yml"
-   ceph_conf_overrides:
-     "client.rgw.{{ rgw_zone }}.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
-       "rgw content length compat": "true"
-       "rgw enable apis": "swift, s3, admin"
-       "rgw keystone accepted roles": "member, admin"
-       "rgw keystone accepted admin roles": "admin"
-       "rgw keystone admin domain": "default"
-       "rgw keystone admin password": "{{ ceph_rgw_keystone_password }}"
-       "rgw keystone admin project": "service"
-       "rgw keystone admin tenant": "service"
-       "rgw keystone admin user": "ceph_rgw"
-       "rgw keystone api version": "3"
-       "rgw keystone url": "https://api-int.testbed.osism.xyz:5000"
-       "rgw keystone verify ssl": "false"
-       "rgw keystone implicit tenants": "true"
-       "rgw s3 auth use keystone": "true"
-       "rgw swift account in url": "true"
-       "rgw swift versioning enabled": "true"
-   ```
-   </TabItem>
-   <TabItem value="osism-8" label="OSISM < 9.0.0">
-   ```yaml title="environments/ceph/configuration.yml"
-   ceph_conf_overrides:
-     "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
-       "rgw content length compat": "true"
-       "rgw enable apis": "swift, s3, admin"
-       "rgw keystone accepted roles": "member, admin"
-       "rgw keystone accepted admin roles": "admin"
-       "rgw keystone admin domain": "default"
-       "rgw keystone admin password": "{{ ceph_rgw_keystone_password }}"
-       "rgw keystone admin project": "service"
-       "rgw keystone admin tenant": "service"
-       "rgw keystone admin user": "ceph_rgw"
-       "rgw keystone api version": "3"
-       "rgw keystone url": "https://api-int.testbed.osism.xyz:5000"
-       "rgw keystone verify ssl": "false"
-       "rgw keystone implicit tenants": "true"
-       "rgw s3 auth use keystone": "true"
-       "rgw swift account in url": "true"
-       "rgw swift versioning enabled": "true"
-   ```
-   </TabItem>
-   </Tabs>
+    <Tabs>
+    <TabItem value="osism-9" label="OSISM >= 9.0.0">
+    ```yaml title="environments/ceph/configuration.yml"
+    ceph_conf_overrides:
+      "client.rgw.{{ rgw_zone }}.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
+        "rgw content length compat": "true"
+        "rgw enable apis": "swift, s3, admin"
+        "rgw keystone accepted roles": "member, admin"
+        "rgw keystone accepted admin roles": "admin"
+        "rgw keystone admin domain": "default"
+        "rgw keystone admin password": "{{ ceph_rgw_keystone_password }}"
+        "rgw keystone admin project": "service"
+        "rgw keystone admin tenant": "service"
+        "rgw keystone admin user": "ceph_rgw"
+        "rgw keystone api version": "3"
+        "rgw keystone url": "https://api-int.testbed.osism.xyz:5000"
+        "rgw keystone verify ssl": "false"
+        "rgw keystone implicit tenants": "true"
+        "rgw s3 auth use keystone": "true"
+        "rgw swift account in url": "true"
+        "rgw swift versioning enabled": "true"
+    ```
+    </TabItem>
+    <TabItem value="osism-8" label="OSISM < 9.0.0">
+    ```yaml title="environments/ceph/configuration.yml"
+    ceph_conf_overrides:
+      "client.rgw.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
+        "rgw content length compat": "true"
+        "rgw enable apis": "swift, s3, admin"
+        "rgw keystone accepted roles": "member, admin"
+        "rgw keystone accepted admin roles": "admin"
+        "rgw keystone admin domain": "default"
+        "rgw keystone admin password": "{{ ceph_rgw_keystone_password }}"
+        "rgw keystone admin project": "service"
+        "rgw keystone admin tenant": "service"
+        "rgw keystone admin user": "ceph_rgw"
+        "rgw keystone api version": "3"
+        "rgw keystone url": "https://api-int.testbed.osism.xyz:5000"
+        "rgw keystone verify ssl": "false"
+        "rgw keystone implicit tenants": "true"
+        "rgw s3 auth use keystone": "true"
+        "rgw swift account in url": "true"
+        "rgw swift versioning enabled": "true"
+    ```
+    </TabItem>
+    </Tabs>
 
-   If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
-   expand it and do not overwrite it.
+    If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
+    expand it and do not overwrite it.
 
-   If self-signed SSL certificates are used, two additional parameters must be set.
+    If self-signed SSL certificates are used, two additional parameters must be set.
 
-   ```yaml title="environments/ceph/configuration.yml"
-    "rgw keystone verify ssl": "false"
-    "rgw verify ssl": "false"
-   ```
+    ```yaml title="environments/ceph/configuration.yml"
+     "rgw keystone verify ssl": "false"
+     "rgw verify ssl": "false"
+    ```
 
-   For all possible configuration parameters visit the
-   [Ceph configuration reference](https://docs.ceph.com/en/quincy/radosgw/config-ref/).
+    For all possible configuration parameters visit the
+    [Ceph configuration reference](https://docs.ceph.com/en/quincy/radosgw/config-ref/).
 
 2. Add the `ceph_rgw_keystone_password` from `environments/kolla/secrets.yml` to
    `environments/ceph/secrets.yml`.
 
 3. Add following configuration in `environments/kolla/configuration.yml`
 
-   ```yaml title="environments/kolla/configuration.yml"
-   enable_ceph_rgw: true
-   enable_ceph_rgw_keystone: true
+    ```yaml title="environments/kolla/configuration.yml"
+    enable_ceph_rgw: true
+    enable_ceph_rgw_keystone: true
 
-   ceph_rgw_swift_compatibility: false
-   ceph_rgw_swift_account_in_url: true
-   ```
-4. On the nodes on which the RGW service is to be deployed, `radowsgw_interface` **or**
+    ceph_rgw_swift_compatibility: false
+    ceph_rgw_swift_account_in_url: true
+    ```
+
+4. On the nodes on which the RGW service is to be deployed, `radosgw_interface` **or**
    `radosgw_address` must be set in the host vars for the nodes in the inventory.
-   If `radowsgw_interface` is used, the first IPv4 address on this interface is used.
+   If `radosgw_interface` is used, the first IPv4 address on this interface is used.
 
-   ```yaml title=inventory/host_vars/testbed-node-0.testbed.osism.xyz/vars.yml
-   ##########################################################
-   # ceph
+    ```yaml title=inventory/host_vars/testbed-node-0.testbed.osism.xyz/vars.yml
+    ##########################################################
+    # ceph
 
-   radosgw_address: 192.168.16.10
-   ```
+    radosgw_address: 192.168.16.10
+    ```
 
 5. The nodes on which the RGW service is to be deployed can be defined in inventory group
    `ceph-rgw`. By default, the RGW services are deployed on the Ceph control nodes..
 
-   ```ini title="inventory/20-roles"
-   [ceph-rgw:children]
-   ceph-control
-   ```
+    ```ini title="inventory/20-roles"
+    [ceph-rgw:children]
+    ceph-control
+    ```
 
 ## Pools and Keys
 
@@ -237,208 +237,208 @@ The extra keys can then be fetched and copied by calling `osism apply ceph-copy-
    add a configuration like the following to it. Ensure that no `devices` parameter
    is present in the file.
 
-   1. Parameters
+    1. Parameters
 
-      * With the optional parameter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
-        set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
-        for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
+        * With the optional parameter `ceph_osd_db_wal_devices_buffer_space_percent` it is possible to
+          set the percentage of VGs to leave free. The parameter is not set by default. Can be helpful
+          for SSD performance of some older SSD models or to extend lifetime of SSDs in general.
+
+          ```yaml
+          ceph_osd_db_wal_devices_buffer_space_percent: 10
+          ```
+        * It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
+          `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
+        * It is always possible to use device names such as `sda` or device IDs such as
+          `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`. `/dev/` is not
+          prefixed and is added automatically.
+        * The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
+        * The `wal_size` parameter is optional and defaults to `2 GB`.
+        * The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
+        * The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
+        * The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
+
+    2. OSD only
+
+        The `sda` device will be used as an OSD device without WAL and DB device.
 
         ```yaml
-        ceph_osd_db_wal_devices_buffer_space_percent: 10
+        ceph_osd_devices:
+          sda:
         ```
-      * It is possible to configure the devices to be used with the parameters `ceph_osd_devices`,
-        `ceph_db_devices`, `ceph_wal_devices`, and `ceph_db_wal_devices`. This is described below.
-      * It is always possible to use device names such as `sda` or device IDs such as
-        `disk/by-id/wwn-<something>` or `disk/by-id/nvme-eui.<something>`. `/dev/` is not
-        prefixed and is added automatically.
-      * The `db_size` parameter is optional and defaults to `(VG size - buffer space (if enabled)) / num_osds`.
-      * The `wal_size` parameter is optional and defaults to `2 GB`.
-      * The `num_osds` parameter specifies the maximum number of OSDs that can be assigned to a WAL device or DB device.
-      * The optional parameter `wal_pv` can be used to set the device that is to be used as the WAL device.
-      * The optional parameter `db_pv` can be used to set the device that is to be used as the DB device.
-
-   2. OSD only
-
-      The `sda` device will be used as an OSD device without WAL and DB device.
-
-      ```yaml
-      ceph_osd_devices:
-        sda:
-      ```
 
     3. OSD + DB device
 
-       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
-       OSD is provided with 30 GB.
+        The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
+        OSD is provided with 30 GB.
 
-       ```yaml
-       ceph_db_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-       ```
+        ```yaml
+        ceph_db_devices:
+          nvme0n1:
+            num_osds: 6
+            db_size: 30 GB
+        ```
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device.
+        The `sda` device will be used as an OSD device with `nvme0n1` as DB device.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-       ```
+        ```yaml
+        ceph_osd_devices:
+           sda:
+             db_pv: nvme0n1
+        ```
 
     4. OSD + WAL device
 
-       The `nvme0n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
-       OSD is provided with 2 GB.
+        The `nvme0n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
+        OSD is provided with 2 GB.
 
-       ```yaml
-       ceph_wal_devices:
-         nvme0n1:
-           num_osds: 6
-           wal_size: 2 GB
-       ```
+        ```yaml
+        ceph_wal_devices:
+          nvme0n1:
+            num_osds: 6
+            wal_size: 2 GB
+        ```
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as WAL device.
+        The `sda` device will be used as an OSD device with `nvme0n1` as WAL device.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            wal_pv: nvme0n1
-       ```
+        ```yaml
+        ceph_osd_devices:
+           sda:
+             wal_pv: nvme0n1
+        ```
 
     5. OSD + DB device + WAL device (same device for DB + WAL)
 
-       The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
-       to 6 OSDs.
+        The `nvme0n1` device will be used as an DB device and a WAL device. It is possible to use those devices for up
+        to 6 OSDs.
 
-       ```yaml
-       ceph_db_wal_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-           wal_size: 2 GB
-       ```
+        ```yaml
+        ceph_db_wal_devices:
+          nvme0n1:
+            num_osds: 6
+            db_size: 30 GB
+            wal_size: 2 GB
+        ```
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
+        The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme0n1` as WAL device.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-            wal_pv: nvme0n1
-       ```
+        ```yaml
+        ceph_osd_devices:
+           sda:
+             db_pv: nvme0n1
+             wal_pv: nvme0n1
+        ```
 
     6. OSD + DB device + WAL device (different device for DB + WAL)
 
-       The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
-       OSD is provided with 30 GB.
+        The `nvme0n1` device will be used as an DB device. It is possible to use this DB device for up to 6 OSDs. Each
+        OSD is provided with 30 GB.
 
-       ```yaml
-       ceph_db_devices:
-         nvme0n1:
-           num_osds: 6
-           db_size: 30 GB
-       ```
+        ```yaml
+        ceph_db_devices:
+          nvme0n1:
+            num_osds: 6
+            db_size: 30 GB
+        ```
 
-       The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
-       OSD is provided with 2 GB.
+        The `nvme1n1` device will be used as an WAL device. It is possible to use this WAL device for up to 6 OSDs. Each
+        OSD is provided with 2 GB.
 
-       ```yaml
-       ceph_wal_devices:
-         nvme1n1:
-           num_osds: 6
-           wal_size: 2 GB
-       ```
+        ```yaml
+        ceph_wal_devices:
+          nvme1n1:
+            num_osds: 6
+            wal_size: 2 GB
+        ```
 
-       The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
+        The `sda` device will be used as an OSD device with `nvme0n1` as DB device and `nvme1n1` as WAL device.
 
-       ```yaml
-       ceph_osd_devices:
-          sda:
-            db_pv: nvme0n1
-            wal_pv: nvme1n1
-       ```
+        ```yaml
+        ceph_osd_devices:
+           sda:
+             db_pv: nvme0n1
+             wal_pv: nvme1n1
+        ```
 
 2. Push the configuration to your configuration repository and after that do the following
 
-   ```bash
-   osism apply configuration
-   osism reconciler sync
-   osism apply facts
-   ```
+    ```bash
+    osism apply configuration
+    osism reconciler sync
+    osism apply facts
+    ```
 
 3. After the configuration has been pulled and facts updated,
    you can run the LVM configuration playbook:
 
-   ```
-   osism apply ceph-configure-lvm-volumes
-   ```
+    ```bash
+    osism apply ceph-configure-lvm-volumes
+    ```
 
-   This will generate a new configuration file for each node in `/tmp`
-   on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
+    This will generate a new configuration file for each node in `/tmp`
+    on the first manager node named `<nodename>-ceph-lvm-configuration.yml`.
 
 4. Take the generated configuration file from `/tmp` and **replace the previously
    configuration** for each node.
 
-   In this example, the following content was in the host vars file before
-   `osism apply ceph-configure-lvm-volumes` was called.
+    In this example, the following content was in the host vars file before
+    `osism apply ceph-configure-lvm-volumes` was called.
 
-   ```yaml
-   ceph_osd_devices:
-     sdb:
-     sdc:
-   ```
+    ```yaml
+    ceph_osd_devices:
+      sdb:
+      sdc:
+    ```
 
-   The following content has now been generated in the file in the `/tmp` directory by running
-   `osism apply ceph-configure-lvm-volumes`.
+    The following content has now been generated in the file in the `/tmp` directory by running
+    `osism apply ceph-configure-lvm-volumes`.
 
-   ```yaml
-   ceph_osd_devices:
-     sdb:
-       osd_lvm_uuid: 196aad32-7cc4-5350-8a45-1b03f50fc9bb
-     sdc:
-       osd_lvm_uuid: c6df96be-1264-5815-9cb2-da5eb453a6de
-   lvm_volumes:
-   - data: osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb
-     data_vg: ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb
-   - data: osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de
-     data_vg: ceph-c6df96be-1264-5815-9cb2-da5eb453a6de
-   ```
+    ```yaml
+    ceph_osd_devices:
+      sdb:
+        osd_lvm_uuid: 196aad32-7cc4-5350-8a45-1b03f50fc9bb
+      sdc:
+        osd_lvm_uuid: c6df96be-1264-5815-9cb2-da5eb453a6de
+    lvm_volumes:
+    - data: osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb
+      data_vg: ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb
+    - data: osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de
+      data_vg: ceph-c6df96be-1264-5815-9cb2-da5eb453a6de
+    ```
 
-   This content from the file in the `/tmp` directory is added in the host vars file.
-   The previous `ceph_osd_devices` is replaced with the new content.
+    This content from the file in the `/tmp` directory is added in the host vars file.
+    The previous `ceph_osd_devices` is replaced with the new content.
 
 5. Push the updated configuration **again** to your configuration repository and re-run:
 
-   ```bash
-   osism apply configuration
-   osism reconciler sync
-   ```
+    ```bash
+    osism apply configuration
+    osism reconciler sync
+    ```
 
 6. Finally create the LVM devices.
 
-   ```bash
-   osism apply ceph-create-lvm-devices
-   ```
+    ```bash
+    osism apply ceph-create-lvm-devices
+    ```
 
-   These PVs, VGs and LVs are created using the example from step 4.
+    These PVs, VGs and LVs are created using the example from step 4.
 
-   ```console
-   $ sudo pvs
-   PV         VG                                        Fmt  Attr PSize   PFree
-   /dev/sdb   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb lvm2 a--  <20.00g    0
-   /dev/sdc   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de lvm2 a--  <20.00g    0
+    ```console
+    $ sudo pvs
+    PV         VG                                        Fmt  Attr PSize   PFree
+    /dev/sdb   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb lvm2 a--  <20.00g    0
+    /dev/sdc   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de lvm2 a--  <20.00g    0
 
-   $ sudo vgs
-   VG                                        #PV #LV #SN Attr   VSize   VFree
-   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb   1   1   0 wz--n- <20.00g    0
-   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de   1   1   0 wz--n- <20.00g    0
+    $ sudo vgs
+    VG                                        #PV #LV #SN Attr   VSize   VFree
+    ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb   1   1   0 wz--n- <20.00g    0
+    ceph-c6df96be-1264-5815-9cb2-da5eb453a6de   1   1   0 wz--n- <20.00g    0
 
-   $ sudo lvs
-   LV                                             VG                                        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-   osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb -wi-a----- <20.00g
-   osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
-   ```
+    $ sudo lvs
+    LV                                             VG                                        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+    osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb -wi-a----- <20.00g
+    osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
+    ```
 
 7. Everything is now ready for the deployment of the OSDs.
    Details on deploying Ceph in the [Ceph Deploy Guide](../../deploy-guide/services/ceph/index.mdx).
@@ -644,36 +644,36 @@ osd-block-a0da232a-e5b8-5823-8c42-8fb231442edc ceph-a0da232a-e5b8-5823-8c42-8fb2
 
 1. There is the following existing configuration in `inventory/host_vars/<nodename>.yml`.
 
-   ```yaml
-   ceph_osd_devices:
-     sda:
-       osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
-     sdb:
-       osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
-   lvm_volumes:
-   - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
-     data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
-   - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
-     data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
-   ```
+    ```yaml
+    ceph_osd_devices:
+      sda:
+        osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
+      sdb:
+        osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
+    lvm_volumes:
+    - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
+      data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
+    - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
+      data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
+    ```
 
 2. The block device `sdc` should be added as new OSD on `nodename`. Edit the existing
    configuration in `inventory/host_vars/<nodename>.yml` and add `sdc` to the list
    `ceph_osd_devices`.
 
-   ```yaml
-   ceph_osd_devices:
-     sda:
-       osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
-     sdb:
-       osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
-     sdc:
-   lvm_volumes:
-   - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
-     data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
-   - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
-     data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
-   ```
+    ```yaml
+    ceph_osd_devices:
+      sda:
+        osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
+      sdb:
+        osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
+      sdc:
+    lvm_volumes:
+    - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
+      data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
+    - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
+      data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
+    ```
 
 3. Commit changes in the configuration repository, sync the configuration repository on
    the manager and reconcile the inventory with `osism reconciler sync`.
@@ -682,42 +682,42 @@ osd-block-a0da232a-e5b8-5823-8c42-8fb231442edc ceph-a0da232a-e5b8-5823-8c42-8fb2
    Synchronize the contents of `/tmp/<nodename>-ceph-lvm-configuration.yml` with those in
    `inventory/host_vars/<nodename>.yml`.
 
-   ```yaml
-   ceph_osd_devices:
-     sda:
-       osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
-     sdb:
-       osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
-     sdc:
-       osd_lvm_uuid: ad1a16cd-b35e-58d1-8e40-80a14597f583
-   lvm_volumes:
-   - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
-     data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
-   - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
-     data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
-   - data: osd-block-ad1a16cd-b35e-58d1-8e40-80a14597f583
-     data_vg: ceph-ad1a16cd-b35e-58d1-8e40-80a14597f583
-   ```
+    ```yaml
+    ceph_osd_devices:
+      sda:
+        osd_lvm_uuid: 71e54cfb-65e5-5109-8f09-2be6b661f39c
+      sdb:
+        osd_lvm_uuid: acb56e1f-0700-587f-95d4-fbe905491fea
+      sdc:
+        osd_lvm_uuid: ad1a16cd-b35e-58d1-8e40-80a14597f583
+    lvm_volumes:
+    - data: osd-block-71e54cfb-65e5-5109-8f09-2be6b661f39c
+      data_vg: ceph-71e54cfb-65e5-5109-8f09-2be6b661f39c
+    - data: osd-block-acb56e1f-0700-587f-95d4-fbe905491fea
+      data_vg: ceph-acb56e1f-0700-587f-95d4-fbe905491fea
+    - data: osd-block-ad1a16cd-b35e-58d1-8e40-80a14597f583
+      data_vg: ceph-ad1a16cd-b35e-58d1-8e40-80a14597f583
+    ```
 
-   Added in this case:
+    Added in this case:
 
-   ```yaml
-   [...]
-     sdc:
-       osd_lvm_uuid: ad1a16cd-b35e-58d1-8e40-80a14597f583
-   [...]
-   - data: osd-block-ad1a16cd-b35e-58d1-8e40-80a14597f583
-     data_vg: ceph-ad1a16cd-b35e-58d1-8e40-80a14597f583
-   ```
+    ```yaml
+    [...]
+      sdc:
+        osd_lvm_uuid: ad1a16cd-b35e-58d1-8e40-80a14597f583
+    [...]
+    - data: osd-block-ad1a16cd-b35e-58d1-8e40-80a14597f583
+      data_vg: ceph-ad1a16cd-b35e-58d1-8e40-80a14597f583
+    ```
 
 5. Commit changes in the configuration repository, sync the configuration repository on
    the manager and reconcile the inventory with `osism reconciler sync`.
 
 6. Create new LVM devices.
 
-   ```bash
-   osism apply ceph-create-lvm-devices -l <nodename>
-   ```
+    ```bash
+    osism apply ceph-create-lvm-devices -l <nodename>
+    ```
 
 7. Everything is now ready for the deployment of the new OSD.
    Details on deploying the OSD service in the [Ceph operations guide](../../operations-guide/ceph#add-a-new-osd).

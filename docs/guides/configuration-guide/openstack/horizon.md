@@ -1,7 +1,6 @@
 ---
 sidebar_label: Horizon
 ---
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
