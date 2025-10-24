@@ -217,7 +217,7 @@ sudo wg-quick up $HOME/cloud-in-a-box.conf
 Once the Wireguard tunnel has been set up, it is possible to access individual services on a name-based basis.
 As a test, you can try whether the name `api.in-a-box.cloud` resolves correctly to the IP address `192.168.16.254`.
 
-```
+```console
 dig +short A api.in-a-box.cloud
 192.168.16.254
 ```
@@ -226,7 +226,7 @@ If this does not work, a DNS filter such as Pi-hole or AdGuard will most likely 
 IP ranges such as `192.168.16.0/20` are not resolved via a public DNS server. If this is the case, the following
 entries must be added to the local `/etc/hosts` file for the name resolution to work.
 
-```
+```text
 192.166.16.10	cgit.services.in-a-box.cloud
 192.166.16.10	netbox.services.in-a-box.cloud
 192.168.16.10	ara.services.in-a-box.cloud
@@ -336,7 +336,7 @@ H/W path          Device          Class          Description
 In the following we use `eno7`. Activate the device manually with  `sudo ip link set up dev eno7`.
 Then check that a link is actually present.
 
-```
+```console
 dragon@manager:~$ ethtool eno7
 Settings for eno7:
 	Supported ports: [ FIBRE ]
@@ -440,7 +440,7 @@ is permitted there.
 After a reboot, there is a very high load for the first few minutes. Depending
 on which CPU is used, this can be over 100.
 
-```
+```console
 dragon@cumulus:~$ uptime
  16:58:12 up 1 min,  1 user,  load average: 101.44, 30.94, 10.78
 ```

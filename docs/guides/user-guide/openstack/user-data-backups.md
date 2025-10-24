@@ -175,16 +175,24 @@ When creating snapshots of attached (in-use) volumes, the `force` parameter has 
 :::
 
 1. Create a snapshot of the target volume while including the `force` parameter in the request:
-   - `openstack volume snapshot create --volume $VOLUME_NAME_OR_ID $SNAPSHOT_NAME`
+   ```bash
+   openstack volume snapshot create --volume $VOLUME_NAME_OR_ID $SNAPSHOT_NAME
+   ```
 2. Create a new temporary volume based on the snapshot to act as backup source:
-   - `openstack volume create --snapshot $SNAPSHOT_NAME $TEMP_VOLUME_NAME`
+   ```bash
+   openstack volume create --snapshot $SNAPSHOT_NAME $TEMP_VOLUME_NAME
+   ```
 3. Wait until the volume creation is finished and the temporary volume reaches the `available` status.
 4. Create a backup image of the temporary volume:
-   - `openstack image create --volume $TEMP_VOLUME_NAME $IMAGE_NAME`
+   ```bash
+   openstack image create --volume $TEMP_VOLUME_NAME $IMAGE_NAME
+   ```
 5. Wait until the image creation finishes and the target image reaches the `active` status.
 6. Delete the temporary volume and snapshot:
-   - `openstack volume delete $TEMP_VOLUME_NAME`
-   - `openstack volume snapshot delete $SNAPSHOT_NAME`
+   ```bash
+   openstack volume delete $TEMP_VOLUME_NAME
+   openstack volume snapshot delete $SNAPSHOT_NAME
+   ```
 
 A full backup copy of the volume now resides in the Glance storage backend.
 
@@ -385,7 +393,7 @@ For this procedure to succeed it is necessary to know the exact volume type of t
 If the source volume of the backup still exists, the original volume type can be determined by inspecting the backup's `volume_id` attribute and then using it to look up the corresponding volume and its `type` attribute.
 The following client command can be used for this (fill in the value for `BACKUP_ID`):
 
-```bash
+```console
 export BACKUP_ID=...
 
 SOURCE_VOLUME_ID="$(openstack volume backup show $BACKUP_ID -f value -c volume_id)"
@@ -458,7 +466,7 @@ This will result in the following local files:
 
 Since OpenStack internally uses Python's `binascii.hexlify()` to convert the binary encryption key before passing it as a passphrase to the LUKS encryption, as a last step this conversion must be mimicked to unlock the encryption:
 
-```bash
+```console
 python3 -c "import binascii; \
     f = open('image.key', 'rb'); \
     print(binascii.hexlify(f.read()).decode('utf-8'))" \
@@ -473,7 +481,7 @@ The `/dev/mapper/decrypted_image` can now be handled like a raw block device (e.
 
 To close the encryption execute:
 
-```bash
+```console
 sudo cryptsetup luksClose decrypted_image
 ```
 

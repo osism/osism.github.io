@@ -16,7 +16,7 @@ Prepare to use the Openstack Project Manager.
 
 During installation, ldap libraries are required under Linux; you should install libldap2-dev and libsasl2-dev beforehand.
 
-```
+```bash
 git clone https://github.com/osism/openstack-project-manager
 cd openstack-project-manager
 pipenv install
@@ -29,7 +29,7 @@ pipenv shell
 ### create.py 
 The `create.py` command and his default options while executing the command.
 
-```
+```text
  --admin-domain              default
  --assign-admin-user         true
  --cloud                     admin
@@ -61,7 +61,7 @@ The `create.py` command and his default options while executing the command.
 
 The `manage.py` has also some defaults while executing and will touch all projects in your Openstack Cluster, if not --domain is used.
 
-```
+```text
  --admin-domain        default
  --assign-admin-user   false
  --classes             etc/classes.yml
@@ -96,7 +96,7 @@ create.py can't delete once created objects, this must be done using Openstack c
 
 :::
 
-```
+```console
 python src/create.py -h
 usage: create [-h] [--admin-domain ADMIN_DOMAIN] [--assign-admin-user] [--cloud CLOUD] [--config-dir DIR] [--config-file PATH] [--create-admin-user] [--create-domain] [--create-user]
               [--domain DOMAIN] [--domain-name-prefix] [--has-public-network] [--has-service-network] [--has-shared-images] [--internal-id INTERNAL_ID] [--managed-network-resources] [--name NAME]
@@ -174,7 +174,7 @@ options:
 
 When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project `webshop`. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
 
-```
+```console
 $ python3 src/create.py --domain democompany --name webshop
 +----------------+----------------------+----------------------------------+
 | name           | value                | id                               |
@@ -188,8 +188,8 @@ $ python3 src/create.py --domain democompany --name webshop
 
 #### Create a User for a project
 
-```
-$ python3 src/create.py --domain democompany --name webshopuser --create-user             
+```console
+$ python3 src/create.py --domain democompany --name webshopuser --create-user
 +----------+-------------------------+----------------------------------+
 | name     | value                   | id                               |
 |----------+-------------------------+----------------------------------|
@@ -202,7 +202,7 @@ $ python3 src/create.py --domain democompany --name webshopuser --create-user
 
 #### Create additional project with unlimited quota
 
-```
+```console
 $ python3 src/create.py --domain democompany --name styles --quota-class unlimited
 +----------+--------------------+----------------------------------+
 | name     | value              | id                               |
@@ -218,22 +218,26 @@ $ python3 src/create.py --domain democompany --name styles --quota-class unlimit
 All quota information must be set as a property to the Openstack project within your Openstack Cluster, if no property is set, the `basic` quotaclass of `etc/classes.yml` will be applied.
 It is possible to set a quota multiplier for any project.
 
-The following command you set a multiplier of 256 of the basic quota:
-```
+The following command sets a multiplier of 256 of the basic quota:
+
+```bash
 $ openstack project set --property quotamultiplier=256 democompany-webshop
 ```
 
 Adjusting gigabyte quota for storage with a multiplier of 20 of the basic quota for a project:
+
+```bash
+openstack project set  --property quotamultiplier_storage=20 democompany-webshop
 ```
-$ openstack project set  --property quotamultiplier_storage=20 democompany-webshop
-```
+
 This will override the general quotamultiplier only for storage.
 
 Other possible multiplier which can be set individually are: `quotamultiplier_compute`, `quotamultiplier_network`, `quota_router`
 
 To change the quotaclass to unlimited from the `etc/classes.yaml`
-```
-$ openstack project set  --property quotaclass=unlimited democompany-webshop
+
+```bash
+openstack project set  --property quotaclass=unlimited democompany-webshop
 ```
 
 #### Special project: images
@@ -242,7 +246,7 @@ With this special Project you can share all images uploaded into this project to
 Alsoi only the domain-admin user has access to this project, other domain users won't see this, they will find the uploaded images in their projects. 
 If you want your grant other domain users also access to upload some images, you need to give them access to the images Project in Openstack.
 
-```
+```console
 $ python3 src/create.py --domain democompany --name images
 +---------+---------------------+----------------------------------+
 | name    | value               | id                               |
@@ -254,14 +258,14 @@ $ python3 src/create.py --domain democompany --name images
 
 Additionally you need to add the domain and domain-admin user to the `clouds.yaml`, it is always named `opm-domainname-admin:` so the manage.py can setup permissions to the projects later on and users are able to find the images.
 
-```
+```yaml
   opm-democompany-admin:
     auth:
       auth_url: https://keystone.my.cloud:5000/v3
       username: democompany-admin
       password: yourpassword
       user_domain_name: Default
-      project_domain_name: democompany 
+      project_domain_name: democompany
     identity_api_version: 3
 ```
 
@@ -269,7 +273,7 @@ Additionally you need to add the domain and domain-admin user to the `clouds.yam
 
 With this special project you can share installed services, like a harbor, to all other projects in your domain. Per default, only the domain admin has access to this project.
 
-```
+```console
 $ python3 src/create.py --domain democompany --name service
 +---------+---------------------+----------------------------------+
 | name    | value               | id                               |
@@ -290,7 +294,7 @@ This command applies quotas, networks and routers to **all** projects in the Ope
 
 Best is to run this command by cron, every hour to apply all pending changes, it is also possible to run this at the command line to apply changes immediately.
 
-```
+```console
 python3 src/manage.py -h
 usage: manage [-h] [--admin-domain ADMIN_DOMAIN] [--assign-admin-user] [--classes CLASSES] [--cloud CLOUD] [--config-dir DIR] [--config-file PATH] [--domain DOMAIN] [--dry-run]
               [--endpoints ENDPOINTS] [--manage-endpoints] [--manage-homeprojects] [--name NAME] [--noassign-admin-user] [--nodry-run] [--nomanage-endpoints] [--nomanage-homeprojects]
@@ -325,7 +329,7 @@ options:
 
 #### Manage a specific domain only
 
-```
+```console
 $ python3 src/manage.py --domain democompany
 
 2024-04-19 14:24:02.873 | INFO     | democompany - domain_id = a8549ef5d3d14f938b127a1cdefe3788

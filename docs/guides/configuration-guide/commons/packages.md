@@ -13,7 +13,7 @@ The role is applied during the bootstrap. The role can be applied manually using
 
 The following packages are installed by default.
 
-```
+```yaml
 required_packages_default:
   - curl
   - dmidecode
@@ -35,7 +35,7 @@ required_packages_default:
 
 Additional packages can be added via the `required_packages_extra` parameter.
 
-```
+```yaml
 required_packages_extra: []
 ```
 
@@ -45,7 +45,7 @@ required_packages_extra: []
 
 With Debian, the packages listed in `required_packages_distribution` are installed by default.
 
-```
+```yaml
 required_packages_distribution:
   - command-not-found
   - debconf
@@ -69,7 +69,7 @@ the `cache_valid_time`. The parameter is set in seconds and defaults to `3600`.
 
 With CentOS, the packages listed in `required_packages_distribution` are installed by default.
 
-```
+```yaml
 required_packages_distribution:
   - libselinux-utils
   - openssh

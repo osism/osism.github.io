@@ -24,7 +24,7 @@ the nodes are already ready for use.
 
 1. Create operator user.
 
-   ```
+   ```bash
    osism apply operator -u osism
    ```
 
@@ -42,7 +42,7 @@ the nodes are already ready for use.
      Alternatively (not recommended), the password can be stored in plain text in a file `/opt/configuration/secrets/conn_password`.
      The parameter `--conn-pass-file /opt/configuration/secrets/conn_password` must then also be specified:
 
-     ```
+     ```bash
      osism apply operator -u osism \
        --conn-pass-file /opt/configuration/secrets/conn_password
      ```
@@ -52,14 +52,14 @@ the nodes are already ready for use.
      Alternatively (not recommended), the password can be stored in plain text in a file `/opt/configuration/secrets/become_password`.
      The parameter `--become-pass-file /opt/configuration/secrets/become_password` must then also be specified:
 
-     ```
+     ```bash
      osism apply operator -u osism \
        --become-pass-file /opt/configuration/secrets/become_password
      ```
 
    * If a password is required for both sudo and login, use both arguments at the same time.
 
-     ```
+     ```bash
      osism apply operator -u osism \
        --become-pass-file /opt/configuration/secrets/become_password \
        --conn-pass-file /opt/configuration/secrets/conn_password
@@ -72,45 +72,45 @@ the nodes are already ready for use.
 2. Proxy deployment (optional). This is only necessary if you use the proxy on the manager to enable external access to
    the nodes.
 
-   ```
+   ```bash
    osism apply squid
    ```
 
 3. Proxy configuration (optional). This is only necessary if you use the proxy on the manager to enable external access to
    the nodes.
 
-   ```
+   ```bash
    osism apply proxy
    ```
 
 4. Network configuration. It is recommended to backup the existing network configuration.
 
-   ```
+   ```bash
    osism apply network
    ```
 
 5. Reboot (optional). The reboot at this point is recommended to ensure that the network configuration is working.
 
-   ```
+   ```bash
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
 6. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
-   ```
+   ```bash
    osism apply ping
    ```
 
    * System is currently rebooting and is not yet accessible via network.
 
-     ```
+     ```console
      fatal: [net003]: UNREACHABLE! => {"changed": false, "msg": "Connection timed
      out.", "unreachable": true}``
      ```
 
    * System has already been rebooted and is not accessible via the network.
 
-     ```
+     ```console
      fatal: [net003]: UNREACHABLE! => {"changed": false, "msg": "EOF on stream;
      last 100 lines received:\nssh: connect to host 10.15.0.33 port 22: No route
      to host\r", "unreachable": true}
@@ -118,38 +118,38 @@ the nodes are already ready for use.
 
 7. Refresh facts.
 
-   ```
+   ```bash
    osism apply facts
    ```
 
 8. Bootstrap.
 
-   ```
+   ```bash
    osism apply bootstrap
    ```
 
 9. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
    the reboot should always be performed.
 
-   ```
+   ```bash
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
 10. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
-    ```
+    ```bash
     osism apply ping
     ```
 
 11. Prepare the SSH configuration of the manager node.
 
-    ```
+    ```bash
     osism apply sshconfig
     ```
 
 12. Make all SSH public keys known.
 
-    ```
+    ```bash
     osism apply known-hosts
     ```
 

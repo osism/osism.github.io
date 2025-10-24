@@ -112,14 +112,14 @@ files under `/vmfs/volumes/`.
 
 Example SSH copy and path of all vmdk files to the converter host using the scp command for our testing-host:
 
-```
+```bash
 scp user@vmhost:/vmfs/volumes/datastore1/testing-host/*.vmdk .
 ```
 
 After copying is finished, we find several vmdk files in our directory.
 We copied two disc images:
 
-```
+```console
 testing-host-disc0-flat.vmdk testing-host-disc1.vmdk
 testing-host-disc0.vmdk      testing-host-disc1-flat.vmdk
 ```
@@ -130,7 +130,7 @@ testing-host-disc0.vmdk      testing-host-disc1-flat.vmdk
 
 Now convert those vmdk files into raw images with the following flags:
 
-```
+```console
 -p show progress (optional)
 -f Input Format
 -O Output Format
@@ -140,7 +140,7 @@ Raw files are required to import images into OpenStack.
 
 :::
 
-```
+```bash
 qemu-img convert -p -f vmdk -O raw testing-host-disc0.vmdk testing-host-disc0.raw
 ```
 
@@ -164,13 +164,13 @@ By mounting the raw image files you can edit the configuration files to, e.g.:
 
 On Ubuntu you can use losetup to mount the raw image as a loopdevice to mount it somewhere you have access to.
 
-```txt example of mounting and raw image
+```bash
 losetup -f -P testing-host-disc0.raw
 losetup -l
 
 mount /dev/loop0p1 /mnt/test/
-or
-lvscan and mount the lvm volume
+# or
+lvscan # and mount the lvm volume
 ```
 
 ### How to import Images
@@ -183,11 +183,11 @@ To get your credentials please check with your OpenStack provider.
 
 If you want to preserve the `/dev/sd*` device names of the mountpoints, you must inject the new image and add some properties while uploading it into the OpenStack environment or add them later on to the images with Horzion web interface or openstack cli client.
 
-```
+```bash
 openstack image create --progress --property hw_disk_bus=scsi --property hw_scsi_model=virtio-scsi --property hw_watchdog_action=reset --disk-format raw --private --file testing-host-disc0.raw  testing-host-image-disc0
 ```
 
-```
+```console
 openstack image list
 +--------------------------------------+------------------------------+--------+
 | ID                                   | Name                         | Status |
@@ -209,7 +209,7 @@ As the images are 20GB, you tell openstack that you need a boot volume with a si
 
 In this guide there is already a security group which fits our needs, if not, create one or you will not be able to communicate with your new host.
 
-```
+```console
 openstack security group list
 +--------------------------------------+-----------------+------------------------------+----------------------------------+------+
 | ID                                   | Name            | Description                  | Project                          | Tags |
@@ -225,7 +225,7 @@ Now you need to tell which network you want to deploy your host on, optionally i
 
 You can repeat the `--nic` for additional nics in your server, in this guide it's the my_corp_net.
 
-```
+```console
 openstack network list
 +--------------------------------------+-------------------+--------------------------------------+
 | ID                                   | Name              | Subnets                              |
@@ -240,7 +240,7 @@ As last parameter, you give the server name of your migrated system.
 
 As we are starting an already configured system we do not need to inject SSH keys or passwords as they should already be present on the host.
 
-```
+```bash
 openstack server create --flavor SCS-8V-16 \
  --image 2a12b545-5d09-4ca1-9a76-b57f8d2489be --boot-from-volume 20 \
  --security-group 73967e73-e8d5-4318-b621-a06e7496fec3 \
@@ -251,7 +251,7 @@ openstack server create --flavor SCS-8V-16 \
 
 ### Show your new server
 
-```
+```console
 openstack server list
 +--------------------------------------+------------------+---------+----------------------------------+--------------------------+-----------+
 | ID                                   | Name             | Status  | Networks                         | Image                    | Flavor    |
@@ -261,7 +261,7 @@ openstack server list
 ```
 To see the attached volumes and their mountpoints:
 
-```
+```console
 openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc
 +----------+--------------------------------------+--------------------------------------+------+------------------------+--------------------------------------+--------------------------------------+
 | Device   | Server ID                            | Volume ID                            | Tag  | Delete On Termination? | Attachment ID                        | BlockDeviceMapping UUID              |
@@ -275,7 +275,7 @@ openstack server volume list 71a8b930-4212-434a-8891-afdeeb1802dc
 
 To get the VNC URL for console login use:
 
-```
+```console
 openstack console url show 71a8b930-4212-434a-8891-afdeeb1802dc
 +----------+-------------------------------------------------------------------------------------------+
 | Field    | Value                                                                                     |

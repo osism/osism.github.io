@@ -106,13 +106,13 @@ docker_registry_openstackclient: registry.osism.tech
 
 The naming scheme for the Ceph RadosGW service was changed from
 
-```
+```text
 rgw.$HOSTNAME.$INSTANCE
 ```
 
 to
 
-```
+```text
 rgw.$ZONE.$HOSTNAME.$INSTANCE
 ```
 

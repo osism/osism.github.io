@@ -39,7 +39,7 @@ Change into the `environments/manager` directory of the configuration repository
 on the seed node. The deployment of the seed node itself is documented in the
 [Deploy Guide for the seed node](../deploy-guide/seed.md).
 
-```
+```bash
 cd environments/manager
 ```
 
@@ -61,7 +61,7 @@ The `ANSIBLE_USER` parameter is only required when executing `operator` play usi
 script. After this step, the `ANSIBLE_USER` is always set to `dragon` in the `run.sh` script.
 It is therefore important to only set this parameter for exactly this step.
 
-```
+```bash
 ANSIBLE_BECOME_ASK_PASS=True \
 ANSIBLE_ASK_VAULT_PASS=True \
 ANSIBLE_ASK_PASS=True \
@@ -87,21 +87,21 @@ When the `./run.sh operator` is executed, the following prompts are displayed:
 * If the error `/bin/sh: 1: /usr/bin/python: not found occurs`, Python has to be installed first on
   the manager node:
 
-  ```
+  ```bash
   ANSIBLE_USER=osism ./run.sh python3
   ```
 
 * If you receive the following error message `ssh: Too many authentication failures` set
   `ANSIBLE_SSH_ARGS` environment variable to use only the operator ssh key for authentication.
 
-  ```
+  ```bash
   export ANSIBLE_SSH_ARGS="-o IdentitiesOnly=yes"
   ```
 
 * The warning message `[WARNING]: running playbook inside collection osism.manager` can be ignored
 * If Ansible Vault is used, let Ansible ask for the Vault password:
 
-  ```
+  ```bash
   export ANSIBLE_ASK_VAULT_PASS=True
   ```
 
@@ -122,7 +122,7 @@ To verify the proper creation of the operator user, use the private key file `id
 sure you purge all keys from ssh-agent identity cache using `ssh-add -D`. You can print the list
 using `ssh-add -l`. The list should be empty.
 
-```
+```bash
 ssh-add -D
 ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 ```
@@ -133,7 +133,7 @@ Most of the parameters required for Ansible (`ANSIBLE_BECOME_ASK_PASS`, `ANSIBLE
 in the previous step are no longer necessary. If Ansible Vault is used, however, `ANSIBLE_ASK_VAULT_PASS`
 must still be set.
 
-```
+```bash
 export ANSIBLE_ASK_VAULT_PASS=True
 ```
 
@@ -144,7 +144,7 @@ Then you can deploy the network configuration with the network role.
 
 Have a look to the [network documentation](../configuration-guide/network.md) and configure it before running this playbook.
 
-```
+```bash
 ./run.sh network
 ```
 
@@ -165,13 +165,13 @@ This is recommended.
 
 1. Bootstrap the manager node.
 
-   ```
+   ```bash
    ./run.sh bootstrap
    ```
 
 2. Reboot the manager node.
 
-   ```
+   ```bash
    ./run.sh reboot
    ```
 
@@ -179,26 +179,26 @@ This is recommended.
 
 1. Transfer the configuration repository.
 
-   ```
+   ```bash
    ./run.sh configuration
    ```
 
 2. Deploy the Traefik service. This is optional and only necessary if the Traefik service is to be used.
 
-   ```
+   ```bash
    ./run.sh traefik
    ```
 
 3. Deploy the Netbox service. This is optional and only necessary if the Netbox service is to be used.
 
-   ```
+   ```bash
    ./run.sh netbox
    ```
 
 4. Deploy the manager service.
    Have a look to the [manager documentation](../configuration-guide/manager.mdx) and configure it before running this playbook.
 
-   ```
+   ```bash
    ./run.sh manager
    ```
 
@@ -207,7 +207,7 @@ This is recommended.
 Finally, the Ansible Vault password is made known on the manager node. Before that, log in to the manager node
 with the `dragon` user.
 
-```
+```bash
 ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 osism set vault password
 ```

@@ -47,77 +47,77 @@ The following commands can be used to quickly check the status of Ceph:
 
 * Print overall cluster status
 
-  ```
+  ```bash
   ceph -s
   ```
 
 * Print detailed health information
 
-  ```
+  ```bash
   ceph health detail
   ```
 
 * Display current OSD tree
 
-  ```
+  ```bash
   ceph osd tree
   ```
 
 * Cluster storage usage by pool and storage class
 
-  ```
+  ```bash
   ceph df
   ```
 
 * List pools with detailed configuration
 
-  ```
+  ```bash
   ceph osd pool ls detail
   ```
 
 * Get usage stats for OSDs
 
-  ```
+  ```bash
   ceph osd df {plain|tree} {class e.g. hdd|ssd}
   ```
 
 * Watch Ceph health messages sequentially
 
-  ```
+  ```bash
   ceph -w
   ```
 
 * List daemon versions running in the cluster
 
-  ```
+  ```bash
   ceph versions
   ```
 
 Also you can run the following on each node running ceph-daemons,
 to provide further debug information about the environment:
 
-```
-# lscpu
-# cat /proc/cpuinfo # if lscpu isn't available
-# free -g
-# ip l
-# ethtool <device> # for each network adapter
+```bash
+lscpu
+cat /proc/cpuinfo # if lscpu isn't available
+free -g
+ip l
+ethtool <device> # for each network adapter
 ```
 
 ### Mute/Unmute a health warning
 
-```
-$ ceph health mute <what> <duration>
-$ ceph health unmute <what>
+```bash
+ceph health mute <what> <duration>
+ceph health unmute <what>
 ```
 
 ### Disable/Enable (deep-)scrubbing
 
-```
-$ ceph osd set noscrub
-$ ceph osd set nodeep-scrub
-$ ceph osd unset noscrub
-$ ceph osd unset nodeep-scrub
+```bash
+ceph osd set noscrub
+ceph osd set nodeep-scrub
+ceph osd unset noscrub
+ceph osd unset nodeep-scrub
 ```
 
 :::warning
@@ -135,13 +135,13 @@ The traditional way of doing this is by setting the ``noout`` flag,
 do the appropriate maintenance work and after the node is back online
 unset the flag like so:
 
-```
+```bash
 ceph osd set noout
 ```
 
 After maintenance is done and host is back up:
 
-```
+```bash
 ceph osd unset noout
 ```
 
@@ -151,25 +151,25 @@ maintenance periods.
 
 Add noout for a OSD:
 
-```
+```bash
 ceph osd add-noout osd.<ID>
 ```
 
 Remove noout for a OSD:
 
-```
+```bash
 ceph osd rm-noout osd.<ID>
 ```
 
 Add noout for CRUSH bucket (e.g. host name as seen in ``ceph osd tree``):
 
-```
+```bash
 ceph osd set-group noout <crush-bucket-name>
 ```
 
 Remove noout for CRUSH bucket:
 
-```
+```bash
 ceph osd unset-group noout <crush-bucket-name>
 ```
 
@@ -177,27 +177,27 @@ ceph osd unset-group noout <crush-bucket-name>
 
 ### Enumerate typical storage devices and LVM
 
-```
-# lsblk
-# lsblk -S
-# lsscsi
-# nvme list
-# pvs
-# vgs
-# lvs
+```bash
+lsblk
+lsblk -S
+lsscsi
+nvme list
+pvs
+vgs
+lvs
 ```
 
 ### SMART data for SATA/SAS and NVME devices
 
-```
-# smartctl -a /dev/sdX
-# nvme smart-log /dev/nvmeXnY
+```bash
+smartctl -a /dev/sdX
+nvme smart-log /dev/nvmeXnY
 ```
 
 ### Check format of a NVME device
 
-```
-# nvme id-ns -H /dev/nvmeXnY
+```bash
+nvme id-ns -H /dev/nvmeXnY
 ```
 
 :::note
@@ -217,8 +217,8 @@ This will destroy all data on the device!
 
 :::
 
-```
-# nvme format --lbaf=<id> /dev/nvmeXnY
+```bash
+nvme format --lbaf=<id> /dev/nvmeXnY
 ```
 
 ### Secure Erase a NVME drive using nvme-cli
@@ -229,10 +229,10 @@ This will destroy all data on the device!
 
 :::
 
-```
-# nvme format -s2 /dev/nvmeXnY
-# blkdiscard /dev/nvmeXnY
-# nvme format -s1 /dev/nvmeXnY
+```bash
+nvme format -s2 /dev/nvmeXnY
+blkdiscard /dev/nvmeXnY
+nvme format -s1 /dev/nvmeXnY
 ```
 
 ### Secure Erase a SATA/SAS drive using hdparm
@@ -246,8 +246,8 @@ This will destroy all data on the device!
 
 1. Gather device info:
 
-   ```
-   # hdparm -I /dev/sdX
+   ```bash
+   hdparm -I /dev/sdX
    ```
 
   Check that the output says **"not frozen"** and **"not locked"**,
@@ -256,9 +256,9 @@ This will destroy all data on the device!
 
 2. Set a master password for the disk (required, will be automatically removed after wipe)
 
-   ```
-   # hdparm --user-master wipeit --security-set-pass wipeit /dev/sdX
-   # hdparm -I /dev/sdX
+   ```bash
+   hdparm --user-master wipeit --security-set-pass wipeit /dev/sdX
+   hdparm -I /dev/sdX
    ```
 
    Check that "Security level" is now **"high"** and master password is now
@@ -268,14 +268,14 @@ This will destroy all data on the device!
 
    If device supports enhanced security erase (better), use the following:
 
-   ```
-   # hdparm --user-master wipeit --security-erase-enhanced wipeit /dev/sdX
+   ```bash
+   hdparm --user-master wipeit --security-erase-enhanced wipeit /dev/sdX
    ```
 
    If not, use standard security erase:
 
-   ```
-   # hdparm --user-master wipeit --security-erase wipeit /dev/sdX
+   ```bash
+   hdparm --user-master wipeit --security-erase wipeit /dev/sdX
    ```
 
 :::note
@@ -293,15 +293,15 @@ at least perform a blanking pass on HDDs with a tool like nwipe.
 
 ### Locate a specific OSD in the cluster
 
-```
-$ ceph osd find osd.<ID>
+```bash
+ceph osd find osd.<ID>
 ```
 
 ### Get OSD metadata (global and single OSD)
 
-```
-$ ceph osd metadata
-$ ceph osd metadata osd.<ID>
+```bash
+ceph osd metadata
+ceph osd metadata osd.<ID>
 ```
 
 Interesting fields:
@@ -325,7 +325,7 @@ Interesting fields:
 
 2. Deploy the new OSD service on `<nodename>`.
 
-   ```
+   ```bash
    osism apply ceph-osds -l <nodename> -e ceph_handler_osds_restart=false
    ```
 
@@ -339,13 +339,13 @@ Only the entries relating to the removed OSD are removed from the host vars.
 
 #### Manual way
 
-```
-$ ceph osd crush reweight osd.<ID> 0.0
+```bash
+ceph osd crush reweight osd.<ID> 0.0
 # Wait for rebalance to complete...
-$ ceph osd out osd.<ID>
-# systemctl stop ceph-osd@<ID>
-# systemctl disable ceph-osd@<ID>
-$ ceph osd purge osd.<ID> --yes-i-really-mean-it
+ceph osd out osd.<ID>
+systemctl stop ceph-osd@<ID>
+systemctl disable ceph-osd@<ID>
+ceph osd purge osd.<ID> --yes-i-really-mean-it
 ```
 
 The LV and VG defined in the inventory for this OSD must also be removed. The
@@ -355,7 +355,7 @@ OSD itself should be wiped.
 
 1. Get all OSDs  of the node
 
-   ```
+   ```console
    $ ceph osd tree
    ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
    -1         0.11691  root default
@@ -375,14 +375,14 @@ OSD itself should be wiped.
    Depending on how large the Ceph cluster and the individual OSDs are, this
    may take some time.
 
-   ```
-   $ ceph osd crush reweight osd.2 0.0
-   $ ceph osd crush reweight osd.5 0.0
+   ```bash
+   ceph osd crush reweight osd.2 0.0
+   ceph osd crush reweight osd.5 0.0
    ```
 
    The Ceph OSDs that are to be removed then have a weight of 0.
 
-   ```
+   ```console
    $ ceph osd tree
    ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
    -1         0.07794  root default
@@ -401,13 +401,13 @@ OSD itself should be wiped.
    This is a disruptive action that cannot be undone. The devices used
    are also reset.
 
-   ```
-   $ osism apply ceph-shrink-osd -e ireallymeanit=yes -e osd_to_kill=2,5
+   ```bash
+   osism apply ceph-shrink-osd -e ireallymeanit=yes -e osd_to_kill=2,5
    ```
 
    All OSDs were removed.
 
-   ```
+   ```console
    $ ceph osd tree
    ID  CLASS  WEIGHT   TYPE NAME                STATUS  REWEIGHT  PRI-AFF
    -1         0.07794  root default
@@ -422,7 +422,7 @@ OSD itself should be wiped.
 
 4. Remove the node from the CRUSH map.
 
-   ```
+   ```console
    $ ceph osd crush remove testbed-node-2
    removed item id -7 name 'testbed-node-2' from crush map
    ```
@@ -434,10 +434,10 @@ OSD itself should be wiped.
 
 ### Remove an OSD (temporarily e.g. when replacing a broken disk)
 
-```
-$ ceph osd out osd.<ID>
-# systemctl stop ceph-osd@<ID>
-# systemctl disable ceph-osd@<ID>
+```bash
+ceph osd out osd.<ID>
+systemctl stop ceph-osd@<ID>
+systemctl disable ceph-osd@<ID>
 ```
 
 ### Disable backfills/recovery completely
@@ -448,10 +448,10 @@ Use only in emergency situations!
 
 :::
 
-```
-$ ceph osd set nobackfill
-$ ceph osd set norecovery
-$ ceph osd set norebalance
+```bash
+ceph osd set nobackfill
+ceph osd set norecovery
+ceph osd set norebalance
 ```
 
 Unset the flags with ``ceph osd unset <flag>``.
@@ -463,22 +463,23 @@ Unset the flags with ``ceph osd unset <flag>``.
 ### Dump placement groups
 
 Usually only useful when parsing it, so here are two ways to get the data:
-```
-$ ceph pg dump
-$ ceph pg dump --format=json-pretty
+
+```bash
+ceph pg dump
+ceph pg dump --format=json-pretty
 ```
 
 ### Query a PG about its status
 
-```
-$ ceph pg <pgid> query
+```bash
+ceph pg <pgid> query
 ```
 
 ### Start (deep-)scrubbing of a placement group
 
-```
-$ ceph pg scrub <pgid>
-$ ceph pg deep-scrub <pgid>
+```bash
+ceph pg scrub <pgid>
+ceph pg deep-scrub <pgid>
 ```
 
 :::note
@@ -492,8 +493,8 @@ it can take some time for the scrub to start.
 
 Finding PGs which have large OMAP objects:
 
-```
-# ceph pg dump --format=json | jq '.pg_map.pg_stats[] |
+```bash
+ceph pg dump --format=json | jq '.pg_map.pg_stats[] |
 select(.stat_sum.num_large_omap_objects != 0) |
 (.pgid, .stat_sum.num_large_omap_objects, .up, .acting)'
 ```
@@ -514,8 +515,8 @@ thus resharding that bucket's index will be necessary.
 
 ### Instruct a PG to repair in case of scrub errors (inconsistent PG)
 
-```
-$ ceph pg repair <pgid>
+```bash
+ceph pg repair <pgid>
 ```
 
 :::note
@@ -542,35 +543,35 @@ https://docs.ceph.com/en/latest/rados/operations/pools/
 
 ### Get pools and their configuration
 
-```
-$ ceph osd pool ls detail
+```bash
+ceph osd pool ls detail
 ```
 
 ### Dump all CRUSH rules
 
-```
-$ ceph osd crush rule dump
+```bash
+ceph osd crush rule dump
 ```
 
 ### Get autoscaler status
 
-```
-$ ceph osd pool autoscale-status
+```bash
+ceph osd pool autoscale-status
 ```
 
 ### Create a replicated pool
 
-```
-$ ceph osd pool create <pool_name> <pg_num> <pgp_num> replicated [<crush_rule_name>]
+```bash
+ceph osd pool create <pool_name> <pg_num> <pgp_num> replicated [<crush_rule_name>]
 ```
 
 ### Enabling an application on a pool
 
 Required, otherwise a health warning will be raised after some time.
 
-```
-$ ceph osd pool application enable <pool_name> <application_name> # Syntax
-$ ceph osd pool application enable cinder rbd # Example
+```bash
+ceph osd pool application enable <pool_name> <application_name> # Syntax
+ceph osd pool application enable cinder rbd # Example
 ```
 
 Typical application names are: rbd, rgw, cephfs
@@ -583,8 +584,8 @@ This will delete all data in that pool. There is no undo/undelete.
 
 :::
 
-```
-$ ceph osd pool delete <pool_name> <pool_name> --yes-i-really-really-mean-it
+```bash
+ceph osd pool delete <pool_name> <pool_name> --yes-i-really-really-mean-it
 ```
 
 :::note
@@ -610,8 +611,8 @@ Further information on placement groups can be found in the
 You should definitely read *FACTORS RELEVANT TO SPECIFYING PG_NUM* and *CHOOSING THE NUMBER OF PGS*
 there.
 
-```
-$ ceph osd pool set <poolname> pg_num <num_pgs>
+```bash
+ceph osd pool set <poolname> pg_num <num_pgs>
 ```
 
 :::note
@@ -625,16 +626,16 @@ In older versions one also has to set pgp_num manually, either in increments or 
 
 ### Create CRUSH rules for different storage classes
 
-```
-$ ceph osd crush rule create-replicated replicated_hdd default host hdd
-$ ceph osd crush rule create-replicated replicated_ssd default host ssd
-$ ceph osd crush rule create-replicated replicated_nvme default host nvme
+```bash
+ceph osd crush rule create-replicated replicated_hdd default host hdd
+ceph osd crush rule create-replicated replicated_ssd default host ssd
+ceph osd crush rule create-replicated replicated_nvme default host nvme
 ```
 
 ### Change CRUSH rule for a pool ("move pool")
 
-```
-$ ceph osd pool set <poolname> crush_rule <rule_name>
+```bash
+ceph osd pool set <poolname> crush_rule <rule_name>
 ```
 
 This can be used to move a pool from e.g. HDD to SSD or NVME class
@@ -669,40 +670,41 @@ You will need them to restart the cluster later.
 
 2. Pause/Stop operations on the cluster by setting flags
 
-   ```
-   $ ceph osd set noout
-   $ ceph osd set nobackfill
-   $ ceph osd set norecover
-   $ ceph osd set norebalance
-   $ ceph osd set nodown
-   $ ceph osd set pause
+   ```bash
+   ceph osd set noout
+   ceph osd set nobackfill
+   ceph osd set norecover
+   ceph osd set norebalance
+   ceph osd set nodown
+   ceph osd set pause
    ```
 3. Stop and disable the ``radosgw`` services on all nodes (on each rgw node) (if RGW is used)
 
    Get the name of the unit (globs not supported for disable) and
    make a note of the unit name for that node:
 
-   ```
-   # systemctl | grep ceph-radosgw
+   ```bash
+   systemctl | grep ceph-radosgw
    ```
 
    Then disable and stop the unit:
-   ```
-   # systemctl disable --now ceph-radosgw@<name>.service
+
+   ```bash
+   systemctl disable --now ceph-radosgw@<name>.service
    ```
 
 4. Stop all CephFS file systems (if CephFS is used)
 
    List all Ceph file systems
 
-   ```
-   $ ceph fs ls
+   ```bash
+   ceph fs ls
    ```
 
    For each CephFS do:
 
-   ```
-   $ ceph fs <file system name> down true
+   ```bash
+   ceph fs <file system name> down true
    ```
 
 5. After that disable and stop all ``ceph-mds`` services on all nodes (do this on each node)
@@ -710,12 +712,12 @@ You will need them to restart the cluster later.
    Get the name of the unit (globs not supported for disable) and
    make a note of the unit name for that node:
 
-   ```
-   # systemctl | grep ceph-mds
+   ```bash
+   systemctl | grep ceph-mds
    ```
 
-   ```
-   # systemctl disable --now ceph-mds@<unit>.service
+   ```bash
+   systemctl disable --now ceph-mds@<unit>.service
    ```
 
 6. Stop and disable the ``ceph-mgr`` services on all nodes (do this on each node)
@@ -723,12 +725,12 @@ You will need them to restart the cluster later.
    Get the name of the unit (globs not supported for disable) and
    make a note of the unit name for that node:
 
-   ```
-   # systemctl | grep ceph-mgr
+   ```bash
+   systemctl | grep ceph-mgr
    ```
 
-   ```
-   # systemctl disable --now ceph-mgr@<unit>.service
+   ```bash
+   systemctl disable --now ceph-mgr@<unit>.service
    ```
 
 7. Stop and disable the ``ceph-osd`` services on all nodes (do this on each node)
@@ -736,20 +738,20 @@ You will need them to restart the cluster later.
    Get the names of the units (globs not supported for disable) and
    make a note of the unit names for that node (best to save it to a file):
 
-   ```
-   # systemctl | grep ceph-osd
+   ```bash
+   systemctl | grep ceph-osd
    ```
 
    For each OSD unit execute:
 
-   ```
-   # systemctl disable ceph-osd@<osd-id>.service
+   ```bash
+   systemctl disable ceph-osd@<osd-id>.service
    ```
 
    Stop all OSDs at once:
 
-   ```
-   # systemctl stop ceph-osd\*.service
+   ```bash
+   systemctl stop ceph-osd\*.service
    ```
 
 8. Finally stop the ``ceph-mon`` services on all nodes (do this on each node)
@@ -757,12 +759,12 @@ You will need them to restart the cluster later.
    Get the name of the unit (globs not supported for disable) and
    make a note of the unit name for that node:
 
-   ```
-   # systemctl | grep ceph-mon
+   ```bash
+   systemctl | grep ceph-mon
    ```
 
-   ```
-   # systemctl disable --now ceph-mon@<unit>.service
+   ```bash
+   systemctl disable --now ceph-mon@<unit>.service
    ```
 
 ### Restart a Ceph cluster after manual shutdown
@@ -779,45 +781,45 @@ in the section above, you do the following:
 
 1. Enable & start the ``ceph-mon`` services on all nodes (do this on each node)
 
-   ```
-   # systemctl enable --now ceph-mon@<unit-name>.service
+   ```bash
+   systemctl enable --now ceph-mon@<unit-name>.service
    ```
 
 2. Enable & start the ``ceph-osd`` services on all nodes (do this on each node)
 
    For each Ceph OSD on that node do:
 
-   ```
-   # systemctl enable --now ceph-osd@<osd-id>.service
+   ```bash
+   systemctl enable --now ceph-osd@<osd-id>.service
    ```
 
    Depending on the number of OSDs on that node it can take a while.
 
 3. Enable & start the ``ceph-mgr`` services on all nodes (do this on each node)
 
-   ```
-   # systemctl enable --now ceph-mgr@<unit-name>.service
+   ```bash
+   systemctl enable --now ceph-mgr@<unit-name>.service
    ```
 
 4. Check the status of your cluster and wait for all OSDs to come online
 
    You can watch the status periodically by running:
 
-   ```
-   $ watch ceph -s
+   ```bash
+   watch ceph -s
    ```
 
    You should wait until all OSDs are up + in again, before removing flags.
 
 5. Remove flags to unpause operations
 
-   ```
-   $ ceph osd unset pause
-   $ ceph osd unset nodown
-   $ ceph osd unset noout
-   $ ceph osd unset nobackfill
-   $ ceph osd unset norecover
-   $ ceph osd unset norebalance
+   ```bash
+   ceph osd unset pause
+   ceph osd unset nodown
+   ceph osd unset noout
+   ceph osd unset nobackfill
+   ceph osd unset norecover
+   ceph osd unset norebalance
    ```
 
 6. Wait for cluster to resume operations
@@ -829,34 +831,34 @@ in the section above, you do the following:
 
 7. Enable & start the ``ceph-mds`` services on each node (if CephFS is used)
 
-   ```
-   # systemctl enable --now ceph-mds@<unit>.service
+   ```bash
+   systemctl enable --now ceph-mds@<unit>.service
    ```
 
 8. Start CephFS file systems again
 
    List all Ceph file systems
 
-   ```
-   $ ceph fs ls
+   ```bash
+   ceph fs ls
    ```
 
    For each CephFS do:
 
-   ```
-   $ ceph fs <file system name> down false
+   ```bash
+   ceph fs <file system name> down false
    ```
 
 9. Enable & start the ``radosgw`` services on each node (if RGW is used)
 
-   ```
-   # systemctl enable --now ceph-radosgw@<name>.service
+   ```bash
+   systemctl enable --now ceph-radosgw@<name>.service
    ```
 
 ## Performance benchmark
 
-```
-# apt-get install -y fio
+```bash
+apt-get install -y fio
 ```
 
 ```bash

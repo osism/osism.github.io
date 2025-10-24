@@ -66,12 +66,12 @@ To enable TLS encryption the following steps are needed.
   * private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
   * private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`
 3. Encrypt the certificates using ansible vault:
-   ```
+   ```bash
    make ansible_vault_edit FILE=environments/kolla/certificates/haproxy.pem
    make ansible_vault_edit FILE=environments/kolla/certificates/haproxy-internal.pem
    ```
 4. Add the changes to the Git repository
-   ```
+   ```bash
    git add environments/kolla/certificates/haproxy.pem \
      environments/kolla/certificates/haproxy-internal.pem \
      environments/kolla/configuration.yml
@@ -81,7 +81,7 @@ To enable TLS encryption the following steps are needed.
      environments/kolla/configuration.yml
    ```
 5. Rollout changes
-   ```
+   ```bash
    osism apply loadbalancer
    ```
 
@@ -134,7 +134,7 @@ by the [general procedure](#general-procedure) described above.
      ```
 
 4. Import the ca certificate to all nodes so that the custom CA is known everywhere and the self-signed certificates are accepted as valid.
-   ```
+   ```bash
    osism apply certificates
    ```
 
@@ -158,7 +158,7 @@ must be accessible from the internet.
    ```
 
 2. Rollout changes
-   ```
+   ```bash
    osism apply loadbalancer
    ```
 
@@ -253,7 +253,7 @@ At the moment it is only possible to deploy the loadbalancer itself with its own
 not possible to use the integrated service configurations of Kolla itself (Nova, Cinder, ..) on an additional
 loadbalancer. This will be possible in the future.
 
-```
+```bash
 osism apply --sub external loadbalancer-without-service-config
 ```
 

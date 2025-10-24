@@ -16,13 +16,13 @@ Therefore it is required to move any existing payload when modifying the
 network configuration of compute nodes. You may use the `osism` command
 to achieve this, e.g.:
 
-```
+```bash
 osism manage compute migrate $COMPUTE_NODE
 ```
 
 Applying the network change is then limited to the empty compute node, e.g.:
 
-```
+```bash
 osism apply network --limit $COMPUTE_NODE
 ```
 
@@ -35,7 +35,7 @@ being unmanaged. A reboot will ensure that only the actually defined network
 configuration will be set up. You may use `osism` to reboot the node and wait
 for it to come back up:
 
-```
+```bash
 osism apply reboot --limit $COMPUTE_NODE --extra-vars reboot_wait=true --extra-vars ireallymeanit=yes
 ```
 
@@ -43,7 +43,7 @@ osism apply reboot --limit $COMPUTE_NODE --extra-vars reboot_wait=true --extra-v
 
 OpenStack, OVN, and Open vSwitch all really like UUIDs.
 
-```
+```console
 $ openstack --os-cloud admin image list -f yaml
 - ID: d64f0b9d-0ea1-40b0-b879-b98e46fc7bcf
   Name: Cirros 0.6.0
@@ -61,14 +61,14 @@ for readability. Statistically, just the first few characters are enough for
 uniqueness in small environments, so let’s define a helper to make things more
 readable:
 
-```
+```bash
 abbrev() { a='[0-9a-fA-F]' b=$a$a c=$b$b; sed "s/$b-$c-$c-$c-$c$c$c//g"; }
 ```
 
 You can use this as a filter to abbreviate UUIDs. For example, use it to abbreviate
 the above image list:
 
-```
+```console
 $ openstack --os-cloud admin image list -f yaml | abbrev
 - ID: d64f0b
   Name: Cirros 0.6.0
@@ -90,7 +90,7 @@ Source: https://docs.ovn.org/en/stable/tutorials/ovn-openstack.html#shortening-u
 Open vSwitch on a network node with external network `vxlan0` and integration
 with the Octavia service via `ohm0`.
 
-```
+```console
 $ docker exec -it openvswitch_vswitchd ovs-vsctl show
 2e6227aa-33f1-4762-8831-ab678ce7272d
     Bridge br-int
@@ -127,7 +127,7 @@ $ docker exec -it openvswitch_vswitchd ovs-vsctl show
 Get OVN NB and OVN SB connection information from the `/etc/kolla/neutron-server/ml2_conf.ini`
 file.
 
-```
+```bash
 ovn_nb_connection=$(sudo grep -P -o -e "(?<=^ovn_nb_connection = ).*" "/etc/kolla/neutron-server/ml2_conf.ini")
 ovn_sb_connection=$(sudo grep -P -o -e "(?<=^ovn_sb_connection = ).*" "/etc/kolla/neutron-server/ml2_conf.ini")
 ```
@@ -137,7 +137,7 @@ deployment with no payload running yet.
 
 OVN NB DB entries:
 
-```
+```console
 $ docker exec ovn_northd ovn-nbctl --db "$ovn_nb_connection" show | abbrev
 switch b5139b (neutron-8fe7d0) (aka lb-mgmt-net)
     port 45a49e
@@ -153,7 +153,7 @@ switch b5139b (neutron-8fe7d0) (aka lb-mgmt-net)
 
 OVN SB DB entries:
 
-```
+```console
 $ docker exec ovn_northd ovn-sbctl --db "$ovn_sb_connection" show | abbrev
 Chassis testbed-node-0
     hostname: testbed-node-0
@@ -177,7 +177,7 @@ Chassis testbed-node-1
 
 OVN NB status:
 
-```
+```console
 $ docker exec ovn_nb_db ovs-appctl -t /var/run/ovn/ovnnb_db.ctl cluster/status OVN_Northbound | abbrev
 6d15
 Name: OVN_Northbound
@@ -205,7 +205,7 @@ Servers:
 
 OVN SB status:
 
-```
+```console
 $ docker exec ovn_sb_db ovs-appctl -t /var/run/ovn/ovnsb_db.ctl cluster/status OVN_Southbound | abbrev
 be29
 Name: OVN_Southbound
@@ -238,7 +238,7 @@ Router L3 high availability is built natively into OVN and does not require any 
 Nodes providing connection to external networks do have the `ovn-cms-options` key in their `Open_vSwitch` tables `external_ids` column set to `enable-chassis-as-gw`. This is done automatically in `osism` for all hosts in inventory group `ovn-controller-network`, which defaults to include all network nodes.
 You can check this on any particular node by running
 
-```
+```bash
 docker exec openvswitch_vswitchd ovs-vsctl get Open_vSwitch . external_ids:ovn-cms-options
 ```
 
@@ -259,7 +259,7 @@ Note that there is no detection of failures in the external network connectivity
 
 For each router created in neutron a `Logical_Router` object is created in the OVN northd DB. The list can be retrived by connecting to one of the hosts running `ovn-northd`
 
-```
+```console
 docker exec ovn_northd ovn-nbctl --db $ovn_nb_connection list Logical_Router
 _uuid               : f0ea6a95-d4bd-40e0-9efd-6da197825981
 copp                : []
@@ -279,7 +279,7 @@ The `ovn_nb_connection` is retrieved from the neutron ML2 configuration in the s
 
 Finding the routers external gateway port directly may be achieved by searching the OVN's `Logical_Router_Port` table for logical router ports having the `neutron:is_ext_gw=True` and `neutron:router_name=$Router_ID` in their `external_ids` column, where `$ROUTER_ID` is the ID of the router in neutron, which may also be found as part of the `name` in the OVN `Logical_Router` above.
 
-```
+```console
 ROUTER_ID="e9133cdd-7c31-4f67-8aac-a32384ce7939"
 docker exec ovn_northd ovn-nbctl --db $ovn_nb_connection find Logical_Router_Port external_ids:\"neutron:is_ext_gw\"=True external_ids:\"neutron:router_name\"=$ROUTER_ID
 _uuid               : bc73e085-ea33-45a9-89cf-78f81625d172
@@ -301,7 +301,7 @@ The `gateway_chassis` field in the output above shows the chassis currently invo
 At most five gateway chassis are used even if more nodes with external connectivity are available to keep BFD complexity low.
 To look at the gateway chassis names and their priorities the bare list of gateway chassis from the command above may used to retrieve them specifically
 
-```
+```console
 docker exec ovn_northd ovn-nbctl --db=tcp:127.0.0.1:6641 --columns chassis_name,priority list Gateway_Chassis \
   $(docker exec ovn_northd ovn-nbctl --db=tcp:127.0.0.1:6641 --bare --columns gateway_chassis find Logical_Router_Port external_ids:\"neutron:is_ext_gw\"=True external_ids:\"neutron:router_name\"=$ROUTER_ID)
 chassis_name        : testbed-node-2

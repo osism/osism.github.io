@@ -50,7 +50,7 @@ os_tuning_params:
 The sysctl paremeters are written to the file `/etc/sysctl.d/ceph-tuning.conf`
 on the storage nodes.
 
-```
+```console
 # cat /etc/sysctl.d/ceph-tuning.conf
 fs.aio-max-nr=1048576
 fs.file-max=26234859
@@ -361,17 +361,17 @@ The extra keys can then be fetched and copied by calling `osism apply ceph-copy-
 
 2. Push the configuration to your configuration repository and after that do the following
 
-   ```
-   $ osism apply configuration
-   $ osism reconciler sync
-   $ osism apply facts
+   ```bash
+   osism apply configuration
+   osism reconciler sync
+   osism apply facts
    ```
 
 3. After the configuration has been pulled and facts updated,
    you can run the LVM configuration playbook:
 
    ```
-   $ osism apply ceph-configure-lvm-volumes
+   osism apply ceph-configure-lvm-volumes
    ```
 
    This will generate a new configuration file for each node in `/tmp`
@@ -410,34 +410,34 @@ The extra keys can then be fetched and copied by calling `osism apply ceph-copy-
 
 5. Push the updated configuration **again** to your configuration repository and re-run:
 
-   ```
-   $ osism apply configuration
-   $ osism reconciler sync
+   ```bash
+   osism apply configuration
+   osism reconciler sync
    ```
 
 6. Finally create the LVM devices.
 
-   ```
-   $ osism apply ceph-create-lvm-devices
+   ```bash
+   osism apply ceph-create-lvm-devices
    ```
 
    These PVs, VGs and LVs are created using the example from step 4.
 
-   ```
+   ```console
    $ sudo pvs
-     PV         VG                                        Fmt  Attr PSize   PFree
-     /dev/sdb   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb lvm2 a--  <20.00g    0
-     /dev/sdc   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de lvm2 a--  <20.00g    0
+   PV         VG                                        Fmt  Attr PSize   PFree
+   /dev/sdb   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb lvm2 a--  <20.00g    0
+   /dev/sdc   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de lvm2 a--  <20.00g    0
 
    $ sudo vgs
-     VG                                        #PV #LV #SN Attr   VSize   VFree
-     ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb   1   1   0 wz--n- <20.00g    0
-     ceph-c6df96be-1264-5815-9cb2-da5eb453a6de   1   1   0 wz--n- <20.00g    0
+   VG                                        #PV #LV #SN Attr   VSize   VFree
+   ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb   1   1   0 wz--n- <20.00g    0
+   ceph-c6df96be-1264-5815-9cb2-da5eb453a6de   1   1   0 wz--n- <20.00g    0
 
    $ sudo lvs
-     LV                                             VG                                        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-     osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb -wi-a----- <20.00g
-     osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
+   LV                                             VG                                        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+   osd-block-196aad32-7cc4-5350-8a45-1b03f50fc9bb ceph-196aad32-7cc4-5350-8a45-1b03f50fc9bb -wi-a----- <20.00g
+   osd-block-c6df96be-1264-5815-9cb2-da5eb453a6de ceph-c6df96be-1264-5815-9cb2-da5eb453a6de -wi-a----- <20.00g
    ```
 
 7. Everything is now ready for the deployment of the OSDs.
@@ -467,7 +467,7 @@ ceph_osd_devices:
 
 Then generate the required LVM2 device configuration with the `ceph-configure-lvm-volumes` play.
 
-```
+```bash
 osism apply facts
 osism reconciler sync
 osism apply ceph-configure-lvm-volumes
@@ -508,32 +508,32 @@ lvm_volumes:
 Finally, create the necessary PVs, VGs and LVs. The parameter `-e ignore_db_too_small=true` is only set
 here in the example because we use less than 30 GByte for the size of the DB LV.
 
-```
+```bash
 osism reconciler sync
 osism apply ceph-create-lvm-devices -e ignore_db_too_small=true
 ```
 
 You can check the PVs, VGs, and LVs on the node.
 
-```
+```console
 $ sudo pvs
-  PV         VG                                           Fmt  Attr PSize   PFree
-  /dev/sdb   ceph-75960289-2e0e-525d-8bb5-dd8552531ef5    lvm2 a--  <20.00g      0
-  /dev/sdc   ceph-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f    lvm2 a--  <20.00g      0
-  /dev/sdd   ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb lvm2 a--  <20.00g <10.00g
+PV         VG                                           Fmt  Attr PSize   PFree
+/dev/sdb   ceph-75960289-2e0e-525d-8bb5-dd8552531ef5    lvm2 a--  <20.00g      0
+/dev/sdc   ceph-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f    lvm2 a--  <20.00g      0
+/dev/sdd   ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb lvm2 a--  <20.00g <10.00g
 
 $ sudo vgs
-  VG                                           #PV #LV #SN Attr   VSize   VFree
-  ceph-75960289-2e0e-525d-8bb5-dd8552531ef5      1   1   0 wz--n- <20.00g      0
-  ceph-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f      1   1   0 wz--n- <20.00g      0
-  ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb   1   2   0 wz--n- <20.00g <10.00g
+VG                                           #PV #LV #SN Attr   VSize   VFree
+ceph-75960289-2e0e-525d-8bb5-dd8552531ef5      1   1   0 wz--n- <20.00g      0
+ceph-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f      1   1   0 wz--n- <20.00g      0
+ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb   1   2   0 wz--n- <20.00g <10.00g
 
 $ sudo lvs
-  LV                                             VG                                           Attr       LSize   [...]
-  osd-block-75960289-2e0e-525d-8bb5-dd8552531ef5 ceph-75960289-2e0e-525d-8bb5-dd8552531ef5    -wi-a----- <20.00g
-  osd-block-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f ceph-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f    -wi-a----- <20.00g
-  osd-db-75960289-2e0e-525d-8bb5-dd8552531ef5    ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb -wi-a-----   5.00g
-  osd-db-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f    ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb -wi-a-----   5.00g
+LV                                             VG                                           Attr       LSize   [...]
+osd-block-75960289-2e0e-525d-8bb5-dd8552531ef5 ceph-75960289-2e0e-525d-8bb5-dd8552531ef5    -wi-a----- <20.00g
+osd-block-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f ceph-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f    -wi-a----- <20.00g
+osd-db-75960289-2e0e-525d-8bb5-dd8552531ef5    ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb -wi-a-----   5.00g
+osd-db-ce2c2cb6-f911-52dd-b57f-4476bf7afe9f    ceph-db-eb7522b1-41cf-522e-8d7e-2a4a82a879bb -wi-a-----   5.00g
 ```
 
 #### Use of partitions
@@ -543,7 +543,7 @@ The use of partitions presented in this example is not recommended for use in pr
 First create partitions that should be used for Ceph. In this example we use a block device `/dev/sdb`
 with four partitions that will be used for Ceph OSDs.
 
-```
+```console
 $ sudo fdisk -l /dev/sdb
 Disk /dev/sdb: 20 GiB, 21474836480 bytes, 41943040 sectors
 Disk model: QEMU HARDDISK
@@ -573,7 +573,7 @@ ceph_osd_devices:
 
 Then generate the required LVM2 device configuration with the `ceph-configure-lvm-volumes` play.
 
-```
+```bash
 osism apply facts
 osism reconciler sync
 osism apply ceph-configure-lvm-volumes
@@ -610,34 +610,34 @@ lvm_volumes:
 
 Finally, create the necessary PVs, VGs and LVs.
 
-```
+```bash
 osism reconciler sync
 osism apply ceph-create-lvm-devices
 ```
 
 You can check the PVs, VGs, and LVs on the node.
 
-```
+```console
 $ sudo pvs
-  PV         VG                                        Fmt  Attr PSize  PFree
-  /dev/sdb1  ceph-9e8799ae-c716-5212-8833-49f153ffbcef lvm2 a--  <5.00g    0
-  /dev/sdb2  ceph-8518d3a2-3194-5764-b55a-c51222b9b576 lvm2 a--  <5.00g    0
-  /dev/sdb3  ceph-a0da232a-e5b8-5823-8c42-8fb231442edc lvm2 a--  <5.00g    0
-  /dev/sdb4  ceph-56f7b5bc-82b0-5626-90a5-adf6078ceba6 lvm2 a--  <5.00g    0
+PV         VG                                        Fmt  Attr PSize  PFree
+/dev/sdb1  ceph-9e8799ae-c716-5212-8833-49f153ffbcef lvm2 a--  <5.00g    0
+/dev/sdb2  ceph-8518d3a2-3194-5764-b55a-c51222b9b576 lvm2 a--  <5.00g    0
+/dev/sdb3  ceph-a0da232a-e5b8-5823-8c42-8fb231442edc lvm2 a--  <5.00g    0
+/dev/sdb4  ceph-56f7b5bc-82b0-5626-90a5-adf6078ceba6 lvm2 a--  <5.00g    0
 
 $ sudo vgs
-  VG                                        #PV #LV #SN Attr   VSize  VFree
-  ceph-56f7b5bc-82b0-5626-90a5-adf6078ceba6   1   1   0 wz--n- <5.00g    0
-  ceph-8518d3a2-3194-5764-b55a-c51222b9b576   1   1   0 wz--n- <5.00g    0
-  ceph-9e8799ae-c716-5212-8833-49f153ffbcef   1   1   0 wz--n- <5.00g    0
-  ceph-a0da232a-e5b8-5823-8c42-8fb231442edc   1   1   0 wz--n- <5.00g    0
+VG                                        #PV #LV #SN Attr   VSize  VFree
+ceph-56f7b5bc-82b0-5626-90a5-adf6078ceba6   1   1   0 wz--n- <5.00g    0
+ceph-8518d3a2-3194-5764-b55a-c51222b9b576   1   1   0 wz--n- <5.00g    0
+ceph-9e8799ae-c716-5212-8833-49f153ffbcef   1   1   0 wz--n- <5.00g    0
+ceph-a0da232a-e5b8-5823-8c42-8fb231442edc   1   1   0 wz--n- <5.00g    0
 
 $ sudo lvs
-  LV                                             VG                                        Attr       LSize  [...]
-  osd-block-56f7b5bc-82b0-5626-90a5-adf6078ceba6 ceph-56f7b5bc-82b0-5626-90a5-adf6078ceba6 -wi-a----- <5.00g
-  osd-block-8518d3a2-3194-5764-b55a-c51222b9b576 ceph-8518d3a2-3194-5764-b55a-c51222b9b576 -wi-a----- <5.00g
-  osd-block-9e8799ae-c716-5212-8833-49f153ffbcef ceph-9e8799ae-c716-5212-8833-49f153ffbcef -wi-a----- <5.00g
-  osd-block-a0da232a-e5b8-5823-8c42-8fb231442edc ceph-a0da232a-e5b8-5823-8c42-8fb231442edc -wi-a----- <5.00g
+LV                                             VG                                        Attr       LSize  [...]
+osd-block-56f7b5bc-82b0-5626-90a5-adf6078ceba6 ceph-56f7b5bc-82b0-5626-90a5-adf6078ceba6 -wi-a----- <5.00g
+osd-block-8518d3a2-3194-5764-b55a-c51222b9b576 ceph-8518d3a2-3194-5764-b55a-c51222b9b576 -wi-a----- <5.00g
+osd-block-9e8799ae-c716-5212-8833-49f153ffbcef ceph-9e8799ae-c716-5212-8833-49f153ffbcef -wi-a----- <5.00g
+osd-block-a0da232a-e5b8-5823-8c42-8fb231442edc ceph-a0da232a-e5b8-5823-8c42-8fb231442edc -wi-a----- <5.00g
 ```
 
 ### Add a new osd
@@ -715,7 +715,7 @@ $ sudo lvs
 
 6. Create new LVM devices.
 
-   ```yaml
+   ```bash
    osism apply ceph-create-lvm-devices -l <nodename>
    ```
 
@@ -740,8 +740,8 @@ ceph_dashboard_username: admin
 
 The Ceph dashboard is bootstrapped with the `ceph-bootstrap-dashboard` play.
 
-```
-$ osism apply ceph-bootstrap-dashboard
+```bash
+osism apply ceph-bootstrap-dashboard
 ```
 
 ### Configuring the openstack loadbalancer to expose the ceph dashboard
@@ -777,8 +777,8 @@ listen ceph_dashboard
 
 and apply it.
 
-```
-$ osism apply -a reconfigure loadbalancer
+```bash
+osism apply -a reconfigure loadbalancer
 ```
 
 ## Second Ceph cluster
@@ -840,7 +840,7 @@ testbed-node-5.testbed.osism.xyz
 The sub environment can then be specified with all `apply` commands of the OSISM CLI. For example,
 to deploy the Ceph mon services of the `ceph.rgw` sub environment:
 
-```
+```bash
 osism apply --sub rgw ceph-osds
 ```
 
@@ -899,7 +899,7 @@ by default.
   In this example, there are 2 NUMA nodes. The pinned CPUs should all be assigned to the
   specified NUMA node.
 
-  ```
+  ```console
   # numactl --hardware
   available: 2 nodes (0-1)
   node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
@@ -961,19 +961,19 @@ by default.
    In this example, the name of the node on which the RBD is to be used is
    used as the name for the RBD.
 
-   ```
+   ```bash
    rbd create testbed-node-5 --size 64 --pool extra001
    ```
 
 6. On the node map the RBD as block device.
 
-   ```
+   ```bash
    sudo rbd map testbed-node-5 --pool extra001 --id extra001
    ```
 
 7. On the node check the mapped block device.
 
-   ```
+   ```console
    sudo rbd showmapped --id extra001
    id  pool      namespace  image           snap  device
    0   extra001             testbed-node-5  -     /dev/rbd0
@@ -984,6 +984,6 @@ by default.
 9. The file `/etc/ceph/rbdmap` is used to persist the mapping. The service `rbdmap.service`
    must be activated and started for this.
 
-   ```
+   ```text
    extra001/testbed-node-5 id=extra001,keyring=/etc/ceph/ceph.client.extra001.keyring
    ```

@@ -14,7 +14,7 @@ files on the node itself.
 
 ### Maintenance
 
-```
+```bash
 osism set maintenance NODE
 osism noset maintenance NODE
 ```
@@ -24,7 +24,7 @@ osism noset maintenance NODE
 
 ### Bootstrap
 
-```
+```bash
 osism set bootstrap NODE
 osism noset bootstrap NODE
 ```
@@ -34,7 +34,7 @@ osism noset bootstrap NODE
 
 ## Manage services
 
-```
+```bash
 osism apply manage-service \
   -e service_name=rsyslog \
   -e service_state=restarted
@@ -42,7 +42,7 @@ osism apply manage-service \
 
 ## Manage containers
 
-```
+```bash
 osism apply manage-container \
   -e container_name=nova_compute \
   -e container_action=restart
@@ -57,7 +57,7 @@ disabled.
 Reboot node `testbed-node-0.testbed.osism.xyz` and wait until the reboot has
 been completed and the system is accessible again.
 
-```
+```bash
 osism apply reboot \
   -e reboot_wait=True \
   -e ireallymeanit=yes \
@@ -67,7 +67,7 @@ osism apply reboot \
 Reboot node `testbed-node-0.testbed.osism.xyz` and do not wait for the reboot
 to complete.
 
-```
+```bash
 osism apply reboot \
   -e ireallymeanit=yes \
   -l testbed-node-0.testbed.osism.xyz
@@ -77,7 +77,7 @@ osism apply reboot \
 
 ### Display the IP address
 
-```
+```console
 $ sudo ipmitool lan print | grep 'IP Address'
 IP Address Source       : DHCP Address
 IP Address              : 10.10.0.100

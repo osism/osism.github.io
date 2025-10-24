@@ -15,7 +15,7 @@ The `osism apply` command can be used to list all integrated playbooks and their
 environments. Custom plays that have been added in the configuration repository are not visible
 in this list.
 
-```
+```console
 $ osism apply
 2023-09-30 10:09:25 | INFO     | No role given for execution. The roles listed in the table can be used.
 +------------------------------------------------------------------+----------------+
@@ -46,7 +46,7 @@ $ osism apply
 
 ## Apply a play
 
-```
+```console
 $ osism apply operator -l node01
 2024-06-14 09:33:10 | INFO     | Task f94a2e6f-d199-421c-b7b7-743db4661305 (operator) was prepared for execution.
 2024-06-14 09:33:10 | INFO     | It takes a moment until task f94a2e6f-d199-421c-b7b7-743db4661305 (operator) has been started and output is visible here.
@@ -81,26 +81,31 @@ contributing to OSISM.
 Some facts about custom plays:
 
 * Plays must be stored under the following naming scheme so that they can be executed with the OSISM command.
-  ```environments/<environment>/playbook-<the name of the play>.yml```
+
+  ```text
+  environments/<environment>/playbook-<the name of the play>.yml
+  ```
 
 * Without specifying a particular environment the `custom` environment is used.
 
-  ```yaml
+  ```bash
   # executes: environments/custom/playbook-setup-serial-device.yml
   osism apply setup-serial-device
   ```
 
 * Specifying a play of a environment:
 
-  ```yaml
-  # executes environments/deph/playbook-wipe-parititons.yml
-  osism apply -e ceph wipe-parititons
+  ```bash
+  # executes environments/deph/playbook-wipe-partitions.yml
+  osism apply -e ceph wipe-partitions
   ```
 
 * Custom roles that are used for a specific environment must be stored under the following path so that
   they can be found by plays.
 
-  `environments/<environment>/roles/<role>/`
+  ```text
+  environments/<environment>/roles/<role>/
+  ```
 
 ### Example play with roles: Manage the infrastructure of the SCS testing environment
 
@@ -125,7 +130,7 @@ Just to be on the safe side: The following example can be useful, but it can als
 :::
 
 
-```yaml title="environments/ceph/playbook-wipe-partitions.yml
+```yaml title="environments/ceph/playbook-wipe-partitions.yml"
 ---
 - name: Wipe partitions
   hosts: ceph-resource

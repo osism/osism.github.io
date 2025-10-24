@@ -25,32 +25,32 @@ production use yet.
 
    * Deploy [Rook Operator](https://rook.io/docs/rook/latest/Helm-Charts/operator-chart/)
 
-     ```
+     ```bash
      osism apply rook-operator
      ```
 
    * Deploy Ceph cluster
 
-     ```
+     ```bash
      osism apply rook
      ```
 
    * Copy Ceph keyrings to kolla directories (if deploying OpenStack)
 
-     ```
+     ```bash
      osism apply rook-fetch-keys
      ```
 
 2. Get Ceph keyrings. This places the necessary keys in `/opt/configuration`.
 
-   ```
+   ```bash
    osism apply rook-fetch-keys
    ```
 
    After run, these keys must be permanently added to the configuration repository
    via Git.
 
-   ```
+   ```console
    environments/infrastructure/files/ceph/ceph.client.admin.keyring
    environments/kolla/files/overlays/gnocchi/ceph.client.gnocchi.keyring
    environments/kolla/files/overlays/nova/ceph.client.cinder.keyring
@@ -71,7 +71,7 @@ production use yet.
 
 3. A Ceph client, a wrapper on the manager for entering the Rook toolbox, can be deployed.
 
-   ```
+   ```bash
    osism apply cephclient
    ```
 

@@ -4,13 +4,13 @@ This website is built using [Docusaurus](https://docusaurus.io/), a modern stati
 
 ### Installation
 
-```
-yarn
+```bash
+npm install --global yarn
 ```
 
 ### Local Development
 
-```
+```bash
 yarn start
 ```
 

@@ -18,7 +18,7 @@ It is **strongly advised** to use the documentation for the version being used.
 
 The block device `sdf` has errors. You can see this in the kernel ring buffer, for example.
 
-```
+```console
 $ sudo dmesg
 [...]
 [14062414.575715] sd 14:0:5:0: [sdf] tag#2120 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_OK cmd_age=1s
@@ -30,7 +30,7 @@ $ sudo dmesg
 
 It may also be displayed in the health details of Ceph.
 
-```
+```console
 $ ceph -s
 [...]
     health: HEALTH_WARN
@@ -46,14 +46,14 @@ HEALTH_WARN Too many repaired reads on 1 OSDs
 In this case the block device `sdf` is in the storage node `sto1001`. The OSD assigned
 to this block device can be determined.
 
-```
+```console
 $ ceph device ls | grep 'sto1001:sdf'
 SEAGATE_ST16000NM004J_ZR604ZDZ0000C210PWE9  sto1001:sdf      osd.17
 ```
 
 If you only know the OSD ID, you can also determine the associated block device and the storage node.
 
-```
+```console
 $ ceph device ls | grep osd.17
 [...]
 SEAGATE_ST16000NM004J_ZR604ZDZ0000C210PWE9  sto1001:sdf      osd.17
@@ -62,13 +62,13 @@ SEAGATE_ST16000NM004J_ZR604ZDZ0000C210PWE9  sto1001:sdf      osd.17
 The broken OSD can be removed from the Ceph cluster. The Ceph cluster is then rebalanced.
 This can take some time and cause a high level of activity on the Ceph cluster.
 
-```
+```console
 $ ceph osd out osd.17
 marked out osd.17.
 ```
 
 On the storage node disable the OSD service for the OSD.
 
-```
+```bash
 $ sudo systemctl stop ceph-osd@17.service
 ```

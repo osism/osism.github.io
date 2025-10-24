@@ -11,7 +11,7 @@ One way to do this in OpenStack is to leverage the [instance rescue mechanism](h
 
 If the required ISO image is not available in the image store yet upload it first:
 
-```
+```bash
 PATH_TO_ISO_IMAGE=""
 IMAGE_NAME=""
 openstack image create \
@@ -30,7 +30,7 @@ The `hw_rescue_device` and `hw_rescue_bus` properties may be omitted if you do n
 
 One cannot create an instance with a blank local boot device. As a workaround create a blank image first, e.g.:
 
-```
+```bash
 BLANK_IMAGE_NAME="blank"
 dd if=/dev/zero of="$BLANK_IMAGE_NAME" bs=1k count=1
 openstack image create \
@@ -41,7 +41,7 @@ rm  "$BLANK_IMAGE_NAME"
 
 Create the instance:
 
-```
+```bash
 INSTANCE_NAME=""
 FLAVOR=""
 openstack server create \
@@ -55,7 +55,7 @@ openstack server create \
 
 Create an instance with a blank boot volume
 
-```
+```bash
 INSTANCE_NAME=""
 FLAVOR=""
 BOOT_VOLUME_SIZE=""
@@ -68,7 +68,7 @@ openstack server create \
 
 Set the created volume to bootable
 
-```
+```bash
 openstack volume set --bootable $(openstack server show $INSTANCE_NAME -f json -c attached_volumes | jq -r '.attached_volumes | first | .id')
 ```
 
@@ -76,7 +76,7 @@ openstack volume set --bootable $(openstack server show $INSTANCE_NAME -f json -
 
 Use the rescue mechanism to boot the ISO, e.g.:
 
-```
+```bash
 openstack server rescue \
   --image $IMAGE_NAME \
   $INSTANCE_NAME
@@ -85,13 +85,13 @@ openstack server rescue \
 Wait for the instance to be rescued. This will take a moment, as a soft reboot is tried before issueing a hard reboot.
 Watch the instance `task_state` and `status` to see the latter change from `ACTIVE` to `RESCUE`.
 
-```
+```bash
 watch openstack server show $INSTANCE_NAME -f value -c status -c task_state
 ```
 
 Start the installation procedure, e.g. by opening the instance's console
 
-```
+```bash
 openstack console url show $INSTANCE_NAME
 ```
 
@@ -99,6 +99,6 @@ The instances storage device should be available as a destination for the instal
 Rebooting the instance in this state will lead to the rescue image being booted again.
 To boot the instance from its freshly provisioned boot device unrescue the instance:
 
-```
+```bash
 openstack server unrescue $INSTANCE_NAME
 ```
