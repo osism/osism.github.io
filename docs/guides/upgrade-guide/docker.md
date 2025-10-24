@@ -78,7 +78,7 @@ cd /opt/configuration/environments/manager
 ANSIBLE_ASK_VAULT_PASS=True ./run.sh docker
 ```
 
-## Restart behaviour
+## Restart behavior
 
 When upgrading, the Docker service is restarted. As a result, it can come to a restart of the
 running containers. This can lead to interruptions in individual services. A change in
@@ -100,7 +100,7 @@ to be restarted:
 
 There are two ways to prevent a restart of the Docker service during an upgrade.
 
-If the restart behaviour of the Docker service is changed, always make sure to restart the
+If the restart behavior of the Docker service is changed, always make sure to restart the
 Docker service manually afterwards (e.g. by a system reboot).
 
 1. A host group can be defined via the parameter `docker_ignore_restart_groupname`. The

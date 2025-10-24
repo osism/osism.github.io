@@ -304,7 +304,7 @@ done
 #exec ./api_monitor.sh -O -C -D -N 2 -n 6 -s -M -LO -b -B -a 2 -t -T -R -S ciab "$@"
 exec ./api_monitor.sh -O -C -D -N 2 -n 6 -s -M -LO -b -B -T "$@"
 ```
-Compared to the previous run, we have explicitly set two networks here `-N 2` and rely on the iterations being passed in as command line arguments. Add parameter `-t` if your cloud is slow to increase timeouts. We have enabled the ovtavia loadbalancer (`-LO`) in this example rather than the amphora based one (`-LL`).
+Compared to the previous run, we have explicitly set two networks here `-N 2` and rely on the iterations being passed in as command line arguments. Add parameter `-t` if your cloud is slow to increase timeouts. We have enabled the octavia loadbalancer (`-LO`) in this example rather than the amphora based one (`-LL`).
 
 You may use one of the existing `run_XXXX.sh` scripts as example. Beware: eMail alerting with `ALARM_EMAIL_ADDRESS` and `NOTE_EMAIL_ADDRESS` (and limiting with `-a` and `-R` ) and reporting data to telegraf (option `-S`) may be present in the samples. Make this script executable (`chmod +x run_CLOUDNAME.sh`).
 
@@ -364,7 +364,7 @@ Once you have configured `postfix`, you can enable eMail notifications using the
 
 Note that `api_monitor.sh` does take some care not to expose secrets -- since v1.99, it does also redact issued tokens (which would otherwise give you up to 24hrs of access). But the Log files still may contain moderately sensitive information, so we suggest to not share it with untrusted parties.
 
-The log file is written to the file system. After finishing the 200 iterations, the log file is compressed. If the environment variable `SWIFTCONTAINER` has been set (in `run_COULDNAME.sh`) when starting `api_monitor.sh`. the log file will be uploaded to a container with that name if it exists and if the swift object storage service is supported by the cloud. So create the container (a bucket in S3 speak) before if you want to use this: `export SWIFTCONTAINER=OSHM_Logs; openstack container create $SWIFTCONTAINER`
+The log file is written to the file system. After finishing the 200 iterations, the log file is compressed. If the environment variable `SWIFTCONTAINER` has been set (in `run_CLOUDNAME.sh`) when starting `api_monitor.sh`. the log file will be uploaded to a container with that name if it exists and if the swift object storage service is supported by the cloud. So create the container (a bucket in S3 speak) before if you want to use this: `export SWIFTCONTAINER=OSHM_Logs; openstack container create $SWIFTCONTAINER`
 
 After the 200 iterations, a `.psv` file (pipe-separated values) is created `Stats.STARTTIME-ENDTIME.psv` (with times as calendar dates) which contains a bit of statistics on the last 200 iterations. This one will also be uploaded to $SWIFTCONTAINER (if configured).
 

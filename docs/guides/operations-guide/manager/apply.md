@@ -121,7 +121,7 @@ For example, this is a play to prepare all devices to be used for Ceph on a Ceph
 resource node.
 
 * It is saved in the configuration repository in the file `environments/ceph/playbook-wipe-partitions.yml`.
-* It is run with `osism apply -e ceph wipe-parititons`.
+* It is run with `osism apply -e ceph wipe-partitions`.
 
 :::warning
 

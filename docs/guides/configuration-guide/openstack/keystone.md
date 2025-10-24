@@ -24,7 +24,7 @@ service itself is then done as usual.
 ---
 # SCS Domain Manager policy configuration
 
-# Section A: OpenStack base definitons
+# Section A: OpenStack base definitions
 # The entries beginning with "base_<rule>" should be exact copies of the
 # default "identity:<rule>" definitions for the target OpenStack release.
 # They will be extended upon for the domain manager role below this section.

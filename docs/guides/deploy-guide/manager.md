@@ -20,7 +20,7 @@ Requirements for the manager node:
 
 - The system should have the following hardware features
   - at least 64 GB RAM (We assume here that the monitoring services are also run on the manager.
-    If the manager node is only used for the sanager Service, 32 GByte is sufficient and
+    If the manager node is only used for the manager Service, 32 GByte is sufficient and
     with 16 GByte it will probably also work.
   - at least 256 GB hard disk space
   - the system should be initially and permanently accessible independently of the cloud environment
@@ -51,7 +51,7 @@ The operator user is created on each node. It is used as a service account for O
 containers run with this user. Ansible also uses this user to access the nodes. Commands
 on the manager node need to be run as this user. The name of the operator user is always `dragon`.
 
-With `ANSIBLE_USER` the existing user account is set after the provsioning of the management
+With `ANSIBLE_USER` the existing user account is set after the provisioning of the management
 node. When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
 and the password of this user is `password`. If you install Ubuntu manually the user usually
 is `ubuntu`. If you want to use any other user here, that's no problem. It is important that
@@ -139,7 +139,7 @@ export ANSIBLE_ASK_VAULT_PASS=True
 
 To prevent recurring installation of Ansible Collections, `export INSTALL_ANSIBLE_ROLES=False` can be set.
 
-The network configuration, already present on a node should be backuped before this step.
+The network configuration, already present on a node should be backed up before this step.
 Then you can deploy the network configuration with the network role.
 
 Have a look to the [network documentation](../configuration-guide/network.md) and configure it before running this playbook.

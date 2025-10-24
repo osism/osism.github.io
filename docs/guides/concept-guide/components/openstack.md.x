@@ -1,4 +1,3 @@
-
 # OpenStack
 
 ## Lifecycle Management of OpenStack in OSISM
@@ -26,7 +25,7 @@ An OpenStack Operator focuses on user-facing OpenStack services, meaning service
 
 ### OpenStack Services to Manage Applications
 
-The first set of OpenStack services are the minimal services required by pratically any functional OpenStack cluster. It would be hard to support even the simplest applications without including all services in this category, so we call them fundamental services.
+The first set of OpenStack services are the minimal services required by practically any functional OpenStack cluster. It would be hard to support even the simplest applications without including all services in this category, so we call them fundamental services.
 
 It is common for the OpenStack community to refer to individual services by either their code names or their purposes. Follows a list of the fundamental OpenStack services covered in this section:
 
@@ -46,7 +45,7 @@ So OpenStack Operator users (and also Administrator users) first connect to Keys
 
 #### OpenStack Virtual Machines: Nova
 
-As aplication workloads run on OpenStack as Virtual Machines (VMs), the first service Operators care about is Nova, the Compute service. It interacts with the local hypervisor in compute nodes to manage VMs and provides advanced features such as live migration and snapshots. OpenStack nova uses the server resource type to manage VMs. It is usual to refer to Nova VMs as "server instances".
+As application workloads run on OpenStack as Virtual Machines (VMs), the first service Operators care about is Nova, the Compute service. It interacts with the local hypervisor in compute nodes to manage VMs and provides advanced features such as live migration and snapshots. OpenStack nova uses the server resource type to manage VMs. It is usual to refer to Nova VMs as "server instances".
 
 If an Operator just creates a VM using Nova APIs, that VM has no connectivity to anything else, including other VMs inside the same OpenStack cluster. And all data inside that VM can be lost in events such as hardware failure of a compute node. So most VMs require that you use Nova together with other fundamental services. But, if everything you need is access to the virtual console of a VM, to run software installed locally on that VM, them Nova alone would be sufficient.
 
@@ -61,11 +60,11 @@ The Block Storage service, Cinder, provides virtual disks, called volumes, which
 
 You can attach multiple volumes to the same VM, and you move volumes from one VM to another. You can even attach a single volume to multiple VMs at the same time, though this is a dangerous operation: applications not designed for shared disks may easily corrupt data.
 
-Cinder does not provide shared filesystems, which some worloads require. Stay tuned for the next section, which describes the right OpenStack service for such applications. The "block" nature of Cinder relates to the network storage protocol, such as iSCSI, Fibre Channel, or Ceph RBD.
+Cinder does not provide shared filesystems, which some workloads require. Stay tuned for the next section, which describes the right OpenStack service for such applications. The "block" nature of Cinder relates to the network storage protocol, such as iSCSI, Fibre Channel, or Ceph RBD.
 
 Cinder also provides advanced features such as clones and snapshots of volumes, which you use for backup and disaster recovery procedures, or for quick cloning of VMs. The root or boot disk of a VM is usually a Cinder volume because this enables VMs to survive the loss of the compute node running the VM.
 
-There might be reasons to NOT use Cincer volumes for VM disks, for example to support very fast local NVMe flash storage, but then the application itself needs to provide resiliency and fault tolerance for that data. Most times, applications rely on the infrastructure to do it for them, which means Cinder does the job.
+There might be reasons to NOT use Cinder volumes for VM disks, for example to support very fast local NVMe flash storage, but then the application itself needs to provide resiliency and fault tolerance for that data. Most times, applications rely on the infrastructure to do it for them, which means Cinder does the job.
 
 #### OpenStack Virtual Networks: Neutron
 
@@ -75,7 +74,7 @@ Neutron is the Networking service of OpenStack. It provides virtual internal net
 
 It is possible to manage Neutron virtual networks down to the virtual port level, and you can even create virtual VLANs (virtual Virtual Local Area Networks?) ports and trunks on tenant networks, for applications which you migrate from physical servers and need to keep their original operating system settings. Provider networks, from the other side, can abstract data center networking details, such as VLAN IDs, from connected VMs, if you wish.
 
-Notice that, whatever you configure on your Neutron virtual networks, you need consistent configurations in the operating system inside your VMs. OpenStack helps with this task by providing features, such as cloud-init, to offer an initial configuration to new VMs, and also provides virtual DHCP services. But, if you want to configure static IP addresses and routes inside your VMs, you can. It is also a best practice to configure the internal firewall of your operating system, such as firewalld from RHEL, in addition to the network security resoruces from OpenStack.
+Notice that, whatever you configure on your Neutron virtual networks, you need consistent configurations in the operating system inside your VMs. OpenStack helps with this task by providing features, such as cloud-init, to offer an initial configuration to new VMs, and also provides virtual DHCP services. But, if you want to configure static IP addresses and routes inside your VMs, you can. It is also a best practice to configure the internal firewall of your operating system, such as firewalld from RHEL, in addition to the network security resources from OpenStack.
 
 #### Operating System Boot Images: Glance
 
@@ -83,7 +82,7 @@ If you create a new VM, you need a bootable operating system disk. It could be a
 
 Glance, the OpenStack Image service, not only provides a choice of such images that Nova can use for the first boot of a VM, or to copy to the root disk of a VM, prior to its first boot, but also provides management of an image catalog, so Operators and Administrators can create and maintain a large set of customized VM images.
 
-There are many reasons to customize VM images, from preconfiguring operating system settings required by your organization policies, such as enterprise identity servers, certificate auhtorities, and agents for anti-virus and backup software, to including entire application stacks, like an online web store that you use to run multiple VMs with copies of the same application, possibly in multiple OpenStack clusters.
+There are many reasons to customize VM images, from preconfiguring operating system settings required by your organization policies, such as enterprise identity servers, certificate authorities, and agents for anti-virus and backup software, to including entire application stacks, like an online web store that you use to run multiple VMs with copies of the same application, possibly in multiple OpenStack clusters.
 
 It is the work of OpenStack Administrator to provide at least one image to Glance before Operators can create VMs.
 
@@ -99,15 +98,15 @@ Thanks to Placement, Nova can schedule each server instance to a compute node wi
 
 Placement also enables the definition of new classes of compute resources, for example: the availability of GPUs in compute nodes. Then server instances can request a number of GPUs, and an OpenStack Operator can be sure that instance either gets the GPUs it needs, or fails to start.
 
-Defining new classes of compute resources is usually an OpenStack Admninistrator task, while configuring workloads to consume compute resources from those classes is an OpenStack Operator task.
+Defining new classes of compute resources is usually an OpenStack Administrator task, while configuring workloads to consume compute resources from those classes is an OpenStack Operator task.
 
 #### OpenStack Secrets Management: Barbican
 
 We already know that security in OpenStack starts with Keystone, as the authentication entry point for all OpenStack services. While most end-user applications do not need to invoke OpenStack APIs, thus would have no need for direct interactions with Keystone, most applications do interact with a wide range of services. These services range from external APIs of a software vendor to middleware running on other servers inside and outside of their OpenStack cluster, such as database servers and messaging middleware.
 
-Management of credentials to access those services and APIs is a potential source of security issues. They should not be hardoced in either application source code nor on its configuration files. Ideally they would live outside of application VMs. Security conscious organizations require that applications use Key Management Services (KMS) to store such credentials, and OpenStack offers Barbican: the Key Management service.
+Management of credentials to access those services and APIs is a potential source of security issues. They should not be hardcoded in either application source code nor on its configuration files. Ideally they would live outside of application VMs. Security conscious organizations require that applications use Key Management Services (KMS) to store such credentials, and OpenStack offers Barbican: the Key Management service.
 
-OpenStack Barbican enables secure storage of many types of keys, including symetric and assymetric keys, and including both passwords and certificate files. Applications authenticate to Barbican using Keystone to retrieve keys, and OpenStack Operators manage those keys independent of applications.
+OpenStack Barbican enables secure storage of many types of keys, including symmetric and asymmetric keys, and including both passwords and certificate files. Applications authenticate to Barbican using Keystone to retrieve keys, and OpenStack Operators manage those keys independent of applications.
 
 Multiple OpenStack services offer integration with Barbican, for example to encrypt data stored in Cinder volumes or Swift objects.
 
@@ -122,13 +121,13 @@ Public cloud started without file sharing services, but offering object storage 
 
 For end users, object storage may look just like file storage: buckets or containers are folders or directories, and objects are files. But, from a developer’s perspective, they are very different. For example, objects support write-once semantics and versioning, but files support append and random access modes.
 
-In the end, applications are typically designed to use either of them (file or object storage) and cannot be easily configured to use the other. This course is not intended to provide a comparision of the benefits and capabilities of object versus file storage: from the perspective of OpenStack Operators, the decision was already made, and their job is to provide whatever of these capabilities applications require.
+In the end, applications are typically designed to use either of them (file or object storage) and cannot be easily configured to use the other. This course is not intended to provide a comparison of the benefits and capabilities of object versus file storage: from the perspective of OpenStack Operators, the decision was already made, and their job is to provide whatever of these capabilities applications require.
 
 #### OpenStack File Shares: Manila
 
 Manila offers access to remote file shares using a variety of network protocols, according to the capabilities of the storage backends configured on your OpenStack cluster. Typical business requirements, such as high availability of data by replication, depends on the storage backend rather than on OpenStack.
 
-The role of Manila is providing a uniform interface for making file shares avaibale to application VMs, so an OpenStack Operator does not need direct acces to the storage backends themselves and their proprietary administration interfaces. Depending on the backend, Manila may also abstract networking and authentication details, making it look like the file share exists inside the virtual tenant network.
+The role of Manila is providing a uniform interface for making file shares available to application VMs, so an OpenStack Operator does not need direct access to the storage backends themselves and their proprietary administration interfaces. Depending on the backend, Manila may also abstract networking and authentication details, making it look like the file share exists inside the virtual tenant network.
 
 Manila does not abstract the file sharing protocol itself: if an application VM expects a remote NFS share, Manila must be configured to provide NFS services. Besides, it is outside the scope of Manila to abstract file system security, such as uid, gid, and permission masks of POSIX files.
 

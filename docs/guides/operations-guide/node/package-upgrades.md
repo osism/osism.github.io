@@ -48,7 +48,7 @@ and confirm resize for all finished migrations individually
 openstack server resize confirm #SERVER
 ```
 
-Check for remaining nodes in unmigratables states
+Check for remaining nodes in unmigratable states
 
 ```console
 osism manage compute list $HOST

@@ -88,7 +88,7 @@ The Openstack Project Manager essentially consists of two parts, the `create.py`
 
 ### create.py
 
-This command is used to create and modify domains, projects, users and quotas. As default the domain is used as prefix for all projects and users created for easy alloction in Openstack.
+This command is used to create and modify domains, projects, users and quotas. As default the domain is used as prefix for all projects and users created for easy allocation in Openstack.
 
 :::note
 
@@ -170,9 +170,9 @@ options:
                         Service network CIDR
 ```
 
-#### Create a Domain and inital project
+#### Create a Domain and initial project
 
-When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project `webshop`. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain. 
+When executing the `create.py` command, the first time with `--domain`, it will create a new domain, an admin account and the first project `webshop`. The admin account will be created in the default Domain of Openstack and can be used for the Service Provider to manager the complete domain.
 
 ```console
 $ python3 src/create.py --domain democompany --name webshop
@@ -243,7 +243,7 @@ openstack project set  --property quotaclass=unlimited democompany-webshop
 #### Special project: images
 
 With this special Project you can share all images uploaded into this project to all other project in your domain which has set the property `has-shared-images`, which is by default set.
-Alsoi only the domain-admin user has access to this project, other domain users won't see this, they will find the uploaded images in their projects. 
+Also only the domain-admin user has access to this project, other domain users won't see this, they will find the uploaded images in their projects.
 If you want your grant other domain users also access to upload some images, you need to give them access to the images Project in Openstack.
 
 ```console
@@ -359,7 +359,7 @@ $ python3 src/manage.py --domain democompany
 2024-04-19 14:24:07.334 | INFO     | democompany-webshop - check if service rbac policy must be deleted (democompany-service)
 ```
 
-## Config files 
+## Config files
 
 The config files which can be used for `create.py` and `manage.py` are using the [oslo.config format](https://docs.openstack.org/oslo.config/latest/configuration/quickstart.html), you can set the command line options as `key = value pair` and create your own config files matching your setup.
 
@@ -369,7 +369,7 @@ cloud = admin
 domain = democompany
 ```
 
-## Quota Templates 
+## Quota Templates
 
 Edit the `etc/classes.yml` file if you want to change or add new quota templates
 

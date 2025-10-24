@@ -126,7 +126,7 @@ When creating backups of attached (in-use) volumes, the state of the full volume
 
 :::
 
-In case of attached (in-use) volumes, backups can only be created while also specfiying the `force` parameter:
+In case of attached (in-use) volumes, backups can only be created while also specifying the `force` parameter:
 
 ```bash
 openstack volume backup create --force $VOLUME_NAME_OR_ID

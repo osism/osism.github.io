@@ -30,7 +30,7 @@ OSISM is a comprehensive platform for managing software-defined cloud infrastruc
 
 ## Guides
 
-This documentation is organised into guides:
+This documentation is organized into guides:
 
 * The [Concept Guide](./guides/concept-guide/) explains which components and modules make up OSISM. It also
   explains the use cases.

@@ -54,16 +54,16 @@ git clone ssh://git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git
 
 Examples:
 
-* The repository is located in the `regiocloud` organisation on GitHub, has the name
+* The repository is located in the `regiocloud` organization on GitHub, has the name
   configuration and can be accessed via SSH: `ssh://git@github.com:regiocloud/configuration.git`
-* The repository is located in the `regiocloud` organisation on Gitlab, has the name configuration
+* The repository is located in the `regiocloud` organization on Gitlab, has the name configuration
   and can be accessed via SSH: `ssh://git@gitlab.com:regiocloud/configuration.git`
-* The repository is located in the `regiocloud` organisation on an internal Gitlab, has the name
+* The repository is located in the `regiocloud` organization on an internal Gitlab, has the name
   configuration and can be accessed via SSH: `ssh://git@git.services.osism.tech:regiocloud/configuration.git`
 
 If necessary, the configuration SSH key can be used for the initial transfer of the repository.
 
-For this, the following content is added in `~/.ssh/config` and the SSH privte key is stored in
+For this, the following content is added in `~/.ssh/config` and the SSH private key is stored in
 `~/.ssh/id_rsa.configuration`.
 
 

@@ -453,7 +453,7 @@ of a new configuration repository documented.
 | `Makefile`                       |                                                                                                                                                                                        |
 | `gilt.yaml`                      | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
 
-## Synchronising the configuration repository
+## Synchronizing the configuration repository
 
 Once the manager has been deployed and the configuration repository has been initially
 transferred to the manager node, the configuration repository can be updated using

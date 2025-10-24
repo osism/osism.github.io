@@ -67,7 +67,7 @@ global
 ### Backup
 
 [Mariabackup](https://mariadb.com/kb/en/mariabackup-overview/) is used to create backups
-of MariaDB. For more details about backups, you can use the offical
+of MariaDB. For more details about backups, you can use the official
 [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html) documentation.
 
 * Create a full backup
@@ -98,7 +98,7 @@ of MariaDB. For more details about backups, you can use the offical
   -rw-r--r-- 1 42434 42434 5411763 Jun  3 18:45 mysqlbackup-03-06-2024-1717440342.qp.xbc.xbs.gz
   ```
 
-Currently there is no offical scheduling and houskeeping (disk space) for mariadb backups.
+Currently there is no official scheduling and housekeeping (disk space) for mariadb backups.
 You can create a simple cronjob on the manager or use your enterprise backup software.
 
 ```bash
@@ -125,7 +125,7 @@ EOF
 
 ### Recovery
 
-If you stopped your mariadb galera cluster completly, you can use the following procedure
+If you stopped your mariadb galera cluster completely, you can use the following procedure
 to start a recovery.
 
 ```bash

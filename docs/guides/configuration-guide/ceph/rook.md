@@ -510,7 +510,7 @@ The following inventory groups are defined with defaults and can be used to cont
 * `rook-osd`
 * `rook-rgw`
 
-To customise those inventory groups it is possible to do so in the following format:
+To customize those inventory groups it is possible to do so in the following format:
 
 ```ini title="inventory/20-roles"
 [rook-mds:children]
@@ -529,7 +529,7 @@ ceph-resource
 ceph-control
 ```
 
-Nodes assigned to those groups will be labeled and then be utilised during the scheduling of the pods with a configuration like the following for each component:
+Nodes assigned to those groups will be labeled and then be utilized during the scheduling of the pods with a configuration like the following for each component:
 
 ```yaml title="environments/rook/configuration.yml"
 nodeAffinity:
@@ -595,7 +595,7 @@ In theory, this is completely customizable by deploying multiple helm releases. 
 
 ## Helm Value File
 
-The [OSISM Rook role](https://github.com/osism/ansible-collection-services/tree/main/roles/rook) is an opinionated and sane default configuration. If you reach the limits of what is customizable via ansible variables or have a very custom setup, you can pass a custom or additional [`values.yml`](https://github.com/osism/ansible-collection-services/blob/main/roles/rook/templates/01-helm-values-all.yml.j2) files or even any [Rook CRD](https://rook.io/docs/rook/latest-release/CRDs/specification/) to the role and it will be jinja2 templated and roled out to the kubernetes cluster.
+The [OSISM Rook role](https://github.com/osism/ansible-collection-services/tree/main/roles/rook) is an opinionated and sane default configuration. If you reach the limits of what is customizable via ansible variables or have a very custom setup, you can pass a custom or additional [`values.yml`](https://github.com/osism/ansible-collection-services/blob/main/roles/rook/templates/01-helm-values-all.yml.j2) files or even any [Rook CRD](https://rook.io/docs/rook/latest-release/CRDs/specification/) to the role and it will be jinja2 templated and rolled out to the kubernetes cluster.
 
 Just overwrite `rook_configuration_directory` and place any `*.yml.j2` files that you want to apply there.
 

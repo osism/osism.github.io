@@ -248,7 +248,7 @@ Monitoring is done using [Bidirectional Forwarding Detection (BFD)](https://data
 Failures detected this way are
 
 * Disconnection of the gateway chassis from the network used for tunneling:
-  The BFD signal will be disrupted, since it it being send over the tunnel network. It is therfore advisable to not use a different physical network as tunnel network.
+  The BFD signal will be disrupted, since it it being send over the tunnel network. It is therefore advisable to not use a different physical network as tunnel network.
 * Stop/Crash of `openvswitch_vswitchd`:
   The daemon is the source of the BFD signal.
 * Graceful termination of ovn-controller
@@ -257,7 +257,7 @@ Failures detected this way are
 
 Note that there is no detection of failures in the external network connectivity of a gateway chassis and subsequently no failover in this case!
 
-For each router created in neutron a `Logical_Router` object is created in the OVN northd DB. The list can be retrived by connecting to one of the hosts running `ovn-northd`
+For each router created in neutron a `Logical_Router` object is created in the OVN northd DB. The list can be retrieved by connecting to one of the hosts running `ovn-northd`
 
 ```console
 docker exec ovn_northd ovn-nbctl --db $ovn_nb_connection list Logical_Router
@@ -323,8 +323,8 @@ priority            : 3
 * Observe change of the hosting-chassis as described above
 * Evaluate packet-loss in the network test
 
-During testing of the first two detected failures listed above (loss of tunnel network connectivity and stop of `openvswitch_vswitchd`) loss of a couple of ICMP echo replies was observed occasionally, while failback consistently resulted in loss of multiple ICMP echo replies.
-During tests of graceful shutdown of `ovn-controller` no loss of ICMP replies was observed. Additionally no failback occured, but logical router port priorities were adapted instead, thus giving a seamless networking experience even during shutdown of network nodes.
+During testing of the first two detected failures listed above (loss of tunnel network connectivity and stop of `openvswitch_vswitchd`) loss of a couple of ICMP echo replies was observed occasionally, while fallback consistently resulted in loss of multiple ICMP echo replies.
+During tests of graceful shutdown of `ovn-controller` no loss of ICMP replies was observed. Additionally no fallback occurred, but logical router port priorities were adapted instead, thus giving a seamless networking experience even during shutdown of network nodes.
 
 #### References
 https://docs.openstack.org/neutron/latest/admin/ovn/refarch/refarch.html

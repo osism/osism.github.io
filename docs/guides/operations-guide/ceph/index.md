@@ -580,7 +580,7 @@ Typical application names are: rbd, rgw, cephfs
 
 :::warning
 
-This will delete all data in that pool. There is no undo/undelete.
+This will delete all data in that pool. There is no undo/restore.
 
 :::
 
