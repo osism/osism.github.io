@@ -50,16 +50,16 @@ network:
 
 The parameters listed in the following table can be used in the template.
 
-| Parameter         | Default     | Description                                                                                             |
-|:------------------|:------------|:--------------------------------------------------------------------------------------------------------|
-| network_version   | `2`         | Defines what version of the configuration format is used. The only value supported at the moment is 2.  |
-| network_renderer  | `networkd`  | Defines what network configuration tool will be used to set up your configuration.                      |
-| network_bonds     | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bonds                 |
-| network_bridges   | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bridges               |
-| network_ethernets | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-ethernets             |
-| network_tunnels   | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-tunnels               |
-| network_vlans     | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vlans                 |
-| network_vrfs      | `{}`        | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vrfs                  |
+| Parameter         | Default    | Description                                                                                            |
+|:------------------|:-----------|:-------------------------------------------------------------------------------------------------------|
+| network_version   | `2`        | Defines what version of the configuration format is used. The only value supported at the moment is 2. |
+| network_renderer  | `networkd` | Defines what network configuration tool will be used to set up your configuration.                     |
+| network_bonds     | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bonds                |
+| network_bridges   | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-bridges              |
+| network_ethernets | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-ethernets            |
+| network_tunnels   | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-tunnels              |
+| network_vlans     | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vlans                |
+| network_vrfs      | `{}`       | https://netplan.readthedocs.io/en/stable/netplan-yaml/#properties-for-device-type-vrfs                 |
 
 By default changes to the network configuration are not applied automatically. This is done on
 purpose to allow a manual check in advance. Changes to the network configuration can

@@ -11,12 +11,12 @@ therefore not only read and take into account the release notes for 8.0.0 but al
 previous release notes. The same applies to an update from, for example, 8.0.0 to 8.0.2.
 The release notes for 8.0.1 must then also be taken into account.
 
-| Release                  | Release Date        |
-|:-------------------------|:--------------------|
-| [8.1.0](#810-20250116)   | 16. January 2025    |
-| [8.0.2](#802-20241006)   | 6. October 2024     |
-| [8.0.1](#801-20240924)   | 24. September 2024  |
-| [8.0.0](#800-20240911)   | 11. September 2024  |
+| Release                | Release Date       |
+|:-----------------------|:-------------------|
+| [8.1.0](#810-20250116) | 16. January 2025   |
+| [8.0.2](#802-20241006) | 6. October 2024    |
+| [8.0.1](#801-20240924) | 24. September 2024 |
+| [8.0.0](#800-20240911) | 11. September 2024 |
 
 ## Next
 

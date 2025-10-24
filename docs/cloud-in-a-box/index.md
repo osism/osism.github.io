@@ -241,22 +241,22 @@ entries must be added to the local `/etc/hosts` file for the name resolution to 
 
 If you want to access the services please choose the URL from the following list:
 
-| Name                    | URL                                         | Username       | Password          | Note                                                            |
-|:------------------------|:--------------------------------------------|:---------------|:------------------|:----------------------------------------------------------------|
-| ARA                     | https://ara.services.in-a-box.cloud         | ara            | password          |                                                                 |
-| Ceph                    | http://manager.systems.in-a-box.cloud:7000  | admin          | password          |                                                                 |
-| Configuration           | https://cgit.services.in-a-box.cloud        | -              | -                 |                                                                 |
-| Flower                  | https://flower.services.in-a-box.cloud      | -              | -                 |                                                                 |
-| Grafana                 | https://api.in-a-box.cloud:3000             | admin          | password          |                                                                 |
-| HAProxy                 | http://manager.systems.in-a-box.cloud:1984  | openstack      | password          |                                                                 |
-| Homer                   | https://homer.services.in-a-box.cloud       | -              | -                 |                                                                 |
-| Horizon                 | https://api.in-a-box.cloud                  | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
-| Netbox                  | https://netbox.services.in-a-box.cloud      | admin          | password          |                                                                 |
-| Netdata                 | http://manager.systems.in-a-box.cloud:19999 | -              | -                 |                                                                 |
-| OpenSearch Dashboards   | https://api.in-a-box.cloud:5601             | opensearch     | password          |                                                                 |
-| RabbitMQ                | https://api.in-a-box.cloud:15672            | openstack      | password          |                                                                 |
-| Skyline                 | https://api.in-a-box.cloud:9999             | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
-| phpMyAdmin              | https://phpmyadmin.services.in-a-box.cloud  | root_shard_0   | password          |                                                                 |
+| Name                  | URL                                         | Username       | Password          | Note                                                            |
+|:----------------------|:--------------------------------------------|:---------------|:------------------|:----------------------------------------------------------------|
+| ARA                   | https://ara.services.in-a-box.cloud         | ara            | password          |                                                                 |
+| Ceph                  | http://manager.systems.in-a-box.cloud:7000  | admin          | password          |                                                                 |
+| Configuration         | https://cgit.services.in-a-box.cloud        | -              | -                 |                                                                 |
+| Flower                | https://flower.services.in-a-box.cloud      | -              | -                 |                                                                 |
+| Grafana               | https://api.in-a-box.cloud:3000             | admin          | password          |                                                                 |
+| HAProxy               | http://manager.systems.in-a-box.cloud:1984  | openstack      | password          |                                                                 |
+| Homer                 | https://homer.services.in-a-box.cloud       | -              | -                 |                                                                 |
+| Horizon               | https://api.in-a-box.cloud                  | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
+| Netbox                | https://netbox.services.in-a-box.cloud      | admin          | password          |                                                                 |
+| Netdata               | http://manager.systems.in-a-box.cloud:19999 | -              | -                 |                                                                 |
+| OpenSearch Dashboards | https://api.in-a-box.cloud:5601             | opensearch     | password          |                                                                 |
+| RabbitMQ              | https://api.in-a-box.cloud:15672            | openstack      | password          |                                                                 |
+| Skyline               | https://api.in-a-box.cloud:9999             | admin<br/>test | password<br/>test | domain: default, project: admin<br/>domain: test, project: test |
+| phpMyAdmin            | https://phpmyadmin.services.in-a-box.cloud  | root_shard_0   | password          |                                                                 |
 
 ### Command-line interfaces
 
