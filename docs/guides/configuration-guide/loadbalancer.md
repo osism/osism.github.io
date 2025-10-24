@@ -182,11 +182,11 @@ the `configuration.yml`, `images.yml` and `secrets.yml` files as usual.
 
 The following directories and files are also required in a sub-environment for a loadbalancer.
 
-| File                                             | Description                                                           |
-|:-------------------------------------------------|:----------------------------------------------------------------------|
-| `certificates/ca/custom.crt`                     | The file is optional. If a custom CA is used, it must be added here.  |
-| `certificates/haproxy-internal.pem`              | SSL certificate to be used.                                           |
-| `files/overlays/haproxy/services.d/haproxy.cfg`  | HAProxy configuration to be used on the loadbalancer.                 |
+| File                                            | Description                                                          |
+|:------------------------------------------------|:---------------------------------------------------------------------|
+| `certificates/ca/custom.crt`                    | The file is optional. If a custom CA is used, it must be added here. |
+| `certificates/haproxy-internal.pem`             | SSL certificate to be used.                                          |
+| `files/overlays/haproxy/services.d/haproxy.cfg` | HAProxy configuration to be used on the loadbalancer.                |
 
 In this example, a sub-environment `kolla.external` is created, which is used for an outward facing
 loadbalancer that only offers certain API services.

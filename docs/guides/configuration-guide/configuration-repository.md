@@ -415,26 +415,26 @@ set the `openstack_version` and the `ceph_version` explicitly.
 
 ## Parameter reference
 
-| Parameter                  | Description                                                                                                                                | Default                                   |
-|:---------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------|
-| `ceph_network`             | Address range for Ceph's network                                                                                                           | `192.168.16.0/20`                         |
-| `ceph_version`             | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                  |
-| `domain`                   | The domain used by hostnames                                                                                                               | `osism.xyz`                               |
-| `fqdn_external`            | External API FQDN                                                                                                                          | `api.osism.xyz`                           |
-| `fqdn_internal`            | Internal API FQDN                                                                                                                          | `api-int.osism.xyz`                       |
-| `git_host`                 | Address of the used Git server                                                                                                             | `github.com`                              |
-| `git_port`                 | Port of the used Git server                                                                                                                | `22`                                      |
-| `git_repository`           | Path to the git configuration repository                                                                                                   | `YOUR_ORG/YOUR_CONFIGURATION_REPOSITORY`  |
-| `git_username`             | Username of the git repository                                                                                                             | `git`                                     |
-| `git_version`              | Git branch name                                                                                                                            | `main`                                    |
-| `ip_external`              | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                          |
-| `ip_internal`              | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                            |
-| `manager_version`          | The version of OSISM. An overview of available OSISM releases can be found [here](https://osism.tech/docs/release-notes/)                  | `7.0.4`                                   |
-| `name_server`              | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                         |
-| `ntp_server`               | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                         |
-| `openstack_version`        | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                  |
-| `project_name`             | Name of the configuration repository directory                                                                                             | `configuration`                           |
-| `with_ceph`                | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                       |
+| Parameter           | Description                                                                                                                                | Default                                  |
+|:--------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
+| `ceph_network`      | Address range for Ceph's network                                                                                                           | `192.168.16.0/20`                        |
+| `ceph_version`      | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                 |
+| `domain`            | The domain used by hostnames                                                                                                               | `osism.xyz`                              |
+| `fqdn_external`     | External API FQDN                                                                                                                          | `api.osism.xyz`                          |
+| `fqdn_internal`     | Internal API FQDN                                                                                                                          | `api-int.osism.xyz`                      |
+| `git_host`          | Address of the used Git server                                                                                                             | `github.com`                             |
+| `git_port`          | Port of the used Git server                                                                                                                | `22`                                     |
+| `git_repository`    | Path to the git configuration repository                                                                                                   | `YOUR_ORG/YOUR_CONFIGURATION_REPOSITORY` |
+| `git_username`      | Username of the git repository                                                                                                             | `git`                                    |
+| `git_version`       | Git branch name                                                                                                                            | `main`                                   |
+| `ip_external`       | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                         |
+| `ip_internal`       | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                           |
+| `manager_version`   | The version of OSISM. An overview of available OSISM releases can be found [here](https://osism.tech/docs/release-notes/)                  | `7.0.4`                                  |
+| `name_server`       | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                        |
+| `ntp_server`        | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                        |
+| `openstack_version` | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                 |
+| `project_name`      | Name of the configuration repository directory                                                                                             | `configuration`                          |
+| `with_ceph`         | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                      |
 
 ## Configuration repository layout
 
@@ -443,15 +443,15 @@ the content available in a configuration repository. In the section
 [Creating a new configuration repository](#creating-a-new-configuration-repository) is the creation
 of a new configuration repository documented.
 
-| Directory/File                   | Description                                                                                                                                                                            |
-|:---------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `environments`                   |                                                                                                                                                                                        |
-| `inventory`                      |                                                                                                                                                                                        |
-| `netbox`                         | optional                                                                                                                                                                               |
-| `requirements.txt`               | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                            |
-| `gilt.yml`                       |                                                                                                                                                                                        |
-| `Makefile`                       |                                                                                                                                                                                        |
-| `gilt.yaml`                      | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
+| Directory/File     | Description                                                                                                                                                                            |
+|:-------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `environments`     |                                                                                                                                                                                        |
+| `inventory`        |                                                                                                                                                                                        |
+| `netbox`           | optional                                                                                                                                                                               |
+| `requirements.txt` | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                            |
+| `gilt.yml`         |                                                                                                                                                                                        |
+| `Makefile`         |                                                                                                                                                                                        |
+| `gilt.yaml`        | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
 
 ## Synchronizing the configuration repository
 
