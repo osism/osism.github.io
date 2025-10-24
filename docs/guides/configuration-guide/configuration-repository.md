@@ -505,7 +505,7 @@ targets that can be used to view encrypted files and to edit encrypted files.
   make ansible_vault_show FILE=environments/secrets.yml
   ```
 
-* Change or add secrets in an encrypted file with the editor set in ` $EDITOR`.
+* Change or add secrets in an encrypted file with the editor set in `$EDITOR`.
 
   ```bash
   make ansible_vault_edit FILE=environments/secrets.yml EDITOR=nano

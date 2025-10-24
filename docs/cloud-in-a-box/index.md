@@ -227,14 +227,14 @@ IP ranges such as `192.168.16.0/20` are not resolved via a public DNS server. If
 entries must be added to the local `/etc/hosts` file for the name resolution to work.
 
 ```text
-192.166.16.10	cgit.services.in-a-box.cloud
-192.166.16.10	netbox.services.in-a-box.cloud
-192.168.16.10	ara.services.in-a-box.cloud
-192.168.16.10	flower.services.in-a-box.cloud
-192.168.16.10	homer.services.in-a-box.cloud
-192.168.16.10	phpmyadmin.services.in-a-box.cloud
-192.168.16.10   manager.systems.in-a-box.cloud
-192.168.16.254	api.in-a-box.cloud
+192.166.16.10  cgit.services.in-a-box.cloud
+192.166.16.10  netbox.services.in-a-box.cloud
+192.168.16.10  ara.services.in-a-box.cloud
+192.168.16.10  flower.services.in-a-box.cloud
+192.168.16.10  homer.services.in-a-box.cloud
+192.168.16.10  phpmyadmin.services.in-a-box.cloud
+192.168.16.10  manager.systems.in-a-box.cloud
+192.168.16.254 api.in-a-box.cloud
 ```
 
 ### Web interfaces

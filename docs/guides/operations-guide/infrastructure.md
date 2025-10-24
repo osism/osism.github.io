@@ -26,7 +26,7 @@ global
     stats socket /var/lib/kolla/haproxy/haproxy.sock group kolla mode 660 level admin
 ```
 
-* Disable the host `testbed-node-0` in all backends of the service `keystone `
+* Disable the host `testbed-node-0` in all backends of the service `keystone`
 
   ```bash
   osism apply manage-loadbalancer \
@@ -35,7 +35,7 @@ global
     -e manage_loadbalancer_host=testbed-node-0
   ```
 
-* Enable the host `testbed-node-0` in all backends of the service `keystone `
+* Enable the host `testbed-node-0` in all backends of the service `keystone`
 
   ```bash
   osism apply manage-loadbalancer \

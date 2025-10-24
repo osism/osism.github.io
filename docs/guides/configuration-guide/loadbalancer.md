@@ -145,7 +145,7 @@ by the [general procedure](#general-procedure) described above.
 Using Let's encrypt certificates is a good alternative to traditional certificate authorities and
 greatly simplifies the administration of TLS certificates.
 
-For a working Let's Encrypt configuration, the API endpoints (configured by `kolla_internal_fqdn` and `kolla_external_fqdn`) 
+For a working Let's Encrypt configuration, the API endpoints (configured by `kolla_internal_fqdn` and `kolla_external_fqdn`)
 must be accessible from the internet.
 
 1. Activate Let's Encrypt tls encryption for both endpoints
