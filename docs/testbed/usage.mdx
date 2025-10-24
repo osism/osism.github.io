@@ -60,25 +60,25 @@ All SSL-enabled services within the OSISM Testbed use certs which are signed by 
 
 If you want to access the services, please choose the URL from the following table:
 
-| Name                     | URL                                            | Username     | Password     | Note            |
-|:-------------------------|:-----------------------------------------------|:-------------|:-------------|:----------------|
-| ARA                      | https://ara.testbed.osism.xyz                  | ara          | password     |                 |
-| Ceph                     | https://api-int.testbed.osism.xyz:8140         | admin        | password     |                 |
-| Flower                   | https://flower.testbed.osism.xyz               |              |              |                 |
-| Grafana                  | https://api-int.testbed.osism.xyz:3000         | admin        | password     |                 |
-| HAProxy (testbed-node-0) | http://testbed-node-0.testbed.osism.xyz:1984   | openstack    | password     |                 |
-| HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984   | openstack    | password     |                 |
-| HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984   | openstack    | password     |                 |
-| Homer                    | https://homer.testbed.osism.xyz                |              |              |                 |
-| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin        | password     | domain: default |
-| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test         | test         | domain: test    |
-| Netbox                   | https://netbox.testbed.osism.xyz               | admin        | password     |                 |
-| Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |              |              |                 |
-| Nexus                    | https://nexus.testbed.osism.xyz                | admin        | password     |                 |
-| OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601             | opensearch   | password     |                 |
-| Prometheus               | https://api-int.testbed.osism.xyz:9091         | admin        | password     |                 |
-| RabbitMQ                 | https://api-int.testbed.osism.xyz:15672        | openstack    | password     |                 |
-| phpMyAdmin               | https://phpmyadmin.testbed.osism.xyz           | root         | password     |                 |
+| Name                     | URL                                            | Username   | Password | Note            |
+|:-------------------------|:-----------------------------------------------|:-----------|:---------|:----------------|
+| ARA                      | https://ara.testbed.osism.xyz                  | ara        | password |                 |
+| Ceph                     | https://api-int.testbed.osism.xyz:8140         | admin      | password |                 |
+| Flower                   | https://flower.testbed.osism.xyz               |            |          |                 |
+| Grafana                  | https://api-int.testbed.osism.xyz:3000         | admin      | password |                 |
+| HAProxy (testbed-node-0) | http://testbed-node-0.testbed.osism.xyz:1984   | openstack  | password |                 |
+| HAProxy (testbed-node-1) | http://testbed-node-1.testbed.osism.xyz:1984   | openstack  | password |                 |
+| HAProxy (testbed-node-2) | http://testbed-node-2.testbed.osism.xyz:1984   | openstack  | password |                 |
+| Homer                    | https://homer.testbed.osism.xyz                |            |          |                 |
+| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | admin      | password | domain: default |
+| Horizon (via Keystone)   | https://api.testbed.osism.xyz                  | test       | test     | domain: test    |
+| Netbox                   | https://netbox.testbed.osism.xyz               | admin      | password |                 |
+| Netdata                  | http://testbed-manager.testbed.osism.xyz:19999 |            |          |                 |
+| Nexus                    | https://nexus.testbed.osism.xyz                | admin      | password |                 |
+| OpenSearch Dashboards    | https://api.testbed.osism.xyz:5601             | opensearch | password |                 |
+| Prometheus               | https://api-int.testbed.osism.xyz:9091         | admin      | password |                 |
+| RabbitMQ                 | https://api-int.testbed.osism.xyz:15672        | openstack  | password |                 |
+| phpMyAdmin               | https://phpmyadmin.testbed.osism.xyz           | root       | password |                 |
 
 ### Usage of the OpenStack CLI
 
@@ -130,31 +130,31 @@ of the other cloud is changed accordingly.
 
 ### Deploy services
 
-| Script                                                            | Description                 |
-|:------------------------------------------------------------------|:----------------------------|
-| `/opt/configuration/scripts/deploy/000-manager.sh`                |                             |
-| `/opt/configuration/scripts/deploy/001-helpers.sh`                |                             |
-| `/opt/configuration/scripts/deploy/100-ceph-with-ansible.sh`      | Ceph with Ansible           |
-| `/opt/configuration/scripts/deploy/100-ceph-with-rook.sh`         | Ceph with Rook              |
-| `/opt/configuration/scripts/deploy/200-infrastructure.sh`         |                             |
-| `/opt/configuration/scripts/deploy/300-openstack.sh`              |                             |
-| `/opt/configuration/scripts/deploy/310-openstack-extended.sh`     |                             |
-| `/opt/configuration/scripts/deploy/400-monitoring.sh`             |                             |
-| `/opt/configuration/scripts/deploy/500-kubernetes.sh`             |                             |
-| `/opt/configuration/scripts/deploy/510-clusterapi.sh`             |                             |
+| Script                                                        | Description       |
+|:--------------------------------------------------------------|:------------------|
+| `/opt/configuration/scripts/deploy/000-manager.sh`            |                   |
+| `/opt/configuration/scripts/deploy/001-helpers.sh`            |                   |
+| `/opt/configuration/scripts/deploy/100-ceph-with-ansible.sh`  | Ceph with Ansible |
+| `/opt/configuration/scripts/deploy/100-ceph-with-rook.sh`     | Ceph with Rook    |
+| `/opt/configuration/scripts/deploy/200-infrastructure.sh`     |                   |
+| `/opt/configuration/scripts/deploy/300-openstack.sh`          |                   |
+| `/opt/configuration/scripts/deploy/310-openstack-extended.sh` |                   |
+| `/opt/configuration/scripts/deploy/400-monitoring.sh`         |                   |
+| `/opt/configuration/scripts/deploy/500-kubernetes.sh`         |                   |
+| `/opt/configuration/scripts/deploy/510-clusterapi.sh`         |                   |
 
 ### Upgrade services
 
-| Script                                                                    | Description                 |
-|:--------------------------------------------------------------------------|:----------------------------|
-| `/opt/configuration/scripts/upgrade/100-ceph-with-ansible.sh`             | Ceph with Ansible           |
-| `/opt/configuration/scripts/upgrade/100-ceph-with-rook.sh`                | Ceph with Rook              |
-| `/opt/configuration/scripts/upgrade/200-infrastructure.sh`                |                             |
-| `/opt/configuration/scripts/upgrade/300-openstack.sh`                     |                             |
-| `/opt/configuration/scripts/upgrade/310-openstack-extended.sh`            |                             |
-| `/opt/configuration/scripts/upgrade/400-monitoring.sh`                    |                             |
-| `/opt/configuration/scripts/upgrade/500-kubernetes.sh`                    |                             |
-| `/opt/configuration/scripts/upgrade/510-clusterapi.sh`                    |                             |
+| Script                                                         | Description       |
+|:---------------------------------------------------------------|:------------------|
+| `/opt/configuration/scripts/upgrade/100-ceph-with-ansible.sh`  | Ceph with Ansible |
+| `/opt/configuration/scripts/upgrade/100-ceph-with-rook.sh`     | Ceph with Rook    |
+| `/opt/configuration/scripts/upgrade/200-infrastructure.sh`     |                   |
+| `/opt/configuration/scripts/upgrade/300-openstack.sh`          |                   |
+| `/opt/configuration/scripts/upgrade/310-openstack-extended.sh` |                   |
+| `/opt/configuration/scripts/upgrade/400-monitoring.sh`         |                   |
+| `/opt/configuration/scripts/upgrade/500-kubernetes.sh`         |                   |
+| `/opt/configuration/scripts/upgrade/510-clusterapi.sh`         |                   |
 
 ### Add new OSD in Ceph
 

@@ -9,7 +9,7 @@ This guide will explain common procedures for creating and restoring backups of 
 ## Glossary
 
 | Term              | Explanation                                                                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | Virtual Machine   | Equals the `server` resource in Nova.                                                                                                    |
 | Ephemeral Storage | Disk storage directly supplied to a virtual machine by Nova. Different from volumes.                                                     |
 | (Glance) Image    | IaaS resource usually storing raw disk data. Managed by the Glance service.                                                              |

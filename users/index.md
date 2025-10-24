@@ -6,7 +6,7 @@ sidebar_position: 10
 
 ## Public Clouds
 
-| Environment        | Operating company                  | Short Description                                                                                                                                                     |
+| Environment        | Operating company                  | Short Description                                                                                                 |
 |:-------------------|:-----------------------------------|:------------------------------------------------------------------------------------------------------------------|
 | CNDS               | artcodix GmbH                      |                                                                                                                   |
 | pluscloud open     | plusserver GmbH                    | Currently 4 regions, used for example for the [BayernCloud School (ByCS)](https://www.bycs.de/index.html)         |
@@ -17,10 +17,10 @@ sidebar_position: 10
 
 ## Private Clouds
 
-| Environment    | Operating company    | Short Description                       |
-|:---------------|:---------------------|:----------------------------------------|
-| AOV Cloud      | aov IT.Services GmbH |                                         |
-| DevCloud       | SEEBURGER AG         | Used for CI                             |
+| Environment | Operating company    | Short Description |
+|:------------|:---------------------|:------------------|
+| AOV Cloud   | aov IT.Services GmbH |                   |
+| DevCloud    | SEEBURGER AG         | Used for CI       |
 
 ## Users of Kolla
 

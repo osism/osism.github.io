@@ -35,6 +35,6 @@ sidebar_label: Networks
 
 ## IPv6
 
-| Parameter                          | CIDR                |
-|:-----------------------------------|:--------------------|
-| `zuul_network_v6`                  | `2001:db8:2::/64`   |
+| Parameter         | CIDR              |
+|:------------------|:------------------|
+| `zuul_network_v6` | `2001:db8:2::/64` |

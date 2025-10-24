@@ -14,17 +14,17 @@ osism apply network-external
 
 Available parameters for the OpenStack Environment (`environments/openstack/configuration.yml`).
 
-| Parameter                                   | Default                  |
-|:--------------------------------------------|:-------------------------|
-| network_external_allocation_pool_end        | "192.168.112.200"        |
-| network_external_allocation_pool_start      | "192.168.112.100"        |
-| network_external_cidr                       | "192.168.112.0/20"       |
-| network_external_cloud                      | admin                    |
-| network_external_gateway_ip                 | "192.168.112.5"          |
-| network_external_name                       | public                   |
-| network_external_provider_network_type      | flat                     |
-| network_external_provider_physical_network  | physnet1                 |
-| network_external_state                      | present                  |
+| Parameter                                  | Default            |
+|:-------------------------------------------|:-------------------|
+| network_external_allocation_pool_end       | "192.168.112.200"  |
+| network_external_allocation_pool_start     | "192.168.112.100"  |
+| network_external_cidr                      | "192.168.112.0/20" |
+| network_external_cloud                     | admin              |
+| network_external_gateway_ip                | "192.168.112.5"    |
+| network_external_name                      | public             |
+| network_external_provider_network_type     | flat               |
+| network_external_provider_physical_network | physnet1           |
+| network_external_state                     | present            |
 
 ## Reboot a compute node
 

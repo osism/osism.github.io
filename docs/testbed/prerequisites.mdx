@@ -14,19 +14,19 @@ the capabilities for nested virtualization.
 It is not part of this guide to describe the registration with the individual cloud
 providers. Please contact the respective cloud provider for this.
 
-| Provider        | Product             | Profile name     | Note                               |
-|:----------------|:--------------------|:-----------------|:-----------------------------------|
-| OSISM           | REGIO.cloud         | `regiocloud`     |                                    |
-| OSISM           | REGIO.cloud         | `regio-fast`     |  boot from NVMe SSD backed volumes |
-| Cleura          | Cleura              | `cleura`         |                                    |
-| FUGA            | Fuga Cloud          | `fuga`           |                                    |
-| HuaweiCloud     | HuaweiCloud         | `huaweicloud`    |                                    |
-| OVH             | OVH                 | `ovh`            |                                    |
-| T-Systems       | OpenTelekomCloud    | `otc`            |                                    |
-| plusserver      | pluscloud open      | `pluscloudopen`  |                                    |
-| plusserver      | pluscloud SCS Test  | `gx-scs`         |                                    |
-| noris network   | Wavestack           | `wavestack`      |                                    |
-| artcodix        | CNDS Cloud          | `artcodix`       |                                    |
+| Provider      | Product            | Profile name    | Note                              |
+|:--------------|:-------------------|:----------------|:----------------------------------|
+| OSISM         | REGIO.cloud        | `regiocloud`    |                                   |
+| OSISM         | REGIO.cloud        | `regio-fast`    | boot from NVMe SSD backed volumes |
+| Cleura        | Cleura             | `cleura`        |                                   |
+| FUGA          | Fuga Cloud         | `fuga`          |                                   |
+| HuaweiCloud   | HuaweiCloud        | `huaweicloud`   |                                   |
+| OVH           | OVH                | `ovh`           |                                   |
+| T-Systems     | OpenTelekomCloud   | `otc`           |                                   |
+| plusserver    | pluscloud open     | `pluscloudopen` |                                   |
+| plusserver    | pluscloud SCS Test | `gx-scs`        |                                   |
+| noris network | Wavestack          | `wavestack`     |                                   |
+| artcodix      | CNDS Cloud         | `artcodix`      |                                   |
 
 For each cloud provider listed in the table, a predefined profile is available in the
 `terraform/environments` directory. This profile contains the name of the public
@@ -50,18 +50,18 @@ network_availability_zone = "nova"
 
 The OSISM Testbed requires at least the following project quota when using the default flavors:
 
-| Resource              | Quantity  | Note                                          |
-|:----------------------|:----------|:----------------------------------------------|
-| Instances             | 7         | 52 VCPUs + 208 GByte RAM (6 modes, 1 manager) |
-| Volumes               | 18        | 360 GByte volume storage                      |
-| Floating IP           | 1         |                                               |
-| Keypair               | 1         |                                               |
-| Security group        | 3         |                                               |
-| Security group rules  | 16        |                                               |
-| Network               | 1         |                                               |
-| Subnetwork            | 1         |                                               |
-| Ports                 | 6         |                                               |
-| Router                | 1         |                                               |
+| Resource             | Quantity | Note                                          |
+|:---------------------|:---------|:----------------------------------------------|
+| Instances            | 7        | 52 VCPUs + 208 GByte RAM (6 modes, 1 manager) |
+| Volumes              | 18       | 360 GByte volume storage                      |
+| Floating IP          | 1        |                                               |
+| Keypair              | 1        |                                               |
+| Security group       | 3        |                                               |
+| Security group rules | 16       |                                               |
+| Network              | 1        |                                               |
+| Subnetwork           | 1        |                                               |
+| Ports                | 6        |                                               |
+| Router               | 1        |                                               |
 
 ## Software
 

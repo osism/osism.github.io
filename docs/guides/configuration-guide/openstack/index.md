@@ -32,41 +32,41 @@ The image tags can be set in the `environments/kolla/images.yml` file.
 The public endpoints used for the individual OpenStack services can be configured via the `public_endpoint` parameters.
 These are defined as follows.
 
-| Parameter                                  | Default value                                                                                        |
-|:-------------------------------------------|:-----------------------------------------------------------------------------------------------------|
-| aodh_public_endpoint                       | `aodh_external_fqdn \| kolla_url(public_protocol, aodh_api_public_port)`                             |
-| blazar_public_endpoint                     | `blazar_external_fqdn \| kolla_url(public_protocol, blazar_api_public_port, '/v1')`                  |
-| ceph_rgw_public_endpoint                   | `ceph_rgw_external_fqdn \| kolla_url(public_protocol, ceph_rgw_public_port, ceph_rgw_endpoint_path)` |
-| cinder_v3_public_endpoint                  | `{{ cinder_public_base_endpoint }}/v3/%(tenant_id)s`                                                 |
-| cloudkitty_public_endpoint                 | `cloudkitty_external_fqdn \| kolla_url(public_protocol, cloudkitty_api_public_port)`                 |
-| cyborg_public_endpoint                     | `cyborg_external_fqdn \| kolla_url(public_protocol, cyborg_api_port, '/v2')`                         |
-| gnocchi_public_endpoint                    | `gnocchi_external_fqdn \| kolla_url(public_protocol, gnocchi_api_public_port)`                       |
-| heat_cfn_public_endpoint                   | `{{ heat_cfn_public_base_endpoint }}/v1`                                                             |
-| heat_public_endpoint                       | `heat_external_fqdn \| kolla_url(public_protocol, heat_api_public_port, '/v1/%(tenant_id)s')`        |
-| ironic_inspector_public_endpoint           | `ironic_inspector_external_fqdn \| kolla_url(public_protocol, ironic_inspector_public_port)`         |
-| magnum_public_endpoint                     | `magnum_external_fqdn \| kolla_url(public_protocol, magnum_api_public_port, '/v1')`                  |
-| manila_public_endpoint                     | `{{ manila_public_base_endpoint }}/v1/%(tenant_id)s`                                                 |
-| manila_v2_public_endpoint                  | `{{ manila_public_base_endpoint }}/v2`                                                               |
-| masakari_public_endpoint                   | `masakari_external_fqdn \| kolla_url(public_protocol, masakari_api_public_port)`                     |
-| mistral_public_endpoint                    | `mistral_external_fqdn \| kolla_url(public_protocol, mistral_api_public_port, '/v2')`                |
-| nova_legacy_public_endpoint                | `{{ nova_public_base_endpoint }}/v2/%(tenant_id)s`                                                   |
-| nova_public_endpoint                       | `{{ nova_public_base_endpoint }}/v2.1`                                                               |
-| placement_public_endpoint                  | `placement_external_fqdn \| kolla_url(public_protocol, placement_api_public_port)`                   |
-| tacker_public_endpoint                     | `tacker_external_fqdn \| kolla_url(public_protocol, tacker_server_public_port)`                      |
-| trove_public_endpoint                      | `trove_external_fqdn \| kolla_url(public_protocol, trove_api_public_port, '/v1.0/%(tenant_id)s')`    |
-| venus_public_endpoint                      | `venus_external_fqdn \| kolla_url(public_protocol, venus_api_port)`                                  |
-| watcher_public_endpoint                    | `watcher_external_fqdn \| kolla_url(public_protocol, watcher_api_public_port)`                       |
-| zun_public_endpoint                        | `zun_external_fqdn \| kolla_url(public_protocol, zun_api_public_port, '/v1/')`                       |
+| Parameter                        | Default value                                                                                        |
+|:---------------------------------|:-----------------------------------------------------------------------------------------------------|
+| aodh_public_endpoint             | `aodh_external_fqdn \| kolla_url(public_protocol, aodh_api_public_port)`                             |
+| blazar_public_endpoint           | `blazar_external_fqdn \| kolla_url(public_protocol, blazar_api_public_port, '/v1')`                  |
+| ceph_rgw_public_endpoint         | `ceph_rgw_external_fqdn \| kolla_url(public_protocol, ceph_rgw_public_port, ceph_rgw_endpoint_path)` |
+| cinder_v3_public_endpoint        | `{{ cinder_public_base_endpoint }}/v3/%(tenant_id)s`                                                 |
+| cloudkitty_public_endpoint       | `cloudkitty_external_fqdn \| kolla_url(public_protocol, cloudkitty_api_public_port)`                 |
+| cyborg_public_endpoint           | `cyborg_external_fqdn \| kolla_url(public_protocol, cyborg_api_port, '/v2')`                         |
+| gnocchi_public_endpoint          | `gnocchi_external_fqdn \| kolla_url(public_protocol, gnocchi_api_public_port)`                       |
+| heat_cfn_public_endpoint         | `{{ heat_cfn_public_base_endpoint }}/v1`                                                             |
+| heat_public_endpoint             | `heat_external_fqdn \| kolla_url(public_protocol, heat_api_public_port, '/v1/%(tenant_id)s')`        |
+| ironic_inspector_public_endpoint | `ironic_inspector_external_fqdn \| kolla_url(public_protocol, ironic_inspector_public_port)`         |
+| magnum_public_endpoint           | `magnum_external_fqdn \| kolla_url(public_protocol, magnum_api_public_port, '/v1')`                  |
+| manila_public_endpoint           | `{{ manila_public_base_endpoint }}/v1/%(tenant_id)s`                                                 |
+| manila_v2_public_endpoint        | `{{ manila_public_base_endpoint }}/v2`                                                               |
+| masakari_public_endpoint         | `masakari_external_fqdn \| kolla_url(public_protocol, masakari_api_public_port)`                     |
+| mistral_public_endpoint          | `mistral_external_fqdn \| kolla_url(public_protocol, mistral_api_public_port, '/v2')`                |
+| nova_legacy_public_endpoint      | `{{ nova_public_base_endpoint }}/v2/%(tenant_id)s`                                                   |
+| nova_public_endpoint             | `{{ nova_public_base_endpoint }}/v2.1`                                                               |
+| placement_public_endpoint        | `placement_external_fqdn \| kolla_url(public_protocol, placement_api_public_port)`                   |
+| tacker_public_endpoint           | `tacker_external_fqdn \| kolla_url(public_protocol, tacker_server_public_port)`                      |
+| trove_public_endpoint            | `trove_external_fqdn \| kolla_url(public_protocol, trove_api_public_port, '/v1.0/%(tenant_id)s')`    |
+| venus_public_endpoint            | `venus_external_fqdn \| kolla_url(public_protocol, venus_api_port)`                                  |
+| watcher_public_endpoint          | `watcher_external_fqdn \| kolla_url(public_protocol, watcher_api_public_port)`                       |
+| zun_public_endpoint              | `zun_external_fqdn \| kolla_url(public_protocol, zun_api_public_port, '/v1/')`                       |
 
 Some of the previous default values refer to a `public_base_endpoint parameter`. These are defined as follows.
 
-| Parameter                                 | Default value                                                                                  |
-|:------------------------------------------|:-----------------------------------------------------------------------------------------------|
-| cinder_public_base_endpoint               | `cinder_external_fqdn \| kolla_url(public_protocol, cinder_api_public_port)`                   |
-| heat_cfn_public_base_endpoint             | `heat_cfn_external_fqdn \| kolla_url(public_protocol, heat_api_cfn_public_port)`               |
-| manila_public_base_endpoint               | `manila_external_fqdn \| kolla_url(public_protocol, manila_api_public_port)`                   |
-| nova_public_base_endpoint                 | `nova_external_fqdn \| kolla_url(public_protocol, nova_api_public_port)`                       |
-| skyline_apiserver_public_base_endpoint    | `skyline_apiserver_external_fqdn \| kolla_url(public_protocol, skyline_apiserver_public_port)` |
+| Parameter                              | Default value                                                                                  |
+|:---------------------------------------|:-----------------------------------------------------------------------------------------------|
+| cinder_public_base_endpoint            | `cinder_external_fqdn \| kolla_url(public_protocol, cinder_api_public_port)`                   |
+| heat_cfn_public_base_endpoint          | `heat_cfn_external_fqdn \| kolla_url(public_protocol, heat_api_cfn_public_port)`               |
+| manila_public_base_endpoint            | `manila_external_fqdn \| kolla_url(public_protocol, manila_api_public_port)`                   |
+| nova_public_base_endpoint              | `nova_external_fqdn \| kolla_url(public_protocol, nova_api_public_port)`                       |
+| skyline_apiserver_public_base_endpoint | `skyline_apiserver_external_fqdn \| kolla_url(public_protocol, skyline_apiserver_public_port)` |
 
 ### Example for the use of name-based endpoints
 
@@ -157,19 +157,19 @@ novncproxy_base_url = https://console.services.a.regiocloud.tech/vnc_lite.html
 
 ## Network interfaces
 
-| Parameter                      | Default                                                                | Description    |
-|:-------------------------------|:-----------------------------------------------------------------------|:---------------|
-| `network_interface`            | `eth0`                                                                 |                |
-| `neutron_external_interface`   | `{{ network_interface }}`                                              |                |
-| `kolla_external_vip_interface` | `{{ network_interface }}`                                              |                |
-| `api_interface`                | `{{ network_interface }}`                                              |                |
-| `migration_interface`          | `{{ api_interface }}`                                                  |                |
-| `tunnel_interface`             | `{{ network_interface }}`                                              |                |
-| `octavia_network_interface`    | `{{ 'o-hm0' if octavia_network_type == 'tenant' else api_interface }}` |                |
-| `dns_interface`                | `{{ network_interface }}`                                              |                |
-| `dpdk_tunnel_interface`        | `{{ neutron_external_interface }}`                                     |                |
-| `ironic_http_interface`        | `{{ api_interface }}`                                                  |                |
-| `ironic_tftp_interface`        | `{{ api_interface }}`                                                  |                |
+| Parameter                      | Default                                                                | Description |
+|:-------------------------------|:-----------------------------------------------------------------------|:------------|
+| `network_interface`            | `eth0`                                                                 |             |
+| `neutron_external_interface`   | `{{ network_interface }}`                                              |             |
+| `kolla_external_vip_interface` | `{{ network_interface }}`                                              |             |
+| `api_interface`                | `{{ network_interface }}`                                              |             |
+| `migration_interface`          | `{{ api_interface }}`                                                  |             |
+| `tunnel_interface`             | `{{ network_interface }}`                                              |             |
+| `octavia_network_interface`    | `{{ 'o-hm0' if octavia_network_type == 'tenant' else api_interface }}` |             |
+| `dns_interface`                | `{{ network_interface }}`                                              |             |
+| `dpdk_tunnel_interface`        | `{{ neutron_external_interface }}`                                     |             |
+| `ironic_http_interface`        | `{{ api_interface }}`                                                  |             |
+| `ironic_tftp_interface`        | `{{ api_interface }}`                                                  |             |
 
 ## Customization of the service configurations
 
@@ -458,41 +458,41 @@ case of a change. ``osism apply -a reconfigure aodh`` in this example.
 
 These parameters are all set in `environments/kolla/configuration.yml`.
 
-| Parameter                              |
-|:---------------------------------------|
-| aodh_api_workers                       |
-| barbican_api_workers                   |
-| cinder_api_workers                     |
-| designate_api_workers                  |
-| designate_worker_workers               |
-| designate_producer_workers             |
-| designate_central_workers              |
-| designate_sink_workers                 |
-| designate_mdns_workers                 |
-| glance_api_workers                     |
-| gnocchi_metricd_workers                |
-| gnocchi_api_workers                    |
-| heat_api_cfn_workers                   |
-| heat_api_workers                       |
-| heat_engine_workers                    |
-| horizon_wsgi_processes                 |
-| ironic_api_workers                     |
-| keystone_api_workers                   |
-| proxysql_workers                       |
-| magnum_api_workers                     |
-| magnum_conductor_workers               |
-| manila_api_workers                     |
-| neutron_api_workers                    |
-| neutron_metadata_workers               |
-| nova_api_workers                       |
-| nova_superconductor_workers            |
-| nova_metadata_api_workers              |
-| nova_scheduler_workers                 |
-| nova_cell_conductor_workers            |
-| octavia_api_workers                    |
-| octavia_healthmanager_health_workers   |
-| octavia_healthmanager_stats_workers    |
-| placement_api_workers                  |
-| skyline_gunicorn_workers               |
+| Parameter                            |
+|:-------------------------------------|
+| aodh_api_workers                     |
+| barbican_api_workers                 |
+| cinder_api_workers                   |
+| designate_api_workers                |
+| designate_worker_workers             |
+| designate_producer_workers           |
+| designate_central_workers            |
+| designate_sink_workers               |
+| designate_mdns_workers               |
+| glance_api_workers                   |
+| gnocchi_metricd_workers              |
+| gnocchi_api_workers                  |
+| heat_api_cfn_workers                 |
+| heat_api_workers                     |
+| heat_engine_workers                  |
+| horizon_wsgi_processes               |
+| ironic_api_workers                   |
+| keystone_api_workers                 |
+| proxysql_workers                     |
+| magnum_api_workers                   |
+| magnum_conductor_workers             |
+| manila_api_workers                   |
+| neutron_api_workers                  |
+| neutron_metadata_workers             |
+| nova_api_workers                     |
+| nova_superconductor_workers          |
+| nova_metadata_api_workers            |
+| nova_scheduler_workers               |
+| nova_cell_conductor_workers          |
+| octavia_api_workers                  |
+| octavia_healthmanager_health_workers |
+| octavia_healthmanager_stats_workers  |
+| placement_api_workers                |
+| skyline_gunicorn_workers             |
 
 ## Back-end TLS configuration
