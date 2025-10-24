@@ -197,7 +197,7 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    ```
 
    ```bash
-   $ openstack --os-cloud admin compute service delete 90345eb5-cf2f-47ef-becc-758ee36fb132
+   openstack --os-cloud admin compute service delete 90345eb5-cf2f-47ef-becc-758ee36fb132
    ```
 
 7. Stop all OpenStack network services on the compute node

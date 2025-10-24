@@ -9,7 +9,7 @@ Common issues with deploying infrastructure services required by OpenStack
 are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-guide/openstack.md).
 
 
-1. Optional: In order to reduce the active observation time for the deployment of the components, 
+1. Optional: In order to reduce the active observation time for the deployment of the components,
    the container images for the following services can be downloaded in advance with the argument `-a pull`.
 
    ```bash

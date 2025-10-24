@@ -225,7 +225,7 @@ Feel free to study the meaning of all the command line parameters by looking at 
 This will run for ~7 minutes, depending on the performance of your OpenStack environment. You should not get any error. (The amber-colored outputs `DOWN`, `BUILD`, `creating` are not errors. Nothing in red should be displayed.) Studying the console output may be instructive to follow the script's progress. You may also open another window (remember the tmux recommendation above) and look at the resources with the usual `openstack RESOURCE list` and `openstack RESOURCE show NAME` and `RESOURCE` being something like `router`, `network`, `subnet`, `port`, `volume`, `server`, `floating ip`, `loadbalancer`, `loadbalancer pool`, `loadbalancer listener`, `security group`, `keypair`, `image`, ...)
 
 The `api_monitor.sh` uses and `APIMonitor_TIMESTAMP` prefix for all OpenStack resource names. This allows to identify the created resources and clean them up even if things go wrong.
-`TIMESTAMP` is an integer number representing the seconds after 1970-01-01 00:00:00 UTC (Unix time). 
+`TIMESTAMP` is an integer number representing the seconds after 1970-01-01 00:00:00 UTC (Unix time).
 
 This may be the time to check that you have sufficient quota to create the resources. While we only create 6+N VMs (and volumes) with the above call (N being the number of AZs), we would want to increase this number for larger clouds. For single-AZ deployments, we would want to still use 2 networks at least `-N 2` to test the ability of the router to route traffic between networks. So expect `-n 6` to become `-N 2 -n 6` for a very small single-AZ cloud or `-n 12` for a large 3 AZ cloud region. So, re-run the `api_monitor.sh` with the target sizing.
 
@@ -349,7 +349,7 @@ After waiting for that to complete, you can start it again with `systemctl --use
 
 ### Multiple instances
 
-You can run multiple instances of `api_monitor.sh` on the same driver VM. In this case, you should rename `run_in_loop.sh` to e.g. `run_in_loop_CLOUDNAME1.sh` and call `run_CLOUDNAME1.sh` from there. Don't forget to adjust `startup/run-apimon-in-tmux.sh` and `startup/kill-apimon-in-tmux.sh` to start more windows. 
+You can run multiple instances of `api_monitor.sh` on the same driver VM. In this case, you should rename `run_in_loop.sh` to e.g. `run_in_loop_CLOUDNAME1.sh` and call `run_CLOUDNAME1.sh` from there. Don't forget to adjust `startup/run-apimon-in-tmux.sh` and `startup/kill-apimon-in-tmux.sh` to start more windows.
 
 It is not recommended to run multiple instances against the same OpenStack project however. While the `api_monitor.sh` script carefully keeps track of its own resources and avoids to delete things it has not created, this is not the case for the `run_CLOUDNAME.sh` script, which is explicitly meant to identify anything in the target project that was created by a health monitor and clean it up. If it hits the resources that are currently in use by another health mon instance, this will create spurious errors. This will happen every ~200 iterations, so you could still have some short-term coexistence when you are performing debug operations.
 

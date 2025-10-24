@@ -17,8 +17,8 @@ granted yet.
 The official Rook documentation starts here https://rook.io/docs/rook/latest-release/Getting-Started/intro/
 
 Some sections to point out are:
-  - [Rook Common Issues Documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/common-issues/)
-  - [Rook Ceph Common Issues Documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/ceph-common-issues/)
+- [Rook Common Issues Documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/common-issues/)
+- [Rook Ceph Common Issues Documentation](https://rook.io/docs/rook/latest-release/Troubleshooting/ceph-common-issues/)
 
 The official Ceph documentation is located on https://docs.ceph.com/en/latest/rados/operations/
 

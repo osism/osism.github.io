@@ -26,7 +26,7 @@ pipenv shell
 ## Defaults
 
 
-### create.py 
+### create.py
 The `create.py` command and his default options while executing the command.
 
 ```text
@@ -79,7 +79,7 @@ Default Openstack Roles to users are set to `member` and `load-balancer_member` 
 
 ## Usage
 
-There must be a `clouds.yml` and a `secure.yml` file in the directory where the OpenStack Project Manager will be executed, examples are provided within the git repository. 
+There must be a `clouds.yml` and a `secure.yml` file in the directory where the OpenStack Project Manager will be executed, examples are provided within the git repository.
 
 The cloud profile to be used can be specified via the optional --cloud parameter. By default the cloud profile with the name admin is used. It has to be and admin account, to create and modify domains, projects, users and quotas.
 
@@ -221,7 +221,7 @@ It is possible to set a quota multiplier for any project.
 The following command sets a multiplier of 256 of the basic quota:
 
 ```bash
-$ openstack project set --property quotamultiplier=256 democompany-webshop
+openstack project set --property quotamultiplier=256 democompany-webshop
 ```
 
 Adjusting gigabyte quota for storage with a multiplier of 20 of the basic quota for a project:

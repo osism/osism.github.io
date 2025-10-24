@@ -39,7 +39,7 @@ for it to come back up:
 osism apply reboot --limit $COMPUTE_NODE --extra-vars reboot_wait=true --extra-vars ireallymeanit=yes
 ```
 
-## Internal components 
+## Internal components
 
 OpenStack, OVN, and Open vSwitch all really like UUIDs.
 

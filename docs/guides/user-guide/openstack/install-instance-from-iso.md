@@ -72,7 +72,7 @@ Set the created volume to bootable
 openstack volume set --bootable $(openstack server show $INSTANCE_NAME -f json -c attached_volumes | jq -r '.attached_volumes | first | .id')
 ```
 
-## Install the created instance from the uploaded ISO 
+## Install the created instance from the uploaded ISO
 
 Use the rescue mechanism to boot the ISO, e.g.:
 
