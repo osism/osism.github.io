@@ -50,18 +50,14 @@ are designed to to handle all possible configuration transitions on their own.
 To enable TLS encryption the following steps are needed.
 
 1. Activate tls encryption for both endpoints
-
   * To enable external TLS encryption:
-
     ```yaml title="environments/kolla/configuration.yml"
     kolla_enable_tls_external: "yes"
     ```
   * To enable internal TLS encryption:
-
     ```yaml title="environments/kolla/configuration.yml"
     kolla_enable_tls_internal: "yes"
      ```
-
 2. Add the combined server certificate and private key to the following locations in the configuration repository:
   * private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
   * private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`

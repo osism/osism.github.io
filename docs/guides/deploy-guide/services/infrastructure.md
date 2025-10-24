@@ -42,7 +42,7 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
    osism apply loadbalancer
    ```
 
-   It is important to do this deployment before any other deployements in the Kolla
+   It is important to do this deployment before any other deployments in the Kolla
    environment, as parts of the other deployments depend on the loadbalancer
    service.
 

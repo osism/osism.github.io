@@ -41,13 +41,13 @@ Image source: [Introduction to Red Hat OpenStack Services on OpenShift](https://
 * Ironic: Bare Metal Provisioning
 * Ceilometer: Metering
 
-# General architecture of OpenStack services
+## General architecture of OpenStack services
 
 ![General Architecture of OpenStack Services](./images/s6-services-lecture-fig-1.svg)
 
 Image source: [Red Hat OpenStack Services on OpenShift Architecture](https://redhatquickcourses.github.io/rhoso-arch/rhoso-arch/1/ch1-architecture/s6-services-lecture.html)
 
-# Multitenancy with OpenStack
+## Multitenancy with OpenStack
 
 ![Multitenancy with OpenStack](./images/s1-domains-projects-lecture-fig-1.svg)
 

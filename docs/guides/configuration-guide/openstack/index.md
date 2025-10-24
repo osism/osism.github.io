@@ -271,10 +271,10 @@ is created and gets into the container.
     merge_yaml:
       sources:
         # highlight-start
-	- "{{ role_path }}/templates/opensearch.yml.j2"
-	- "{{ node_custom_config }}/opensearch.yml"
-	- "{{ node_custom_config }}/opensearch/opensearch.yml"
-	- "{{ node_custom_config }}/opensearch/{{ inventory_hostname }}/opensearch.yml"
+    - "{{ role_path }}/templates/opensearch.yml.j2"
+    - "{{ node_custom_config }}/opensearch.yml"
+    - "{{ node_custom_config }}/opensearch/opensearch.yml"
+    - "{{ node_custom_config }}/opensearch/{{ inventory_hostname }}/opensearch.yml"
         # highlight-end
       dest: "{{ node_config_directory }}/opensearch/opensearch.yml"
       mode: "0660"
