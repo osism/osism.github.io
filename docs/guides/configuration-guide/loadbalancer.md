@@ -162,7 +162,7 @@ must be accessible from the internet.
    osism apply loadbalancer
    ```
 
-For more details about this topic, we recommend the [offical kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
+For more details about this topic, we recommend the [official kolla-ansible documentation](https://docs.openstack.org/kolla-ansible/latest/admin/tls.html#generating-tls-certificates-with-let-s-encrypt).
 
 ## Second Loadbalancer
 
@@ -206,7 +206,7 @@ testbed-node-2.testbed.osism.xyz
 It is also important to ensure that the nodes used for the second loadbalancer are not included in
 the `loadbalancer` group. This can be checked with `osism get hosts -l loadbalancer`. If the nodes of
 the second loadbalancer are also listed there, the `loadbalancer` group in the `99-overwrite` file of
-the global inventory must be overwritten. In this example, the `loadbalaner` group is overwritten so
+the global inventory must be overwritten. In this example, the `loadbalancer` group is overwritten so
 that only `testbed-node-0.testbed.osism.xyz` and `testbed-node-1.testbed.osism.xyz` are left in the
 `loadbalancer` group.
 

@@ -105,7 +105,7 @@ removed.
 5. After completing the creation of the images in repository `container-images-kolla`,
    the file `images.yml` must be added to repository `osism/sbom` as
    `5.0.0/openstack.yml` (instead of `5.0.0`, the corresponding release is used).
-   The file is available as a build artefact of the `Release container images` action
+   The file is available as a build artifact of the `Release container images` action
    on the created tag.
 
    Before the file is added, it is enhanced with the checksums of the images. The script
@@ -120,7 +120,7 @@ removed.
    repositories before.
 
 7. Add the created SPDX files from the listed repositories to the `osism/sbom` repository.
-   The file are available as build artefacts of the ``Build container image`` action
+   The file are available as build artifacts of the ``Build container image`` action
    on the created tags.
 
    ```text
@@ -163,7 +163,7 @@ removed.
     testbed-upgrade-stable
     ```
 
-11. Add a new release notes file to `doc/sorce/notes`. Generate the versions table with the
+11. Add a new release notes file to `doc/source/notes`. Generate the versions table with the
     help of the `release-table.py` script in the `osism/sbom` repository.
 
 12. After all known issues are documented, a corresponding tag, e.g. `5.0.0`, is set on the

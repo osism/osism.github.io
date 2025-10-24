@@ -16,7 +16,7 @@ of targets depends on the container it is run in.
 * For the `osismclient` container
   * `/change.sh osism <git branch>` for the [osism/python-osism](https://github.com/osism/python-osism) repository
 
-* For the `inventory-reonciler` container
+* For the `inventory-reconciler` container
   * `/change.sh osism <git branch>` for the [osism/python-osism](https://github.com/osism/python-osism) repository
   * `/change.sh generics <git branch>` for the [osism/cfg-generics](https://github.com/osism/cfg-generics) repository
   * `/change.sh defaults <git branch>` for the [osism/defaults](https://github.com/osism/defaults) repository
@@ -51,7 +51,7 @@ docker restart osism-ansible
 
 If something has been changed in the defaults and is to be tested, this must be
 changed in the inventory reconciler service. Regardless of which of the Ansible services
-the customised defaults are intended for.
+the customized defaults are intended for.
 
 ```bash
 docker exec -u root -it manager-inventory_reconciler-1 /change.sh defaults main

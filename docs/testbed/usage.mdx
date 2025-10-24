@@ -52,7 +52,7 @@ make vpn-sshuttle ENVIRONMENT=regiocloud
 killall sshuttle
 ```
 
-## Webinterfaces
+## Web interfaces
 
 All SSL-enabled services within the OSISM Testbed use certs which are signed by the self-signed
 [OSISM Testbed CA](https://raw.githubusercontent.com/osism/testbed/main/environments/kolla/certificates/ca/testbed.crt)
@@ -252,7 +252,7 @@ Since this will fetch a lot of repositories it is advisable to enable this only 
 cinder_dev_mode: true
 ```
 
-You may customise the used `git` repository by adding `kolla_repos_git` to `environments/kolla/configuration.yml` to specify a common root for the repositories of all services, which will be completed by the service's name, e.g.:
+You may customize the used `git` repository by adding `kolla_repos_git` to `environments/kolla/configuration.yml` to specify a common root for the repositories of all services, which will be completed by the service's name, e.g.:
 
 ```yaml
 kolla_repos_git: "https://github.com/openstack"
@@ -277,7 +277,7 @@ in `environments/kolla/configuration.yml`, or for specific services, via service
 cinder_source_version: my_cinder_feature
 ```
 
-In order to update the `git` repositories on `kolla-ansible` deployments set either 
+In order to update the `git` repositories on `kolla-ansible` deployments set either
 
 ```yaml
 kolla_dev_repos_pull: true

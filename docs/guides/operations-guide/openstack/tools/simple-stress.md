@@ -6,7 +6,7 @@ sidebar_position: 55
 # Simple Stress
 
 ## Overview
-The OpenStack Simple Stress is a small stress test for your Openstack Cluster. You can use it for burnin tests or if you want to monitor your cluster perfomance.
+The OpenStack Simple Stress is a small stress test for your Openstack Cluster. You can use it for burnin tests or if you want to monitor your cluster performance.
 It is able to start a predefined amount of Servers in specific networks in parallel and serial and removes them afterwards, so you can test your environment to the limits.
 
 ## Installation

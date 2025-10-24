@@ -10,7 +10,7 @@ import {EnumChangefreq} from 'sitemap';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'OSISM – Sovereign Cloud Platform',
-  tagline: 'Get your data center ready for the mulit-cloud era',
+  tagline: 'Get your data center ready for the multi-cloud era',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here

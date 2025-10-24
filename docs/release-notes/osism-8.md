@@ -89,7 +89,7 @@ Release date: 6. October 2024
 
 * The generic inventory group is now used as the default for the FRR service.
 
-* In the inventory reconciler, the handling of inventory groups from the configuration repoistory
+* In the inventory reconciler, the handling of inventory groups from the configuration repository
   and the Netbox has been improved. Groups that exist both in the configuration repository and in
   the Netbox are now merged and do not overwrite each other.
 
@@ -99,10 +99,10 @@ Release date: 6. October 2024
   specific hosts.
 
 * The `osism.commons.repository` role now supports the newer DEB822 format and is now also
-  usuable on Ubuntu 24.04 based ARM nodes.
+  usable on Ubuntu 24.04 based ARM nodes.
 
 * With the `nexus_force_init` parameter of `osism.services.nexus` it is possible to force the
-  initialisation of the Nexus service.
+  initialization of the Nexus service.
 
 * A temporary workaround for the installation of python3-docker on Ubuntu 24.04 has been added
   to `osism.services.docker`. This will be removed later.
@@ -155,7 +155,7 @@ Release date: 24. September 2024
   enable_prometheus_openstack_exporter: "yes"
   ```
 
-* An error when upgrading the Postres database of the Netbox service has been fixed. Upgrades
+* An error when upgrading the PostgreSQL database of the Netbox service has been fixed. Upgrades
   of the Postgres database are now done automatically.
 
 * The Scaphandre service now accesses the host PIDs by default in order to better assign the
@@ -167,10 +167,10 @@ Release date: 24. September 2024
   ```
 
 * Both Ceph play (`osism apply ceph`)  and the validation of Ceph OSD services
-  (`osism validate ceph-osds`) have been fixed for non-HCI environments.  
+  (`osism validate ceph-osds`) have been fixed for non-HCI environments.
 
 * Inventory groups in `inventory/20-roles` now also overwrite groups in all other files
-  (with exception of `inventory/99-ovewrite`). The same applies to groups that are set
+  (with exception of `inventory/99-overwrite`). The same applies to groups that are set
   via labels in Netbox. This makes it possible, for example, to define the load balancers
   via the `loadbalancer` group directly via `inventory/20-roles` or a Netbox label.
 
@@ -186,16 +186,16 @@ Release date: 11. September 2024
 
 * New manager features.
 
-  * The configuration is now synchronised with `osism sync configuration`.
+  * The configuration is now synchronized with `osism sync configuration`.
     The `osism configuration sync` command will be removed in the future.
 
-  * The inventory is now synchronised with `osism sync inventory`.
+  * The inventory is now synchronized with `osism sync inventory`.
     The `osism reconciler sync` command will be removed in the future.
 
-  * Netbox is now synchronised with `osism sync netbox`.
+  * Netbox is now synchronized with `osism sync netbox`.
     The `osism netbox sync` command will be removed in the future.
 
-  * Ironic is now synchronised with `osism sync ironic`.
+  * Ironic is now synchronized with `osism sync ironic`.
     The `osism netbox sync ironic` command will be removed in the future.
 
 ### Upgrade notes

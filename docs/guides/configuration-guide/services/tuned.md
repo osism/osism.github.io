@@ -21,7 +21,7 @@ The following profiles are available:
 | cpu-partitioning            | Optimize for CPU partitioning                                                                                                     |
 | default                     | Legacy default tuned profile                                                                                                      |
 | desktop                     | Optimize for the desktop use-case                                                                                                 |
-| desktop-powersave           | Optmize for the desktop use-case with power saving                                                                                |
+| desktop-powersave           | Optimize for the desktop use-case with power saving                                                                                |
 | enterprise-storage          | Legacy profile for RHEL6, for RHEL7, please use throughput-performance profile                                                    |
 | hpc-compute                 | Optimize for HPC compute workloads                                                                                                |
 | intel-sst                   | Configure for Intel Speed Select Base Frequency                                                                                   |

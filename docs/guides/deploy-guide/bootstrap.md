@@ -7,7 +7,7 @@ sidebar_position: 40
 
 :::info
 
-The prerequisite for bootstraping the nodes of a cluster the Manager node has to be
+The prerequisite for bootstrapping the nodes of a cluster the Manager node has to be
 prepares. What a Manager node is and how to prepare it is documented in the
 [Manager chapter of the Deploy Guide](./manager.md).
 

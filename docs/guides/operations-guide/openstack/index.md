@@ -59,7 +59,7 @@ Available parameters for the OpenStack Environment (`environments/openstack/conf
 
 ## Add a new compute node
 
-1. Add the operater user
+1. Add the operator user
 
    ```bash
    osism apply operator -u osism -l NODE

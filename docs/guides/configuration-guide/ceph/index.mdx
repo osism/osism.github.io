@@ -37,7 +37,7 @@ only be completely overwritten via an entry in the file `environments/ceph/confi
 
 By default, the dictionary looks like this. If the swappiness of `10` is to be used, it is not
 necessary to add the `os_tuning_params` dictionary to the configuration repository. This is only
-necessary if the swappiness is to be customised.
+necessary if the swappiness is to be customized.
 
 ```yaml title="environments/ceph/configuration.yml"
 os_tuning_params:
@@ -47,7 +47,7 @@ os_tuning_params:
   - { name: vm.min_free_kbytes, value: "{{ vm_min_free_kbytes }}" }
 ```
 
-The sysctl paremeters are written to the file `/etc/sysctl.d/ceph-tuning.conf`
+The sysctl parameters are written to the file `/etc/sysctl.d/ceph-tuning.conf`
 on the storage nodes.
 
 ```console
@@ -474,7 +474,7 @@ osism apply ceph-configure-lvm-volumes
 ```
 
 Check the `/tmp` directory on the manager node for files like `testbed-node-0.testbed.osism.xyz-ceph-lvm-configuration.yml`.
-Add this content to the host vars of the correspondingnode. The existing `ceph_osd_devices` parameter is replaced.
+Add this content to the host vars of the corresponding node. The existing `ceph_osd_devices` parameter is replaced.
 
 ```yaml
 ---
@@ -580,7 +580,7 @@ osism apply ceph-configure-lvm-volumes
 ```
 
 Check the `/tmp` directory on the manager node for files like `testbed-node-0.testbed.osism.xyz-ceph-lvm-configuration.yml`.
-Add this content to the host vars of the correspondingnode. The existing `ceph_osd_devices` parameter is replaced.
+Add this content to the host vars of the corresponding node. The existing `ceph_osd_devices` parameter is replaced.
 
 ```yaml
 ---
@@ -679,7 +679,7 @@ osd-block-a0da232a-e5b8-5823-8c42-8fb231442edc ceph-a0da232a-e5b8-5823-8c42-8fb2
    the manager and reconcile the inventory with `osism reconciler sync`.
 
 4. Regenerate the configuration with `osism apply ceph-configure-lvm-volumes -l <nodename>`.
-   Synchronise the contents of `/tmp/<nodename>-ceph-lvm-configuration.yml` with those in
+   Synchronize the contents of `/tmp/<nodename>-ceph-lvm-configuration.yml` with those in
    `inventory/host_vars/<nodename>.yml`.
 
    ```yaml

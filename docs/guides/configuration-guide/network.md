@@ -18,7 +18,7 @@ By default, all other files in `/etc/netplan` are removed. If you do not want th
 can set `network_netplan_remove_unmanaged_files` to `false`. It is also possible to explicitly
 list individual files that should not be deleted in `network_netplan_managed_files_extra`.
 
-An existing `/etc/intefaces` file is replaced with a placeholder file. It is not possible
+An existing `/etc/interfaces` file is replaced with a placeholder file. It is not possible
 to use `/etc/interfaces` and Netplan in parallel.
 
 ```yaml title="This template is used as the base for the configuration"
@@ -118,7 +118,7 @@ network_vlans:
 
 Dummy devices are created with the help of
 [systemd.netdev](https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html)
-and can then be used as a normal netowrk device in the Netplan configuration.
+and can then be used as a normal network device in the Netplan configuration.
 
 ```yaml
 network_dummy_interfaces:

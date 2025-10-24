@@ -237,7 +237,7 @@ entries must be added to the local `/etc/hosts` file for the name resolution to 
 192.168.16.254	api.in-a-box.cloud
 ```
 
-### Webinterfaces
+### Web interfaces
 
 If you want to access the services please choose the URL from the following list:
 
@@ -304,7 +304,7 @@ osism apply configuration
 docker system prune -a
 ```
 
-## Customisations
+## Customizations
 
 ### Use of 2nd NIC for external network
 
@@ -445,7 +445,7 @@ dragon@cumulus:~$ uptime
  16:58:12 up 1 min,  1 user,  load average: 101.44, 30.94, 10.78
 ```
 
-After about 5 minutes, when all services have been started, this normalises again
+After about 5 minutes, when all services have been started, this normalizes again
 and the load drops well below 10.
 
 ![Netdata System Load Average](./images/netdata-high-load.png)
@@ -473,6 +473,6 @@ you need to know the following.
 * The installation persists the kernel parameters of the initial boot to the file `/etc/.initial-kernel-commandline`
 * The status and activities of the deployment are logged in `/var/log/install-cloud-in-a-box.log`. For proper colors use `less -r`.
   Search for `OVERALL STATUS` to find the result of the specific installation steps.
-* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overriden
+* Branch and location of the [osism/cloud-in-a-box](https://github.com/osism/cloud-in-a-box) repository can be overridden
   by setting the kernel parameters `ciab_repo_url` (a public repository address without authentication) and `ciab_branch`
   (a name of a branch, use only ASCII chars, `-`, and `_`).

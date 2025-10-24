@@ -7,7 +7,7 @@ sidebar_label: Operations for Rook
 :::warning
 
 This is a technical preview and not recommended for production use yet. This whole
-document has to be reworkded with more rook like handling. Do not take it for
+document has to be reworked with more rook like handling. Do not take it for
 granted yet.
 
 :::
@@ -397,6 +397,7 @@ ceph pg dump --format=json | jq '.pg_map.pg_stats[] |
 select(.stat_sum.num_large_omap_objects != 0) |
 (.pgid, .stat_sum.num_large_omap_objects, .up, .acting)'
 ```
+
 (Remove the line breaks between the single quotes or `jq` might act weird!)
 
 This will dump all PG IDs with large OMAP objects and their up/acting OSDs.
@@ -489,7 +490,7 @@ It also can be done by hand but Rook will not know about the pool in this case.
 
 :::warning
 
-This will delete all data in that pool. There is no undo/undelete.
+This will delete all data in that pool. There is no undo/restore.
 
 :::
 

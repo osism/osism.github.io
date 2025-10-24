@@ -151,7 +151,7 @@ python3 clouds.py > clouds.yaml
 ### Bash
 
 You need to point the `source` line to your `openrc` file first. Then execute the Bash script.
-This will create the `clouds.yaml` file in your currect directory
+This will create the `clouds.yaml` file in your correct directory
 
 ```bash
 #!/bin/bash
