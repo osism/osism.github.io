@@ -9,15 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
       - uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: yarn
-      - run: pip3 install requests
-      - run: python3 get-external-files.py
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
