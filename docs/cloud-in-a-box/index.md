@@ -117,7 +117,7 @@ The scripts are not idempotent yet. In case there is any fail during `bootstrap.
 start over with fresh installation.
 
 
-1. Follow the [provisioning guide](../guides/deploy-guide/provisioning),
+1. Follow the [provisioning guide](../guides/deploy-guide/provisioning.md),
    skip the part about disk layout and do it this way:
 
    ![Disk layout](images/disk-layout.png)

@@ -4,7 +4,7 @@ sidebar_label: OSISM 8
 
 # OSISM 8
 
-Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager).
+Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
 
 The release notes build on each other. When upgrading from 7.0.1 to 8.0.0, you should
 therefore not only read and take into account the release notes for 8.0.0 but also the
