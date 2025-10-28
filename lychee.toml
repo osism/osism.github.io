@@ -1,2 +1,11 @@
 ################################  Exclusions  ##################################
-exclude = ['in-a-box.cloud','testbed.osism.xyz','testbed.osism.xyz']
+exclude = [
+  'in-a-box.cloud',
+  'testbed.osism.xyz',
+  'testbed.osism.xyz',
+  'http://xn--hvg/',
+  'https://xn--hvg/',
+  'www.supermicro.com'
+]
+################################  Requests  ####################################
+insecure = true
