@@ -169,7 +169,7 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    with the help of the [OpenStack Resource Manager](./tools/resource-manager.md#live-migration)
 
 3. Evacuate all instances on the compute node
-   with the help of the [OpenStack Resource Manager](./tools/resource-manager.md#evacutation)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager.md#evacuation)
 
 4. Ensure that no more instances are running on the compute node
 

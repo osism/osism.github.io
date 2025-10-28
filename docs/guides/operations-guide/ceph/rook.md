@@ -463,7 +463,7 @@ ceph osd pool autoscale-status
 
 ### Create a replicated pool
 
-This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../../configuration-guide/ceph/rook.md#extra-pool--cephblockpool-crd).
+This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPool CRD](../../configuration-guide/ceph/rook.md#extra-pools---cephblockpool-crd).
 
 It also can be done by hand but Rook will not know about the pool in this case.
 
@@ -484,7 +484,7 @@ Typical application names are: rbd, rgw, cephfs
 
 ### Delete a pool
 
-This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPoolC CRD](../../configuration-guide/ceph/rook.md#extra-pool--cephblockpool-crd).
+This should be done by updating your `values.yml` file via the variables in [Rook Extra pools - CephBlockPool CRD](../../configuration-guide/ceph/rook.md#extra-pools---cephblockpool-crd).
 
 It also can be done by hand but Rook will not know about the pool in this case.
 
