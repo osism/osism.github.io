@@ -29,7 +29,7 @@ Available parameters for the OpenStack Environment (`environments/openstack/conf
 ## Reboot a compute node
 
 1. Live migrate all instances running on the compute node
-   with the help of the [OpenStack Resource Manager](./tools/resource-manager#live-migration)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager.md#live-migration)
 
 2. Ensure that no more instances are running on the compute node
 
@@ -166,10 +166,10 @@ f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-
    repository on the manager with `osism apply configuration`
 
 2. Live migrate all instances running on the compute node
-   with the help of the [OpenStack Resource Manager](./tools/resource-manager#live-migration)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager.md#live-migration)
 
 3. Evacuate all instances on the compute node
-   with the help of the [OpenStack Resource Manager](./tools/resource-manager#evacutation)
+   with the help of the [OpenStack Resource Manager](./tools/resource-manager.md#evacutation)
 
 4. Ensure that no more instances are running on the compute node
 

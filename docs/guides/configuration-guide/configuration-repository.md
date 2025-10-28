@@ -201,7 +201,7 @@ as manager in your own cluster.
 * Network section
 
   The static and complete network configuration of the node. Further details on creating the
-  network configuration in the [network configuration guide](../configuration-guide/network).
+  network configuration in the [network configuration guide](../configuration-guide/network.md).
 
   ```yaml title="environments/manager/host_vars/node01.yml"
   network_ethernets:
