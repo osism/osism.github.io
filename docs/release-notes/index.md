@@ -33,6 +33,6 @@ The release notes for 7.0.3 must then also be taken into account.
 
 * There is the possibility to subscribe to the GitHub releases [Atom feed](https://github.com/osism/release/releases.atom).
   This way you will be informed directly when a release has been approved.
-* [How to use of a specific release in the configuration repository?](https://osism.tech/docs/guides/configuration-guide/manager#stable-release)
-* [How we handle releases?](https://osism.tech/docs/guides/other-guides/developer-guide/releases#how-we-handle-releases)
-* [How to prepare and make a release?](https://osism.tech/docs/guides/other-guides/developer-guide/releases#how-to-make-a-release)
+* [How to use of a specific release in the configuration repository?](../guides/configuration-guide/manager.mdx#stable-release)
+* [How we handle releases?](../guides/developer-guide/releases.md#how-we-handle-releases)
+* [How to prepare and make a release?](../guides/developer-guide/releases.md#how-to-make-a-release)
