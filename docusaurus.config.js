@@ -219,6 +219,7 @@ const config = {
         docsRouteBasePath: 'https://osism.tech/docs/',
         // blogRouteBasePath: 'https://osism.tech/blog/',
         indexPages: true,
+        indexBlog: false,
         // For Docs using Chinese, The `language` is recommended to set to:
         // ```
         // language: ["en", "zh"],
