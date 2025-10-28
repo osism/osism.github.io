@@ -14,7 +14,7 @@ jobs:
           python-version: "3.13"
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: yarn
       - run: pip3 install requests
       - run: python3 get-external-files.py
