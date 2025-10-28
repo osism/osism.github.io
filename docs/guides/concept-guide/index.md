@@ -47,7 +47,7 @@ and Documentation relies on contributions.
 
 ## Reference architecture
 
-* [Manager architecture](./architecture.md#manager-architexture)
+* [Manager architecture](./architecture.md#manager-architecture)
 * [Control architecture](./architecture.md#control-architecture)
 * [Compute architecture](./architecture.md#compute-architecture)
 * [Storage architecture](./architecture.md#storage-architecture)
