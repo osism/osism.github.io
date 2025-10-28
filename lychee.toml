@@ -1,0 +1,2 @@
+################################  Exclusions  ##################################
+exclude = ['in-a-box.cloud','testbed.osism.xyz','testbed.osism.xyz']
