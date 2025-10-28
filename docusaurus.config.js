@@ -148,7 +148,7 @@ const config = {
               },
               {
                 label: 'Zuul CI',
-                href: 'https://zuul.services.betacloud.xyz/t/osism/status',
+                href: 'https://zuul.services.osism.tech/t/osism/status',
               },
               {
                 href: 'https://regiocloud.github.io',
