@@ -30,9 +30,9 @@ The defaults for the OpenTofu variables are intended for [REGIO.cloud](https://r
 | keypair                   | `testbed`                |
 | manager_version           | `latest`                 |
 | network_availability_zone | `nova`                   |
-| number_of_nodes           | `3`                      |
+| number_of_nodes           | `6`                      |
 | number_of_volumes         | `3`                      |
-| openstack_version         | `2023.2`                 |
+| openstack_version         | `2024.2`                 |
 | prefix                    | `testbed`                |
 | public                    | `external`               |
 | refstack                  | `false`                  |
@@ -85,13 +85,13 @@ The deployment of Ceph is based on [ceph-ansible](https://docs.ceph.com/ceph-ans
 
 The deployment of OpenStack is based on [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/).
 
-* OpenStack 2023.1
-* OpenStack 2023.2
-* OpenStack 2024.1 (**default**)
+* OpenStack 2024.1
+* OpenStack 2024.2 (**default**)
+* OpenStack 2025.1
 
 The deployment of Kubernetes is based on [k3s-ansible](https://github.com/techno-tim/k3s-ansible).
 
-* Kubernetes v1.30 (**default**)
+* Kubernetes v1.32 (**default**)
 
 ## Included services
 

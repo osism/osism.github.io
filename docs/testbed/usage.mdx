@@ -82,7 +82,7 @@ If you want to access the services, please choose the URL from the following tab
 
 ### Usage of the OpenStack CLI
 
-The `environments/openstack` folder contains the needed files for the openstack client:
+The `environments/openstack` folder contains the files needed for the `openstack` client:
 
 ```bash
 cd environments/openstack
@@ -101,7 +101,7 @@ OpenStack dashboard via the public IP address of the manager, the following chan
 of the other cloud is changed accordingly.
 
 1. Add the customization `external_api`. This customization makes sure that the required security group rules
-   are created for the various OpenStack APIs and the OpenStack dashboard.
+   are created to allow access to the various OpenStack APIs and the OpenStack dashboard.
 
    ```text
    # customisation:external_api
