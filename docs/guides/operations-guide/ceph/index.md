@@ -1,5 +1,6 @@
 ---
 sidebar_label: Ceph
+sidebar_key: operations-guide-ceph
 ---
 
 # Ceph
