@@ -48,19 +48,37 @@ This documentation is organized into guides:
 
 ## Prerequisites
 
-We aim to make each step as accessible as possible - from deployment, upgrade, to day2 operations and more. However, pre-existing knowledge is still required to work with our technology stack, which we do not cover in our documentation. Throughout our documentation we provide and refer to existing guides from e.g. Ansible and Docker.
+We aim to make each step as accessible as possible - from deployment, upgrade,
+to day2 operations and more. However, pre-existing knowledge is still required
+to work with our technology stack, which we do not cover in our documentation.
+Throughout our documentation we provide and refer to existing guides from e.g.
+Ansible and Docker.
 
 ### Linux
-We assume the reader is familiar with [Linux (LPIC2 level)](https://www.lpi.org/our-certifications/lpic-2-overview/). This includes advanced system administration like networking, system services and automation, troubleshooting and security, and maintenance.
+
+We assume the reader is familiar with
+[Linux (LPIC2 level)](https://www.lpi.org/our-certifications/lpic-2-overview/).
+This includes system administration like networking, system services and
+automation, troubleshooting and security as well as maintenance.
 
 ### Ansible
-We assume the reader has understood the basic concepts of [Ansible](https://docs.ansible.com/). This includes understanding the YAML-syntax, reading, modifying and running playbooks, managing inventories, and using variables and templates.
+
+We assume the reader has understood the basic concepts of
+[Ansible](https://docs.ansible.com/). This includes understanding the
+YAML-syntax, reading, modifying and running playbooks, managing inventories, and
+using variables and templates.
 
 ### Docker
-We assume that the reader has intermediate CLI skills of [Docker](https://docs.docker.com/), and knows how to view logs, restart containers, and inspect errors.
+
+We assume that the reader has intermediate CLI skills of
+[Docker](https://docs.docker.com/), and knows how to view logs, restart
+containers, and inspect errors.
 
 ### Kubernetes
-We assume that the reader has understood the concepts of [Kubernetes](https://kubernetes.io/docs/home/). Including inspecting clusters, and troubleshooting pods/services.
+
+We assume that the reader has understood the concepts of
+[Kubernetes](https://kubernetes.io/docs/home/). Including inspecting clusters,
+and troubleshooting pods/services.
 
 :::note
 
