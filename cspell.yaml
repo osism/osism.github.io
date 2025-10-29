@@ -23,7 +23,6 @@ ignorePaths:
   - "megalinter-reports/**"
   - "package-lock.json"
   - "report"
-  - "i18n/**"
   - "src/**"
 
 language: en
@@ -205,6 +204,7 @@ words:
   - oshm
   - osism
   - osismclient
+  - pagetitle
   - pastebin
   - peaceiris
   - pgid
