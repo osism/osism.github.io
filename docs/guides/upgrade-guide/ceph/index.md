@@ -1,5 +1,6 @@
 ---
 sidebar_label: Ceph
+sidebar_key: upgrade-guide-ceph
 sidebar_position: 20
 ---
 

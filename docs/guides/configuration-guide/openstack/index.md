@@ -1,5 +1,6 @@
 ---
 sidebar_label: OpenStack
+sidebar_key: configuration-guide-openstack
 sidebar_position: 30
 ---
 

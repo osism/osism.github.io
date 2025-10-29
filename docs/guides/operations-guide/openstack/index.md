@@ -1,5 +1,6 @@
 ---
 sidebar_label: OpenStack
+sidebar_key: operations-guide-openstack
 ---
 
 # OpenStack

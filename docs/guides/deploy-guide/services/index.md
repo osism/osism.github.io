@@ -1,5 +1,6 @@
 ---
 sidebar_label: Services
+sidebar_key: deploy-guide-services
 sidebar_position: 100
 ---
 
