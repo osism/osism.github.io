@@ -31,8 +31,9 @@ The release notes for 7.0.3 must then also be taken into account.
 
 ## Further information
 
-* There is the possibility to subscribe to the GitHub releases [Atom feed](https://github.com/osism/release/releases.atom).
-  This way you will be informed directly when a release has been approved.
+* We comply with the removals, deprecations, etc. of the individual upstream projects used. The release
+  notes of the upstream projects used are not included in the OSISM release notes and must be considered
+  separately.
 * [How to use of a specific release in the configuration repository?](../guides/configuration-guide/manager.mdx#stable-release)
 * [How we handle releases?](../guides/developer-guide/releases.md#how-we-handle-releases)
 * [How to prepare and make a release?](../guides/developer-guide/releases.md#how-to-make-a-release)
