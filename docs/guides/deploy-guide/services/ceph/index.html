@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.9.2">
 <title data-rh="true">Ceph | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/deploy-guide/services/ceph/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Ceph | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="In OSISM it is also possible to integrate and use existing Ceph clusters. It"><meta data-rh="true" property="og:description" content="In OSISM it is also possible to integrate and use existing Ceph clusters. It"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/deploy-guide/services/ceph/"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/services/ceph/" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/services/ceph/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Deploy Guide","item":"https://osism.tech/docs/guides/deploy-guide/"},{"@type":"ListItem","position":3,"name":"Services","item":"https://osism.tech/docs/guides/deploy-guide/services/"},{"@type":"ListItem","position":4,"name":"Ceph","item":"https://osism.tech/docs/guides/deploy-guide/services/ceph/"}]}</script><link rel="stylesheet" href="/assets/css/styles.86371050.css">
-<script src="/assets/js/runtime~main.c7500c3b.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.8fc828b2.js" defer="defer"></script>
 <script src="/assets/js/main.19e0e3d3.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -15,12 +15,12 @@
 <p>In OSISM it is also possible to integrate and use existing Ceph clusters. It
 is not necessary to deploy Ceph with OSISM. If Ceph is deployed with OSISM, it
 should be noted that OSISM does not claim to provide all possible features of Ceph.
-Ceph provided with OSISM is intended to provide the storage for Glance, Nova, Cinder
-and Manila. In a specific way that has been implemented by OSISM for years. It
-should be checked in advance whether the way in OSISM the Ceph deployment and the
-provided features are sufficient. If this is not the case, it is recommended to
-deploy Ceph in a different way directly and independently of OSISM. For possible
-open source projects, please refer to
+Ceph provided with OSISM is intended to provide the storage for Glance, Nova, and
+Cinder. This means that RBD is used and is the only use case. In a specific way that
+has been implemented by OSISM for years. It should be checked in advance whether
+the way in OSISM the Ceph deployment and the provided features are sufficient. Ifx
+this is not the case, it is recommended to deploy Ceph in a different way directly
+and independently of OSISM. For possible open source projects, please refer to
 <a href="https://docs.ceph.com/en/latest/cephadm/index.html" target="_blank" rel="noopener noreferrer" class="">cephadm</a> and
 <a href="https://rook.io" target="_blank" rel="noopener noreferrer" class="">Rook</a>.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="deployment-with-ansible">Deployment with Ansible<a href="#deployment-with-ansible" class="hash-link" aria-label="Direct link to Deployment with Ansible" title="Direct link to Deployment with Ansible" translate="no">​</a></h2>
