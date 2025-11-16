@@ -12,17 +12,18 @@ The old release notes (before OSISM 7) can be found on the archived page
 
 :::
 
-| Series                  | Status               | Initial Release Date | Next Phase           | EOL Date         |
-|:------------------------|:---------------------|:---------------------|:---------------------|:-----------------|
-| [OSISM 9](./osism-9.md) | Maintained           | 8. April 2025        | Extended Maintenance |                  |
-| [OSISM 8](./osism-8.md) | Extended Maintenance | 11. September 2024   | End of life          |                  |
-| [OSISM 7](./osism-7.md) | End of life          | 20. March 2024       |                      | 31. October 2024 |
-| OSISM 6                 | End of life          | 20. September 2023   |                      | 20. May 2024     |
-| OSISM 5                 | End of life          |                      |                      |                  |
-| OSISM 4                 | End of life          |                      |                      |                  |
-| OSISM 3                 | End of life          |                      |                      |                  |
-| OSISM 2                 | End of life          |                      |                      |                  |
-| OSISM 1                 | End of life          |                      |                      |                  |
+| Series                    | Status               | Initial Release Date | Next Phase           | EOL Date         |
+|:--------------------------|:---------------------|:---------------------|:---------------------|:-----------------|
+| [OSISM 10](./osism-10.md) | Maintained           |                      | Extended Maintenance |                  |
+| [OSISM 9](./osism-9.md)   | Maintained           | 8. April 2025        | Extended Maintenance |                  |
+| [OSISM 8](./osism-8.md)   | Extended Maintenance | 11. September 2024   | End of life          |                  |
+| [OSISM 7](./osism-7.md)   | End of life          | 20. March 2024       |                      | 31. October 2024 |
+| OSISM 6                   | End of life          | 20. September 2023   |                      | 20. May 2024     |
+| OSISM 5                   | End of life          |                      |                      |                  |
+| OSISM 4                   | End of life          |                      |                      |                  |
+| OSISM 3                   | End of life          |                      |                      |                  |
+| OSISM 2                   | End of life          |                      |                      |                  |
+| OSISM 1                   | End of life          |                      |                      |                  |
 
 The release notes build on each other. When upgrading from 6.0.2 to 7.0.4, you should
 therefore not only read and take into account the release notes for 7.0.4 but also the
