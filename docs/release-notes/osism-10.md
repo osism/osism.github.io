@@ -13,6 +13,11 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## RabbitMQ 4
 
+Since the default changed to have all queues be of durable type in the Epoxy release,
+following procedure is required to be carried out before any upgrade to Epoxy.
+
+See docs: https://docs.openstack.org/kolla-ansible/latest/reference/message-queues/rabbitmq.html#high-availability
+
 ## New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own
@@ -85,6 +90,8 @@ OpenStack 2025.1 release notes: https://releases.openstack.org/epoxy/index.html
 
 Release notes for each OpenStack service:
 
+* Kolla-Ansible: https://docs.openstack.org/releasenotes/kolla-ansible/2025.1.html
+* Kolla: https://docs.openstack.org/releasenotes/kolla/2025.1.html
 * Barbican: https://docs.openstack.org/releasenotes/barbican/2025.1.html
 * Ceilometer: https://docs.openstack.org/releasenotes/ceilometer/2025.1.html
 * Cinder: https://docs.openstack.org/releasenotes/cinder/2025.1.html
