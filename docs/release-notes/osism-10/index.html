@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.9.2">
 <title data-rh="true">OSISM 10 | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/release-notes/osism-10"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OSISM 10 | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Instructions for the upgrade can be found in the Upgrade Guide."><meta data-rh="true" property="og:description" content="Instructions for the upgrade can be found in the Upgrade Guide."><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/release-notes/osism-10"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/release-notes/osism-10" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/release-notes/osism-10" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Release Notes","item":"https://osism.tech/docs/release-notes/"},{"@type":"ListItem","position":2,"name":"OSISM 10","item":"https://osism.tech/docs/release-notes/osism-10"}]}</script><link rel="stylesheet" href="/assets/css/styles.86371050.css">
-<script src="/assets/js/runtime~main.8bdaeaf3.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.153923ba.js" defer="defer"></script>
 <script src="/assets/js/main.d12303e5.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -16,6 +16,9 @@
 <table><thead><tr><th style="text-align:left">Release</th><th style="text-align:left">Release Date</th></tr></thead></table>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1000">10.0.0<a href="#1000" class="hash-link" aria-label="Direct link to 10.0.0" title="Direct link to 10.0.0" translate="no">​</a></h2>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="rabbitmq-4">RabbitMQ 4<a href="#rabbitmq-4" class="hash-link" aria-label="Direct link to RabbitMQ 4" title="Direct link to RabbitMQ 4" translate="no">​</a></h2>
+<p>Since the default changed to have all queues be of durable type in the Epoxy release,
+following procedure is required to be carried out before any upgrade to Epoxy.</p>
+<p>See docs: <a href="https://docs.openstack.org/kolla-ansible/latest/reference/message-queues/rabbitmq.html#high-availability" target="_blank" rel="noopener noreferrer" class="">https://docs.openstack.org/kolla-ansible/latest/reference/message-queues/rabbitmq.html#high-availability</a></p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-container-registry">New container registry<a href="#new-container-registry" class="hash-link" aria-label="Direct link to New container registry" title="Direct link to New container registry" translate="no">​</a></h2>
 <p>Container images are no longer pushed to Quay.io and are only made available on our own
 container registry. During the transition phase, the new container registry must be made
@@ -41,6 +44,8 @@ E.g. if you previously had</p>
 <p>OpenStack 2025.1 release notes: <a href="https://releases.openstack.org/epoxy/index.html" target="_blank" rel="noopener noreferrer" class="">https://releases.openstack.org/epoxy/index.html</a></p>
 <p>Release notes for each OpenStack service:</p>
 <ul>
+<li class="">Kolla-Ansible: <a href="https://docs.openstack.org/releasenotes/kolla-ansible/2025.1.html" target="_blank" rel="noopener noreferrer" class="">https://docs.openstack.org/releasenotes/kolla-ansible/2025.1.html</a></li>
+<li class="">Kolla: <a href="https://docs.openstack.org/releasenotes/kolla/2025.1.html" target="_blank" rel="noopener noreferrer" class="">https://docs.openstack.org/releasenotes/kolla/2025.1.html</a></li>
 <li class="">Barbican: <a href="https://docs.openstack.org/releasenotes/barbican/2025.1.html" target="_blank" rel="noopener noreferrer" class="">https://docs.openstack.org/releasenotes/barbican/2025.1.html</a></li>
 <li class="">Ceilometer: <a href="https://docs.openstack.org/releasenotes/ceilometer/2025.1.html" target="_blank" rel="noopener noreferrer" class="">https://docs.openstack.org/releasenotes/ceilometer/2025.1.html</a></li>
 <li class="">Cinder: <a href="https://docs.openstack.org/releasenotes/cinder/2025.1.html" target="_blank" rel="noopener noreferrer" class="">https://docs.openstack.org/releasenotes/cinder/2025.1.html</a></li>
