@@ -14,7 +14,7 @@ The old release notes (before OSISM 7) can be found on the archived page
 
 | Series                    | Status               | Initial Release Date | Next Phase           | EOL Date         |
 |:--------------------------|:---------------------|:---------------------|:---------------------|:-----------------|
-| [OSISM 10](./osism-10.md) | Maintained           |                      | Extended Maintenance |                  |
+| [OSISM 10](./osism-10.md) |                      |                      | Maintained           |                  |
 | [OSISM 9](./osism-9.md)   | Maintained           | 8. April 2025        | Extended Maintenance |                  |
 | [OSISM 8](./osism-8.md)   | Extended Maintenance | 11. September 2024   | End of life          |                  |
 | [OSISM 7](./osism-7.md)   | End of life          | 20. March 2024       |                      | 31. October 2024 |

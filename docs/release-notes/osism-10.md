@@ -4,10 +4,17 @@ sidebar_label: OSISM 10
 
 # OSISM 10
 
+:::info
+
+The OSISM 10 release notes are still a work in progress and not yet complete.
+
+:::
+
 Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
 
-| Release                | Release Date       |
-|:-----------------------|:-------------------|
+| Release         | Release Date |
+|:----------------|:-------------|
+| [10.0.0](#1000) |              |
 
 ## 10.0.0
 
