@@ -18,19 +18,70 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## 10.0.0
 
-## RabbitMQ 4
+## RabbitMQ 3 to RabbitMQ 4 migration
 
-Since the default changed to have all queues be of durable type in the Epoxy release,
-following procedure is required to be carried out before any upgrade to Epoxy.
+OSISM 10 only supports RabbitMQ 4. This requires a mandatory switch to quorum
+queues if this has not already been done.
 
-See docs: https://docs.openstack.org/kolla-ansible/latest/reference/message-queues/rabbitmq.html#high-availability
+If you were already using quorum queues with RabbitMQ 3, migrating from RabbitMQ 3
+to RabbitMQ 4 is easy. Run `osism apply -a upgrade rabbitmq`. No further manual changes
+are necessary. Existing old classic queues are automatically removed when upgrading the
+individual OpenStack services afterwards.
+
+If you are unsure whether you are already using quorum queues or not, first make the upgrade
+from the Manager service. Then run `osism migrate rabbitmq3to4 check`.
+
+```
+$ osism migrate rabbitmq3to4 check
+2025-12-02 20:32:54 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
+2025-12-02 20:32:54 | INFO     | Found 183 classic queue(s)
+2025-12-02 20:32:54 | INFO     | Found 0 quorum queue(s)
+2025-12-02 20:32:54 | INFO     | Migration is REQUIRED: Only classic queues found, no quorum queues
+```
+
+If you have not used quorum queues before, here is our recommended procedure.
+
+1. If not already done upgrade the Manager service as usual.
+2. Remove the `om_enable_rabbitmq_quorum_queues` parameter from `environments/kolla/configuration.yml`.
+3. Add the `om_rpc_vhost: openstack` parameter in `environments/kolla/configuration.yml`.
+4. Add the `om_notify_vhost: openstack` parameter in `environments/kolla/configuration.yml`.
+5. Upgrade RabbitMQ with `osism apply -a upgrade rabbitmq`.
+6. Prepare a new RabbitMQ vHost that uses quorum queues by default with `osism migrate rabbitmq3to4 prepare`.
+7. Upgrade the services that use RabbitMQ and delete the old queues afterwards. For aodh, for example, first
+   run the upgrade with `osism apply -a upgrade aodh` and then remove the classic queues.
+
+   ```
+   $ osism migrate rabbitmq3to4 delete aodh
+   2025-12-02 20:55:27 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
+   2025-12-02 20:55:27 | INFO     | Found 2 classic queue(s) for service 'aodh' in vhost '/'
+   2025-12-02 20:55:27 | INFO     | Deleted queue: alarm.all.sample
+   2025-12-02 20:55:27 | INFO     | Deleted queue: alarming.sample
+   2025-12-02 20:55:27 | INFO     | Successfully deleted 2 queue(s) for service 'aodh' in vhost '/'
+   ```
+
+   These services use RabbitMQ:
+
+   - aodh
+   - barbican
+   - ceilometer
+   - cinder
+   - designate
+   - neutron
+   - nova
+   - octavia
+
+8. Once everything has been upgraded, the old notification queues can be deleted with
+   `osism migrate rabbitmq3to4 notifications.
+9. When the Manager's listener service is used (`enable_listener` in `environments/manager/configuration.yml`)
+   add the new `openstack` RabbitMQ vhost to end of the `manager_listener_broker_uri` parameter.
+   Then update the manager with `osism update manager` and delete the old queues with
+   `osism migrate rabbitmq3to4 manager`.
 
 ## New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own
 container registry. During the transition phase, the new container registry must be made
-known in the configuration repository. In the future ( likely with the release of OSISM 10),
-these parameters can be removed again.
+known in the configuration repository. In the future these parameters can be removed again.
 
 ```yaml title="environments/kolla/configuration.yml"
 docker_namespace: kolla/release
@@ -70,8 +121,8 @@ to
 rgw.$ZONE.$HOSTNAME.$INSTANCE
 ```
 
-Please adapt any `client` entries in `ceph_config_overrides` in `environments/ceph/configuration.yml` accordingly.
-E.g. if you previously had
+Please adapt any `client` entries in `ceph_config_overrides` in `environments/ceph/configuration.yml`
+accordingly. E.g. if you previously had
 
 ```yaml title="environments/ceph/configuration.yml"
 ceph_conf_overrides:
