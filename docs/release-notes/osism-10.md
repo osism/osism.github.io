@@ -18,20 +18,21 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## 10.0.0
 
-## RabbitMQ 3 to RabbitMQ 4 migration
+### RabbitMQ 3 to RabbitMQ 4 migration
 
 OSISM 10 only supports RabbitMQ 4. This requires a mandatory switch to quorum
 queues if this has not already been done.
 
 If you were already using quorum queues with RabbitMQ 3, migrating from RabbitMQ 3
-to RabbitMQ 4 is easy. Run `osism apply -a upgrade rabbitmq`. No further manual changes
-are necessary. Existing old classic queues are automatically removed when upgrading the
-individual OpenStack services afterwards.
+to RabbitMQ 4 is easy. Run `osism apply -a upgrade rabbitmq`. Most of the existing
+old classic queues are automatically removed when upgrading the individual OpenStack
+services afterwards. After completing all upgrades, run `osism migrate rabbitmq3to4 delete`
+to remove old classic queues.
 
 If you are unsure whether you are already using quorum queues or not, first make the upgrade
 from the Manager service. Then run `osism migrate rabbitmq3to4 check`.
 
-```
+```bash
 $ osism migrate rabbitmq3to4 check
 2025-12-02 20:32:54 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
 2025-12-02 20:32:54 | INFO     | Found 183 classic queue(s)
@@ -39,7 +40,9 @@ $ osism migrate rabbitmq3to4 check
 2025-12-02 20:32:54 | INFO     | Migration is REQUIRED: Only classic queues found, no quorum queues
 ```
 
-If you have not used quorum queues before, here is our recommended procedure.
+If you have not used quorum queues before, here is our recommended procedure. This creates
+a new RabbitMQ vHost `openstack` that uses quorum queues by default and then moves all
+queues there when upgrading the services.
 
 1. If not already done upgrade the Manager service as usual.
 2. Remove the `om_enable_rabbitmq_quorum_queues` parameter from `environments/kolla/configuration.yml`.
@@ -50,7 +53,7 @@ If you have not used quorum queues before, here is our recommended procedure.
 7. Upgrade the services that use RabbitMQ and delete the old queues afterwards. For aodh, for example, first
    run the upgrade with `osism apply -a upgrade aodh` and then remove the classic queues.
 
-   ```
+   ```bash
    $ osism migrate rabbitmq3to4 delete aodh
    2025-12-02 20:55:27 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
    2025-12-02 20:55:27 | INFO     | Found 2 classic queue(s) for service 'aodh' in vhost '/'
@@ -70,12 +73,16 @@ If you have not used quorum queues before, here is our recommended procedure.
    - nova
    - octavia
 
+   After upgrading all services, you can also delete all remaining classic queues at once using
+   `osism migrate rabbitmq3to4 delete`.
+
 8. Once everything has been upgraded, the old notification queues can be deleted with
-   `osism migrate rabbitmq3to4 notifications.
-9. When the Manager's listener service is used (`enable_listener` in `environments/manager/configuration.yml`)
-   add the new `openstack` RabbitMQ vhost to end of the `manager_listener_broker_uri` parameter.
-   Then update the manager with `osism update manager` and delete the old queues with
-   `osism migrate rabbitmq3to4 manager`.
+   `osism migrate rabbitmq3to4 delete notifications`.
+
+When the Manager's listener service is used (`enable_listener` in `environments/manager/configuration.yml`)
+add the new `openstack` RabbitMQ vhost to the `manager_listener_broker_uri` parameter.
+Then update the manager with `osism update manager` and delete the old queues with
+`osism migrate rabbitmq3to4 delete manager`.
 
 ## New container registry
 
