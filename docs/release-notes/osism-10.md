@@ -34,10 +34,11 @@ from the Manager service. Then run `osism migrate rabbitmq3to4 check`.
 
 ```bash
 $ osism migrate rabbitmq3to4 check
-2025-12-02 20:32:54 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
-2025-12-02 20:32:54 | INFO     | Found 183 classic queue(s)
-2025-12-02 20:32:54 | INFO     | Found 0 quorum queue(s)
-2025-12-02 20:32:54 | INFO     | Migration is REQUIRED: Only classic queues found, no quorum queues
+2025-12-03 21:04:33 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
+2025-12-03 21:04:33 | INFO     | Found 210 classic queue(s)
+2025-12-03 21:04:33 | INFO     | Found 0 quorum queue(s)
+2025-12-03 21:04:33 | INFO     |   - 210 classic queue(s) in vhost /
+2025-12-03 21:04:33 | INFO     | Migration is REQUIRED: Only classic queues found, no quorum queues
 ```
 
 If you have not used quorum queues before, here is our recommended procedure. This creates
@@ -69,6 +70,8 @@ queues there when upgrading the services.
    - ceilometer
    - cinder
    - designate
+   - magnum
+   - manila
    - neutron
    - nova
    - octavia
@@ -83,6 +86,17 @@ When the Manager's listener service is used (`enable_listener` in `environments/
 add the new `openstack` RabbitMQ vhost to the `manager_listener_broker_uri` parameter.
 Then update the manager with `osism update manager` and delete the old queues with
 `osism migrate rabbitmq3to4 delete manager`.
+
+Finally, you can re-run the check command. There should now be no more classic queues.
+
+```bash
+$ osism migrate rabbitmq3to4 check
+2025-12-04 08:38:58 | INFO     | Connecting to RabbitMQ Management API at 192.168.16.10:15672 (node: testbed-node-0) as openstack...
+2025-12-04 08:38:58 | INFO     | Found 0 classic queue(s)
+2025-12-04 08:38:58 | INFO     | Found 216 quorum queue(s)
+2025-12-04 08:38:58 | INFO     |   - 216 quorum queue(s) in vhost openstack
+2025-12-04 08:38:58 | INFO     | Migration is NOT required: Only quorum queues found
+```
 
 ## New container registry
 
