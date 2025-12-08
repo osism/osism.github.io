@@ -18,7 +18,9 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 ## 10.0.0
 
-### RabbitMQ 3 to RabbitMQ 4 migration
+### Upgrade nodes
+
+#### RabbitMQ 3 to RabbitMQ 4 migration
 
 OSISM 10 only supports RabbitMQ 4. This requires a mandatory switch to quorum
 queues if this has not already been done.
@@ -98,7 +100,7 @@ $ osism migrate rabbitmq3to4 check
 2025-12-04 08:38:58 | INFO     | Migration is NOT required: Only quorum queues found
 ```
 
-## New namespace for Kolla images
+#### New namespace for Kolla images
 
 To make it easier to identify which OpenStack version is being used, the OpenStack version is
 now included in the Kolla Image namespace. An existing `docker_namespace` parameter must be adjusted
@@ -108,7 +110,7 @@ accordingly.
 docker_namespace: kolla/release/2025.1
 ```
 
-## New container registry
+#### New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own
 container registry. During the transition phase, the new container registry must be made
@@ -134,7 +136,7 @@ docker_registry_nexus: registry.osism.tech
 docker_registry_openstackclient: registry.osism.tech
 ```
 
-## New service names for RadosGW in Ceph Reef
+#### New service names for RadosGW in Ceph Reef
 
 The naming scheme for the Ceph RadosGW service was changed from
 
@@ -163,7 +165,7 @@ ceph_conf_overrides:
   "client.rgw.{{ rgw_zone }}.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
 ```
 
-## Removal of the community.general.yaml Ansible plugin
+#### Removal of the community.general.yaml Ansible plugin
 
 If `community.general.yaml` has been set for `stdout_callback` in `ansible.cfg`,
 this entry must be removed and replaced with `result_format=yaml`.
@@ -176,7 +178,7 @@ removed from community.general in version 12.0.0. Please update your
 playbooks.
 ```
 
-## TLS for ProxySQL is now enabled by default
+#### TLS for ProxySQL is now enabled by default
 
 If you are already using ProxySQL, but without TLS, set the following parameter in
 `environments/kolla/configuration.yml`.
