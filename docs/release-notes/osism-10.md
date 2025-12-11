@@ -4,19 +4,13 @@ sidebar_label: OSISM 10
 
 # OSISM 10
 
-:::info
-
-The OSISM 10 release notes are still a work in progress and not yet complete.
-
-:::
-
 Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
 
-| Release         | Release Date |
-|:----------------|:-------------|
-| [10.0.0](#1000) |              |
+| Release     | Release Date     |
+|:------------|:-----------------|
+| 10.0.0-rc.1 | 8. December 2025 |
 
-## 10.0.0
+## 10.0.0-rc.1
 
 ### Upgrade nodes
 
@@ -186,6 +180,10 @@ If you are already using ProxySQL, but without TLS, set the following parameter 
 ```yaml title="environments/kolla/configuration.yml"
 database_enable_tls_internal: "no"
 ```
+
+#### New parameters
+
+* Generate password with `pwgen 32` and add `prometheus_haproxy_password` to `environments/kolla/secrets.yml`
 
 ## References
 

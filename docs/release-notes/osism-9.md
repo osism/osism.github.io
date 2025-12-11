@@ -8,12 +8,38 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 | Release                | Release Date       |
 |:-----------------------|:-------------------|
+| [9.5.0](#950-20251130) | 30. November 2025  |
 | [9.4.0](#940-20250928) | 28. September 2025 |
 | [9.3.1](#931-20250920) | 20. September 2025 |
 | [9.3.0](#930-20250917) | 17. September 2025 |
 | [9.2.0](#920-20250711) | 11. July 2025      |
 | [9.1.0](#910-20250530) | 30. May 2025       |
 | [9.0.0](#900-20250408) | 8. April 2025      |
+
+## 9.5.0 (20251130)
+
+* All OpenStack service images have been rebuilt. An upgrade of OpenStack services is recommended.
+
+* The infrastructure service images (MariaDB, RabbitMQ, ..) have been rebuilt. An upgrade is recommended.
+
+* The network service images (OVN, OVS) have been rebuilt. An upgrade is recommended.
+
+* The monitoring service images (Prometheus & all Prometheus exporters) have been rebuilt. An upgrade is recommended.
+
+* The logging service images (OpenSearch, Fluentd) have been rebuilt. An upgrade is recommended.
+
+### Removal of the community.general.yaml Ansible plugin
+
+If `community.general.yaml` has been set for `stdout_callback` in `ansible.cfg`,
+this entry must be removed and replaced with `result_format=yaml`.
+
+```text
+ERROR! [DEPRECATED]: community.general.yaml has been removed. The plugin
+has been superseded by the option result_format=yaml in callback plugin
+ansible.builtin.default from ansible-core 2.13 onwards. This feature was
+removed from community.general in version 12.0.0. Please update your
+playbooks.
+```
 
 ## 9.4.0 (20250928)
 
