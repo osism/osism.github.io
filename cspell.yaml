@@ -106,8 +106,10 @@ words:
   - garloff
   - geneve
   - gnmic
+  - grasza
   - groupname
   - gunicorn
+  - grzegorz
   - hana
   - harddrives
   - healthmanager
@@ -141,6 +143,7 @@ words:
   - keypair
   - keypairs
   - keyrings
+  - keystonemiddleware
   - knowledgebase
   - kolla
   - kompose
