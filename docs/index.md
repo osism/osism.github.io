@@ -7,83 +7,100 @@ sidebar_position: 10
 
 :::info
 
-This documentation is constantly being updated, is incomplete in some places
-and may contain inaccuracies. We are always happy to provide support without
-any commitment, as we know that the barrier to entry for OSISM is not necessarily
-low.
+**About this documentation**
 
-For newcomers, we offer [Cloud in a Box](./cloud-in-a-box/) and a
-[virtual testbed](./testbed/) for a quick and easy start. For this purpose,
-we also offer regular on-site workshops near Stuttgart if there is sufficient demand.
+This documentation is constantly being updated and may be incomplete or contain
+inaccuracies in some places. We are happy to provide support, as we understand
+that the barrier to entry for OSISM can be challenging.
 
-If there are requests for certain sections or if existing sections are not
-understandable or need more details, please open an [issue](https://github.com/osism/issues/issues).
-You are also welcome to contact us by email at [info@osism.tech](mailto:info@osism.tech).
+**Quick start options**
 
-Contributions are welcome, and they are greatly appreciated. Open Source Software
-and Documentation relies on contributions. This documentation cannot be improved
-without your feedback and help.
+For newcomers, we offer two ways to get started quickly:
+
+* [Cloud in a Box](./cloud-in-a-box/) — A self-contained environment for testing
+* [Virtual testbed](./testbed/) — A virtual environment for experimentation
+
+We also offer regular on-site workshops near Stuttgart if there is sufficient demand.
+
+**Get involved**
+
+* Open an [issue](https://github.com/osism/issues/issues) for questions, suggestions, or unclear sections
+* Contact us at [info@osism.tech](mailto:info@osism.tech)
+* Contributions to documentation and code are welcome and greatly appreciated
 
 :::
 
-OSISM is a comprehensive platform for managing software-defined cloud infrastructure that goes far beyond being a simple deployment tool for OpenStack. While OSISM does support the deployment and management of OpenStack as a key component, its capabilities extend to orchestrating a wide array of services and tools needed to build and operate a modern private cloud. By leveraging OSISM, organizations gain a powerful toolset for building, managing, and scaling private cloud infrastructures tailored to their specific needs, while also maintaining full control over their data and operations.
+OSISM is a comprehensive platform for managing software-defined cloud infrastructure.
+It goes far beyond being a simple deployment tool for OpenStack.
+
+While OSISM supports the deployment and management of OpenStack as a key component,
+its capabilities extend to orchestrating a wide array of services and tools needed
+to build and operate a modern private cloud.
+
+Organizations using OSISM gain:
+
+* A powerful toolset for building, managing, and scaling private cloud infrastructures
+* Flexibility to tailor the infrastructure to their specific needs
+* Full control over their data and operations
 
 ## Guides
 
-This documentation is organized into guides:
+This documentation is organized into the following guides:
 
-* The [Concept Guide](./guides/concept-guide/) explains which components and modules make up OSISM. It also
-  explains the use cases.
-* The [Deploy Guide](./guides/deploy-guide/) explains how the nodes of a cluster are created and bootstrapped.
-  It also explains how the individual modules can be deployed.
-* The [Upgrade Guide](./guides/upgrade-guide/) explains how the individual modules can be upgraded.
-* The [Configuration Guide](./guides/configuration-guide/) explains how the individual modules can be
-  configured.
-* The [Operations Guide](./guides/operations-guide/) explains how individual tasks can be done in
-  day-to-day business in a running cluster.
-* The [Troubleshooting Guide](./guides/troubleshooting-guide/) explains how to resolve problems.
-  It is an extension of the Operations Guide.
-* The [User Guide](./guides/user-guide/) is intended for users of the individual components. It contains
-  best practices, as well as other information.
+| Guide                                                    | Description                                         |
+|----------------------------------------------------------|-----------------------------------------------------|
+| [Concept Guide](./guides/concept-guide/)                 | Components, modules, and use cases of OSISM         |
+| [Deploy Guide](./guides/deploy-guide/)                   | Creating, bootstrapping nodes and deploying modules |
+| [Upgrade Guide](./guides/upgrade-guide/)                 | Upgrading individual modules                        |
+| [Configuration Guide](./guides/configuration-guide/)     | Configuring individual modules                      |
+| [Operations Guide](./guides/operations-guide/)           | Day-to-day tasks in a running cluster               |
+| [Troubleshooting Guide](./guides/troubleshooting-guide/) | Resolving problems (extends Operations Guide)       |
+| [User Guide](./guides/user-guide/)                       | Best practices and information for component users  |
 
 ## Prerequisites
 
-We aim to make each step as accessible as possible - from deployment, upgrade,
-to day2 operations and more. However, pre-existing knowledge is still required
-to work with our technology stack, which we do not cover in our documentation.
-Throughout our documentation we provide and refer to existing guides from e.g.
-Ansible and Docker.
+We aim to make each step as accessible as possible — from deployment and upgrades
+to day-to-day operations. However, working with OSISM requires pre-existing
+knowledge of several technologies. We reference external guides throughout this
+documentation where appropriate.
 
 ### Linux
 
-We assume the reader is familiar with
-[Linux (LPIC2 level)](https://www.lpi.org/our-certifications/lpic-2-overview/).
-This includes system administration like networking, system services and
-automation, troubleshooting and security as well as maintenance.
+We assume familiarity with [Linux at LPIC-2 level](https://www.lpi.org/our-certifications/lpic-2-overview/):
+
+* System administration (networking, services, automation)
+* Security and maintenance
+* Troubleshooting
 
 ### Ansible
 
-We assume the reader has understood the basic concepts of
-[Ansible](https://docs.ansible.com/). This includes understanding the
-YAML-syntax, reading, modifying and running playbooks, managing inventories, and
-using variables and templates.
+We assume understanding of [Ansible](https://docs.ansible.com/) basics:
+
+* YAML syntax
+* Reading, modifying, and running playbooks
+* Managing inventories
+* Using variables and templates
 
 ### Docker
 
-We assume that the reader has intermediate CLI skills of
-[Docker](https://docs.docker.com/), and knows how to view logs, restart
-containers, and inspect errors.
+We assume intermediate [Docker](https://docs.docker.com/) CLI skills:
+
+* Viewing container logs
+* Restarting and managing containers
+* Inspecting errors and debugging
 
 ### Kubernetes
 
-We assume that the reader has understood the concepts of
-[Kubernetes](https://kubernetes.io/docs/home/). Including inspecting clusters,
-and troubleshooting pods/services.
+We assume understanding of [Kubernetes](https://kubernetes.io/docs/home/) concepts:
 
-:::note
+* Inspecting cluster state and resources
+* Troubleshooting pods and services
+* Understanding deployments and configurations
 
-If you are not sure whether you already have the required knowledge, need support in
-gaining the knowledge or would like a guided introduction, you are welcome to contact
-us at [info@osism.tech](mailto:info@osism.tech). We are happy to help.
+:::tip Need help?
+
+If you are unsure about your knowledge level, need support in gaining the required
+skills, or would like a guided introduction, contact us at
+[info@osism.tech](mailto:info@osism.tech). We are happy to help.
 
 :::
