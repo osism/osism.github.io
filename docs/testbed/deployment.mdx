@@ -117,21 +117,15 @@ This section describes step by step how to deploy the OSISM Testbed.
 
 ## Start deployment
 
-1. Create the infrastructure with OpenTofu.
-
-   ```bash
-   make ENVIRONMENT=regiocloud create
-   ```
-
-2. Deploy the OSISM manager and bootstrap all nodes.
+1. Create the infrastructure, deploy the OSISM Manager and bootstrap all nodes.
 
    <Tabs>
-   <TabItem value="testbed-deploy-latest" label="Deploy latest manager version">
+   <TabItem value="testbed-deploy-latest" label="Deploy latest version">
    ```bash
    make ENVIRONMENT=regiocloud manager
    ```
    </TabItem>
-   <TabItem value="testbed-deploy-stable" label="Deploy a stable manager version">
+   <TabItem value="testbed-deploy-stable" label="Deploy a stable version">
    ```bash
    make ENVIRONMENT=regiocloud VERSION_MANAGER=8.0.1 manager
    ```
@@ -141,24 +135,24 @@ This section describes step by step how to deploy the OSISM Testbed.
    Check the [OSISM release notes](https://osism.tech/docs/release-notes/)
    to find out what's available.
 
-3. After the bootstrap, you can log in to the manager via SSH.
+2. After the bootstrap, you can log in to the OSISM Manager via SSH.
 
    ```bash
    make ENVIRONMENT=regiocloud login
    ```
 
-   Yo can log in to the nodes of the cluster via the manager.
+   You can log in to the nodes of the cluster via the OSISM Manager.
 
    ```bash
    osism console testbed-node-0
    ```
 
-4. Deploy all services.
+3. Deploy all services.
 
    <Tabs>
    <TabItem value="testbed-deploy-multi-steps" label="Deployment in single steps">
    It is also possible to deploy the services step by step on the
-   manager. To do this, first log in to the manager with `make ENVIRONMENT=regiocloud login`
+   OSISM Manager. To do this, first log in with `make ENVIRONMENT=regiocloud login`
    and then execute the deployment scripts one after the other. It is recommended to do this
    within a screen session.
 
