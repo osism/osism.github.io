@@ -11,11 +11,9 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 | 10.0.0-rc.1 | 8. December 2025 |
 | 10.0.0-rc.2 | 30. January 2026 |
 
-## 10.0.0
+## Upgrade notes
 
-### Upgrade nodes
-
-#### RabbitMQ 3 to RabbitMQ 4 migration
+### RabbitMQ 3 to RabbitMQ 4 migration
 
 OSISM 10 only supports RabbitMQ 4. This requires a mandatory switch to quorum
 queues if this has not already been done.
@@ -105,7 +103,7 @@ $ osism migrate rabbitmq3to4 check
 2025-12-04 08:38:58 | INFO     | Migration is NOT required: Only quorum queues found
 ```
 
-#### New namespace for Kolla images
+### New namespace for Kolla images
 
 To make it easier to identify which OpenStack version is being used, the OpenStack version is
 now included in the Kolla Image namespace. An existing `docker_namespace` parameter must be adjusted
@@ -116,7 +114,7 @@ different OpenStack versions with a specific OSISM release.
 docker_namespace: kolla/release/2025.1
 ```
 
-#### New container registry
+### New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own
 container registry. During the transition phase, the new container registry must be made
@@ -142,7 +140,7 @@ docker_registry_nexus: registry.osism.tech
 docker_registry_openstackclient: registry.osism.tech
 ```
 
-#### New service names for RadosGW in Ceph Reef
+### New service names for RadosGW in Ceph Reef
 
 The naming scheme for the Ceph RadosGW service was changed from
 
@@ -171,7 +169,7 @@ ceph_conf_overrides:
   "client.rgw.{{ rgw_zone }}.{{ hostvars[inventory_hostname]['ansible_hostname'] }}.rgw0":
 ```
 
-#### Removal of the community.general.yaml Ansible plugin
+### Removal of the community.general.yaml Ansible plugin
 
 If `community.general.yaml` has been set for `stdout_callback` in `ansible.cfg`,
 this entry must be removed and replaced with `result_format=yaml`.
@@ -184,7 +182,7 @@ removed from community.general in version 12.0.0. Please update your
 playbooks.
 ```
 
-#### TLS for ProxySQL is now enabled by default
+### TLS for ProxySQL is now enabled by default
 
 If you are already using ProxySQL, but without TLS, set the following parameter in
 `environments/kolla/configuration.yml`.
@@ -193,16 +191,37 @@ If you are already using ProxySQL, but without TLS, set the following parameter 
 database_enable_tls_internal: "no"
 ```
 
-#### Remove of the Apache2 Shibboleth module in Keystone image
+### Remove of the Apache2 Shibboleth module in Keystone image
 
 Due to repeated problems with the Apache2 Shibboleth module in conjunction with the Apache2 OIDC
 module in the Keystone container image, the Apache2 Shibboleth module has been removed. An overlay
 image is now available with [osism/keystone-shib](https://github.com/osism/container-images/tree/main/keystone-shib),
 which only contains the Apache2 Shibboleth module and can be used as needed.
 
-#### New parameters
+### New parameters
 
 * Generate password with `pwgen 32` and add `prometheus_haproxy_password` to `environments/kolla/secrets.yml`
+
+## Deprecations
+
+### Deprecation of ceph-ansible
+
+The deployment tool ceph-ansible is deprecated as of OSISM 10 and will not be supported in upcoming
+OSISM releases. While ceph-ansible is still maintained upstream, development activity has slowed
+significantly. The [official recommendation](https://github.com/ceph/ceph-ansible/blob/main/README.rst)
+is to migrate to [cephadm](https://docs.ceph.com/en/latest/cephadm/).
+
+Existing Ceph clusters deployed with ceph-ansible will continue to be fully usable in OSISM 10. This
+deprecation affects the manageability of Ceph clusters via ceph-ansible. The day-to-day functionality
+of the clusters themselves is not impacted. However, upgrades, expansions, and other lifecycle operations
+on Ceph clusters via ceph-ansible will not be possible in future OSISM releases. A migration to a
+an other deployment tool like cephadm will be required to perform such operations going forward.
+
+We are actively preparing migration paths from ceph-ansible to cephadm. As each environment is unique,
+the exact migration approach will depend on the specific deployment scenario. OSISM customers will
+receive dedicated support for their migration. If you are planning to migrate, please contact us so we
+can assist you with your specific requirements. In the meantime, we recommend familiarizing yourself
+with the [cephadm documentation](https://docs.ceph.com/en/latest/cephadm/).
 
 ## References
 
