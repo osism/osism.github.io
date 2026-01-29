@@ -9,8 +9,9 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 | Release     | Release Date     |
 |:------------|:-----------------|
 | 10.0.0-rc.1 | 8. December 2025 |
+| 10.0.0-rc.2 | 30. January 2026 |
 
-## 10.0.0-rc.1
+## 10.0.0
 
 ### Upgrade nodes
 
@@ -59,6 +60,17 @@ queues there when upgrading the services.
    2025-12-02 20:55:27 | INFO     | Successfully deleted 2 queue(s) for service 'aodh' in vhost '/'
    ```
 
+   Before upgrading Nova, two additional steps are required in preparation. Afterwards, you can upgrade
+   Nova as usual with `osism apply -a upgrade nova`.
+
+   ```bash
+   osism apply -a config nova -l 'nova-conductor[0]'
+   osism apply nova-update-cell-mappings
+   ```
+
+   After upgrading all services, you can also delete all remaining classic queues at once using
+   `osism migrate rabbitmq3to4 delete`.
+
    These services use RabbitMQ:
 
    - aodh
@@ -72,11 +84,10 @@ queues there when upgrading the services.
    - nova
    - octavia
 
-   After upgrading all services, you can also delete all remaining classic queues at once using
-   `osism migrate rabbitmq3to4 delete`.
-
-8. Once everything has been upgraded, the old notification queues can be deleted with
+8. Once everything has been upgraded, the old notification queues can also be deleted with
    `osism migrate rabbitmq3to4 delete notifications`.
+
+9. Old exchanges can be removed with `osism migrate rabbitmq3to4 delete-exchanges`.
 
 When the Manager's listener service is used (`enable_listener` in `environments/manager/configuration.yml`)
 add the new `openstack` RabbitMQ vhost to the `manager_listener_broker_uri` parameter.
@@ -98,7 +109,8 @@ $ osism migrate rabbitmq3to4 check
 
 To make it easier to identify which OpenStack version is being used, the OpenStack version is
 now included in the Kolla Image namespace. An existing `docker_namespace` parameter must be adjusted
-accordingly.
+accordingly. In the case of OSISM 10, this looks as follows. In the future, it will be possible to use
+different OpenStack versions with a specific OSISM release.
 
 ```yaml title="environments/kolla/configuration.yml"
 docker_namespace: kolla/release/2025.1
@@ -180,6 +192,13 @@ If you are already using ProxySQL, but without TLS, set the following parameter 
 ```yaml title="environments/kolla/configuration.yml"
 database_enable_tls_internal: "no"
 ```
+
+#### Remove of the Apache2 Shibboleth module in Keystone image
+
+Due to repeated problems with the Apache2 Shibboleth module in conjunction with the Apache2 OIDC
+module in the Keystone container image, the Apache2 Shibboleth module has been removed. An overlay
+image is now available with [osism/keystone-shib](https://github.com/osism/container-images/tree/main/keystone-shib),
+which only contains the Apache2 Shibboleth module and can be used as needed.
 
 #### New parameters
 
