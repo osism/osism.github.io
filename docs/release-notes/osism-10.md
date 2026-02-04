@@ -202,6 +202,20 @@ which only contains the Apache2 Shibboleth module and can be used as needed.
 
 * Generate password with `pwgen 32` and add `prometheus_haproxy_password` to `environments/kolla/secrets.yml`
 
+### Ceph RGW Multisite support
+
+Support for Ceph RGW Multisite deployments is available through a dedicated `ceph-ansible-rgw-multisite`
+container image. This image is provided for Ceph Quincy, Reef, and Squid releases and includes the
+necessary functionality for deploying and managing RGW Multisite configurations.
+
+To use the RGW Multisite image, set the following parameter in `environments/ceph/configuration.yml`:
+
+```yaml title="environments/ceph/configuration.yml"
+ceph_ansible_container_image: "registry.osism.tech/osism/ceph-ansible-rgw-multisite:CEPH_RELEASE"
+```
+
+Replace `CEPH_RELEASE` with your target Ceph version (`quincy`, `reef`, or `squid`).
+
 ## Removals
 
 ### Kubernetes
