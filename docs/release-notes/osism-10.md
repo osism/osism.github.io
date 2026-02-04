@@ -202,6 +202,19 @@ which only contains the Apache2 Shibboleth module and can be used as needed.
 
 * Generate password with `pwgen 32` and add `prometheus_haproxy_password` to `environments/kolla/secrets.yml`
 
+## Removals
+
+### Kubernetes
+
+* **ingress-nginx**: The Kubernetes project has [announced the retirement](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/)
+  of ingress-nginx. The project will receive best-effort maintenance until March 2026, after which no new
+  releases, bug fixes, or security updates will be provided. Users should migrate to the
+  [Gateway API](https://gateway-api.sigs.k8s.io/) or an alternative ingress controller.
+
+* **Kubernetes Dashboard**: The Kubernetes Dashboard has been [archived by SIG UI](https://groups.google.com/g/kubernetes-sig-ui/c/vpYIRDMysek)
+  and is no longer actively maintained. The recommended successor is [Headlamp](https://headlamp.dev/),
+  which provides a modern web interface with plugin support and proper RBAC integration.
+
 ## Deprecations
 
 ### Deprecation of ceph-ansible
