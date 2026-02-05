@@ -1,6 +1,6 @@
 import React from 'react';
 import Redirect from '@site/src/components/Redirect';
 
-export default function Home() {
+export default function Support() {
   return <Redirect to="https://osism.cloud" />;
 }

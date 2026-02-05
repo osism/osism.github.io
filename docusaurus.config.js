@@ -79,15 +79,6 @@ const config = {
         ],
       },
     ],
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'users',
-        path: 'users',
-        routeBasePath: 'users',
-        sidebarPath: require.resolve('./sidebarUsers.js')
-      }
-    ],
   ],
 
   themeConfig:
@@ -99,6 +90,7 @@ const config = {
         logo: {
           alt: 'OSISM Logo',
           src: 'img/logo.svg',
+          href: 'https://osism.cloud',
         },
         items: [
           {
@@ -107,15 +99,15 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
-          { to: "/users", label: "Users", position: "left" },
+          {
+            href: 'https://osism.cloud/de/partner',
+            label: 'Users',
+            position: 'left',
+          },
           {
 	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
             label: 'Schedule a demo',
             position: 'right',
-          },
-          {
-            type: 'localeDropdown',
-            position: 'left',
           },
         ],
       },
@@ -131,7 +123,7 @@ const config = {
               },
               {
                 label: 'Users',
-                href: '/users',
+                href: 'https://osism.cloud/de/partner',
               },
 	    ],
           },
@@ -169,11 +161,11 @@ const config = {
             items: [
               {
                 label: 'About Us',
-                href: '/about-us',
+                href: 'https://osism.cloud/de/ueber-uns',
               },
               {
                 label: 'Contact Us',
-                href: '/contact-us',
+                href: 'https://osism.cloud',
               },
               {
 	        href: 'mailto:info@osism.tech?subject=OSISM Demo',
@@ -181,23 +173,19 @@ const config = {
               },
               {
                 label: 'Support',
-                href: '/support',
+                href: 'https://osism.cloud',
               },
               {
                 label: 'Jobs',
-                href: '/jobs',
+                href: 'https://osism.cloud',
               },
               {
                 label: 'Privacy Policy',
-                href: '/privacy',
-              },
-              {
-                label: 'Terms & Conditions',
-                href: '/terms',
+                href: 'https://osism.cloud/de/datenschutz',
               },
               {
                 label: 'Legals',
-                href: '/legals',
+                href: 'https://osism.cloud/de/impressum',
               },
             ],
           },
@@ -222,7 +210,7 @@ const config = {
         hashed: true,
         docsRouteBasePath: 'https://osism.tech/docs/',
         // blogRouteBasePath: 'https://osism.tech/blog/',
-        indexPages: true,
+        indexPages: false,
         indexBlog: false,
         // For Docs using Chinese, The `language` is recommended to set to:
         // ```
