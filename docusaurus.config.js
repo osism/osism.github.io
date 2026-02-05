@@ -146,14 +146,6 @@ const config = {
                 label: 'Zuul CI',
                 href: 'https://zuul.services.osism.tech/t/osism/status',
               },
-              {
-                href: 'https://regiocloud.github.io',
-                label: 'REGIO.cloud',
-              },
-              {
-                href: 'https://www.sovereigncloudstack.org',
-                label: 'Sovereign Cloud Stack',
-              },
 	    ],
           },
           {
@@ -173,11 +165,7 @@ const config = {
               },
               {
                 label: 'Support',
-                href: 'https://osism.cloud',
-              },
-              {
-                label: 'Jobs',
-                href: 'https://osism.cloud',
+                href: 'https://osism.cloud/de/subskription',
               },
               {
                 label: 'Privacy Policy',
