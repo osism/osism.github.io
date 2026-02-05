@@ -1,0 +1,6 @@
+import React from 'react';
+import Redirect from '@site/src/components/Redirect';
+
+export default function AboutUs() {
+  return <Redirect to="https://osism.cloud/de/ueber-uns" />;
+}
