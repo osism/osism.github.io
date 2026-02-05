@@ -99,16 +99,6 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
-          {
-            href: 'https://osism.cloud/de/partner',
-            label: 'Users',
-            position: 'left',
-          },
-          {
-	    href: 'mailto:info@osism.tech?subject=OSISM Demo',
-            label: 'Schedule a demo',
-            position: 'right',
-          },
         ],
       },
       footer: {
@@ -122,7 +112,7 @@ const config = {
                 href: '/docs',
               },
               {
-                label: 'Users',
+                label: 'Partner',
                 href: 'https://osism.cloud/de/partner',
               },
 	    ],
