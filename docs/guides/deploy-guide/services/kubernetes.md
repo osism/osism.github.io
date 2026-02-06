@@ -19,12 +19,6 @@ to deploy this Kubernetes cluster.
    osism apply kubernetes
    ```
 
-2. Deploy the [Kubernetes dashboard](https://github.com/kubernetes/dashboard):
-
-   ```bash
-   osism apply kubernetes-dashboard
-   ```
-
 ## Cluster API
 
 1. Deploy the [Cluster API](https://cluster-api.sigs.k8s.io) management cluster on the K3s cluster:
