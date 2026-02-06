@@ -170,6 +170,7 @@ words:
   - migratekit
   - mitogen
   - mountpoints
+  - multisite
   - multitenancy
   - needrestart
   - netbird
