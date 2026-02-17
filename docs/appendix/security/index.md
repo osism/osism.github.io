@@ -28,3 +28,4 @@ handling of security-related information.
 | Advisory                          | Description                                         | Component                    |
 |:----------------------------------|:----------------------------------------------------|:-----------------------------|
 | [OSSA-2026-001](ossa-2026-001.md) | Privilege Escalation via Identity Headers in OAuth2 | OpenStack keystonemiddleware |
+| [OSSA-2026-002](ossa-2026-002.md) | Nova calls qemu-img without format restrictions     | OpenStack Nova               |
