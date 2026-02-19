@@ -31,18 +31,18 @@
   --ifm-global-radius: 3px;
   
   /* Typografie - 1:1.2 Ratio, Basis 18px */
-  --font-size-xs: 0.833rem;    /* 15px */
-  --font-size-base: 1rem;       /* 18px */
-  --font-size-md: 1.2rem;       /* 22px - h3 */
-  --font-size-lg: 1.44rem;      /* 26px - h2 */
-  --font-size-xl: 1.728rem;     /* 31px */
-  --font-size-2xl: 2.074rem;    /* 37px */
-  --font-size-3xl: 2.488rem;    /* 45px - h1 */
-  --font-size-4xl: 2.986rem;    /* 54px */
-  --font-size-5xl: 3.583rem;    /* 64px */
-  --font-size-6xl: 4.3rem;      /* 77px */
-  --font-size-7xl: 5.16rem;     /* 93px */
-  --font-size-8xl: 6.192rem;    /* 111px */
+  --font-size-xs: 0.833rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.2rem;
+  --font-size-lg: 1.44rem;
+  --font-size-xl: 1.728rem;
+  --font-size-2xl: 2.074rem;
+  --font-size-3xl: 2.488rem;
+  --font-size-4xl: 2.986rem;
+  --font-size-5xl: 3.583rem;
+  --font-size-6xl: 4.3rem;
+  --font-size-7xl: 5.16rem;
+  --font-size-8xl: 6.192rem;
   
   /* Docusaurus Variable Overrides */
   --ifm-color-primary: var(--osism-mitternachtsgruen);
@@ -72,22 +72,18 @@
   --ifm-alert-border-color: transparent;
   --ifm-alert-foreground-color: var(--osism-kohlenstoff);
   
-  /* Alert Success (Tip) Override */
   --ifm-color-success-contrast-background: var(--osism-salbei);
   --ifm-color-success-contrast-foreground: var(--osism-kohlenstoff);
   --ifm-color-success-dark: var(--osism-salbei);
   
-  /* Alert Info Override */
   --ifm-color-info-contrast-background: var(--osism-salbei);
   --ifm-color-info-contrast-foreground: var(--osism-kohlenstoff);
   --ifm-color-info-dark: var(--osism-salbei);
   
-  /* Alert Warning Override */
   --ifm-color-warning-contrast-background: var(--osism-koralle);
   --ifm-color-warning-contrast-foreground: var(--osism-naturweiss);
   --ifm-color-warning-dark: var(--osism-koralle);
   
-  /* Alert Danger Override */
   --ifm-color-danger-contrast-background: var(--osism-koralle);
   --ifm-color-danger-contrast-foreground: var(--osism-naturweiss);
   --ifm-color-danger-dark: var(--osism-koralle);
@@ -110,7 +106,6 @@
   --ifm-badge-border-radius: 3px;
   --ifm-alert-border-radius: 3px;
   
-  /* Überschriften Vertical Rhythm */
   --ifm-h1-vertical-rhythm-top: 4;
   --ifm-h1-vertical-rhythm-bottom: 1.5;
   --ifm-h2-vertical-rhythm-top: 3;
@@ -118,7 +113,6 @@
   --ifm-h3-vertical-rhythm-top: 2;
   --ifm-h3-vertical-rhythm-bottom: 1;
   
-  /* Menu Icon */
   --ifm-menu-link-sublist-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBzdHJva2U9IiM0RDRDNDkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGQ9Ik05IDUgNSAxIDEgNSIvPjwvc3ZnPg==");
 }
 
@@ -141,20 +135,17 @@ body {
   color: var(--osism-kohlenstoff);
 }
 
-/* Thin scrollbar override */
 @media (pointer: fine) {
   .thin-scrollbar {
     scrollbar-width: auto;
   }
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
 }
 
-/* Selection */
 ::selection {
   background-color: var(--osism-salbei);
   color: var(--osism-kohlenstoff);
@@ -236,7 +227,6 @@ p {
   color: var(--osism-kohlenstoff);
 }
 
-/* Listen */
 .markdown ul {
   padding: 0 1rem 0 0;
   list-style-type: disc;
@@ -270,7 +260,6 @@ li a:hover {
   color: var(--osism-koralle);
 }
 
-/* Verlinkter Bild-Hover-Effekt */
 a img {
   transition: opacity 0.3s ease;
 }
@@ -279,7 +268,6 @@ a:hover img {
   opacity: 0.7;
 }
 
-/* Links in Fließtext */
 main p a,
 .markdown p a,
 p a {
@@ -295,7 +283,6 @@ p a:hover {
   color: var(--osism-koralle);
 }
 
-/* Links in Tabellen */
 table a {
   text-decoration: underline;
   text-underline-offset: 4pt;
@@ -306,20 +293,17 @@ table a:hover {
   color: var(--osism-koralle);
 }
 
-/* Links in Blockquotes */
 blockquote footer a {
   text-decoration: underline;
   text-underline-offset: 4pt;
   text-decoration-color: currentColor;
 }
 
-/* Table of Contents Links - kein Underline */
 .table-of-contents a,
 .table-of-contents__left-border a {
   text-decoration: none;
 }
 
-/* Links in Admonitions/Alerts */
 .admonition a,
 .theme-admonition a,
 .alert a {
@@ -336,7 +320,6 @@ blockquote footer a {
   text-decoration-thickness: 1px;
 }
 
-/* Anker-Links */
 .hash-link {
   color: var(--osism-quarz);
   opacity: 0;
@@ -416,9 +399,9 @@ pre code {
   background-color: var(--osism-sand);
 }
 
-/* Code Block Title */
 .codeBlockTitle_OeMC {
   border: none;
+  border-bottom: 0;
   border-top-left-radius: var(--osism-radius);
   border-top-right-radius: var(--osism-radius);
   border-bottom-left-radius: 0;
@@ -428,7 +411,18 @@ pre code {
   padding: 0.75rem var(--ifm-pre-padding);
 }
 
-/* Code Block Syntax Highlighting überschreiben */
+[data-theme='dark'] .codeBlockTitle_OeMC,
+[data-theme='dark'] .admonition.admonition-info::before,
+[data-theme='dark'] .admonition.admonition-note::before,
+[data-theme='dark'] .admonition.admonition-tip::before,
+[data-theme='dark'] .alert.alert--info::before,
+[data-theme='dark'] .alert.alert--success::before,
+[data-theme='dark'] .theme-admonition.theme-admonition-info::before,
+[data-theme='dark'] .theme-admonition.theme-admonition-note::before,
+[data-theme='dark'] .theme-admonition.theme-admonition-tip::before {
+  background: var(--osism-graphit);
+}
+
 .prism-code,
 .prism-code *,
 .prism-code span,
@@ -483,7 +477,7 @@ table th {
 }
 
 [data-theme='dark'] table th {
-  color: var(--osism-sand);
+  color: var(--osism-mitternachtsgruen);
 }
 
 table td {
@@ -549,7 +543,6 @@ table tbody td:first-child {
   font-weight: 600;
 }
 
-/* Admonition spacing after headers */
 .markdown header:first-child + .admonition,
 .markdown header:first-child + .theme-admonition,
 .markdown header:first-child + .alert,
@@ -559,7 +552,6 @@ table tbody td:first-child {
   margin-bottom: 2rem;
 }
 
-/* Note */
 .admonition.admonition-note,
 .theme-admonition.theme-admonition-note {
   background-color: rgba(188, 207, 210, 0.5);
@@ -570,7 +562,6 @@ table tbody td:first-child {
   background: var(--osism-salbei);
 }
 
-/* Info */
 .admonition.admonition-info,
 .theme-admonition.theme-admonition-info,
 .alert.alert--info {
@@ -583,7 +574,6 @@ table tbody td:first-child {
   background: var(--osism-salbei);
 }
 
-/* Warning/Caution */
 .admonition.admonition-caution,
 .admonition.admonition-warning,
 .theme-admonition.theme-admonition-warning,
@@ -608,7 +598,6 @@ table tbody td:first-child {
   color: var(--osism-kohlenstoff);
 }
 
-/* Danger */
 .admonition.admonition-danger,
 .theme-admonition.theme-admonition-danger,
 .alert.alert--danger {
@@ -627,7 +616,6 @@ table tbody td:first-child {
   color: var(--osism-kohlenstoff);
 }
 
-/* Tip/Success */
 .admonition.admonition-tip,
 .theme-admonition.theme-admonition-tip,
 .alert.alert--success {
@@ -646,7 +634,6 @@ table tbody td:first-child {
   color: var(--osism-kohlenstoff);
 }
 
-/* Alert Overrides */
 .alert {
   --ifm-code-background: transparent;
   --ifm-link-color: var(--osism-kohlenstoff);
@@ -698,7 +685,6 @@ table tbody td:first-child {
   color: var(--osism-kohlenstoff);
 }
 
-/* Admonition Icons */
 .admonitionIcon_Rf37 svg,
 [class*="admonitionIcon"] svg {
   fill: var(--osism-kohlenstoff);
@@ -708,7 +694,6 @@ table tbody td:first-child {
    NAVIGATION & MENU
    ================================================================= */
 
-/* Navbar */
 .navbar {
   background-color: var(--osism-sand);
   border-bottom: none;
@@ -769,8 +754,13 @@ table tbody td:first-child {
   background: var(--osism-naturweiss) var(--ifm-navbar-search-input-icon) no-repeat .75rem center/.75rem .75rem;
 }
 
-.searchInput_YFbd:focus {
-  outline: none;
+/* Searchbar Focus: nur 1px Border, keine Outline */
+[class*="searchInput"]:focus,
+.navbar__search-input:focus,
+input[class*="search"]:focus {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
   border-color: var(--osism-kohlenstoff);
 }
 
@@ -795,11 +785,15 @@ table tbody td:first-child {
 .searchHint_iIMx {
   background-color: var(--osism-sand);
   border: 0;
+  box-shadow: none;
   color: var(--osism-kohlenstoff);
 }
 
 [data-theme='dark'] .searchHint_iIMx {
   background-color: var(--osism-salbei);
+  border: 0;
+  box-shadow: none;
+  color: var(--osism-mitternachtsgruen);
 }
 
 kbd {
@@ -953,8 +947,10 @@ kbd {
   font-size: var(--font-size-xs);
 }
 
-.toggleButton_gllP:hover {
-  background: transparent;
+/* Toggle Button (Dark/Light Mode) – kein Hover-Hintergrund */
+html .toggleButton_gllP:hover,
+body .toggleButton_gllP:hover {
+  background: transparent !important;
 }
 
 .toggleButton_gllP svg {
@@ -1123,7 +1119,6 @@ kbd {
   margin: 0 auto;
 }
 
-/* Container max-width Override */
 .container {
   max-width: 1600px !important;
 }
@@ -1134,7 +1129,6 @@ kbd {
   }
 }
 
-/* Content max-width */
 @media (min-width: 997px) {
   .docItemCol_VOVn,
   [class*="docItemCol"] {
@@ -1145,33 +1139,29 @@ kbd {
     flex-grow: 1 !important;
     flex-shrink: 1 !important;
   }
-  
+
   @supports (scrollbar-gutter: stable) {
     .menu_SIkG {
-      padding: 1.25rem 0 0.5rem 0;
+      padding: 1.25rem 0 0.5rem 0.5rem;
       scrollbar-gutter: stable;
     }
   }
-}
 
-/* Sidebar und TOC behalten feste Breiten */
-@media (min-width: 997px) {
   .docSidebarContainer_YfHR {
     flex-shrink: 0;
     border-right: none !important;
   }
-  
+
   .col--3 {
     flex-shrink: 0;
   }
-  
+
   .docMainContainer_TBSr {
     display: flex;
     flex-wrap: nowrap;
   }
 }
 
-/* Responsive Anpassungen */
 @media (max-width: 996px) {
   html {
     font-size: 18px;
@@ -1209,17 +1199,24 @@ kbd {
   content: " ";
   display: inline-block;
   height: 100%;
-  -webkit-mask: var(--ifm-menu-link-sublist-icon) center no-repeat;
-  mask: var(--ifm-menu-link-sublist-icon) center no-repeat;
   width: 100%;
-  transform: scale(2);
-  transform-origin: center;
+  -webkit-mask: var(--ifm-menu-link-sublist-icon) 50% / 2rem 2rem no-repeat;
+  mask: var(--ifm-menu-link-sublist-icon) 50% / 2rem 2rem no-repeat;
+  transform: none;
 }
 
 .backToTopButtonShow_xfvO {
   opacity: 1;
   transform: scale(1);
   visibility: visible;
+}
+
+[data-theme='dark'] .backToTopButton_sjWU {
+  background-color: var(--osism-graphit);
+}
+
+[data-theme='dark'] .backToTopButton_sjWU::after {
+  background-color: var(--osism-naturweiss);
 }
 
 /* =================================================================
@@ -1229,16 +1226,12 @@ kbd {
 [data-theme='dark'] {
   --ifm-background-color: var(--osism-basalt);
   --ifm-background-surface-color: var(--osism-basalt);
-  
   --ifm-font-color-base: var(--osism-naturweiss);
   --ifm-font-color-secondary: var(--osism-naturweiss);
-  
   --ifm-navbar-background-color: var(--osism-mitternachtsgruen);
   --ifm-navbar-link-color: var(--osism-naturweiss);
-  
   --ifm-menu-color: var(--osism-naturweiss);
   --ifm-menu-color-active: var(--osism-naturweiss);
-  
   --ifm-link-color: var(--osism-naturweiss);
 }
 
@@ -1360,7 +1353,6 @@ kbd {
   color: var(--osism-naturweiss);
 }
 
-/* Dark Mode Toggle Icon */
 html[data-theme='dark'] button[title*="light"],
 html[data-theme='dark'] button[title*="Light"],
 html[data-theme='dark'] .react-toggle-track,
@@ -1374,7 +1366,6 @@ html[data-theme='dark'] button[title*="Light"]:hover {
   color: var(--osism-koralle);
 }
 
-/* Admonitions Opacity */
 [data-theme='dark'] .admonition.admonition-note,
 [data-theme='dark'] .theme-admonition.theme-admonition-note {
   background-color: rgba(188, 207, 210, 0.25);
