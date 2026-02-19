@@ -19,6 +19,13 @@ and Documentation relies on contributions.
 
 ![OSISM overview](./images/overview.drawio.png)
 
+## Technology Adaptability
+
+OSISM integrates proven open source projects into a cohesive cloud platform. As
+technology evolves, OSISM adapts by evaluating and adopting new approaches while
+providing controlled migration paths. Read more in the
+[Technology Adaptability](./technology-adaptability.md) chapter.
+
 ## Components in a cloud pod
 
 * [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack.md)
