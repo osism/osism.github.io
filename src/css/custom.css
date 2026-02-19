@@ -270,6 +270,15 @@ li a:hover {
   color: var(--osism-koralle);
 }
 
+/* Verlinkter Bild-Hover-Effekt */
+a img {
+  transition: opacity 0.3s ease;
+}
+
+a:hover img {
+  opacity: 0.7;
+}
+
 /* Links in Fließtext */
 main p a,
 .markdown p a,
