@@ -5,7 +5,8 @@ exclude = [
   'testbed.osism.xyz',
   'http://xn--hvg/',
   'https://xn--hvg/',
-  'www.supermicro.com'
+  'www.supermicro.com',
+  'goteleport.com'
 ]
 ################################  Requests  ####################################
 insecure = true
