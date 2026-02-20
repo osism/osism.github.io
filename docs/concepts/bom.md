@@ -1,6 +1,6 @@
 ---
 sidebar_label: Bill of Materials
-sidebar_position: 50
+sidebar_position: 20
 ---
 
 # Bill of Materials
