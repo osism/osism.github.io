@@ -24,10 +24,13 @@ and Documentation relies on contributions.
 * [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack.md)
 * [Software Defined Storage (SDS) with Ceph](./components/ceph.md)
 * [Bare Metal as a Service (BMaaS) with Ironic](./components/ironic.md)
+* Software Defined Networking (SDN) with [SONiC](https://sonicfoundation.dev/) & [OVN](https://www.ovn.org/)
 * [Kubernetes (K8s) with K3S](./components/k3s.md)
 * [Kubernetes as a Service (KaaS) with Gardener](./components/gardener.md)
 * [Kubernetes as a Service (KaaS) with Cluster API](./components/clusterapi.md)
 * [Identity & Access Management with Keycloak](./components/keycloak.md)
+* [Privileged Access Management (PAM) with Teleport](https://goteleport.com/)
+* Logging, Monitoring & Telemetry with [Prometheus](https://prometheus.io/) & [Grafana](https://grafana.com/)
 * [Realtime insights with Netdata](./components/netdata.md)
 
 ## Bill of Materials
