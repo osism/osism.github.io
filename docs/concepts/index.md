@@ -7,10 +7,9 @@ sidebar_position: 20
 
 :::info
 
-The Concept Guide is currently under construction. Therefore, there are still
-many empty sections that have already been created for the overall structure.
-If there are requests for certain sections or if existing sections are not
-understandable or need more details, please open an [issue](https://github.com/osism/issues/issues).
+This section is currently under construction. If there are requests for certain
+sections or if existing sections are not understandable or need more details,
+please open an [issue](https://github.com/osism/issues/issues).
 Contributions are welcome, and they are greatly appreciated. Open Source Software
 and Documentation relies on contributions.
 
@@ -30,8 +29,6 @@ and Documentation relies on contributions.
 * [Kubernetes as a Service (KaaS) with Cluster API](./components/clusterapi.md)
 * [Identity & Access Management with Keycloak](./components/keycloak.md)
 * [Realtime insights with Netdata](./components/netdata.md)
-
-## Requirements
 
 ## Bill of Materials
 
