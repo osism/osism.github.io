@@ -90,7 +90,7 @@ const config = {
         logo: {
           alt: 'OSISM Logo',
           src: 'img/logo.svg',
-          href: 'https://osism.cloud',
+          href: 'https://osism.tech/docs',
         },
         items: [
           {
