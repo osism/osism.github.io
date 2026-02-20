@@ -25,13 +25,10 @@ and Documentation relies on contributions.
 * [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack.md)
 * [Software Defined Storage (SDS) with Ceph](./components/ceph.md)
 * [Bare Metal as a Service (BMaaS) with Ironic](./components/ironic.md)
-* [Software Defined Networking (SDN) with SONiC & OVN](./components/sonic.md)
 * [Kubernetes (K8s) with K3S](./components/k3s.md)
 * [Kubernetes as a Service (KaaS) with Gardener](./components/gardener.md)
 * [Kubernetes as a Service (KaaS) with Cluster API](./components/clusterapi.md)
 * [Identity & Access Management with Keycloak](./components/keycloak.md)
-* [Privileged Access Management (PAM) to all infrastructure with Teleport](./components/teleport.md)
-* [Logging, Monitoring & Telemetry with Prometheus & Grafana](./components/prometheus.md)
 * [Realtime insights with Netdata](./components/netdata.md)
 
 ## Requirements
