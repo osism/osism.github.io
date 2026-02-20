@@ -36,33 +36,6 @@ and Documentation relies on contributions.
 
 ## Requirements
 
-## Layers in a cloud pod
-
-* [Compute Plane](./layers.md#compute-plane)
-* [Control Plane](./layers.md#control-plane)
-* [Data Plane](./layers.md#data-plane)
-* [Management Plane](./layers.md#management-plane)
-* [Monitoring Plane](./layers.md#monitoring-plane)
-* [Network Plane](./layers.md#network-plane)
-
-## Reference architecture
-
-* [Manager architecture](./architecture.md#manager-architecture)
-* [Control architecture](./architecture.md#control-architecture)
-* [Compute architecture](./architecture.md#compute-architecture)
-* [Storage architecture](./architecture.md#storage-architecture)
-* [Network architecture](./architecture.md#network-architecture)
-* [Routing architecture](./architecture.md#routing-architecture)
-* [Firewall architecture](./architecture.md#firewall-architecture)
-* [Loadbalancer architecture](./architecture.md#loadbalancer-architecture)
-* [Logging architecture](./architecture.md#logging-architecture)
-* [Monitoring architecture](./architecture.md#monitoring-architecture)
-* [Identity architecture](./architecture.md#identity-architecture)
-
-## Use cases
-
-* [Hyper-converged infrastructure (HCI)](./use-cases.md#hyper-converged-infrastructure-hci)
-
 ## Bill of Materials
 
 * [Control nodes](./bom.md#control-nodes)
