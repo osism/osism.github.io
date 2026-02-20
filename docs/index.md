@@ -43,13 +43,17 @@ Organizations using OSISM gain:
 * Flexibility to tailor the infrastructure to their specific needs
 * Full control over their data and operations
 
+## Concepts
+
+The [Concepts](./concepts/) section explains which components and modules make up OSISM, its
+architecture, and the use cases it supports.
+
 ## Guides
 
 This documentation is organized into the following guides:
 
 | Guide                                                    | Description                                         |
 |----------------------------------------------------------|-----------------------------------------------------|
-| [Concept Guide](./guides/concept-guide/)                 | Components, modules, and use cases of OSISM         |
 | [Deploy Guide](./guides/deploy-guide/)                   | Creating, bootstrapping nodes and deploying modules |
 | [Upgrade Guide](./guides/upgrade-guide/)                 | Upgrading individual modules                        |
 | [Configuration Guide](./guides/configuration-guide/)     | Configuring individual modules                      |

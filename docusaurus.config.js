@@ -76,6 +76,10 @@ const config = {
             to: '/docs/testbed/',
             from: '/docs/guides/other-guides/testbed',
           },
+          {
+            to: '/docs/concepts/',
+            from: '/docs/guides/concept-guide/',
+          },
         ],
       },
     ],

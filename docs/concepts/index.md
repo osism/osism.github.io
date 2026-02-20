@@ -1,9 +1,9 @@
 ---
-sidebar_label: Concept Guide
-sidebar_position: 10
+sidebar_label: Concepts
+sidebar_position: 20
 ---
 
-# Concept Guide
+# Concepts
 
 :::info
 
