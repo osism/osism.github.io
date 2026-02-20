@@ -5,8 +5,6 @@ sidebar_position: 50
 
 # Guides
 
-* The [Concept Guide](./concept-guide/) explains which components and modules make up OSISM. It also
-  explains the use cases.
 * The [Deploy Guide](./deploy-guide/) explains how the nodes of a cluster are created and bootstrapped.
   It also explains how the individual modules can be deployed.
 * The [Upgrade Guide](./upgrade-guide/) explains how the individual modules can be upgraded.
