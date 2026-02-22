@@ -68,6 +68,83 @@ This adaptability is not a theoretical concept. It is already happening in pract
 Each of these transitions followed the same principle: acknowledge the shift, evaluate
 the successor, provide a migration path, and move forward.
 
+## Greenfield exploration as part of the process
+
+Technology adaptability is not limited to swapping one established component for another.
+Sometimes the most effective way to evaluate a fundamentally new approach is to start from
+a clean slate. OSISM therefore deliberately pursues **greenfield projects** for specific
+areas of the platform when the potential benefits justify the effort.
+
+A greenfield approach means building a solution from scratch, free from the constraints
+and assumptions of an existing implementation. This serves several purposes:
+
+* **Gaining first-hand experience.** Reading about a new technology is not the same as
+  building with it. A greenfield project lets the team develop deep, practical expertise
+  with a new tool, pattern, or architecture before committing to a full integration.
+* **Validating feasibility.** Not every promising technology works well in practice for
+  the specific requirements of cloud infrastructure operations. A focused greenfield
+  effort reveals practical limitations early, before they become costly surprises in
+  production.
+* **Exploring without legacy constraints.** Existing implementations carry design
+  decisions from a different era. A greenfield project can explore what a solution looks
+  like when designed for today's requirements and patterns from the start, without being
+  shaped by backward-compatibility concerns.
+* **De-risking future transitions.** When OSISM eventually migrates a component, the
+  knowledge gained from a greenfield exploration makes the transition more predictable
+  and better informed. The team already understands the target technology in depth.
+
+### Why greenfield instead of adopting an existing project
+
+When exploring a new area, there are almost always existing open source projects that
+address similar problems. The deliberate decision to build from scratch rather than
+adopting one of these projects is not made out of ignorance or pride. It follows a
+**best-of-breed** principle applied at the concept level.
+
+Existing projects in the same space are studied and their ideas are taken into account.
+However, each of these projects was built for its own context, with its own assumptions,
+trade-offs, and constraints. Adopting one wholesale means inheriting all of those
+decisions, including the ones that do not fit the specific requirements of OSISM and its
+operators.
+
+A greenfield approach allows OSISM to take the **best ideas from multiple sources** and
+combine them into a solution that is purpose-built for the problem at hand:
+
+* **Conceptual inspiration, not wholesale adoption.** Existing projects serve as reference
+  implementations. Their architectures, APIs, and operational patterns are analyzed for
+  what works well. But the resulting solution is designed from first principles for OSISM's
+  specific needs rather than being constrained by another project's roadmap and design
+  history.
+* **Avoiding misaligned dependencies.** Adopting an existing project creates a dependency
+  on that project's community, release cycle, and priorities. If those priorities diverge
+  from what OSISM operators need, the integration becomes a constant source of friction,
+  workarounds, and compromise.
+* **Tailored integration.** A solution built within the OSISM ecosystem can be designed
+  from the start to integrate cleanly with the existing platform: the configuration
+  management, the lifecycle tooling, the operational workflows. An external project
+  must be adapted to fit, which often results in a brittle integration layer.
+* **Full understanding of the codebase.** When the team builds a solution, every design
+  decision is understood and documented. There are no opaque internals, no inherited
+  technical debt from a different project's history, and no surprises during
+  troubleshooting.
+
+This does not mean that OSISM reinvents everything. For mature, well-maintained upstream
+projects that align with the platform's needs, adoption remains the preferred path.
+The greenfield approach is reserved for areas where no existing project provides a
+sufficiently good fit, or where the unique combination of requirements makes a
+purpose-built solution the more sustainable long-term choice.
+
+### How greenfield explorations mature
+
+These greenfield efforts are conducted as targeted explorations, not as replacements
+that ship immediately. They run alongside the proven production stack and mature at their
+own pace. Only when a greenfield approach has demonstrated clear advantages and sufficient
+maturity does it enter the path toward becoming a supported part of the platform, following
+the same controlled transition process described above.
+
+This willingness to invest in exploration is a deliberate choice. A platform designed for
+long-term operation must not only react to change but actively seek out and understand
+emerging approaches before they become urgent necessities.
+
 ## New projects do not replace OSISM
 
 When OSISM starts or adopts a new project that could potentially replace a component
