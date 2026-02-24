@@ -64,6 +64,7 @@ const config = {
   ],
 
   plugins: [
+    'docusaurus-plugin-image-zoom',
     [
       '@docusaurus/plugin-client-redirects',
       {
@@ -90,6 +91,16 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
+      zoom: {
+        selector: '.markdown img',
+        background: {
+          light: 'rgb(250, 249, 245)',
+          dark: 'rgb(38, 38, 36)',
+        },
+        config: {
+          margin: 90,
+        },
+      },
       navbar: {
         logo: {
           alt: 'OSISM Logo',

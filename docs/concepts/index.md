@@ -5,26 +5,27 @@ sidebar_position: 20
 
 # Concepts
 
-:::info
+This section explains OSISM's architecture, the components that make up a cloud pod,
+and the design principles that guide technology choices.
 
-This section is currently under construction. If there are requests for certain
-sections or if existing sections are not understandable or need more details,
-please open an [issue](https://github.com/osism/issues/issues).
-Contributions are welcome, and they are greatly appreciated. Open Source Software
-and Documentation relies on contributions.
-
-:::
-
-## Highlevel Overview
+## Architecture overview
 
 ![OSISM overview](./images/overview.drawio.png)
 
-## Technology Adaptability
+The diagram above shows a high-level view of an OSISM-managed cloud pod. It illustrates
+how physical compute, storage, and network resources are abstracted into software-defined
+layers — OpenStack for compute, Ceph for storage, and SONiC with OVN/OVS for networking
+— with Kubernetes as a Service built on top.
 
-OSISM integrates proven open source projects into a cohesive cloud platform. As
-technology evolves, OSISM adapts by evaluating and adopting new approaches while
-providing controlled migration paths. Read more in the
-[Technology Adaptability](./technology-adaptability.md) chapter.
+## The OSISM Manager
+
+The OSISM Manager is the central control point of every OSISM deployment. It is the
+operator's single point of entry for deploying, configuring, and operating all services
+in a cloud pod. All Ansible-based automation — for OpenStack, Ceph, infrastructure,
+and Kubernetes — runs through the manager's job queue system.
+
+See the [OSISM Manager](./manager.md) page for a detailed breakdown of the manager's
+components.
 
 ## Components in a cloud pod
 
@@ -39,6 +40,13 @@ providing controlled migration paths. Read more in the
 * [Privileged Access Management (PAM) with Teleport](https://goteleport.com/)
 * Logging, Monitoring & Telemetry with [Prometheus](https://prometheus.io/) & [Grafana](https://grafana.com/)
 * [Realtime insights with Netdata](./components/netdata.md)
+
+## Technology Adaptability
+
+OSISM integrates proven open source projects into a cohesive cloud platform. As
+technology evolves, OSISM adapts by evaluating and adopting new approaches while
+providing controlled migration paths. Read more in the
+[Technology Adaptability](./technology-adaptability.md) chapter.
 
 ## Bill of Materials
 
