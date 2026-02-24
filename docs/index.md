@@ -5,15 +5,30 @@ sidebar_position: 10
 
 # Getting started
 
-:::info
+OSISM is a comprehensive platform for managing software-defined cloud infrastructure.
+It goes beyond being a deployment tool — OSISM provides a unified operations framework
+for building, running, and scaling private cloud environments based on open source
+components. Organizations using OSISM gain full control over their data and operations,
+with the flexibility to tailor the infrastructure to their specific needs.
 
-**About this documentation**
+## What OSISM provides
 
-This documentation is constantly being updated and may be incomplete or contain
-inaccuracies in some places. We are happy to provide support, as we understand
-that the barrier to entry for OSISM can be challenging.
+OSISM integrates and manages the full stack of services needed for a modern private cloud:
 
-**Quick start options**
+* Infrastructure as a Service (IaaS) with OpenStack
+* Software Defined Storage (SDS) with Ceph
+* Bare Metal as a Service (BMaaS) with Ironic
+* Software Defined Networking (SDN) with SONiC & OVN
+* Kubernetes (K8s) with K3S
+* Kubernetes as a Service (KaaS) with Gardener and Cluster API
+* Identity & Access Management with Keycloak
+* Privileged Access Management (PAM) with Teleport
+* Logging, Monitoring & Telemetry with Prometheus & Grafana
+
+See the [Concepts](./concepts/) section for a deeper look at the architecture and
+component choices.
+
+## Quick start
 
 For newcomers, we offer two ways to get started quickly:
 
@@ -21,32 +36,7 @@ For newcomers, we offer two ways to get started quickly:
 * [Virtual testbed](./testbed/) — A virtual environment for experimentation
 
 We also offer regular on-site workshops near Stuttgart if there is sufficient demand.
-
-**Get involved**
-
-* Open an [issue](https://github.com/osism/issues/issues) for questions, suggestions, or unclear sections
-* Contact us at [info@osism.tech](mailto:info@osism.tech)
-* Contributions to documentation and code are welcome and greatly appreciated
-
-:::
-
-OSISM is a comprehensive platform for managing software-defined cloud infrastructure.
-It goes far beyond being a simple deployment tool for OpenStack.
-
-While OSISM supports the deployment and management of OpenStack as a key component,
-its capabilities extend to orchestrating a wide array of services and tools needed
-to build and operate a modern private cloud.
-
-Organizations using OSISM gain:
-
-* A powerful toolset for building, managing, and scaling private cloud infrastructures
-* Flexibility to tailor the infrastructure to their specific needs
-* Full control over their data and operations
-
-## Concepts
-
-The [Concepts](./concepts/) section explains which components and modules make up OSISM, its
-architecture, and the use cases it supports.
+Contact us at [info@osism.tech](mailto:info@osism.tech) to express interest.
 
 ## Guides
 
@@ -63,48 +53,37 @@ This documentation is organized into the following guides:
 
 ## Prerequisites
 
-We aim to make each step as accessible as possible — from deployment and upgrades
-to day-to-day operations. However, working with OSISM requires pre-existing
-knowledge of several technologies. We reference external guides throughout this
-documentation where appropriate.
+Working with OSISM requires familiarity with several technologies. The official
+documentation for each is a good starting point.
 
 ### Linux
 
-We assume familiarity with [Linux at LPIC-2 level](https://www.lpi.org/our-certifications/lpic-2-overview/):
-
-* System administration (networking, services, automation)
-* Security and maintenance
-* Troubleshooting
+Familiarity with Linux administration is helpful — the
+[Linux Documentation Project](https://tldp.org/) and the
+[official Linux man pages](https://man7.org/linux/man-pages/) are good references.
+You should be comfortable with networking, services, and the command line.
 
 ### Ansible
 
-We assume understanding of [Ansible](https://docs.ansible.com/) basics:
-
-* YAML syntax
-* Reading, modifying, and running playbooks
-* Managing inventories
-* Using variables and templates
+OSISM uses Ansible extensively for automation. The
+[Ansible documentation](https://docs.ansible.com/) covers YAML syntax, playbooks,
+inventories, and variables.
 
 ### Docker
 
-We assume intermediate [Docker](https://docs.docker.com/) CLI skills:
-
-* Viewing container logs
-* Restarting and managing containers
-* Inspecting errors and debugging
+All OSISM services run as containers. The
+[Docker documentation](https://docs.docker.com/) is a good resource for learning
+container management, log inspection, and debugging.
 
 ### Kubernetes
 
-We assume understanding of [Kubernetes](https://kubernetes.io/docs/home/) concepts:
+OSISM deploys and manages Kubernetes clusters. The
+[Kubernetes documentation](https://kubernetes.io/docs/home/) covers cluster concepts,
+resource inspection, and troubleshooting.
 
-* Inspecting cluster state and resources
-* Troubleshooting pods and services
-* Understanding deployments and configurations
+## Get involved
 
-:::tip Need help?
-
-If you are unsure about your knowledge level, need support in gaining the required
-skills, or would like a guided introduction, contact us at
-[info@osism.tech](mailto:info@osism.tech). We are happy to help.
-
-:::
+* Open an [issue](https://github.com/osism/issues/issues) for questions, suggestions,
+  or unclear sections
+* Contact us at [info@osism.tech](mailto:info@osism.tech)
+* Contributions to documentation and code are welcome and greatly appreciated
