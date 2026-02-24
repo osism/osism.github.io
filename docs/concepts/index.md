@@ -10,7 +10,7 @@ and the design principles that guide technology choices.
 
 ## Architecture overview
 
-![OSISM overview](./images/overview.drawio.png)
+<img src="/img/overview.drawio.svg" alt="Overview" />
 
 The diagram above shows a high-level view of an OSISM-managed cloud pod. It illustrates
 how physical compute, storage, and network resources are abstracted into software-defined

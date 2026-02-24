@@ -12,7 +12,7 @@ or Kubernetes — is dispatched through the manager.
 
 ## Architecture
 
-![OSISM Manager architecture](../images/osism-manager.drawio.svg)
+<img src="/img/osism-manager.drawio.svg" alt="Manager" />
 
 ## Components
 
