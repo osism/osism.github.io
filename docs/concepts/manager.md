@@ -67,10 +67,11 @@ management. The source is maintained at
 
 ### Configuration volume
 
-All Ansible containers share read-only access to the configuration repository, mounted
-at `/opt/configuration`. This volume is the single source of truth for the entire
-deployment — inventory, group variables, host variables, and secrets are all read from
-this location.
+All Ansible containers share read-only access to the
+[configuration repository](../guides/configuration-guide/configuration-repository.md),
+mounted at `/opt/configuration`. This volume is the single source of truth for the
+entire deployment — inventory, group variables, host variables, and secrets are all
+read from this location.
 
 ## Further reading
 
