@@ -191,6 +191,20 @@ If you are already using ProxySQL, but without TLS, set the following parameter 
 database_enable_tls_internal: "no"
 ```
 
+### Open vSwitch hostname now defaults to FQDN
+
+The default for `openvswitch_hostname` has been changed from `{{ ansible_facts.hostname }}` (short hostname)
+to `{{ ansible_facts.fqdn }}` (fully qualified domain name). This aligns the Open vSwitch `external-ids:hostname`
+with Neutron's `requested-chassis` field, which uses the FQDN-based name from the agent on FQDN-based deployments
+([kolla-ansible change](https://opendev.org/openstack/kolla-ansible/commit/68036c19b0ce0ccd503843c85e42edb44cfc19e8)).
+
+If your deployment relies on the short hostname, set the following parameter in
+`environments/kolla/configuration.yml` to restore the previous behavior.
+
+```yaml title="environments/kolla/configuration.yml"
+openvswitch_hostname: "{{ ansible_facts.hostname }}"
+```
+
 ### Remove of the Apache2 Shibboleth module in Keystone image
 
 Due to repeated problems with the Apache2 Shibboleth module in conjunction with the Apache2 OIDC
