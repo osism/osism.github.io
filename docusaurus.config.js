@@ -102,19 +102,13 @@ const config = {
         },
       },
       navbar: {
+        title: 'OSISM',
         logo: {
           alt: 'OSISM Logo',
           src: 'img/logo.svg',
           href: 'https://osism.tech/docs',
+          style: {display: 'none'},
         },
-        items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Documentation',
-          },
-        ],
       },
       footer: {
         style: 'dark',
