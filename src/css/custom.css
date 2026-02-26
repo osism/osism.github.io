@@ -268,10 +268,6 @@ a:hover img {
   opacity: 0.7;
 }
 
-.markdown img[src$=".svg"] {
-  background-color: var(--ifm-background-color);
-}
-
 main p a,
 .markdown p a,
 p a {
@@ -389,6 +385,20 @@ h6:hover .hash-link {
    CODE BLOCKS
    ================================================================= */
 
+.buttonGroup_M5ko button {
+  border: 0;
+  padding: 0.6rem;
+  --prism-background-color: var(--osism-naturweiss);
+}
+
+.theme-code-block:hover .buttonGroup_M5ko button {
+  opacity: 1;
+}
+
+[data-theme='dark'] .buttonGroup_M5ko button {
+  --prism-background-color: var(--osism-graphit);
+}
+
 code {
   border-radius: var(--osism-radius);
   border: 0;
@@ -415,15 +425,14 @@ pre code {
   padding: 0.75rem var(--ifm-pre-padding);
 }
 
-[data-theme='dark'] .codeBlockTitle_OeMC,
-[data-theme='dark'] .admonition.admonition-info::before,
-[data-theme='dark'] .admonition.admonition-note::before,
-[data-theme='dark'] .admonition.admonition-tip::before,
-[data-theme='dark'] .alert.alert--info::before,
-[data-theme='dark'] .alert.alert--success::before,
-[data-theme='dark'] .theme-admonition.theme-admonition-info::before,
-[data-theme='dark'] .theme-admonition.theme-admonition-note::before,
-[data-theme='dark'] .theme-admonition.theme-admonition-tip::before {
+/* Wenn codeBlockTitle vorhanden: pre und codeBlockContent oben keine border-radius */
+.codeBlockTitle_OeMC + .codeBlockContent_QJqH,
+.codeBlockTitle_OeMC + .codeBlockContent_QJqH pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+[data-theme='dark'] .codeBlockTitle_OeMC {
   background: var(--osism-graphit);
 }
 
@@ -481,7 +490,7 @@ table th {
 }
 
 [data-theme='dark'] table th {
-  color: var(--osism-mitternachtsgruen);
+  color: var(--osism-sand);
 }
 
 table td {
@@ -509,8 +518,12 @@ table tbody tr:nth-child(2n) {
 }
 
 table tbody td:first-child {
-  font-weight: 500;
-  color: var(--osism-mitternachtsgruen);
+  font-weight: 700;
+  color: var(--osism-kohlenstoff);
+}
+
+[data-theme='dark'] table tbody td:first-child {
+  color: var(--osism-sand);
 }
 
 /* =================================================================
@@ -694,6 +707,11 @@ table tbody td:first-child {
   fill: var(--osism-kohlenstoff) !important;
 }
 
+[data-theme='dark'] .admonitionIcon_Rf37 svg,
+[data-theme='dark'] [class*="admonitionIcon"] svg {
+  fill: var(--osism-sand) !important;
+}
+
 /* =================================================================
    NAVIGATION & MENU
    ================================================================= */
@@ -701,6 +719,8 @@ table tbody td:first-child {
 .navbar {
   background-color: var(--osism-sand);
   border-bottom: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .navbar__title {
@@ -741,6 +761,7 @@ table tbody td:first-child {
 .navbar .navbar__inner {
   margin: 0 auto;
   max-width: 1600px;
+  padding: 0 var(--ifm-spacing-horizontal);
 }
 
 /* Suchfeld */
@@ -790,8 +811,8 @@ input[class*="search"]:focus {
   --ifm-navbar-search-input-background-color: var(--osism-sand);
   --ifm-navbar-search-input-placeholder-color: var(--osism-kohlenstoff);
   background-color: var(--ifm-navbar-search-input-background-color);
-  border: 0;
-  box-shadow: none;
+  border: 0 !important;
+  box-shadow: none !important;
   color: var(--ifm-navbar-search-input-placeholder-color);
 }
 
@@ -811,10 +832,6 @@ kbd {
 .menu.thin-scrollbar {
   font-size: var(--font-size-xs);
   font-weight: 400;
-}
-
-.menu__list-item:not(:first-child) {
-  margin-top: 0;
 }
 
 .menu__list .menu__list {
@@ -946,13 +963,24 @@ kbd {
 }
 
 .tocCollapsibleButton_TO0P::after {
+  background: var(--osism-kohlenstoff) !important;
+  content: " ";
+  display: inline-block;
   height: 1rem;
   width: 1rem;
-  background-size: contain;
+  -webkit-mask: var(--ifm-menu-link-sublist-icon) 50% / 0.7rem 0.5rem no-repeat;
+  mask: var(--ifm-menu-link-sublist-icon) 50% / 0.7rem 0.5rem no-repeat;
+  filter: none !important;
+  transform: rotate(180deg);
+  transition: transform var(--ifm-transition-fast);
+}
+
+[data-theme='dark'] .tocCollapsibleButton_TO0P::after {
+  background-color: var(--osism-sand) !important;
 }
 
 .tocCollapsibleContent_vkbj > ul {
-  border-top: none;
+  border-top: none !important;
   font-size: var(--font-size-xs);
 }
 
@@ -973,7 +1001,14 @@ body .toggleButton_gllP:hover {
 /* Breadcrumbs */
 .breadcrumbs,
 .breadcrumbsContainer_Z_bl {
-  display: none;
+  display: flex;
+}
+
+@media (min-width: 997px) {
+  .breadcrumbs,
+  .breadcrumbsContainer_Z_bl {
+    display: none;
+  }
 }
 
 .breadcrumbs__link {
@@ -984,12 +1019,33 @@ body .toggleButton_gllP:hover {
   color: var(--osism-kohlenstoff);
 }
 
+.breadcrumbs__link:any-link:hover {
+  background: transparent;
+  color: var(--osism-kohlenstoff);
+}
+
+[data-theme='dark'] .breadcrumbs__link:any-link:hover {
+  color: var(--osism-quarz);
+}
+
+.breadcrumbs__item:not(:last-child)::after {
+  opacity: 1;
+}
+
 .breadcrumbs__item--active .breadcrumbs__link {
   color: var(--osism-kohlenstoff);
-  font-weight: 500;
-  background-color: var(--osism-sand);
+  font-weight: 700;
+  background-color: transparent;
   padding: 0.25rem 0.5rem;
   border-radius: var(--osism-radius);
+}
+
+[data-theme='dark'] .breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--osism-sand);
+}
+
+[data-theme='dark'] .breadcrumbs__item--active .breadcrumbs__link:hover {
+  color: var(--osism-quarz);
 }
 
 /* Pagination */
@@ -1150,11 +1206,23 @@ body .toggleButton_gllP:hover {
     flex-shrink: 1 !important;
   }
 
-  @supports (scrollbar-gutter: stable) {
-    .menu_SIkG {
-      padding: 1.35rem 0 0.5rem 0.5rem;
-      scrollbar-gutter: stable;
-    }
+  /* Immer eine gleichbreite Platzhalterlücke rechts reservieren,
+     damit der Content auch ohne ToC an der gleichen Position bleibt */
+  .docMainContainer_TBSr .container .row::after {
+    content: "";
+    display: block;
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  /* Wenn ToC vorhanden: kein zusätzlicher Platzhalter nötig */
+  .docMainContainer_TBSr .container .row:has(.col--3)::after {
+    display: none;
+  }
+
+  .menu_SIkG {
+    padding: 1.35rem 0 0.5rem 0.5rem !important;
+    scrollbar-gutter: stable;
   }
 
   .docSidebarContainer_YfHR {
@@ -1171,7 +1239,6 @@ body .toggleButton_gllP:hover {
     flex-wrap: nowrap;
   }
 }
-
 @media (max-width: 996px) {
   html {
     font-size: 18px;
@@ -1189,7 +1256,7 @@ body .toggleButton_gllP:hover {
    ================================================================= */
 
 .backToTopButton_sjWU {
-  background-color: var(--osism-sand);
+  background-color: var(--osism-sand) !important;
   border-radius: 50%;
   bottom: 1.3rem;
   box-shadow: var(--ifm-global-shadow-lw);
@@ -1210,8 +1277,8 @@ body .toggleButton_gllP:hover {
   display: inline-block;
   height: 100%;
   width: 100%;
-  -webkit-mask: var(--ifm-menu-link-sublist-icon) 50% / 2rem 2rem no-repeat;
-  mask: var(--ifm-menu-link-sublist-icon) 50% / 2rem 2rem no-repeat;
+  -webkit-mask: var(--ifm-menu-link-sublist-icon) 50% / 1.111rem 0.667rem no-repeat !important;
+  mask: var(--ifm-menu-link-sublist-icon) 50% / 1.111rem 0.667rem no-repeat !important;
   transform: none;
 }
 
@@ -1222,7 +1289,7 @@ body .toggleButton_gllP:hover {
 }
 
 [data-theme='dark'] .backToTopButton_sjWU {
-  background-color: var(--osism-graphit);
+  background-color: var(--osism-graphit) !important;
 }
 
 [data-theme='dark'] .backToTopButton_sjWU::after {
@@ -1242,6 +1309,7 @@ body .toggleButton_gllP:hover {
   --ifm-navbar-link-color: var(--osism-naturweiss);
   --ifm-menu-color: var(--osism-naturweiss);
   --ifm-menu-color-active: var(--osism-naturweiss);
+  --ifm-menu-color-background-active: var(--osism-basalt);
   --ifm-link-color: var(--osism-naturweiss);
 }
 
@@ -1262,9 +1330,19 @@ body .toggleButton_gllP:hover {
   background-color: var(--osism-mitternachtsgruen);
 }
 
+[data-theme='dark'] .tocCollapsible_ETCw {
+  background-color: var(--osism-graphit);
+}
+
+[data-theme='dark'] .navbar-sidebar,
+[data-theme='dark'] .navbar-sidebar__brand {
+  background-color: var(--osism-basalt);
+}
+
 [data-theme='dark'] .navbar__title,
 [data-theme='dark'] .navbar__link,
-[data-theme='dark'] .navbar__item {
+[data-theme='dark'] .navbar__item,
+[data-theme='dark'] .navbar__toggle {
   color: var(--osism-sand);
 }
 
