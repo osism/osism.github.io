@@ -64,7 +64,6 @@ const config = {
   ],
 
   plugins: [
-    'docusaurus-plugin-image-zoom',
     [
       '@docusaurus/plugin-client-redirects',
       {
@@ -91,30 +90,22 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
-      zoom: {
-        selector: '.markdown img',
-        background: {
-          light: 'rgb(250, 249, 245)',
-          dark: 'rgb(38, 38, 36)',
-        },
-        config: {
-          margin: 90,
-        },
-      },
       navbar: {
-        logo: {
-          alt: 'OSISM Logo',
-          src: 'img/logo.svg',
-          href: 'https://osism.tech/docs',
-        },
-        items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Documentation',
-          },
-        ],
+        title: 'OSISM',
+        // logo: {
+        //   alt: 'OSISM Logo',
+        //   src: 'img/logo.svg',
+        //   href: 'https://osism.tech/docs',
+        // },
+        items: [],
+        // items: [
+        //   {
+        //     type: 'docSidebar',
+        //     sidebarId: 'tutorialSidebar',
+        //     position: 'left',
+        //     label: 'Documentation',
+        //   },
+        // ],
       },
       footer: {
         style: 'dark',
