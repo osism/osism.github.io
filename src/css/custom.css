@@ -1152,6 +1152,12 @@ body .toggleButton_gllP:hover {
   letter-spacing: 0.005em;
 }
 
+@media (max-width: 996px) {
+  .footer__item {
+    padding: 0.25rem 0;
+  }
+}
+
 .footer__link-item {
   color: var(--osism-quarz);
   line-height: 1;
