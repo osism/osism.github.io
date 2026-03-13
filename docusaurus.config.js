@@ -195,8 +195,8 @@ const config = {
         // ... Your options.
         // `hashed` is recommended as long-term-cache of index file is possible.
         hashed: true,
-        docsRouteBasePath: 'https://osism.tech/docs/',
-        // blogRouteBasePath: 'https://osism.tech/blog/',
+        docsRouteBasePath: '/docs',
+        // blogRouteBasePath: '/blog',
         indexPages: false,
         indexBlog: false,
         // For Docs using Chinese, The `language` is recommended to set to:
