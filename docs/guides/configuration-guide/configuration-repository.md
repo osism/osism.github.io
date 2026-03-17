@@ -208,7 +208,9 @@ as manager in your own cluster.
     eno1:
       addresses:
         - "192.168.16.10/20"
-      gateway4: "192.168.16.1"
+      routes:
+        - to: default
+          via: "192.168.16.1"
       mtu: 1500
   ```
 
@@ -331,7 +333,9 @@ as manager in your own cluster.
     eno1:
       addresses:
         - "192.168.16.10/20"
-      gateway4: "192.168.16.1"
+      routes:
+        - to: default
+          via: "192.168.16.1"
       mtu: 1500
   ```
 
