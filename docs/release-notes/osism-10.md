@@ -8,9 +8,7 @@ Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgra
 
 :::info
 
-Similar to the Ubuntu point release model, the first production-ready release of OSISM 10 will
-be OSISM 10.1.0. The 10.0.0 release is intended for early adopters and testing purposes. For
-production environments, we recommend waiting for OSISM 10.1.0.
+Similar to the Ubuntu point release model, the first release of OSISM 10 is intended for new installations, early adopters and testing purposes. For existing production environments we recommend to wait until the first point release OSISM 10.1 before upgrading.
 
 :::
 
