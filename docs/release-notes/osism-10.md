@@ -6,6 +6,12 @@ sidebar_label: OSISM 10
 
 Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
 
+:::info
+
+Similar to the Ubuntu point release model, the first release of OSISM 10 is intended for new installations, early adopters and testing purposes. For existing production environments we recommend to wait until the first point release OSISM 10.1 before upgrading.
+
+:::
+
 | Release     | Release Date     |
 |:------------|:-----------------|
 | 10.0.0-rc.1 | 8. December 2025 |
