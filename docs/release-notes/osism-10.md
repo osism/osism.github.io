@@ -6,6 +6,14 @@ sidebar_label: OSISM 10
 
 Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
 
+:::info
+
+Similar to the Ubuntu point release model, the first production-ready release of OSISM 10 will
+be OSISM 10.1.0. The 10.0.0 release is intended for early adopters and testing purposes. For
+production environments, we recommend waiting for OSISM 10.1.0.
+
+:::
+
 | Release     | Release Date     |
 |:------------|:-----------------|
 | 10.0.0-rc.1 | 8. December 2025 |
