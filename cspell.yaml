@@ -30,6 +30,7 @@ language: en
 noConfigSearch: true
 
 words:
+  - acpi
   - acura
   - ahci
   - andreas
@@ -69,7 +70,6 @@ words:
   - chrony
   - ciab
   - cleura
-  - cleura
   - cloudbase
   - cloudkitty
   - cloudsmith
@@ -80,14 +80,18 @@ words:
   - cnds
   - configfile
   - configfiles
+  - connmark
   - conntrack
+  - consoleserver
   - containerd
   - containerfiles
   - creativecommons
+  - dbengine
   - devicenames
   - dimm
   - direnv
   - diskless
+  - DNAT
   - dnsdist
   - dnsmasq
   - dpdk
@@ -96,20 +100,24 @@ words:
   - envrc
   - esxi
   - ethernets
+  - evpn
   - exigo
   - exikube
+  - fernet
   - firewalld
   - floatingip
   - fsid
   - fuga
   - galera
   - garloff
+  - gatewayless
+  - gbps
   - geneve
   - gnmic
   - grasza
   - groupname
-  - gunicorn
   - grzegorz
+  - gunicorn
   - hana
   - harddrives
   - healthmanager
@@ -117,6 +125,7 @@ words:
   - highlevel
   - hostgroup
   - hostnames
+  - hostvars
   - hotfixes
   - huaweicloud
   - hugeadm
@@ -130,6 +139,7 @@ words:
   - hystax
   - ianal
   - imguuid
+  - inodes
   - intvl
   - ipfix
   - ireallymeanit
@@ -143,6 +153,7 @@ words:
   - keypair
   - keypairs
   - keyrings
+  - keystoneauth
   - keystonemiddleware
   - knowledgebase
   - kolla
@@ -154,6 +165,7 @@ words:
   - libldap
   - libsasl
   - limitrequestbody
+  - lldp
   - loadbalancers
   - logfile
   - logserver
@@ -164,12 +176,14 @@ words:
   - mariabackup
   - masakari
   - mdns
+  - metalbox
   - metricd
   - mgrs
   - microversion
   - migratekit
   - mitogen
   - mountpoints
+  - multiplicator
   - multisite
   - multitenancy
   - needrestart
@@ -208,6 +222,9 @@ words:
   - oshm
   - osism
   - osismclient
+  - ospf
+  - ospfd
+  - ovsdb
   - pagetitle
   - pastebin
   - peaceiris
@@ -226,6 +243,7 @@ words:
   - preconfiguring
   - proxysql
   - pwgen
+  - pynetbox
   - qcow
   - quotaclass
   - quotamultiplier
@@ -238,6 +256,7 @@ words:
   - regio
   - regiocloud
   - replicatable
+  - reprovisioning
   - resharding
   - resolv
   - resolvconf
@@ -248,10 +267,13 @@ words:
   - scaphandre
   - seeburger
   - senlin
+  - servicesleaf
   - sflow
   - shmem
   - sidenote
+  - skopeo
   - snat
+  - snmp
   - somaxconn
   - sovereignit
   - spectrumscale
@@ -274,6 +296,7 @@ words:
   - tzdata
   - uefi
   - unbootable
+  - undeployment
   - unmigratable
   - unmute
   - unrescue
@@ -289,6 +312,8 @@ words:
   - virtualizes
   - vmfs
   - vrfs
+  - vrrp
+  - vrrpd
   - vswitchd
   - vxlan
   - waivable
@@ -299,7 +324,9 @@ words:
   - webshop
   - wmem
   - wsgi
+  - wsrep
   - xena
   - yourcloud
+  - yrzn
 
 version: "0.2"
