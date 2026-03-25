@@ -563,6 +563,31 @@ Additional capabilities:
 * **Keystone security compliance testing**: New `tempest_enable_keystone` variable to enable
   identity/security_compliance testing when Keystone is enabled.
 
+## Metalbox
+
+The [Metalbox](https://github.com/osism/metalbox) is a new all-in-one provisioning appliance for
+bootstrapping OSISM-managed infrastructure from a single physical or virtual server. It acts as
+the central management node for bare-metal deployments and provides all services needed to bring
+up a cloud environment — including NetBox for inventory management, Ironic for bare-metal
+provisioning, an OSISM manager, and OpenStack infrastructure services.
+
+The Metalbox can operate in fully disconnected environments by serving as a local Ubuntu
+repository server, container registry, and file server for all nodes in the deployment
+(Cloudpod). Pre-built archives for Ubuntu packages, container images, and Octavia images
+can be imported offline.
+
+An integrated SONiC ZTP server enables automated network switch configuration in leaf-spine
+fabrics. SONiC image exports can be imported and served to switches during initial deployment.
+
+The configuration is driven by NetBox. Per-device configuration (network, FRR, dnsmasq) is
+fetched from a NetBox export archive, enabling consistent and reproducible deployments.
+
+The full provisioning workflow — from initial image write to a fully operational environment —
+is automated and can be executed with a single command. Data and service updates for NetBox,
+Ironic images, the container registry, Ubuntu repository files, and all deployed services
+can be performed independently, both with and without external connectivity. Individual
+container images can also be updated selectively without replacing the entire registry.
+
 ## Removals
 
 ### Kubernetes
