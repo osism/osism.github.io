@@ -12,10 +12,21 @@ Similar to the Ubuntu point release model, the first release of OSISM 10 is inte
 
 :::
 
+:::info
+
+Starting with OSISM 10, a specific OSISM version is no longer tied to a single version of
+Kubernetes, Docker, Ceph, or OpenStack. Instead, multiple versions of these components are
+supported within the same OSISM release. For OSISM 10, this means that both OpenStack 2025.1
+and OpenStack 2025.2 will be supported. OpenStack 2025.2 will be added with one of the next
+releases.
+
+:::
+
 | Release     | Release Date     |
 |:------------|:-----------------|
 | 10.0.0-rc.1 | 8. December 2025 |
 | 10.0.0-rc.2 | 30. January 2026 |
+| 10.0.0      | 22. March 2026   |
 
 ## Upgrade notes
 
@@ -236,6 +247,322 @@ ceph_ansible_container_image: "registry.osism.tech/osism/ceph-ansible-rgw-multis
 
 Replace `CEPH_RELEASE` with your target Ceph version (`quincy`, `reef`, or `squid`).
 
+## Manager Service
+
+### Fast Inventory for large environments
+
+For large environments with monolithic `hosts.yml` files (~50 MB), Ansible's startup time is
+dominated by parsing YAML with all variables inlined. The new `/inventory/fast/` directory provides
+an alternative inventory source that combines a compact JSON group index (26–200x faster to parse
+than YAML) with separate `host_vars/` and `group_vars/` directories that Ansible lazy-loads on demand.
+
+This is enabled automatically — no manual configuration is required.
+
+### CLI startup time reduction
+
+Heavy libraries (Celery, OpenStack SDK, keystoneauth1, pynetbox, Redis, cryptography, Docker, PyMySQL)
+were previously imported eagerly at module level, causing CLI startup times of ~11 seconds. These imports
+are now deferred via lazy loading, reducing startup to near-instant.
+
+### Read-only reconciler mode
+
+A new reconciler mode reads netplan, FRR, and dnsmasq parameters from existing custom fields
+without writing back to NetBox. This enables using an external NetBox instance with a read-only
+API token.
+
+### Inventory reconciler improvements
+
+* **Secrets extraction**: Ansible Vault encrypted values from the `secrets` custom field on NetBox
+  devices are extracted and written to `999-netbox-secrets.yml` with proper `!vault` tags.
+* **VRF dummy interface support**: Per-VRF loopback devices (e.g. `lo-vrf-a`, `lo-vrf-b`) for
+  EVPN/VRF deployments with SONiC leaf-spine fabrics are generated as `network_dummy_devices`
+  (netplan) and `frr_vrfs` with `router_id` (FRR).
+* **VXLAN tunnel and VRF support**: Generation of `network_tunnels` configuration for VXLAN
+  interfaces (mode, link, VNI, MTU, local address) including VXLAN interfaces in VRF assignments.
+* **Routed OOB dnsmasq support**: L3/routed OOB network mode for metalbox, where each rack has
+  its own subnet with DHCP relay. Includes per-prefix tagging and binding dnsmasq to physical
+  uplink interfaces.
+* **Configurable dnsmasq DHCP lease time**: New `DNSMASQ_LEASE_TIME` environment variable
+  (default: `28d`).
+* **Per-label-prefix FRR uplink lists**: Separate uplink lists per label prefix (e.g.
+  `frr_uplinks_data`, `frr_uplinks_bmc`) in addition to the combined `frr_uplinks`.
+* **Site-based inventory grouping**: Devices are automatically grouped by their NetBox site
+  assignment into `netbox-site-{site_slug}` groups, enabling site-based targeting in Ansible.
+* **FRR local_pref custom field**: Per-interface BGP local preference via `frr_local_pref` custom
+  field on uplinks.
+* **Deep-merge local_context_data**: Auto-generated `frr_parameters` and `netplan_parameters` are
+  deep-merged with device `local_context_data`, where `local_context_data` wins on conflicts.
+* **Configurable Ceph RGW default port**: The `ceph_rgw_default_port` variable can now override
+  the default RGW port (8081).
+* **Empty group initialization**: All groups defined in `NETBOX_ROLE_MAPPING` now appear in the
+  generated inventory even when no devices are assigned, avoiding reference errors.
+* **Minified hosts.yml**: A `hosts-minified.yml` is generated containing only hosts and group
+  memberships (no variables), enabling faster inventory queries.
+* **Servicesleaf role**: `servicesleaf` added to default FRR switch roles, with support for FRR
+  uplinks without remote AS for yrzn-type devices.
+* **netplan_parameters for loopback0**: Custom netplan parameters from the `netplan_parameters`
+  custom field are now merged into loopback0 interface configuration.
+* **OOB interface filtering**: Management-only interfaces are excluded from netplan configuration
+  for non-metalbox nodes.
+* **MTU for loopback interfaces**: MTU is now also set on loopback interfaces in netplan
+  configuration.
+* **Always regenerate parameters**: Persistent caching of parameters in NetBox custom fields has
+  been removed; parameters are always regenerated from NetBox data on every run.
+
+### Log file tailing
+
+The new `osism log file` command enables real-time log tailing from remote nodes via SSH, with
+clush support for inventory groups. Paths are restricted to `/var/log` to prevent directory traversal.
+
+### SCS compliance validation
+
+The new `osism validate scs` command runs Sovereign Cloud Stack (SCS) IaaS conformity tests
+against OpenStack clouds.
+
+### Enhanced console/SSH with group support
+
+The `osism console ssh` command now accepts Ansible inventory group names. Single-host groups
+connect directly, multi-host groups show an interactive selection list.
+
+### Kolla version synchronization
+
+The new `osism sync versions` command extracts version information from SBOM container images
+(via skopeo, no Docker required) and renders them to `environments/kolla/versions.yml`. Supports
+`--release` to sync from a specific OSISM release and `--dry-run` for preview.
+
+### Database and messaging cluster status
+
+The new `osism status database` command validates the MariaDB Galera Cluster (wsrep status, cluster
+connectivity, readiness, sync state, flow control metrics, transaction statistics). The new
+`osism status messaging` command validates the RabbitMQ Cluster (cluster name, node status,
+memory/disk alarms, health check alarms) across all nodes.
+
+### OpenStack resource management
+
+A suite of new `osism manage` commands for handling problematic OpenStack resources:
+
+* `osism manage loadbalancer list/reset/delete` for Octavia loadbalancers stuck in PENDING or ERROR state.
+* `osism manage amphora restore/rotate` for restoring ERROR amphorae or rotating amphorae older than
+  30 days (configurable).
+* `osism manage volume repair` for Cinder volumes stuck in DETACHING, CREATING, ERROR_DELETING, or
+  DELETING states.
+* `osism manage server clean` for servers stuck in BUILD (>2h, configurable) or ERROR status.
+
+### Vault password chain verification
+
+The new `osism vault check` command verifies the full vault password chain — keyfile existence,
+Fernet key validity, Redis storage, password decryption — and optionally tests decryption against
+a `secrets.yml` file.
+
+### Vault decrypt
+
+The new `osism vault decrypt` command decrypts Ansible Vault encrypted files in-place.
+
+### Stale bind mount detection
+
+The new `osism check mount` and `osism check inode` commands detect stale bind mounts on
+`/opt/configuration`. `check mount` spawns a fresh container and compares inodes between container
+and host views. Useful for diagnosing invisible file changes after git operations.
+
+### Ironic sync improvements
+
+* **Dry-run mode**: `--dry-run` flag for `osism sync ironic` to preview changes without modifying
+  Ironic nodes, with secret masking.
+* **Config Context support**: `ironic_parameters` from NetBox Config Context are merged into node
+  attributes, with Ansible Vault decryption support.
+* **Generic Jinja2 rendering**: All `ironic_osism_*` secrets are available as Jinja2 variables in
+  node attributes.
+* **Automatic node cleaning**: Nodes are automatically cleaned on undeployment via per-node
+  automated cleaning configuration.
+* **Baremetal maintenance and burn-in**: New commands for managing node maintenance state and
+  triggering burn-in tests.
+* **Extra/skip kernel parameters**: `--extra-kernel-param` and `--skip-kernel-param` options allow
+  injecting or skipping specific kernel append parameters during sync.
+* **IPv6 support for IPA kernel parameters**: Adds `osism-ipa-ipv6` kernel parameter from
+  `frr_loopback_v6` alongside existing IPv4 support.
+* **Ansible Vault decryption for FRR parameters**: Encrypted FRR passwords (e.g. BGP neighbor
+  passwords) in NetBox `frr_parameters` custom fields are now automatically decrypted during sync.
+* **Soft power off**: `osism baremetal power off --soft` enables graceful ACPI power off so the
+  OS can shut down cleanly before hardware power is cut.
+* **Automatic power off on enroll**: Newly synced/enrolled nodes are automatically powered off to
+  ensure a defined initial power state.
+* **Automatic boot device override**: Boot device is set to virtual media (cdrom) before deploy,
+  clean, and burn-in operations to prevent BIOS boot order changes from blocking reprovisioning.
+* **FRR parameters as kernel parameters**: For supported IPA types, FRR parameters from NetBox
+  custom fields are automatically appended as kernel boot parameters.
+* **AS number derivation from hostname**: For the yrzn001 IPA type, the BGP AS number is derived
+  from the device hostname. `frr_local_as` from config context takes priority as an override.
+* **Metalbox discovery**: The metalbox primary IPv4 address is resolved from NetBox and passed as
+  the `osism-ipa-metalbox` kernel parameter. The metalbox IP is also added as a hosts entry in
+  the bootstrap playbook used during baremetal deploy.
+
+### Ansible play execution tracking
+
+All Ansible play executions are tracked in `/share/ansible-execution-history.json` with timestamp,
+runtime version, hosts, arguments, and result status.
+
+### Configurable operator user
+
+The hardcoded `dragon` username has been replaced with the `OSISM_OPERATOR_USER` environment
+variable across all commands (console, container, compose, log, report, check, lock).
+
+### New report commands
+
+* `osism report memory` queries physical memory via dmidecode and product UUID for all hosts.
+* `osism report bgp` shows BGP session state across nodes and supports an `--afi` filter option.
+* `osism report lldp` reports LLDP neighbor information for hosts.
+* `osism report status bootstrap` checks whether nodes have been bootstrapped by inspecting
+  `/etc/ansible/facts.d/osism.fact`.
+
+### OpenStack stress testing
+
+The new `osism openstack stress` command supports `--mode` (rolling/block) and `--clean` parameters
+for stress testing OpenStack environments. Additional capabilities include:
+
+* **YAML profiles**: Predefined parameter sets (`quick`, `stress`, `volume`, `persistent`) can be
+  loaded via `--profile`. Custom profile paths are also supported.
+* **Burn-in mode**: `--burnin` creates instances running `stress-ng` on all CPUs via cloud-init.
+  Instances stay alive for a configurable duration (default 48h), then get cleaned up.
+* **Operation statistics**: After a stress test completes, a summary table shows count, errors,
+  average, min, max, median, and P95 timing stats for all OpenStack operations.
+* **Resource reuse**: Existing networks, subnets, and server groups are detected and reused instead
+  of always creating new ones.
+
+### Web frontend for baremetal and inventory
+
+A new web frontend provides a baremetal node listing and detail view showing conductor, fault state,
+maintenance reason, owner, lessee, traits, Redfish address, primary IPs, kernel parameters, netplan
+and FRR parameters, with direct links to the corresponding NetBox device. Nodes can be looked up by
+name or UUID. An inventory page allows querying Ansible inventory data (hostvars, cached facts) with
+search, filter, and copy-to-clipboard support. Sensitive values (passwords, secrets, Ansible Vault
+encrypted values) are masked in API responses.
+
+### Live streaming of Ansible output
+
+Ansible playbook output now appears line-by-line in real time instead of in buffered blocks.
+
+### SONiC switch configuration
+
+Extensive SONiC configuration support including VRF/VXLAN/EVPN, SNMP/syslog configuration,
+BGP neighbor improvements, flexible VRF naming conventions, and tag-based L2VPN EVPN activation
+for BGP neighbors.
+
+### NetBox Manager improvements
+
+* **`autoconf` command**: Analyzes the NetBox API and automatically generates configuration including
+  primary MAC/IP address assignment, loopback0 interface generation, device interface label
+  propagation, PortChannel LAG interface generation, and automatic `managed-by-osism` tagging.
+  Supports per-site output for numbered site folder structures.
+* **`purge` command**: Deletes all resources managed by netbox-manager in reverse dependency order
+  while preserving users, tokens, and custom fields. Supports `--limit`, `--exclude-core`,
+  `--dry-run`, `--force`, and `--parallel` options.
+* **`validate` command**: Verifies NetBox configuration consistency via API-based checks including
+  IP-Prefix validation and VRF consistency validation.
+* **Run command options**: `--fail-fast` for CI/CD pipelines, `--ignore-errors` to continue despite
+  failures, `--verbose` for debugging, `--show-playbooks` to preview generated playbooks.
+* **`uri` task type**: Enables direct NetBox API calls (GET, POST, PATCH, DELETE) for operations
+  not covered by standard netbox.netbox collection modules.
+* **YAML syntax validation**: Resource files are validated with meaningful error messages including
+  line/column information.
+* **Configurable device roles**: `NODE_ROLES` and `SWITCH_ROLES` are now configurable via
+  `settings.toml`, allowing deployments with custom roles (e.g. `compute-chassis`, `consoleserver`).
+* **Configurable loopback network multiplicator**: Segments can override the default multiplicator
+  in loopback IP address calculation via the `_segment_loopback_network_multiplicator` config
+  context parameter.
+* **FRR local_pref propagation**: When a switch has a `frr_local_pref` custom field, the autoconf
+  command propagates it to connected node device interfaces.
+* **Git commit info in export archive**: The `export-archive` command now includes a
+  `COMMIT_INFO.txt` file in the generated tarball for traceability.
+
+### OVN Network Agent
+
+The new [ovn-network-agent](https://github.com/osism/ovn-network-agent) is an event-driven network
+daemon for OVN-based OpenStack environments. It watches the OVN Southbound and Northbound databases
+in real time via OVSDB and reacts instantly to changes such as gateway chassis failover, Floating IP
+assignments, and SNAT changes.
+
+In environments where provider networks are announced via BGP (e.g. in leaf-spine fabrics) rather
+than connected to a physical gateway, the agent advertises Floating IPs as /32 host routes from the
+chassis where the gateway router is currently active. For each locally active router it installs
+kernel routes and FRR static routes so that FRR can announce them via BGP, manages OVS flows on the
+provider bridge, and injects default routes and static MAC bindings into OVN NB so that reply
+traffic exits correctly in pure BGP-routed environments (gatewayless provider networks).
+
+Additional capabilities:
+
+* **Port forwarding (DNAT)**: Forwards traffic from anycast VIP addresses to internal backends
+  while preserving client IPs through connmark-based return routing. Multiple backends are supported
+  with sticky source-IP hashing for consistent client distribution.
+* **High-availability drain mode**: On shutdown the agent gracefully lowers the gateway chassis
+  priority, allowing OVN to migrate ports to standby nodes before the agent exits, eliminating
+  traffic disruption windows.
+* **Automatic network discovery**: Provider networks are auto-discovered from OVN logical router
+  port configurations when not explicitly specified.
+* **Stale chassis cleanup**: Detects ungracefully departed gateway nodes and removes their orphaned
+  OVN entries after a configurable grace period.
+* **Periodic reconciliation**: A safety-net reconciliation loop (default 60 s) ensures convergence
+  even if an event is missed.
+
+### Reliability improvements
+
+* Unique SSH control paths per Celery task prevent intermittent "Permission denied" errors with
+  concurrent Ansible tasks.
+* RabbitMQ 4 compatibility with passive exchange declarations.
+* Periodic exchange discovery connects to new RabbitMQ exchanges dynamically.
+* Shared session management for NetBox connections to prevent file descriptor exhaustion.
+
+## Ansible Collections
+
+### Services
+
+* **Kepler role**: New role to deploy Kepler (Kubernetes-based Efficient Power Level Exporter) for
+  energy consumption monitoring.
+* **FRR YRZN configuration profile**: An entirely new set of FRR configuration templates supporting
+  dual BGP sessions, configurable announced networks, optional BGP neighbor passwords, and
+  metalbox/network variants.
+* **FRR hostname-based configuration**: Support for per-host FRR configuration files with fallback
+  to type-based configuration, enabling more granular control.
+* **FRR external configuration template**: New `frr_config_template` variable allows providing the
+  full FRR config as a Jinja2 template from an external source (e.g. NetBox config context).
+* **FRR VRRP support**: New `frr_vrrp_groups` variable to configure VRRP-managed IP addresses with
+  IPv4/IPv6, priority, and preempt settings for leaf configuration.
+* **FRR BGP local preference**: Configurable BGP local preference values via `frr_local_pref`
+  dictionary, including IPv6 support.
+* **FRR BGP neighbor password support**: Optional authentication for BGP neighbors.
+* **FRR configurable daemons**: Enable/options variables for ospfd, ospf6d, and vrrpd daemons.
+* **IPv6 support for Docker networks**: Configurable IPv6 for internal Docker networks in manager,
+  netbox, openstackclient, and traefik roles. Also IPv6 support for manager host address defaults.
+* **httpd HTTPS/SSL support**: Optional HTTPS/SSL termination, host network mode with configurable
+  listen addresses, and keepalive/performance/timeout settings.
+* **Manager uses uv for pip**: Wrapper scripts now use `uv` instead of `pip` for faster package
+  installations.
+* **Configurable NetBox systemd dependency**: New `netbox_external` parameter to skip the systemd
+  dependency when NetBox runs externally.
+* **Netdata large-scale optimizations**: Switched to dbengine memory mode, streaming compression,
+  configurable page cache/disk space, and 24h default history.
+
+### Commons
+
+* **Fast hosts template**: A new "fast" hosts-file generation type that pre-computes each host's
+  entry and renders the template once on localhost, replacing the O(N^2) per-host rendering approach.
+  Major performance improvement for large inventories.
+* **network-extra-init service**: A new optional systemd service that runs custom bridge and IP
+  commands after the network is ready (e.g. VXLAN FDB entries, VRRP interfaces). Configurable via
+  `network_extra_init_commands`.
+* **Operator PS1 prompt configuration**: Custom PS1 prompt support in the operator user's `.bashrc`
+  with `prepend` and `replace` modes.
+* **NetBox submodule support**: Dedicated NetBox submodule management in the configuration role
+  with separate git private key handling.
+* **Default Ubuntu mirror change**: Default Ubuntu mirror changed to `ftp.uni-stuttgart.de`
+  (HTTPS, 100 Gbps).
+
+### Validations
+
+* **SCS compatible Tempest test list**: A new test list aligned with Sovereign Cloud Stack
+  standards for Tempest validation runs.
+* **Keystone security compliance testing**: New `tempest_enable_keystone` variable to enable
+  identity/security_compliance testing when Keystone is enabled.
+
 ## Removals
 
 ### Kubernetes
@@ -269,6 +596,22 @@ the exact migration approach will depend on the specific deployment scenario. OS
 receive dedicated support for their migration. If you are planning to migrate, please contact us so we
 can assist you with your specific requirements. In the meantime, we recommend familiarizing yourself
 with the [cephadm documentation](https://docs.ceph.com/en/latest/cephadm/).
+
+### Deprecation of hardening
+
+The [ansible-hardening](https://github.com/openstack/ansible-hardening) role used by the `hardening`
+play is deprecated as of OSISM 10 and will be removed in a future OSISM release. The role does not
+work reliably with Ubuntu 24.04.
+
+As an alternative, we recommend [UBUNTU24-CIS](https://github.com/ansible-lockdown/UBUNTU24-CIS),
+which provides CIS benchmark hardening for Ubuntu 24.04. This role is currently not integrated
+into OSISM and must be used as a [custom play](../guides/operations-guide/manager/apply.md#use-of-custom-plays).
+
+### Out-of-tree Cinder drivers
+
+In this and future OSISM releases, out-of-tree drivers for Cinder (e.g. vendor-specific storage
+backends) will only be provided through a dedicated container image and are no longer included
+in the default Cinder container image.
 
 ## References
 
