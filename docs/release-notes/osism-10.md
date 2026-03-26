@@ -590,6 +590,11 @@ container images can also be updated selectively without replacing the entire re
 
 ## Removals
 
+### CI
+
+* **CentOS 9**: Tests for CentOS 9 have been removed from the CI pipelines.
+* **Ubuntu 22.04**: Tests for Ubuntu 22.04 have been removed from the CI pipelines.
+
 ### Kubernetes
 
 * **ingress-nginx**: The Kubernetes project has [announced the retirement](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/)
