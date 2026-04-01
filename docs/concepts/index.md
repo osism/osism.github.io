@@ -48,6 +48,11 @@ technology evolves, OSISM adapts by evaluating and adopting new approaches while
 providing controlled migration paths. Read more in the
 [Technology Adaptability](./technology-adaptability.md) chapter.
 
+## Cluster Layout
+
+See the [Cluster Layout](./cluster-layout.md) page for recommended node counts and
+the impact of cluster size on quorum and data replication.
+
 ## Bill of Materials
 
 * [Control nodes](./bom.md#control-nodes)
