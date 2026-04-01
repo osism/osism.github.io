@@ -7,7 +7,8 @@ exclude = [
   'https://xn--hvg/',
   'www.supermicro.com',
   'goteleport.com',
-  'www.freedesktop.org'
+  'www.freedesktop.org',
+  'opendev.org'
 ]
 ################################  Requests  ####################################
 insecure = true
