@@ -206,7 +206,7 @@ In order for zuul to be able to interact with repositories hosted on
 github, you need to set up a github application. Follow the instructions
 at https://zuul-ci.org/docs/zuul/latest/drivers/github.html#application
 to do this. The webhook token to use is the one defined in the
-pervious section. Use `github` in place of `<connection-name>` for the
+previous section. Use `github` in place of `<connection-name>` for the
 Webhook URL in the app configuration. After the app has been created,
 place the PEM files that you downloaded into a
 directory named `pem-files`:
