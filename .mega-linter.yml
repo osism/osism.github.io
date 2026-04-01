@@ -22,6 +22,7 @@ DISABLE_LINTERS:
   - REPOSITORY_TRIVY # not needed
   - REPOSITORY_TRIVY_SBOM # not needed
   - REPOSITORY_SYFT # not needed
+  - SPELL_CSPELL # replaced by codespell
 
 SHOW_ELAPSED_TIME: true
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
