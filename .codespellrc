@@ -1,0 +1,3 @@
+[codespell]
+skip = *.svg,*.lock,node_modules,.git,src,megalinter-reports
+ignore-words-list = regio,burnin
