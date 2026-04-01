@@ -9,7 +9,7 @@ sidebar_position: 1
 
 The OpenStack Image Manager `update.py` Script updates the `/etc/images/*.yaml` files to the always latest release of the distributions, set S3 mirror URLs and uploads the images to the mirror.
 
-These updated yaml files are later processed by the Image Manger itself.
+These updated yaml files are later processed by the Image Manager itself.
 
 
 ## Installation
