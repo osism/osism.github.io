@@ -103,3 +103,55 @@ sidebar_position: 40
     (nova-compute)[nova@testbed-node-0/]$
     # echo -n "a78b460d-2a38-4d50-b904-7eddbe6cfccb" > /var/lib/nova/compute_id
     ```
+
+## Loadbalancer are stuck in an immutable state
+
+* Problem: Newly created/updated loadbalancers using the `amphora` provider are stuck in provisioning state `PENDING_CREATE`/`PENDING_UPDATE`
+
+* Solution:
+  * One possible cause is a communication failure between octavia workers and the amphora
+    * Check for expired octavia certificates
+      ```sh
+      osism apply octavia-certificates -- -e octavia_certs_check_expiry=true -e octavia_certs_expiry_limit=0
+      ```
+    * Recreate certificates if they have expired  
+      Unfortunately the certificates will not be recreated automatically once expired and have to be deleted first
+      * To recreate all certificates including server and client CA clean up by running
+        ```sh
+        docker exec kolla-ansible bash -c "rm -rf /share/{server,client}_ca"
+        ```
+        on the manager
+      * If only the client certificate is expired execute the following steps on the manager to clean up the old certificate
+        * Create a backup of the Client CA
+          ```sh
+          docker exec kolla-ansible cp -a /share/client_ca /share/client_ca-$(date -I)
+          ```
+        * Remove the expired client certificate
+          ```sh
+          docker exec -it kolla-ansible bash -c "rm /share/client_ca/{client.cert-and-key.pem,client.cert.pem,client.csr.pem,index.txt}"
+          ```
+      * To actually create and copy the existing and created octavia certificates execute the following commands on the manager
+        ```sh
+        osism apply octavia-certificates
+        osism apply copy-octavia-certificates
+        ```
+      * Deploy octavia with newly created certificates
+        ```sh
+        osism apply octavia
+        ```
+    * If certificates are fine check the octavia loadbalancer management network as another possible cause
+  * Once the root cause has been resolved fix loadbalancers stuck in state `PENDING_*`.  
+    Unfortunately loadbalancers cannot be moved out of PENDING states using the API, so they are set to `ERROR` state in the DB  
+    Connect to the octavia database on a control node using the octavia DB credentials
+    ```sh
+    docker exec -it mariadb mysql -uoctavia -p octavia
+    ```
+    For every ID of a loadbalancer stuck in a pending state set the `provisioning_status` to `ERROR`
+    ```sql
+    MariaDB [octavia]> update load_balancer set provisioning_status='ERROR' where id='7f46b3f1-a405-4bbd-b0d0-5bf33a8cc04f';
+    ```
+  * Failover loadbalancers just set to `ERROR` state
+    ```sh
+    openstack --os-cloud admin loadbalancer failover 7f46b3f1-a405-4bbd-b0d0-5bf33a8cc04f
+    ```
+    If the client or server CA certificates have also been changed then all amphora based loadbalancers will need to be failed over to reestablish communication.
