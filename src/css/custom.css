@@ -270,7 +270,9 @@ a:hover img {
 
 main p a,
 .markdown p a,
-p a {
+p a,
+main li a,
+.markdown li a {
   text-decoration: underline;
   text-underline-offset: 4pt;
   text-decoration-color: currentColor;
@@ -279,7 +281,9 @@ p a {
 
 main p a:hover,
 .markdown p a:hover,
-p a:hover {
+p a:hover,
+main li a:hover,
+.markdown li a:hover {
   color: var(--osism-quarz);
 }
 
