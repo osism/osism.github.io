@@ -11,7 +11,7 @@ import {EnumChangefreq} from 'sitemap';
 const config = {
   title: 'OSISM – Sovereign Cloud Platform',
   tagline: 'Get your data center ready for the multi-cloud era',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   // Set the production url of your site here
   url: 'https://osism.tech',
