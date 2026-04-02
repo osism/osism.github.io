@@ -14,6 +14,21 @@ Ceph daemons one at a time. While this process is designed to be non-disruptive,
 made and all other necessary safety measures are in place before migrating a production
 cluster.
 
+TODO: Add specific guidance on recommended backup strategies (e.g. cluster-wide backups
+to a separate cluster) and concrete safety measures to take before starting the migration.
+
+:::
+
+:::info Known limitations
+
+This guide is a work in progress. The following areas are **not yet covered or tested**:
+
+* **Multi-site RGW**: Only single-site RGW deployments have been tested. Multi-site migration instructions will be added in a future update.
+* **Backup and safety measures**: Specific guidance on recommended backup strategies and concrete pre-migration safety measures is still being prepared.
+* **Automated readiness checks**: A planned `osism apply ready-for-cephadm` task to automate prerequisite verification is not yet available.
+
+This note will be updated as additional sections are completed.
+
 :::
 
 ## Background
@@ -23,8 +38,8 @@ in upcoming OSISM releases. The
 [official recommendation](https://github.com/ceph/ceph-ansible/blob/main/README.rst) from
 the Ceph project is to migrate to [cephadm](https://docs.ceph.com/en/latest/cephadm/).
 
-After migration, Ceph daemons run as containers managed by cephadm and systemd instead of
-being managed by Ansible. All lifecycle operations (upgrades, expansions, configuration
+After migration, Ceph daemons run as containers managed by cephadm instead of
+ceph-ansible. All lifecycle operations (upgrades, expansions, configuration
 changes) are then performed through cephadm and the Ceph orchestrator.
 
 For the full upstream documentation, refer to
@@ -39,10 +54,14 @@ For the full upstream documentation, refer to
   OSISM 7 or later already meet this requirement.
 * Python 3 and `lvm2` must be installed on all Ceph nodes (these are typically already present).
 
+TODO: Consider replacing the manual prerequisite checks with an `osism apply ready-for-cephadm`
+task that automatically verifies all conditions (cluster health, SSH access, Ceph version,
+required packages).
+
 ## Step 1: Verify cluster health
 
 Before starting the migration, ensure the cluster is in a healthy state. Run the following
-commands on the manager node .
+commands on the OSISM manager node .
 
 ```bash
 ceph -s
@@ -52,12 +71,15 @@ ceph df
 
 All PGs should be `active+clean`. Resolve any degraded or misplaced PGs before proceeding.
 
+TODO: Consider including the health verification commands in the `osism apply ready-for-cephadm`
+task as well.
+
 ## Step 2: Install cephadm
 
 Install cephadm on **all** Ceph nodes. The version of cephadm must match the running Ceph
 release.
 
-First, determine the running Ceph release on the manager node :
+First, determine the running Ceph release on the OSISM manager node :
 
 ```bash
 ceph version
@@ -134,7 +156,7 @@ CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}
 ```
 
 Set the container image in the Ceph configuration. Run the following command on the
-manager node:
+OSISM manager node:
 
 ```bash
 ceph config set global container_image ${CEPH_IMAGE}
@@ -152,7 +174,7 @@ docker exec ceph-crash-$(hostname) ceph config assimilate-conf -i /etc/ceph/ceph
 
 ## Step 4: Enable the cephadm orchestrator
 
-Enable the cephadm orchestrator module on the manager node:
+Enable the cephadm orchestrator module on the OSISM manager node:
 
 ```bash
 ceph mgr module enable cephadm
@@ -160,7 +182,7 @@ ceph orch set backend cephadm
 ```
 
 Configure cephadm to use the `dragon` user (which has passwordless sudo) instead of
-`root`. Generate an SSH key and distribute it to all Ceph nodes. On the manager node:
+`root`. Generate an SSH key and distribute it to all Ceph nodes. On the OSISM manager node:
 
 ```bash
 ceph cephadm set-user dragon
@@ -182,7 +204,7 @@ for node in $(osism get hosts -l ceph | awk 'NR>3 && /\|/ {print $2}'); do
 done
 ```
 
-Register all Ceph nodes with the orchestrator on the manager node:
+Register all Ceph nodes with the orchestrator on the OSISM manager node:
 
 ```bash
 ceph orch host add <node> <node-ip>
@@ -220,7 +242,7 @@ CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}
 
 :::warning
 
-Verify cluster health with `ceph -s` on the manager node after each step.
+Verify cluster health with `ceph -s` on the OSISM manager node after each step.
 Do not proceed if the cluster is not healthy.
 
 :::
@@ -241,7 +263,7 @@ sudo systemctl reset-failed ceph-mgr@${CEPH_HOSTNAME}.service 2>/dev/null || tru
 
 ### Verify monitors and managers
 
-After all monitors and managers have been adopted, verify on the manager node that
+After all monitors and managers have been adopted, verify on the OSISM manager node that
 the orchestrator recognises them:
 
 ```bash
@@ -251,7 +273,7 @@ ceph orch ps
 
 ### Adopting OSD daemons
 
-Before adopting OSDs, set safety flags on the manager node to prevent unnecessary data
+Before adopting OSDs, set safety flags on the OSISM manager node to prevent unnecessary data
 movement and PG changes during the adoption process:
 
 ```bash
@@ -320,7 +342,7 @@ ceph orch ps --refresh
 ```
 
 Once all PGs are `active+clean`, remove the safety flags and re-enable the PG
-autoscaler on the manager node:
+autoscaler on the OSISM manager node:
 
 ```bash
 ceph osd unset noout
@@ -337,7 +359,7 @@ if [ -f /tmp/autoscale_pools.txt ]; then
 fi
 ```
 
-### Adopting RGW daemons
+### Migrating RGW daemons
 
 :::note
 
@@ -349,32 +371,48 @@ Instructions for multi-site RGW setups will be added in a future update of this 
 RGW daemons cannot be adopted in-place with `cephadm adopt`. Instead, new RGW daemons
 are deployed via the orchestrator and the legacy daemons are stopped afterwards.
 
-Determine the RGW nodes on the manager node:
+Determine the RGW nodes on the OSISM manager node:
 
 ```bash
 osism get hosts -l ceph-rgw
 ```
 
+Determine the RGW realm, zone group, and zone name from the running cluster:
+
+```bash
+radosgw-admin realm list
+radosgw-admin zonegroup list
+radosgw-admin zone list
+```
+
+In a typical single-site deployment, the default values are `default` for all three.
+The service ID for the `ceph orch apply rgw` command is composed as
+`<realm_name>.<zone_name>` (e.g. `default.default`).
+
 Determine the RGW frontend port from the ceph-ansible configuration
 (`environments/ceph/configuration.yml`). The variable `radosgw_frontend_port` contains
 the port (default: `8081`).
 
-Deploy new RGW daemons on the manager node using a service spec. Replace the
-placeholders with the actual values:
-
-```bash
-ceph orch apply rgw <service_id> --placement="<rgw-node-1>,<rgw-node-2>,<rgw-node-3>" --port=<radosgw_frontend_port>
-```
-
 If the RGW service was configured with SSL (i.e. `radosgw_frontend_ssl_certificate` is
 set in the ceph-ansible configuration), the SSL certificate must be imported into the
-Ceph config-key store before deploying. Run this on each RGW node:
+Ceph config-key store **before** deploying. Run this on each RGW node:
 
 ```bash
 sudo ceph config-key set rgw/cert/rgw.$(hostname) -i <path_to_ssl_certificate>
 ```
 
-Then add `--ssl` to the `ceph orch apply rgw` command.
+Deploy new RGW daemons on the OSISM manager node using a service spec. If SSL is used,
+add `--ssl` to the command:
+
+```bash
+RGW_SERVICE_ID=default.default        # <realm_name>.<zone_name>
+RGW_PLACEMENT="rgw-node-1,rgw-node-2,rgw-node-3"  # from osism get hosts -l ceph-rgw
+RGW_PORT=8081                          # from radosgw_frontend_port in configuration.yml
+
+ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT}
+# If SSL is enabled, add --ssl:
+# ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT} --ssl
+```
 
 Wait until the new RGW daemons are running:
 
@@ -389,12 +427,12 @@ sudo systemctl stop ceph-radosgw.target
 sudo systemctl disable ceph-radosgw.target
 ```
 
-### Adopting MDS daemons
+### Migrating MDS daemons
 
 MDS daemons cannot be adopted in-place with `cephadm adopt`. Instead, new MDS daemons
 are deployed via the orchestrator and the legacy daemons are stopped afterwards.
 
-Determine the CephFS filesystem name on the manager node:
+Determine the CephFS filesystem name on the OSISM manager node:
 
 ```bash
 ceph fs ls
@@ -406,14 +444,14 @@ The name (e.g. `cephfs`) is needed for the next step.
 The CephFS name also corresponds to the `cephfs` variable in the ceph-ansible
 configuration (`environments/ceph/configuration.yml`).
 
-Determine the MDS nodes on the manager node:
+Determine the MDS nodes on the OSISM manager node:
 
 ```bash
 osism get hosts -l ceph-mds
 ```
 
 Deploy the new MDS daemons and stop the legacy ones by running the following script
-on the manager node. Replace `<cephfs_name>` with the CephFS filesystem name and
+on the OSISM manager node. Replace `<cephfs_name>` with the CephFS filesystem name and
 list the MDS nodes in the placement:
 
 ```bash
@@ -449,7 +487,7 @@ done
 ## Step 6: Apply service specs
 
 After adoption, daemons show as `<unmanaged>` in `ceph orch ls` because the orchestrator
-has no service spec for them. Apply service specs on the manager node to make them
+has no service spec for them. Apply service specs on the OSISM manager node to make them
 managed:
 
 ```bash
@@ -466,7 +504,7 @@ services instead of adopting the existing ones.
 
 :::
 
-Verify that all services are now managed on the manager node:
+Verify that all services are now managed on the OSISM manager node:
 
 ```bash
 ceph orch ls
@@ -474,7 +512,7 @@ ceph orch ls
 
 ## Step 7: Verify the migration
 
-Verify the full cluster state on the manager node:
+Verify the full cluster state on the OSISM manager node:
 
 ```bash
 ceph -s
@@ -484,7 +522,7 @@ ceph orch ps
 All daemons should show as managed by cephadm in the `ceph orch ps` output. Cluster
 health should be `HEALTH_OK`.
 
-Verify that all services are running with the correct container image (on the manager node):
+Verify that all services are running with the correct container image (on the OSISM manager node):
 
 ```bash
 ceph versions
@@ -500,7 +538,7 @@ sudo systemctl stop ceph-crash@${CEPH_HOSTNAME}.service
 sudo systemctl disable ceph-crash@${CEPH_HOSTNAME}.service
 ```
 
-Then deploy new crash daemons via cephadm on the manager node:
+Then deploy new crash daemons via cephadm on the OSISM manager node:
 
 ```bash
 ceph orch apply crash
@@ -590,11 +628,26 @@ Stop the migration and investigate. Common causes:
 * Network connectivity issues between nodes.
 
 Resolve the issue before continuing. An adopted daemon can be reverted by stopping the
-cephadm-managed unit and restarting the legacy systemd unit if it was preserved.
+cephadm-managed unit and restarting the legacy systemd unit if it was preserved:
+
+```bash
+# Example: reverting an adopted OSD with ID 3
+# Stop the cephadm-managed unit
+sudo systemctl stop ceph-<FSID>@osd.3.service
+sudo systemctl disable ceph-<FSID>@osd.3.service
+
+# Restart the legacy systemd unit
+sudo systemctl enable ceph-osd@3.service
+sudo systemctl start ceph-osd@3.service
+```
+
+Replace `<FSID>` with the cluster's FSID, which can be found with `ceph fsid`. The same
+pattern applies to other daemon types (replace `osd.3` with e.g. `mon.<hostname>` or
+`mgr.<hostname>`).
 
 ### SSH connection issues
 
-Cephadm requires SSH access to all nodes. Verify on the manager node:
+Cephadm requires SSH access to all nodes. Verify on the OSISM manager node:
 
 ```bash
 ceph cephadm check-host <node>
