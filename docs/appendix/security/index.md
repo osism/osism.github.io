@@ -25,7 +25,8 @@ handling of security-related information.
 
 ## OpenStack Security Advisories (OSSA)
 
-| Advisory                          | Description                                         | Component                    |
-|:----------------------------------|:----------------------------------------------------|:-----------------------------|
-| [OSSA-2026-001](ossa-2026-001.md) | Privilege Escalation via Identity Headers in OAuth2 | OpenStack keystonemiddleware |
-| [OSSA-2026-002](ossa-2026-002.md) | Nova calls qemu-img without format restrictions     | OpenStack Nova               |
+| Advisory                          | Description                                           | Component                    |
+|:----------------------------------|:------------------------------------------------------|:-----------------------------|
+| [OSSA-2026-001](ossa-2026-001.md) | Privilege Escalation via Identity Headers in OAuth2   | OpenStack keystonemiddleware |
+| [OSSA-2026-002](ossa-2026-002.md) | Nova calls qemu-img without format restrictions       | OpenStack Nova               |
+| [OSSA-2026-005](ossa-2026-005.md) | Restricted app credentials can create EC2 credentials | OpenStack Keystone           |
