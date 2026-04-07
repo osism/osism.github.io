@@ -93,7 +93,7 @@ false failovers. Dedicated MON nodes also allow the OSD nodes to be sized purely
 for storage capacity and throughput. Five nodes for each role allow full
 self-healing after the loss of one node without operator intervention.
 
-The total comes to **18+ physical nodes**, scaling with the number of compute
+The total comes to **21+ physical nodes**, scaling with the number of compute
 and storage nodes.
 
 | Role     | Nodes | Hosted on |
