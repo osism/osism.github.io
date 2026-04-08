@@ -13,3 +13,5 @@ exclude = [
 ################################  Requests  ####################################
 insecure = true
 accept = [200, 429]
+max_retries = 0
+max_concurrency = 32
