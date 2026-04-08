@@ -121,20 +121,9 @@ Python script from the Ceph Git repository instead:
 
 ```bash
 CEPH_RELEASE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}' | cut -d: -f2)
-```
-
-```bash
 curl --silent --remote-name --location https://raw.githubusercontent.com/ceph/ceph/${CEPH_RELEASE}/src/cephadm/cephadm.py
 chmod +x cephadm.py
 sudo mv cephadm.py /usr/sbin/cephadm
-```
-
-### Verify
-
-On each node, verify the installation:
-
-```bash
-sudo cephadm version
 ```
 
 ## Step 3: Prepare the cephadm configuration
@@ -145,11 +134,25 @@ On each Ceph node, prepare the host for cephadm:
 sudo cephadm prepare-host
 ```
 
-Confirm that the existing `/etc/ceph/ceph.conf` and `/etc/ceph/ceph.client.admin.keyring`
-are accessible on the Ceph nodes. Cephadm will use these to connect to the cluster.
+The output should look similar to this:
 
-On each Ceph node, determine the currently used container image from a running Ceph
-daemon:
+```console
+Verifying podman|docker is present...
+Verifying lvm2 is present...
+Verifying time synchronization is in place...
+Unit chrony.service is enabled and running
+Repeating the final host check...
+docker (/usr/bin/docker) is present
+systemctl is present
+lvcreate is present
+Unit chrony.service is enabled and running
+Host looks OK
+```
+
+If the output indicates errors or missing dependencies, resolve them before proceeding.
+
+Determine the currently used container image from a running Ceph daemon on
+**one of the monitor nodes**:
 
 ```bash
 CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
@@ -165,12 +168,16 @@ ceph config set global container_image ${CEPH_IMAGE}
 Import the existing `ceph.conf` into the central monitor config store. This ensures
 that custom tuning parameters are preserved after migration, as cephadm uses the
 centralized config store instead of per-node `ceph.conf` files. Since the `ceph` CLI
-is not installed on the host, execute the command inside the crash container which is
-available on every Ceph node:
+is not installed on the host, execute the command inside the crash container on
+**one of the monitor nodes**:
 
 ```bash
 docker exec ceph-crash-$(hostname) ceph config assimilate-conf -i /etc/ceph/ceph.conf
 ```
+
+In a typical OSISM deployment, the `ceph.conf` is identical across all nodes, so running
+this once is sufficient. If nodes have individual tuning parameters in their `ceph.conf`,
+run the command on each affected node.
 
 ## Step 4: Enable the cephadm orchestrator
 
@@ -182,10 +189,23 @@ ceph orch set backend cephadm
 ```
 
 Configure cephadm to use the `dragon` user (which has passwordless sudo) instead of
-`root`. Generate an SSH key and distribute it to all Ceph nodes. On the OSISM manager node:
+`root`. Import the existing operator SSH key so that cephadm can connect to all Ceph
+nodes. On the OSISM manager node:
 
 ```bash
 ceph cephadm set-user dragon
+cp /opt/ansible/secrets/id_rsa.operator* /opt/cephclient/data/
+ceph cephadm set-priv-key -i /data/id_rsa.operator
+ceph cephadm set-pub-key -i /data/id_rsa.operator.pub
+rm /opt/cephclient/data/id_rsa.operator*
+```
+
+:::info
+
+If no existing SSH key is available, generate a new one and distribute it to all Ceph
+nodes instead:
+
+```bash
 ceph cephadm generate-key
 ceph cephadm get-pub-key > /tmp/cephadm-pub-key.pub
 ```
@@ -204,6 +224,8 @@ for node in $(osism get hosts -l ceph | awk 'NR>3 && /\|/ {print $2}'); do
 done
 ```
 
+:::
+
 Register all Ceph nodes with the orchestrator on the OSISM manager node:
 
 ```bash
@@ -218,10 +240,34 @@ for node in $(osism get hosts -l ceph | awk 'NR>3 && /\|/ {print $2}'); do
 done
 ```
 
+The output should look similar to this:
+
+```console
+Added host 'testbed-node-0' with addr '192.168.16.10'
+Added host 'testbed-node-1' with addr '192.168.16.11'
+Added host 'testbed-node-2' with addr '192.168.16.12'
+Added host 'testbed-node-3' with addr '192.168.16.13'
+Added host 'testbed-node-4' with addr '192.168.16.14'
+Added host 'testbed-node-5' with addr '192.168.16.15'
+```
+
 Verify that all hosts have been registered:
 
 ```bash
 ceph orch host ls
+```
+
+The output should look similar to this:
+
+```console
+HOST            ADDR           LABELS  STATUS
+testbed-node-0  192.168.16.10
+testbed-node-1  192.168.16.11
+testbed-node-2  192.168.16.12
+testbed-node-3  192.168.16.13
+testbed-node-4  192.168.16.14
+testbed-node-5  192.168.16.15
+6 hosts in cluster
 ```
 
 ## Step 5: Adopt daemons
@@ -232,13 +278,7 @@ Adopt all Ceph daemons across the cluster. The recommended order is:
 2. **Managers** (mgr)
 3. **OSDs** (osd)
 
-For each daemon, run the adopt command on the respective node. Set the variables
-on each node first:
-
-```bash
-CEPH_HOSTNAME=$(hostname)
-CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
-```
+For each daemon, run the adopt command on the respective node.
 
 :::warning
 
@@ -249,16 +289,48 @@ Do not proceed if the cluster is not healthy.
 
 ### Adopting monitor daemons
 
+On each monitor node, set the required variables and adopt the daemon:
+
 ```bash
+CEPH_HOSTNAME=$(hostname)
+CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
 sudo cephadm --image ${CEPH_IMAGE} adopt --style legacy --skip-firewalld --name mon.${CEPH_HOSTNAME}
 sudo systemctl reset-failed ceph-mon@${CEPH_HOSTNAME}.service 2>/dev/null || true
 ```
 
+The output should look similar to this:
+
+```console
+Pulling container image registry.osism.tech/osism/ceph-daemon:reef...
+Stopping old systemd unit ceph-mon@testbed-node-0...
+Disabling old systemd unit ceph-mon@testbed-node-0...
+Moving data...
+Chowning content...
+Moving logs...
+Creating new units...
+```
+
 ### Adopting manager daemons
 
+On each manager node, set the required variables and adopt the daemon:
+
 ```bash
+CEPH_HOSTNAME=$(hostname)
+CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
 sudo cephadm --image ${CEPH_IMAGE} adopt --style legacy --skip-firewalld --name mgr.${CEPH_HOSTNAME}
 sudo systemctl reset-failed ceph-mgr@${CEPH_HOSTNAME}.service 2>/dev/null || true
+```
+
+The output should look similar to this:
+
+```console
+Pulling container image registry.osism.tech/osism/ceph-daemon:reef...
+Stopping old systemd unit ceph-mgr@testbed-node-0...
+Disabling old systemd unit ceph-mgr@testbed-node-0...
+Moving data...
+Chowning content...
+Moving logs...
+Creating new units...
 ```
 
 ### Verify monitors and managers
@@ -266,9 +338,37 @@ sudo systemctl reset-failed ceph-mgr@${CEPH_HOSTNAME}.service 2>/dev/null || tru
 After all monitors and managers have been adopted, verify on the OSISM manager node that
 the orchestrator recognises them:
 
+List all services known to the orchestrator:
+
 ```bash
 ceph orch ls
+```
+
+The output should look similar to this. Both services show as `<unmanaged>` at this point,
+which is expected:
+
+```console
+NAME  PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
+mgr              3/0  43s ago    -    <unmanaged>
+mon              3/0  43s ago    -    <unmanaged>
+```
+
+List all daemon instances and their status:
+
+```bash
 ceph orch ps
+```
+
+The output should look similar to this. All monitors and managers should show as `running`:
+
+```console
+NAME                HOST            PORTS  STATUS         REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+mgr.testbed-node-0  testbed-node-0         running (3m)      2m ago   2m     459M        -  18.2.8   01985efead8e  b6c5b884b38c
+mgr.testbed-node-1  testbed-node-1         running (2m)      2m ago    -     458M        -  18.2.8   01985efead8e  8adf9e898e82
+mgr.testbed-node-2  testbed-node-2         running (2m)      2m ago    -     504M        -  18.2.8   01985efead8e  54e779780c5a
+mon.testbed-node-0  testbed-node-0         running (22m)     2m ago  13m    73.6M    2048M  18.2.8   01985efead8e  e9f0ac0ce245
+mon.testbed-node-1  testbed-node-1         running (19m)     2m ago  13m    69.5M    2048M  18.2.8   01985efead8e  aa12850676f7
+mon.testbed-node-2  testbed-node-2         running (19m)     2m ago  13m    64.5M    2048M  18.2.8   01985efead8e  43a13bac74fb
 ```
 
 ### Adopting OSD daemons
@@ -289,17 +389,53 @@ enabled so it can be re-enabled after adoption:
 for pool in $(ceph osd pool ls); do
     mode=$(ceph osd pool get ${pool} pg_autoscale_mode -f json | python3 -c "import json,sys; print(json.load(sys.stdin)['pg_autoscale_mode'])")
     if [ "${mode}" = "on" ]; then
-        echo "${pool}" >> /tmp/autoscale_pools.txt
+        echo "${pool}" >> /home/dragon/autoscale_pools.txt
         ceph osd pool set ${pool} pg_autoscale_mode off
     fi
 done
 ```
 
-Then adopt the OSDs on each node:
+On each OSD node, set the required variable and identify the OSDs running on the node:
+
+```bash
+CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
+docker ps --filter "name=ceph-osd"
+```
+
+The output should look similar to this:
+
+```console
+CONTAINER ID   IMAGE                                       COMMAND                CREATED    STATUS    NAMES
+05eb59c1ef36   registry.osism.tech/osism/ceph-daemon:reef  "/usr/bin/ceph-osd …"  5 days ago Up 5 days ceph-osd-3
+8646edf83163   registry.osism.tech/osism/ceph-daemon:reef  "/usr/bin/ceph-osd …"  5 days ago Up 5 days ceph-osd-1
+```
+
+The OSD ID is the number after `ceph-osd-` in the container name. For example,
+`ceph-osd-1` has OSD ID `1` and `ceph-osd-3` has OSD ID `3`.
+
+Then adopt each OSD on the node:
 
 ```bash
 sudo cephadm --image ${CEPH_IMAGE} adopt --style legacy --skip-firewalld --name osd.<osd_id>
 sudo systemctl reset-failed ceph-osd@<osd_id>.service 2>/dev/null || true
+```
+
+The output should look similar to this:
+
+```console
+Pulling container image registry.osism.tech/osism/ceph-daemon:reef...
+Found online OSD at //var/lib/ceph/osd/ceph-1/fsid
+objectstore_type is bluestore
+Stopping old systemd unit ceph-osd@1...
+Disabling old systemd unit ceph-osd@1...
+Moving data...
+Chowning content...
+Chowning /var/lib/ceph/11111111-1111-1111-1111-111111111111/osd.1/block...
+Disabling host unit ceph-volume@ lvm unit...
+Non-zero exit code 1 from systemctl disable ceph-volume@lvm-1-f3cfe0e4-70f3-4078-9aba-2d45170e9df9.service
+systemctl: stderr Failed to disable unit: Unit file ceph-volume@lvm-1-f3cfe0e4-70f3-4078-9aba-2d45170e9df9.service does not exist.
+Moving logs...
+Creating new units...
 ```
 
 Or use a loop to adopt all OSDs on the current node at once:
@@ -324,7 +460,7 @@ and wait for the cluster to recover between each adoption.
 
 During OSD adoption you may see an error like:
 
-```
+```console
 Non-zero exit code 1 from systemctl disable ceph-volume@lvm-<OSD_ID>-<UUID>.service
 Failed to disable unit: Unit file ceph-volume@lvm-<OSD_ID>-<UUID>.service does not exist.
 ```
@@ -338,7 +474,40 @@ this unit does not exist, so the disable command fails. The OSD is still adopted
 After all OSDs have been adopted, verify that the orchestrator recognises them:
 
 ```bash
+ceph orch ls --refresh
+```
+
+The output should now also include the OSD service:
+
+```console
+NAME  PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
+mgr              3/0  5m ago     -    <unmanaged>
+mon              3/0  5m ago     -    <unmanaged>
+osd                6  5m ago     -    <unmanaged>
+```
+
+Verify that all daemon instances are running:
+
+```bash
 ceph orch ps --refresh
+```
+
+The output should look similar to this. All daemons should show as `running`:
+
+```console
+NAME                HOST            PORTS  STATUS          REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+mgr.testbed-node-0  testbed-node-0         running (67m)      0s ago  66m     470M        -  18.2.8   01985efead8e  b6c5b884b38c
+mgr.testbed-node-1  testbed-node-1         running (66m)      0s ago  65m     470M        -  18.2.8   01985efead8e  8adf9e898e82
+mgr.testbed-node-2  testbed-node-2         running (66m)      0s ago  65m     536M        -  18.2.8   01985efead8e  54e779780c5a
+mon.testbed-node-0  testbed-node-0         running (85m)      0s ago  77m     133M    2048M  18.2.8   01985efead8e  e9f0ac0ce245
+mon.testbed-node-1  testbed-node-1         running (83m)      0s ago  77m     130M    2048M  18.2.8   01985efead8e  aa12850676f7
+mon.testbed-node-2  testbed-node-2         running (83m)      0s ago  77m     127M    2048M  18.2.8   01985efead8e  43a13bac74fb
+osd.0               testbed-node-3         running (46s)      0s ago    -     181M    4096M  18.2.8   01985efead8e  f83bb9204db5
+osd.1               testbed-node-4         running (5m)       0s ago   2m     167M    4096M  18.2.8   01985efead8e  11cd8d77a78b
+osd.2               testbed-node-5         running (118s)     0s ago    -     176M    4096M  18.2.8   01985efead8e  f608633171a8
+osd.3               testbed-node-4         running (3m)       0s ago   2m     196M    4096M  18.2.8   01985efead8e  5032744c6063
+osd.4               testbed-node-5         running (2m)       0s ago    -     179M    4096M  18.2.8   01985efead8e  a9c9f18801d9
+osd.5               testbed-node-3         running (38s)      0s ago    -     153M    4096M  18.2.8   01985efead8e  bfd02ac996db
 ```
 
 Once all PGs are `active+clean`, remove the safety flags and re-enable the PG
@@ -351,12 +520,45 @@ ceph balancer on
 ```
 
 ```bash
-if [ -f /tmp/autoscale_pools.txt ]; then
+if [ -f /home/dragon/autoscale_pools.txt ]; then
     while read pool; do
         ceph osd pool set ${pool} pg_autoscale_mode on
-    done < /tmp/autoscale_pools.txt
-    rm /tmp/autoscale_pools.txt
+    done < /home/dragon/autoscale_pools.txt
+    rm /home/dragon/autoscale_pools.txt
 fi
+```
+
+### Migrating crash daemons
+
+The crash daemons cannot be adopted from ceph-ansible and must be redeployed. Stop and
+remove the legacy crash containers on each Ceph node:
+
+```bash
+CEPH_HOSTNAME=$(hostname)
+sudo systemctl stop ceph-crash@${CEPH_HOSTNAME}.service
+sudo systemctl disable ceph-crash@${CEPH_HOSTNAME}.service
+```
+
+Then deploy new crash daemons via cephadm on the OSISM manager node:
+
+```bash
+ceph orch apply crash
+```
+
+Verify that the crash daemons are running:
+
+```bash
+ceph orch ls
+```
+
+The output should now include the crash service:
+
+```console
+NAME   PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
+crash             6/6  3s ago     23s  *
+mgr               3/0  3s ago     -    <unmanaged>
+mon               3/0  3s ago     -    <unmanaged>
+osd                 6  3s ago     -    <unmanaged>
 ```
 
 ### Migrating RGW daemons
@@ -528,23 +730,7 @@ Verify that all services are running with the correct container image (on the OS
 ceph versions
 ```
 
-## Step 8: Deploy crash daemons
-
-The crash daemons cannot be adopted from ceph-ansible and must be redeployed. Stop and
-remove the legacy crash containers on each Ceph node:
-
-```bash
-sudo systemctl stop ceph-crash@${CEPH_HOSTNAME}.service
-sudo systemctl disable ceph-crash@${CEPH_HOSTNAME}.service
-```
-
-Then deploy new crash daemons via cephadm on the OSISM manager node:
-
-```bash
-ceph orch apply crash
-```
-
-## Step 9: Clean up ceph-ansible artifacts
+## Step 8: Clean up ceph-ansible artifacts
 
 After verifying that all daemons have been successfully adopted and the cluster is
 stable, the legacy ceph-ansible artifacts can be removed.
