@@ -353,22 +353,34 @@ mgr              3/0  43s ago    -    <unmanaged>
 mon              3/0  43s ago    -    <unmanaged>
 ```
 
-List all daemon instances and their status:
+List all monitor daemon instances and their status:
 
 ```bash
-ceph orch ps
+ceph orch ps --daemon-type mon
 ```
 
-The output should look similar to this. All monitors and managers should show as `running`:
+The output should look similar to this. All monitors should show as `running`:
+
+```console
+NAME                HOST            PORTS  STATUS         REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+mon.testbed-node-0  testbed-node-0         running (22m)     2m ago  13m    73.6M    2048M  18.2.8   01985efead8e  e9f0ac0ce245
+mon.testbed-node-1  testbed-node-1         running (19m)     2m ago  13m    69.5M    2048M  18.2.8   01985efead8e  aa12850676f7
+mon.testbed-node-2  testbed-node-2         running (19m)     2m ago  13m    64.5M    2048M  18.2.8   01985efead8e  43a13bac74fb
+```
+
+List all manager daemon instances and their status:
+
+```bash
+ceph orch ps --daemon-type mgr
+```
+
+The output should look similar to this. All managers should show as `running`:
 
 ```console
 NAME                HOST            PORTS  STATUS         REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
 mgr.testbed-node-0  testbed-node-0         running (3m)      2m ago   2m     459M        -  18.2.8   01985efead8e  b6c5b884b38c
 mgr.testbed-node-1  testbed-node-1         running (2m)      2m ago    -     458M        -  18.2.8   01985efead8e  8adf9e898e82
 mgr.testbed-node-2  testbed-node-2         running (2m)      2m ago    -     504M        -  18.2.8   01985efead8e  54e779780c5a
-mon.testbed-node-0  testbed-node-0         running (22m)     2m ago  13m    73.6M    2048M  18.2.8   01985efead8e  e9f0ac0ce245
-mon.testbed-node-1  testbed-node-1         running (19m)     2m ago  13m    69.5M    2048M  18.2.8   01985efead8e  aa12850676f7
-mon.testbed-node-2  testbed-node-2         running (19m)     2m ago  13m    64.5M    2048M  18.2.8   01985efead8e  43a13bac74fb
 ```
 
 ### Adopting OSD daemons
@@ -486,28 +498,22 @@ mon              3/0  5m ago     -    <unmanaged>
 osd                6  5m ago     -    <unmanaged>
 ```
 
-Verify that all daemon instances are running:
+Verify that all OSD daemon instances are running:
 
 ```bash
-ceph orch ps --refresh
+ceph orch ps --daemon-type osd --refresh
 ```
 
-The output should look similar to this. All daemons should show as `running`:
+The output should look similar to this. All OSDs should show as `running`:
 
 ```console
-NAME                HOST            PORTS  STATUS          REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
-mgr.testbed-node-0  testbed-node-0         running (67m)      0s ago  66m     470M        -  18.2.8   01985efead8e  b6c5b884b38c
-mgr.testbed-node-1  testbed-node-1         running (66m)      0s ago  65m     470M        -  18.2.8   01985efead8e  8adf9e898e82
-mgr.testbed-node-2  testbed-node-2         running (66m)      0s ago  65m     536M        -  18.2.8   01985efead8e  54e779780c5a
-mon.testbed-node-0  testbed-node-0         running (85m)      0s ago  77m     133M    2048M  18.2.8   01985efead8e  e9f0ac0ce245
-mon.testbed-node-1  testbed-node-1         running (83m)      0s ago  77m     130M    2048M  18.2.8   01985efead8e  aa12850676f7
-mon.testbed-node-2  testbed-node-2         running (83m)      0s ago  77m     127M    2048M  18.2.8   01985efead8e  43a13bac74fb
-osd.0               testbed-node-3         running (46s)      0s ago    -     181M    4096M  18.2.8   01985efead8e  f83bb9204db5
-osd.1               testbed-node-4         running (5m)       0s ago   2m     167M    4096M  18.2.8   01985efead8e  11cd8d77a78b
-osd.2               testbed-node-5         running (118s)     0s ago    -     176M    4096M  18.2.8   01985efead8e  f608633171a8
-osd.3               testbed-node-4         running (3m)       0s ago   2m     196M    4096M  18.2.8   01985efead8e  5032744c6063
-osd.4               testbed-node-5         running (2m)       0s ago    -     179M    4096M  18.2.8   01985efead8e  a9c9f18801d9
-osd.5               testbed-node-3         running (38s)      0s ago    -     153M    4096M  18.2.8   01985efead8e  bfd02ac996db
+NAME   HOST            PORTS  STATUS          REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+osd.0  testbed-node-3         running (46s)      0s ago    -     181M    4096M  18.2.8   01985efead8e  f83bb9204db5
+osd.1  testbed-node-4         running (5m)       0s ago   2m     167M    4096M  18.2.8   01985efead8e  11cd8d77a78b
+osd.2  testbed-node-5         running (118s)     0s ago    -     176M    4096M  18.2.8   01985efead8e  f608633171a8
+osd.3  testbed-node-4         running (3m)       0s ago   2m     196M    4096M  18.2.8   01985efead8e  5032744c6063
+osd.4  testbed-node-5         running (2m)       0s ago    -     179M    4096M  18.2.8   01985efead8e  a9c9f18801d9
+osd.5  testbed-node-3         running (38s)      0s ago    -     153M    4096M  18.2.8   01985efead8e  bfd02ac996db
 ```
 
 Once all PGs are `active+clean`, remove the safety flags and re-enable the PG
@@ -603,30 +609,84 @@ Ceph config-key store **before** deploying. Run this on each RGW node:
 sudo ceph config-key set rgw/cert/rgw.$(hostname) -i <path_to_ssl_certificate>
 ```
 
-Deploy new RGW daemons on the OSISM manager node using a service spec. If SSL is used,
-add `--ssl` to the command:
+:::warning
+
+Unlike MDS daemons, RGW daemons bind to a specific port. The legacy daemon on a node must
+be stopped **before** the new one can start, otherwise it will fail due to a port conflict.
+The migration is therefore performed one node at a time to minimize S3/Swift API downtime
+— the remaining RGW nodes continue serving requests while one node is being migrated.
+
+:::
+
+Prepare the variables and deploy the RGW service on the OSISM manager node. The
+orchestrator will attempt to start daemons on each node, but they will only come up
+once the legacy daemon on that node has been stopped. If SSL is used, add `--ssl` to
+the command:
 
 ```bash
-RGW_SERVICE_ID=default.default        # <realm_name>.<zone_name>
-RGW_PLACEMENT="rgw-node-1,rgw-node-2,rgw-node-3"  # from osism get hosts -l ceph-rgw
-RGW_PORT=8081                          # from radosgw_frontend_port in configuration.yml
+RGW_REALM=$(radosgw-admin realm list --format json | python3 -c "import json,sys; print(json.load(sys.stdin)['realms'][0])" 2>/dev/null || echo "default")
+RGW_ZONE=$(radosgw-admin zone list --format json | python3 -c "import json,sys; print(json.load(sys.stdin)['zones'][0])" 2>/dev/null || echo "default")
+RGW_SERVICE_ID="${RGW_REALM}.${RGW_ZONE}"
+RGW_PLACEMENT=$(osism get hosts -l ceph-rgw | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
+RGW_PORT=$(python3 -c "import yaml; print(yaml.safe_load(open('/opt/configuration/environments/ceph/configuration.yml')).get('radosgw_frontend_port', 8081))")
 
 ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT}
 # If SSL is enabled, add --ssl:
 # ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT} --ssl
 ```
 
-Wait until the new RGW daemons are running:
+Then migrate each RGW node sequentially. On the OSISM manager node:
+
+```bash
+for node in $(osism get hosts -l ceph-rgw | awk 'NR>3 && /\|/ {print $2}'); do
+    echo "Stopping legacy RGW daemon on ${node}..."
+    ssh ${node} "sudo systemctl stop ceph-radosgw.target; sudo systemctl disable ceph-radosgw.target"
+
+    echo "Waiting for new RGW daemon on ${node}..."
+    until ceph orch ps --daemon-type rgw --format json | python3 -c "
+import json, sys
+daemons = json.load(sys.stdin)
+sys.exit(0 if any(d['hostname'] == '${node}' and d.get('status_desc') == 'running' for d in daemons) else 1)
+" 2>/dev/null; do
+        sleep 5
+    done
+    echo "New RGW daemon on ${node} is running."
+done
+```
+
+The output should look similar to this:
+
+```console
+Stopping legacy RGW daemon on testbed-node-3...
+Removed "/etc/systemd/system/multi-user.target.wants/ceph-radosgw.target".
+Removed "/etc/systemd/system/ceph.target.wants/ceph-radosgw.target".
+Waiting for new RGW daemon on testbed-node-3...
+New RGW daemon on testbed-node-3 is running.
+Stopping legacy RGW daemon on testbed-node-4...
+Removed "/etc/systemd/system/multi-user.target.wants/ceph-radosgw.target".
+Removed "/etc/systemd/system/ceph.target.wants/ceph-radosgw.target".
+Waiting for new RGW daemon on testbed-node-4...
+New RGW daemon on testbed-node-4 is running.
+Stopping legacy RGW daemon on testbed-node-5...
+Removed "/etc/systemd/system/multi-user.target.wants/ceph-radosgw.target".
+Removed "/etc/systemd/system/ceph.target.wants/ceph-radosgw.target".
+Waiting for new RGW daemon on testbed-node-5...
+New RGW daemon on testbed-node-5 is running.
+```
+
+Verify that all new RGW daemons are running:
 
 ```bash
 ceph orch ps --daemon-type rgw
 ```
 
-Then stop and disable the legacy RGW daemons on each RGW node:
+The output should look similar to this:
 
-```bash
-sudo systemctl stop ceph-radosgw.target
-sudo systemctl disable ceph-radosgw.target
+```console
+NAME                                       HOST            PORTS   STATUS         REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+rgw.default.default.testbed-node-3.dhmops  testbed-node-3  *:8081  running (39s)    32s ago  39s    90.7M        -  18.2.8   fb822dbe2ee6  d4b9a7c26ecd
+rgw.default.default.testbed-node-4.ibjvjy  testbed-node-4  *:8081  running (41s)    32s ago  41s    90.5M        -  18.2.8   fb822dbe2ee6  fcf4d6c837f4
+rgw.default.default.testbed-node-5.xcegdm  testbed-node-5  *:8081  running (43s)    32s ago  43s    91.5M        -  18.2.8   fb822dbe2ee6  569fd2afad81
 ```
 
 ### Migrating MDS daemons
@@ -653,13 +713,21 @@ osism get hosts -l ceph-mds
 ```
 
 Deploy the new MDS daemons and stop the legacy ones by running the following script
-on the OSISM manager node. Replace `<cephfs_name>` with the CephFS filesystem name and
-list the MDS nodes in the placement:
+on the OSISM manager node:
+
+:::info
+
+The new MDS daemons deployed by the orchestrator will come up as **standby** instances.
+CephFS supports multiple MDS daemons simultaneously (controlled by `max_mds`), and new
+daemons automatically join as standby. The legacy active daemons continue serving requests
+until they are explicitly stopped, at which point CephFS promotes the standby daemons to
+active. This brief coexistence of old and new daemons is expected and safe.
+
+:::
 
 ```bash
-CEPHFS_NAME=<cephfs_name>
-MDS_PLACEMENT="<mds-node-1>,<mds-node-2>,<mds-node-3>"
-MDS_NODES=(<mds-node-1> <mds-node-2> <mds-node-3>)
+CEPHFS_NAME=$(ceph fs ls --format json | python3 -c "import json,sys; print(json.load(sys.stdin)[0]['name'])")
+MDS_PLACEMENT=$(osism get hosts -l ceph-mds | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
 
 # Deploy new MDS daemons via the orchestrator
 ceph orch apply mds ${CEPHFS_NAME} --placement="${MDS_PLACEMENT}"
@@ -675,12 +743,25 @@ sys.exit(0 if len(running) >= len('${MDS_PLACEMENT}'.split(',')) else 1)
     sleep 5
 done
 echo "New MDS daemons are running."
+```
 
-# Stop and disable the legacy MDS daemons on each node
-# Alternatively, run on each MDS node manually:
-#   sudo systemctl stop ceph-mds@<hostname>.service
-#   sudo systemctl disable ceph-mds@<hostname>.service
-for node in "${MDS_NODES[@]}"; do
+Verify that the new MDS daemons are running:
+
+```bash
+ceph orch ls --service-type mds
+```
+
+The output should look similar to this:
+
+```console
+NAME        PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
+mds.cephfs             3/3  0s ago     13s  testbed-node-3;testbed-node-4;testbed-node-5
+```
+
+Then stop and disable the legacy MDS daemons. Run the following on the OSISM manager node:
+
+```bash
+for node in $(osism get hosts -l ceph-mds | awk 'NR>3 && /\|/ {print $2}'); do
     echo "Stopping legacy MDS daemon on ${node}..."
     ssh ${node} "sudo systemctl stop ceph-mds@${node}.service; sudo systemctl disable ceph-mds@${node}.service"
 done
@@ -693,8 +774,11 @@ has no service spec for them. Apply service specs on the OSISM manager node to m
 managed:
 
 ```bash
-ceph orch apply mon --placement="<mon-node-1>,<mon-node-2>,<mon-node-3>"
-ceph orch apply mgr --placement="<mgr-node-1>,<mgr-node-2>,<mgr-node-3>"
+MON_PLACEMENT=$(osism get hosts -l ceph-mon | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
+MGR_PLACEMENT=$(osism get hosts -l ceph-mgr | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
+
+ceph orch apply mon --placement="${MON_PLACEMENT}"
+ceph orch apply mgr --placement="${MGR_PLACEMENT}"
 ```
 
 :::note
@@ -706,10 +790,26 @@ services instead of adopting the existing ones.
 
 :::
 
-Verify that all services are now managed on the OSISM manager node:
+Verify that the monitor and manager services are now managed on the OSISM manager node:
 
 ```bash
-ceph orch ls
+ceph orch ls --service-type mon
+```
+
+The output should look similar to this. The service should no longer show as `<unmanaged>`:
+
+```console
+NAME  PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
+mon              3/3  5s ago     10s  testbed-node-0;testbed-node-1;testbed-node-2
+```
+
+```bash
+ceph orch ls --service-type mgr
+```
+
+```console
+NAME  PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
+mgr              3/3  5s ago     10s  testbed-node-0;testbed-node-1;testbed-node-2
 ```
 
 ## Step 7: Verify the migration
@@ -735,10 +835,24 @@ ceph versions
 After verifying that all daemons have been successfully adopted and the cluster is
 stable, the legacy ceph-ansible artifacts can be removed.
 
-1. Remove old systemd unit files that are no longer used:
+1. Remove old systemd unit files that are no longer used. Do **not** use a wildcard
+   like `ceph-*.service` as this would also remove the cephadm-managed units
+   (e.g. `ceph-<FSID>@.service`). Remove only the legacy units:
 
    ```bash
-   sudo rm -f /etc/systemd/system/ceph-*.service
+   sudo rm -f /etc/systemd/system/ceph-mon@.service \
+              /etc/systemd/system/ceph-mgr@.service \
+              /etc/systemd/system/ceph-osd@.service \
+              /etc/systemd/system/ceph-mds@.service \
+              /etc/systemd/system/ceph-radosgw@.service \
+              /etc/systemd/system/ceph-crash@.service \
+              /etc/systemd/system/ceph-mon.target \
+              /etc/systemd/system/ceph-mgr.target \
+              /etc/systemd/system/ceph-osd.target \
+              /etc/systemd/system/ceph-mds.target \
+              /etc/systemd/system/ceph-radosgw.target \
+              /etc/systemd/system/ceph.target
+   sudo rm -rf /etc/systemd/system/ceph.target.wants
    sudo systemctl daemon-reload
    ```
 
