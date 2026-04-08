@@ -94,14 +94,20 @@ Install the cephadm package from the
 [Ubuntu Cloud Archive](https://ubuntu-cloud.archive.canonical.com/ubuntu/pool/main/c/ceph/)
 on the control nodes:
 
-| Ceph Release | cephadm Package                                     |
-|:-------------|:----------------------------------------------------|
+| Ceph Release | cephadm Package                                    |
+|:-------------|:---------------------------------------------------|
 | Quincy (17)  | `cephadm_17.2.9-0ubuntu0.22.04.1~cloud0_amd64.deb` |
 | Reef (18)    | `cephadm_18.2.4-0ubuntu1~cloud1_amd64.deb`         |
 | Squid (19)   | `cephadm_19.2.3-0ubuntu0.24.04.2~cloud0_amd64.deb` |
 
 These are the only versions available in the UCA. The exact point release does not need
 to match your running Ceph version -- only the release series (Quincy, Reef, Squid) matters.
+
+The package is installed directly via `dpkg` rather than `apt install` because the
+Ubuntu Cloud Archive is typically not configured as an apt source in OSISM environments.
+Adding the full UCA repository just for cephadm is not recommended, as it could
+introduce unintended package upgrades from the UCA that conflict with the versions
+managed by OSISM.
 
 ```bash
 CEPHADM_PKG=cephadm_18.2.4-0ubuntu1~cloud1_amd64.deb
@@ -116,8 +122,12 @@ sudo dpkg -i ${CEPHADM_PKG}
 
 The UCA cephadm package for Reef (18.2.4) contains a
 [known bug](https://tracker.ceph.com/issues/63151) that causes a crash when parsing
-AppArmor profiles during OSD adoption. On OSD nodes, install cephadm as a standalone
-Python script from the Ceph Git repository instead:
+AppArmor profiles during OSD adoption. This was
+[fixed upstream](https://github.com/ceph/ceph/pull/57955) and is included in Reef
+v18.2.5+, but the UCA has not updated the packaged version beyond 18.2.4.
+
+On OSD nodes, install cephadm as a standalone Python script from the Ceph Git
+repository instead to get a version that includes the fix:
 
 ```bash
 CEPH_RELEASE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}' | cut -d: -f2)
@@ -128,7 +138,18 @@ sudo mv cephadm.py /usr/sbin/cephadm
 
 ## Step 3: Prepare the cephadm configuration
 
-On each Ceph node, prepare the host for cephadm:
+On each Ceph node, prepare the host for cephadm. The `cephadm prepare-host` command
+performs a series of checks to ensure the host meets the requirements for managing
+Ceph daemons with cephadm. Specifically, it verifies:
+
+* A **container runtime** (Podman or Docker) is installed and functional
+* **LVM2** (`lvm2` package) is available — required by Ceph OSDs for managing logical volumes
+* **Time synchronization** (e.g. chrony or NTP) is enabled and running — clock skew between
+  Ceph nodes can cause monitors to lose quorum
+* General system prerequisites such as the availability of `systemctl`
+
+If any of these checks fail, `prepare-host` will report the issue so it can be resolved
+before proceeding with the migration.
 
 ```bash
 sudo cephadm prepare-host
@@ -179,7 +200,7 @@ In a typical OSISM deployment, the `ceph.conf` is identical across all nodes, so
 this once is sufficient. If nodes have individual tuning parameters in their `ceph.conf`,
 run the command on each affected node.
 
-## Step 4: Enable the cephadm orchestrator
+## Step 4: Configure cephadm
 
 Enable the cephadm orchestrator module on the OSISM manager node:
 
@@ -289,6 +310,20 @@ Do not proceed if the cluster is not healthy.
 
 ### Adopting monitor daemons
 
+The monitor daemons (MON) maintain the cluster map and are responsible for consensus
+among the Ceph nodes. The adopt command converts each monitor from its legacy
+systemd/Docker-based deployment (as set up by ceph-ansible) to a cephadm-managed
+container. During this process cephadm will:
+
+1. Pull the container image (if not already present)
+2. Stop and disable the old systemd unit (e.g. `ceph-mon@<hostname>`)
+3. Move the monitor's data directory and logs into the cephadm-managed directory layout
+   under `/var/lib/ceph/<fsid>/`
+4. Create new systemd units managed by cephadm
+
+The monitor remains available throughout — the other monitors maintain quorum while one
+is being adopted.
+
 On each monitor node, set the required variables and adopt the daemon:
 
 ```bash
@@ -311,6 +346,13 @@ Creating new units...
 ```
 
 ### Adopting manager daemons
+
+The manager daemons (MGR) provide additional monitoring and management interfaces for
+the cluster (e.g. the dashboard, Prometheus metrics, and the orchestrator module).
+The adopt process is identical to that of the monitors — cephadm stops the legacy
+unit, migrates data and logs, and creates new cephadm-managed systemd units. Since
+multiple managers run in active/standby mode, adopting one at a time ensures the
+cluster always has an active manager available.
 
 On each manager node, set the required variables and adopt the daemon:
 
@@ -384,6 +426,18 @@ mgr.testbed-node-2  testbed-node-2         running (2m)      2m ago    -     504
 ```
 
 ### Adopting OSD daemons
+
+The OSD daemons (Object Storage Daemon) are responsible for storing the actual data on
+disk. Adopting OSDs is the most sensitive part of the migration because each OSD manages
+real data volumes (BlueStore). The adopt process migrates each OSD's data directory,
+block device symlinks, and logs into the cephadm layout — but the underlying data on
+disk is **not** moved or modified.
+
+Because an OSD restart temporarily reduces the number of available replicas, safety flags
+(`noout`, `nodeep-scrub`, balancer off) are set beforehand to prevent Ceph from
+initiating unnecessary data rebalancing or deep scrubs while OSDs are being restarted
+during adoption. The PG autoscaler is also disabled to avoid placement group changes
+during the process.
 
 Before adopting OSDs, set safety flags on the OSISM manager node to prevent unnecessary data
 movement and PG changes during the adoption process:
@@ -461,10 +515,20 @@ done
 
 :::warning
 
-Adopt OSDs one node at a time. After completing all OSDs on a node, wait until the
+Adopt OSDs **one node at a time**. After completing all OSDs on a node, wait until the
 cluster has fully recovered (`ceph -s` shows `HEALTH_OK`) before proceeding to the next
-node. In small environments with only a few OSDs, it is best to adopt each OSD individually
-and wait for the cluster to recover between each adoption.
+node.
+
+In **small environments** (e.g. 3 nodes with only 1–2 OSDs each), do **not** use the
+loop above. Instead, adopt each OSD individually and verify cluster health between each
+adoption. In small clusters, every single OSD represents a large fraction of the total
+data redundancy — briefly taking one offline during adoption may already bring the cluster
+to `min_size`. Adopting a second OSD before the first has fully rejoined could lead to
+degraded or unavailable placement groups.
+
+In larger environments with many OSDs per node, the cluster has enough redundancy to
+tolerate multiple sequential OSD restarts on the same node without risk, so using the
+loop is safe.
 
 :::
 
@@ -783,10 +847,44 @@ ceph orch apply mgr --placement="${MGR_PLACEMENT}"
 
 :::note
 
-Adopted osd daemons will show as `<unmanaged>` in `ceph orch ls`. This is
-expected and does not affect their operation. Do **not** use
-`ceph orch apply osd --all-available-devices` as this will create new unwanted OSD
-services instead of adopting the existing ones.
+Adopted OSD daemons will show as `<unmanaged>` in `ceph orch ls`. This is expected
+and does not affect their operation — the OSDs are fully functional, they are just not
+governed by an orchestrator service spec.
+
+To transition the adopted OSDs to a managed state, create an OSD service spec with
+device filters that match exactly the devices already in use. For example, if all OSDs
+use the same device path pattern:
+
+```yaml
+service_type: osd
+service_id: default_drive_group
+placement:
+  host_pattern: '*'
+data_devices:
+  paths:
+    - /dev/sdb
+    - /dev/sdc
+```
+
+Apply the spec:
+
+```bash
+ceph orch apply -i osd_spec.yaml
+```
+
+Do **not** use `ceph orch apply osd --all-available-devices` — this creates a service
+spec that claims **all** unused devices in the cluster, which may provision new unwanted
+OSDs on devices that were intentionally left unused.
+
+If you are unsure which devices are in use, you can inspect the current OSD layout with:
+
+```bash
+ceph osd tree
+ceph device ls
+```
+
+It is safe to leave the OSDs as `<unmanaged>` and transition them to managed at a later
+point.
 
 :::
 
@@ -821,19 +919,49 @@ ceph -s
 ceph orch ps
 ```
 
-All daemons should show as managed by cephadm in the `ceph orch ps` output. Cluster
-health should be `HEALTH_OK`.
+All daemons should appear in the `ceph orch ps` output with status `running`. Monitor
+and manager services should show with a placement (managed). OSD daemons will still
+show as `<unmanaged>` — this is expected (see the note in Step 6 on how to optionally
+transition them to a managed state). Cluster health should be `HEALTH_OK`.
 
-Verify that all services are running with the correct container image (on the OSISM manager node):
+Verify that all daemons are running the same Ceph version (on the OSISM manager node):
 
 ```bash
 ceph versions
 ```
 
+The output should show a single version across all daemon types. If multiple versions
+appear for any daemon type, some daemons were not adopted with the correct container image.
+
+```json
+{
+    "mon": {
+        "ceph version 18.2.8 (efac5a54607c13fa50d4822e50242b86e6e446df) reef (stable)": 3
+    },
+    "mgr": {
+        "ceph version 18.2.8 (efac5a54607c13fa50d4822e50242b86e6e446df) reef (stable)": 3
+    },
+    "osd": {
+        "ceph version 18.2.8 (efac5a54607c13fa50d4822e50242b86e6e446df) reef (stable)": 6
+    },
+    "mds": {
+        "ceph version 18.2.8 (efac5a54607c13fa50d4822e50242b86e6e446df) reef (stable)": 3
+    },
+    "rgw": {
+        "ceph version 18.2.8 (efac5a54607c13fa50d4822e50242b86e6e446df) reef (stable)": 3
+    },
+    "overall": {
+        "ceph version 18.2.8 (efac5a54607c13fa50d4822e50242b86e6e446df) reef (stable)": 18
+    }
+}
+```
+
 ## Step 8: Clean up ceph-ansible artifacts
 
-After verifying that all daemons have been successfully adopted and the cluster is
-stable, the legacy ceph-ansible artifacts can be removed.
+Only proceed with this step after completing the verification in
+[Step 7](#step-7-verify-the-migration): `ceph -s` shows `HEALTH_OK`, all daemons
+appear as `running` in `ceph orch ps`, and `ceph versions` reports a single consistent
+version across all daemon types.
 
 1. Remove old systemd unit files that are no longer used. Do **not** use a wildcard
    like `ceph-*.service` as this would also remove the cephadm-managed units
@@ -917,7 +1045,16 @@ Verify that the node can reach the container registry. For OSISM environments:
 sudo cephadm pull registry.osism.tech/osism/ceph-daemon:${CEPH_RELEASE}
 ```
 
-If the node is behind a proxy, ensure the container runtime is configured to use it.
+If the pull fails, you may see an error like:
+
+```console
+Pulling container image registry.osism.tech/osism/ceph-daemon:reef...
+ERROR: failed to pull image: unable to pull image: Error initializing source docker://registry.osism.tech/osism/ceph-daemon:reef: error pinging docker registry registry.osism.tech: Get "https://registry.osism.tech/v2/": dial tcp 185.56.112.10:443: i/o timeout
+```
+
+This typically indicates a network connectivity issue. If the node is behind a proxy,
+ensure the container runtime is configured to use it (e.g. via `HTTP_PROXY`/`HTTPS_PROXY`
+in `/etc/systemd/system/docker.service.d/proxy.conf` or the equivalent for Podman).
 
 ### Cluster health degrades during migration
 
