@@ -39,9 +39,9 @@ mega-linter-runner --flavor documentation
 ```
 
 > \[!NOTE]
-> We currently see sporadically errors for the link checker Lychee, most likely
-> related to more and more websites reconfiguring their WAF to block AI-agents.
-> Since we still see link checking as a relevant task and do not want to do this
-> manually, we keep Lychee running for now, but will ignore errors which are
-> related to those WAFs blocking our requests, while the link works on manual
+> We currently see errors for the link checker Lychee which are unrelated to
+> actual site availability. Those errors are most likely related to more and
+> more websites reconfiguring their WAF to block AI-agents. Since we still see
+> link checking as a relevant task and do not want to do this manually, we keep
+> Lychee running for now, but will ignore errors if the link works on manual
 > check.
