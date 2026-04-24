@@ -358,7 +358,7 @@ remove the two hanging jobs from the screenshot.
 
 ```bash
 zuul-client --use-config osism dequeue --pipeline periodic-daily --project osism/k8s-capi-images --ref refs/heads/main
-zuul-client --use-config osism dequeue --pipeline periodic-daily --project osism/cfg-generics --ref refs/heads/main
+zuul-client --use-config osism dequeue --pipeline periodic-daily --project osism/generics --ref refs/heads/main
 ```
 
 ## Important daily CI jobs
