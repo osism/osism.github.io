@@ -25,78 +25,37 @@ This section describes step by step how to deploy the OSISM Testbed.
 
 3. Configure your cloud access profile
 
-   The access data for the cloud provider used is stored in `terraform/clouds.yaml` and (optionally) in `terraform/secure.yaml` (same structure, if you want to store credentials in a separate place).
+   The OSISM automation needs credentials to deploy resources on your cloud. These are
+   stored in a file called `terraform/clouds.yaml`, which you create in the following steps.
 
-   In file [terraform/clouds.yaml.sample](https://github.com/osism/testbed/blob/main/terraform/clouds.yaml.sample) you will find examples of typical setups. Settings that are identical for all users of a cloud can be defined centrally via the profiles of the file [terraform/clouds-public.yaml](https://github.com/osism/testbed/blob/main/terraform/clouds-public.yaml). You can reference these settings by using the `profile` parameter in the cloud-specific definition in `terraform/clouds.yaml`.
+   To create this file, log in to the OpenStack Dashboard (Horizon) of your cloud provider
+   and create an application credential:
 
-   The user-specific settings of the `clouds.yaml` file are provided by the cloud provider. Please check the
-   documentation of the cloud provider you are using or their support for details.
+   1. Navigate to **Identity → Application Credentials**.
+   2. Click **Create Application Credential**.
+   3. Enter a name (e.g., `OSISM Testbed`) and accept all other defaults.
+   4. Click **Create Application Credential**.
+   5. In the confirmation dialog, click **Download clouds.yaml**.
 
-   [REGIO.cloud](https://regio.digital) is used as an example here. The cloud name in `clouds.yaml`
-   and the environment name (value of `ENVIRONMENT`) are `regiocloud` in this case. It is important that
-   the name of the cloud in `clouds.yaml` matches the name of the environment to be used. The names must
-   be identical. It is currently not possible to name the cloud `regiocloud-123` in `clouds.yaml` if the
-   environment is `regiocloud`.
+   Open the downloaded file and rename the cloud entry (typically `openstack`)
+   to match your environment's profile name
+   [from the table on the prerequisites page](prerequisites.mdx#cloud-access)
+   (e.g., `regiocloud`). The cloud name in `clouds.yaml` must match the
+   `ENVIRONMENT` value used in subsequent `make` commands.
 
-   If another cloud is used, replace `regiocloud` with the respective profile
-   name
-   [from the table on the prerequisites page](prerequisites.mdx#cloud-access).
-
-   <Tabs>
-   <TabItem value="testbed-cloud-access-with-app-credentials" label="Application Credentials">
-   The use of application credentials is preferred. This way it is not necessary to store
-   details like username, project name or sensitive information like the password in the
-   `clouds.yaml` file.
-
-   The application credentials can be found in the OpenStack Dashboard
-   (Horizon) under **Identity**. Use `OSISM Testbed` as name and click
-   `Create Application Credential`.
-
-   ```yaml title="terraform/clouds.yaml"
+   ```yaml title="terraform/clouds.yaml (example for REGIO.cloud)"
    clouds:
-     regiocloud:
-       profile: regiocloud
+     regiocloud:  # <- renamed from "openstack" to match ENVIRONMENT
        auth:
-         application_credential_id: ID
-         application_credential_secret: SECRET
-       auth_type: "v3applicationcredential"
+         auth_url: https://keystone.services.a.regiocloud.tech/v3
+         application_credential_id: "YOUR_ID"
+         application_credential_secret: "YOUR_SECRET"
+       region_name: RegionA
+       identity_api_version: 3
+       auth_type: v3applicationcredential
    ```
 
-   If you want to make use of `terraform/secure.yaml` add your application credential secret there
-   instead of `terraform/clouds.yaml`.
-
-   ```yaml title="terraform/secure.yaml"
-   clouds:
-     regiocloud:
-       auth:
-         application_credential_secret: SECRET
-   ```
-
-
-   </TabItem>
-   <TabItem value="testbed-cloud-access-with-username-password" label="Username/Password">
-   ```yaml title="terraform/clouds.yaml"
-   clouds:
-     regiocloud:
-       profile: regiocloud
-       auth:
-         project_name: PROJECT
-         username: USERNAME
-         project_domain_name: DOMAIN
-         user_domain_name: DOMAIN
-   ```
-
-   If you want to make use of `terraform/secure.yaml` add your password there instead of `terraform/clouds.yaml`.
-
-   ```yaml title="terraform/secure.yaml"
-   clouds:
-     regiocloud:
-       auth:
-         password: PASSWORD
-   ```
-
-   </TabItem>
-   </Tabs>
+   Move the file to `terraform/clouds.yaml` in the testbed repository.
 
 4. Prepare for the deployment.
 
