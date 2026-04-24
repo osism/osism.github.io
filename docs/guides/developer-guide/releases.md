@@ -272,7 +272,7 @@ other:
 
 ### Example
 
-Here is an example of a [commit from the osism/cfg-generics repository](https://github.com/osism/cfg-generics/commit/e2f04a9f4a51eb058446d7a8ab6835df53989099).
+Here is an example of a [commit from the osism/generics repository](https://github.com/osism/generics/commit/e2f04a9f4a51eb058446d7a8ab6835df53989099).
 
 ```yaml
 ---

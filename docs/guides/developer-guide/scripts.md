@@ -18,7 +18,7 @@ of targets depends on the container it is run in.
 
 * For the `inventory-reconciler` container
   * `/change.sh osism <git branch>` for the [osism/python-osism](https://github.com/osism/python-osism) repository
-  * `/change.sh generics <git branch>` for the [osism/cfg-generics](https://github.com/osism/cfg-generics) repository
+  * `/change.sh generics <git branch>` for the [osism/generics](https://github.com/osism/generics) repository
   * `/change.sh defaults <git branch>` for the [osism/defaults](https://github.com/osism/defaults) repository
   * `/change.sh release <git branch>` for the [osism/release](https://github.com/osism/release) repository
 
