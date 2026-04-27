@@ -27,6 +27,16 @@ and Kubernetes — runs through the manager's job queue system.
 See the [OSISM Manager](./manager.md) page for a detailed breakdown of the manager's
 components.
 
+## The OSISM MetalBox
+
+The OSISM MetalBox is a hardware-provisioning toolkit built around OpenStack Ironic.
+It deploys bare-metal hosts and bundles every component required to install an OSISM
+environment offline — NetBox as the source of truth, an OSISM Manager, a container
+registry, an APT repository, and an HTTP server for the deploy images.
+
+See the [OSISM MetalBox](./metalbox.md) page for a detailed breakdown of the
+MetalBox's components.
+
 ## Components in a cloud pod
 
 * [Infrastructure as a Service (IaaS) with OpenStack](./components/openstack.md)
