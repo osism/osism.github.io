@@ -146,6 +146,31 @@ hosted on the OSISM S3 storage. For the available artifacts and the procedure to
 enable, disable, or update the repository, see the
 [metalbox documentation](https://github.com/osism/metalbox/tree/main#readme).
 
+### Base services (DHCP, DNS, NTP)
+
+The MetalBox also provides the base network services that any provisioning workflow
+relies on: DHCP and DNS are served by [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html),
+and NTP is provided by [Chrony](https://chrony-project.org/). These services can be
+attached to the OOB or management network and are intended for environments where
+no external DHCP, DNS, or NTP servers are available.
+
+The SONiC ZTP workflow described below depends on these services: switches booting
+into ONIE need to receive the correct DHCP options to discover their image and
+configuration source on the MetalBox.
+
+## SONiC ZTP
+
+The MetalBox can additionally serve as a Zero Touch Provisioning (ZTP) server for
+[SONiC](https://sonicfoundation.dev/) network switches, so that leaf and spine
+switches can pull their configuration and image from the MetalBox during their
+first boot.
+
+:::info
+
+Detailed documentation on the SONiC ZTP setup will be added in a future release.
+
+:::
+
 ## Further reading
 
 For installing, operating, and updating a MetalBox — including the air-gap
