@@ -161,15 +161,68 @@ configuration source on the MetalBox.
 ## SONiC ZTP
 
 The MetalBox can additionally serve as a Zero Touch Provisioning (ZTP) server for
-[SONiC](https://sonicfoundation.dev/) network switches, so that leaf and spine
-switches can pull their configuration and image from the MetalBox during their
-first boot.
+[SONiC](https://sonicfoundation.dev/) network switches. Leaf and spine switches
+that ship with [ONIE](https://opencomputeproject.github.io/onie/) (Open Network
+Install Environment) discover the MetalBox on their first boot, fetch a
+per-switch image and configuration, install both to local storage, and finally
+reboot into a fully configured Network Operating System (NOS) — without any
+operator interaction on the switch console.
 
-:::info
+The diagram below shows the components involved and the order in which they
+interact. All ZTP traffic between the MetalBox and the switches runs on the OOB
+network; the switches' data ports (Ethernet0..N) are not used during
+provisioning.
 
-Detailed documentation on the SONiC ZTP setup will be added in a future release.
+![SONiC ZTP on the OSISM MetalBox](./images/osism-metalbox-sonic.drawio.svg)
 
-:::
+The provisioning sequence is:
+
+1. **Provide network information.** NetBox holds the inventory of switches —
+   including each switch's MGMT MAC address, hostname, and the per-port
+   configuration that should end up in SONiC (interfaces, port channels, VLANs,
+   BGP, addressing). The OSISM Manager reads this from NetBox via the API.
+
+2. **Generate per-switch SONiC and DHCP configuration.** From the NetBox data,
+   the Manager renders a SONiC configuration file for every switch
+   (`switch01-config`, `switch02-config`, ...) and places it on the HTTP server
+   next to the SONiC image (`sonic.bin`) it should be installed with. The
+   Manager also renders the per-switch DHCP host entries for dnsmasq, so each
+   switch is matched on its MGMT MAC and offered exactly the URLs that point to
+   its own image and config.
+
+3. **Send DHCP request.** The switch is powered on and boots into ONIE in
+   install mode. ONIE brings up the MGMT NIC and broadcasts a DHCP request on
+   the OOB network.
+
+4. **Send location of image and config via DHCP.** On the MetalBox, dnsmasq
+   replies with the standard DHCP options (address, gateway, DNS, NTP) plus
+   DHCP option 67 (Bootfile-Name), which points ONIE at the per-switch ZTP
+   URL on the HTTPd from which the SONiC image and configuration are fetched.
+   Because the host entries are matched on the MGMT MAC, every switch
+   receives a URL that references its own files.
+
+5. **Install image and config to disk (ZTP).** ONIE downloads `sonic.bin` and
+   the matching `switchNN-config` from the HTTPd over the OOB network, installs
+   the SONiC NOS to local storage, and stages the configuration so it is picked
+   up on the next boot.
+
+6. **Mark installation done.** Once the install step finishes successfully, the
+   switch reports back to the MetalBox so that the Manager knows the ZTP step
+   has completed for this switch.
+
+7. **Set state to deployed.** The Manager updates the switch's state in NetBox
+   to reflect that the switch is now provisioned. The DHCP configuration on
+   the MetalBox is not changed — dnsmasq keeps offering the same options to
+   the switch. The switch simply does not boot back into ONIE install mode
+   after the NOS is installed, so it ignores the ZTP options even though they
+   are still delivered. This means that updating the NOS on a switch is as
+   simple as regenerating its files on the MetalBox and rebooting the switch
+   back into ONIE install mode — it will run through steps 3–8 again and pick up
+   the new image.
+
+8. **Reboot.** The switch reboots out of ONIE and into the freshly installed
+   SONiC NOS, comes up with the per-switch configuration applied, and starts
+   forwarding traffic on its data ports.
 
 ## Further reading
 
