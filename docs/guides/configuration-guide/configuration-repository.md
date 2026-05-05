@@ -63,7 +63,7 @@ listed there will be queried during the execution of Cookiecutter.
      -e TARGET_UID="$(id -u)" \
      -e TARGET_GID="$(id -g)" \
      -v $(pwd)/output:/output \
-     --rm -it quay.io/osism/cookiecutter
+     --rm -it registry.osism.tech/osism/cookiecutter
    ```
 
 3. A few parameters are requested. The parameters are documented in detail in the [parameter reference](#parameter-reference).
