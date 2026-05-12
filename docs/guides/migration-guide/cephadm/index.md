@@ -14,9 +14,6 @@ Ceph daemons one at a time. While this process is designed to be non-disruptive,
 made and all other necessary safety measures are in place before migrating a production
 cluster.
 
-TODO: Add specific guidance on recommended backup strategies (e.g. cluster-wide backups
-to a separate cluster) and concrete safety measures to take before starting the migration.
-
 :::
 
 :::info Known limitations
@@ -49,7 +46,7 @@ For the full upstream documentation, refer to
 
 * A running Ceph cluster deployed with ceph-ansible via OSISM.
 * All Ceph daemons are healthy (`ceph -s` reports `HEALTH_OK` or only expected warnings).
-* SSH access to all Ceph nodes from the node where cephadm will be run.
+* SSH access from the OSISM manager node to all Ceph nodes (required by cephadm for orchestration).
 * The Ceph cluster must be running at least Ceph Octopus (15.2.x) or later. Clusters on
   OSISM 7 or later already meet this requirement.
 * Python 3 and `lvm2` must be installed on all Ceph nodes (these are typically already present).
@@ -61,7 +58,7 @@ required packages).
 ## Step 1: Verify cluster health
 
 Before starting the migration, ensure the cluster is in a healthy state. Run the following
-commands on the OSISM manager node .
+commands on the OSISM manager node.
 
 ```bash
 ceph -s
@@ -70,9 +67,8 @@ ceph df
 ```
 
 All PGs should be `active+clean`. Resolve any degraded or misplaced PGs before proceeding.
-
-TODO: Consider including the health verification commands in the `osism apply ready-for-cephadm`
-task as well.
+In `ceph osd tree`, verify that all OSDs show `up` with a non-zero REWEIGHT. In `ceph df`,
+check that `%RAW USED` is well below 85% (Ceph's default nearfull threshold).
 
 ## Step 2: Install cephadm
 
@@ -89,6 +85,11 @@ This returns output like `ceph version 18.2.7 (...)  reef (stable)`. The full ve
 number (e.g. `18.2.7`) is needed for the next step.
 
 ### Control nodes (mon, mgr)
+
+:::note
+OSD nodes require a different installation method due to a known bug in the UCA cephadm
+package for Reef. See the [OSD nodes](#osd-nodes) section below before installing on OSD nodes.
+:::
 
 Install the cephadm package from the
 [Ubuntu Cloud Archive](https://ubuntu-cloud.archive.canonical.com/ubuntu/pool/main/c/ceph/)
@@ -120,13 +121,16 @@ sudo dpkg -i ${CEPHADM_PKG}
 
 ### OSD nodes
 
-The UCA cephadm package for Reef (18.2.4) contains a
+If you are running **Quincy or Squid**, install cephadm on OSD nodes using the same UCA
+package as described for control nodes above.
+
+If you are running **Reef (18.x)**, the UCA cephadm package (18.2.4) contains a
 [known bug](https://tracker.ceph.com/issues/63151) that causes a crash when parsing
 AppArmor profiles during OSD adoption. This was
 [fixed upstream](https://github.com/ceph/ceph/pull/57955) and is included in Reef
-v18.2.5+, but the UCA has not updated the packaged version beyond 18.2.4.
+v18.2.5+, but the UCA package has not been updated beyond 18.2.4.
 
-On OSD nodes, install cephadm as a standalone Python script from the Ceph Git
+On Reef OSD nodes, install cephadm as a standalone Python script from the Ceph Git
 repository instead to get a version that includes the fix:
 
 ```bash
@@ -210,9 +214,9 @@ ceph orch set backend cephadm
 ```
 
 Configure cephadm to use the `dragon` user (which has passwordless sudo) instead of
-`root`. Import the existing operator SSH key so that cephadm can connect to all Ceph
-nodes. On the OSISM manager node:
-
+`root`. In a standard OSISM deployment, the operator SSH key already exists at
+`/opt/ansible/secrets/id_rsa.operator`. Import it so that cephadm can connect to all
+Ceph nodes. On the OSISM manager node:
 ```bash
 ceph cephadm set-user dragon
 cp /opt/ansible/secrets/id_rsa.operator* /opt/cephclient/data/
@@ -304,7 +308,10 @@ For each daemon, run the adopt command on the respective node.
 :::warning
 
 Verify cluster health with `ceph -s` on the OSISM manager node after each step.
-Do not proceed if the cluster is not healthy.
+Do not proceed if `ceph -s` reports `HEALTH_ERR` or degraded/unavailable PGs.
+
+During migration, `HEALTH_WARN` with messages like "stray daemon(s) not managed by
+cephadm" or "failed to probe daemons or devices" is expected and safe to continue.
 
 :::
 
@@ -383,7 +390,7 @@ the orchestrator recognises them:
 List all services known to the orchestrator:
 
 ```bash
-ceph orch ls
+ceph orch ls --refresh
 ```
 
 The output should look similar to this. Both services show as `<unmanaged>` at this point,
@@ -592,9 +599,14 @@ ceph balancer on
 ```bash
 if [ -f /home/dragon/autoscale_pools.txt ]; then
     while read pool; do
-        ceph osd pool set ${pool} pg_autoscale_mode on
+        if ceph osd pool set ${pool} pg_autoscale_mode on > /dev/null 2>&1; then
+            echo "OK: ${pool}"
+        else
+            echo "FAILED: ${pool}"
+        fi
     done < /home/dragon/autoscale_pools.txt
-    rm /home/dragon/autoscale_pools.txt
+fi
+# Once all pools show OK:, run: rm /home/dragon/autoscale_pools.txt
 fi
 ```
 
@@ -657,7 +669,9 @@ radosgw-admin zonegroup list
 radosgw-admin zone list
 ```
 
-In a typical single-site deployment, the default values are `default` for all three.
+In a typical single-site OSISM deployment, the zone and zonegroup are `default`. The realm
+may be empty — the script below falls back to `default` in that case, giving a service ID
+of `default.default`.
 The service ID for the `ceph orch apply rgw` command is composed as
 `<realm_name>.<zone_name>` (e.g. `default.default`).
 
@@ -963,9 +977,9 @@ Only proceed with this step after completing the verification in
 appear as `running` in `ceph orch ps`, and `ceph versions` reports a single consistent
 version across all daemon types.
 
-1. Remove old systemd unit files that are no longer used. Do **not** use a wildcard
-   like `ceph-*.service` as this would also remove the cephadm-managed units
-   (e.g. `ceph-<FSID>@.service`). Remove only the legacy units:
+1. Remove old systemd unit files that are no longer used. Run on **each Ceph node**.
+   Do **not** use a wildcard like `ceph-*.service` as this would also remove the
+   cephadm-managed units (e.g. `ceph-<FSID>@.service`). Remove only the legacy units:
 
    ```bash
    sudo rm -f /etc/systemd/system/ceph-mon@.service \
