@@ -167,7 +167,11 @@ This section describes step by step how to deploy the OSISM Testbed.
    interface. To re-enable ARA use `/opt/configuration/scripts/enable-ara.sh`.
 
    There is also the option of pre-population of images with `/opt/configuration/scripts/pull-images.sh`
-   so that deployments do not have to be lengthy. Run this script **before** the deployment scripts.
+   so that deployments do not have to be lengthy. Run this script **before** the
+   deployment scripts. The script will start background tasks and not wait for
+   them to finish before exiting. To wait for all containers to be pulled, you
+   can use `osism wait --live` (waiting for all tasks to finish). Depending on
+   the internet connection, this should take around 2 to 3 minutes.
 
    ```bash
    /opt/configuration/scripts/deploy/001-helpers.sh
