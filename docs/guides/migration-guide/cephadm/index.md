@@ -176,19 +176,25 @@ Host looks OK
 
 If the output indicates errors or missing dependencies, resolve them before proceeding.
 
-Determine the currently used container image from a running Ceph daemon on
-**one of the monitor nodes**:
+Determine the currently used container image and set it in the Ceph
+configuration.
+Run the following commands on the OSISM manager node:
 
 ```bash
-CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
-```
-
-Set the container image in the Ceph configuration. Run the following command on the
-OSISM manager node:
-
-```bash
+MON_NODE=$(osism get hosts -l ceph-mon | awk 'NR>3 && /\|/ {print $2}' | head
+-1)
+CEPH_IMAGE=$(ssh ${MON_NODE} "docker inspect \$(docker ps --filter 'name=ceph'
+--format '{{.Names}}' | head -1) --format '{{.Config.Image}}'")
+echo "Container image: ${CEPH_IMAGE}"
 ceph config set global container_image ${CEPH_IMAGE}
 ```
+
+:::warning
+Do not run the `docker inspect` command on the manager node — it runs the
+`cephclient`
+container there and would return a wrong image (`cephclient:reef` instead of
+`ceph-daemon:reef`).
+:::
 
 Import the existing `ceph.conf` into the central monitor config store. This ensures
 that custom tuning parameters are preserved after migration, as cephadm uses the
@@ -486,11 +492,35 @@ CONTAINER ID   IMAGE                                       COMMAND              
 The OSD ID is the number after `ceph-osd-` in the container name. For example,
 `ceph-osd-1` has OSD ID `1` and `ceph-osd-3` has OSD ID `3`.
 
+:::warning
+
+Adopt OSDs **one node at a time**. After completing all OSDs on a node, wait until all
+PGs return to `active+clean` (`ceph -s` shows all PGs `active+clean` under `data:`)
+before proceeding to the next node. The overall health may still show `HEALTH_WARN` for
+stray daemons during migration — this is expected and not a stop condition.
+
+Within a single node, it is safe to use the loop below without waiting between individual
+OSDs, provided your cluster meets both of the following conditions:
+
+* At least **3 OSD nodes**.
+* **Host-level CRUSH failure domain** — the OSISM default. Verify with:
+  ```bash
+  ceph osd crush rule dump
+  ```
+  All rules should show `"type": "host"` in the `chooseleaf` step.
+
+If your cluster has only 2 OSD nodes, or any rule shows a different failure domain type,
+adopt each OSD individually and wait for all PGs to return to `active+clean` after each
+one before continuing.
+
+:::
+
 Then adopt each OSD on the node:
 
 ```bash
-sudo cephadm --image ${CEPH_IMAGE} adopt --style legacy --skip-firewalld --name osd.<osd_id>
-sudo systemctl reset-failed ceph-osd@<osd_id>.service 2>/dev/null || true
+OSD_ID=<osd_id>
+sudo cephadm --image ${CEPH_IMAGE} adopt --style legacy --skip-firewalld --name osd.${OSD_ID}
+sudo systemctl reset-failed ceph-osd@${OSD_ID}.service 2>/dev/null || true
 ```
 
 The output should look similar to this:
@@ -522,20 +552,24 @@ done
 
 :::warning
 
-Adopt OSDs **one node at a time**. After completing all OSDs on a node, wait until the
-cluster has fully recovered (`ceph -s` shows `HEALTH_OK`) before proceeding to the next
-node.
+Adopt OSDs **one node at a time**. After completing all OSDs on a node, wait until all
+PGs return to `active+clean` (`ceph -s` shows all PGs `active+clean` under `data:`)
+before proceeding to the next node. The overall health may still show `HEALTH_WARN` for
+stray daemons during migration — this is expected and not a stop condition.
 
-In **small environments** (e.g. 3 nodes with only 1–2 OSDs each), do **not** use the
-loop above. Instead, adopt each OSD individually and verify cluster health between each
-adoption. In small clusters, every single OSD represents a large fraction of the total
-data redundancy — briefly taking one offline during adoption may already bring the cluster
-to `min_size`. Adopting a second OSD before the first has fully rejoined could lead to
-degraded or unavailable placement groups.
+Within a single node, it is safe to use the loop above without waiting between individual
+OSDs, provided your cluster meets both of the following conditions:
 
-In larger environments with many OSDs per node, the cluster has enough redundancy to
-tolerate multiple sequential OSD restarts on the same node without risk, so using the
-loop is safe.
+* At least **3 OSD nodes**.
+* **Host-level CRUSH failure domain** — the OSISM default. Verify with:
+  ```bash
+  ceph osd crush rule dump
+  ```
+  All rules should show `"type": "host"` in the `chooseleaf` step.
+
+If your cluster has only 2 OSD nodes, or any rule shows a different failure domain type,
+adopt each OSD individually and wait for all PGs to return to `active+clean` after each
+one before continuing.
 
 :::
 
@@ -845,86 +879,7 @@ for node in $(osism get hosts -l ceph-mds | awk 'NR>3 && /\|/ {print $2}'); do
 done
 ```
 
-## Step 6: Apply service specs
-
-After adoption, daemons show as `<unmanaged>` in `ceph orch ls` because the orchestrator
-has no service spec for them. Apply service specs on the OSISM manager node to make them
-managed:
-
-```bash
-MON_PLACEMENT=$(osism get hosts -l ceph-mon | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
-MGR_PLACEMENT=$(osism get hosts -l ceph-mgr | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
-
-ceph orch apply mon --placement="${MON_PLACEMENT}"
-ceph orch apply mgr --placement="${MGR_PLACEMENT}"
-```
-
-:::note
-
-Adopted OSD daemons will show as `<unmanaged>` in `ceph orch ls`. This is expected
-and does not affect their operation — the OSDs are fully functional, they are just not
-governed by an orchestrator service spec.
-
-To transition the adopted OSDs to a managed state, create an OSD service spec with
-device filters that match exactly the devices already in use. For example, if all OSDs
-use the same device path pattern:
-
-```yaml
-service_type: osd
-service_id: default_drive_group
-placement:
-  host_pattern: '*'
-data_devices:
-  paths:
-    - /dev/sdb
-    - /dev/sdc
-```
-
-Apply the spec:
-
-```bash
-ceph orch apply -i osd_spec.yaml
-```
-
-Do **not** use `ceph orch apply osd --all-available-devices` — this creates a service
-spec that claims **all** unused devices in the cluster, which may provision new unwanted
-OSDs on devices that were intentionally left unused.
-
-If you are unsure which devices are in use, you can inspect the current OSD layout with:
-
-```bash
-ceph osd tree
-ceph device ls
-```
-
-It is safe to leave the OSDs as `<unmanaged>` and transition them to managed at a later
-point.
-
-:::
-
-Verify that the monitor and manager services are now managed on the OSISM manager node:
-
-```bash
-ceph orch ls --service-type mon
-```
-
-The output should look similar to this. The service should no longer show as `<unmanaged>`:
-
-```console
-NAME  PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
-mon              3/3  5s ago     10s  testbed-node-0;testbed-node-1;testbed-node-2
-```
-
-```bash
-ceph orch ls --service-type mgr
-```
-
-```console
-NAME  PORTS  RUNNING  REFRESHED  AGE  PLACEMENT
-mgr              3/3  5s ago     10s  testbed-node-0;testbed-node-1;testbed-node-2
-```
-
-## Step 7: Verify the migration
+## Step 6: Verify the migration
 
 Verify the full cluster state on the OSISM manager node:
 
@@ -970,7 +925,7 @@ appear for any daemon type, some daemons were not adopted with the correct conta
 }
 ```
 
-## Step 8: Clean up ceph-ansible artifacts
+## Step 7: Clean up ceph-ansible artifacts
 
 Only proceed with this step after completing the verification in
 [Step 7](#step-7-verify-the-migration): `ceph -s` shows `HEALTH_OK`, all daemons
