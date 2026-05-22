@@ -21,6 +21,7 @@ DISABLE_LINTERS:
   - REPOSITORY_GRYPE # not needed
   - REPOSITORY_TRIVY # not needed
   - REPOSITORY_TRIVY_SBOM # not needed
+  - REPOSITORY_OSV_SCANNER # static site: all npm deps are build-time only, no server exposure
   - REPOSITORY_SYFT # not needed
   - SPELL_CSPELL # replaced by codespell
 
