@@ -24,6 +24,8 @@ DISABLE_LINTERS:
   - REPOSITORY_SYFT # not needed
   - SPELL_CSPELL # replaced by codespell
 
+ACTION_ZIZMOR_ARGUMENTS: --no-online-audits
+
 SHOW_ELAPSED_TIME: true
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
 # DISABLE_ERRORS: true
