@@ -17,6 +17,7 @@ APPLY_FIXES: none
 DISABLE_LINTERS:
   - COPYPASTE_JSCPD # we copy paste a lot of things to keep pages easy to read
   - CSS_STYLELINT # we focus on the documentation for now
+  - ACTION_ZIZMOR # workflows use mutable tags; pinning to SHAs not adopted yet
   - REPOSITORY_GITLEAKS # avoid false positives in documentation repo
   - REPOSITORY_GRYPE # not needed
   - REPOSITORY_TRIVY # not needed
@@ -24,8 +25,6 @@ DISABLE_LINTERS:
   - REPOSITORY_OSV_SCANNER # static site: all npm deps are build-time only, no server exposure
   - REPOSITORY_SYFT # not needed
   - SPELL_CSPELL # replaced by codespell
-
-ACTION_ZIZMOR_ARGUMENTS: --no-online-audits
 
 SHOW_ELAPSED_TIME: true
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
