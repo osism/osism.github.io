@@ -928,7 +928,7 @@ appear for any daemon type, some daemons were not adopted with the correct conta
 ## Step 7: Clean up ceph-ansible artifacts
 
 Only proceed with this step after completing the verification in
-[Step 7](#step-7-verify-the-migration): `ceph -s` shows `HEALTH_OK`, all daemons
+[Step 6](#step-6-verify-the-migration): `ceph -s` shows `HEALTH_OK`, all daemons
 appear as `running` in `ceph orch ps`, and `ceph versions` reports a single consistent
 version across all daemon types.
 
