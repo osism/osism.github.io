@@ -30,3 +30,4 @@ handling of security-related information.
 | [OSSA-2026-001](ossa-2026-001.md) | Privilege Escalation via Identity Headers in OAuth2   | OpenStack keystonemiddleware |
 | [OSSA-2026-002](ossa-2026-002.md) | Nova calls qemu-img without format restrictions       | OpenStack Nova               |
 | [OSSA-2026-005](ossa-2026-005.md) | Restricted app credentials can create EC2 credentials | OpenStack Keystone           |
+| [OSSA-2026-015](ossa-2026-015.md) | Credential delegation and authorization bypass issues | OpenStack Keystone           |
