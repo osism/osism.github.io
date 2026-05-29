@@ -26,6 +26,8 @@ DISABLE_LINTERS:
   - REPOSITORY_SYFT # not needed
   - SPELL_CSPELL # replaced by codespell
 
+SPELL_LYCHEE_DISABLE_ERRORS: true # keep link checks visible without blocking PRs
+
 SHOW_ELAPSED_TIME: true
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
 # DISABLE_ERRORS: true
