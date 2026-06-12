@@ -231,5 +231,26 @@ ssh -o IdentitiesOnly=yes -i  id_rsa.operator dragon@YOUR_MANAGER_NODE
 osism set vault password
 ```
 
+### Step 6: Sync the inventory
+
+This step is only required if the inventory is generated from NetBox data.
+In this case make sure you have deployed the NetBox service as described above
+or that your existing NetBox is available under the configured endpoint.
+
+Log on to the manager node and fill the NetBox with the data from the
+configuration repository.
+
+```bash
+ssh -o IdentitiesOnly=yes -i id_rsa.operator dragon@YOUR_MANAGER_NODE
+osism manage netbox
+```
+
+Synchronize the manager inventory from the NetBox data.
+
+```bash
+osism sync inventory
+```
+
+
 Ready. The manager is now prepared, and you can continue with the bootstrap of the other nodes.
 The seed node used until here is now no longer necessary.
