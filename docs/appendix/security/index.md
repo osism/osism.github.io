@@ -31,3 +31,4 @@ handling of security-related information.
 | [OSSA-2026-002](ossa-2026-002.md) | Nova calls qemu-img without format restrictions       | OpenStack Nova               |
 | [OSSA-2026-005](ossa-2026-005.md) | Restricted app credentials can create EC2 credentials | OpenStack Keystone           |
 | [OSSA-2026-015](ossa-2026-015.md) | Credential delegation and authorization bypass issues | OpenStack Keystone           |
+| [OSSA-2026-022](ossa-2026-022.md) | Scheduler hint injection bypasses Placement claims    | OpenStack Nova               |
