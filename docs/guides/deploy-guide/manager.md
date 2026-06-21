@@ -134,7 +134,7 @@ in the Ansible documentation.
 | `ANSIBLE_ASK_VAULT_PASS`  | Boolean | This controls whether an Ansible playbook should prompt for a vault password.                                                                                        |
 | `ANSIBLE_BECOME_ASK_PASS` | Boolean | Toggle to prompt for privilege escalation password.                                                                                                                  |
 | `ANSIBLE_SSH_ARGS`        | String  | If set, this will override the Ansible default ssh arguments.                                                                                                        |
-| `ANSIBLE_USER`            | String  | The user Ansible ‘logs in’ as.                                                                                                                                       |
+| `ANSIBLE_USER`            | String  | The user Ansible 'logs in' as.                                                                                                                                       |
 
 
 To verify the proper creation of the operator user, use the private key file `id_rsa.operator`. Make
