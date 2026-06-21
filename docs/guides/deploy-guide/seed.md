@@ -25,7 +25,40 @@ The use of Linux on the seed node is recommended. Other operating systems should
 work without problems. It is assumed in this documentation that Ubuntu 24.04 is used on
 the seed node.
 
-## Install required packages
+There are two ways to run the seed tooling:
+
+* **Seed container** — a prebuilt container image with Ansible and all required
+  OSISM collections. The only prerequisite on the seed node is a working
+  Docker (or Podman) installation. No packages are installed on the seed node
+  itself.
+* **Manual installation** — install the required packages on the seed node and
+  use the `run.sh` script from the configuration repository.
+
+## Option 1: Seed container {#option-1-seed-container}
+
+```bash
+docker pull registry.osism.tech/osism/seed
+```
+
+`run.sh` itself runs the playbooks inside the seed container automatically —
+there is no separate wrapper. When a container engine (Docker or Podman) is
+available and `SEED_CONTAINER` is left at its default value of `auto`, `run.sh`
+execs the `registry.osism.tech/osism/seed` image with the configuration
+repository bind-mounted, so every Manager step is the same plain command:
+
+```bash
+./run.sh <playbook>
+```
+
+No extra setup is required beyond having Docker (or Podman) installed on the
+seed node. The same `./run.sh <playbook>` command is used whether you are
+running with the seed container or with a local venv installation — the
+difference is transparent.
+
+To force the local-venv path (Option 2) even when a container engine is
+present, set `SEED_CONTAINER=false` before running any playbook.
+
+## Option 2: Manual installation
 
 ```bash
 sudo apt-get install git python3-pip python3-virtualenv sshpass libssh-dev
