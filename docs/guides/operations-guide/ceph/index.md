@@ -334,7 +334,7 @@ Interesting fields:
 
 ### Remove a OSD
 
-As with ‘Remove a single OSD node’. Except that the steps are only executed
+As with 'Remove a single OSD node'. Except that the steps are only executed
 for a single OSD and the node is not removed from the CRUSH map and the inventory.
 Only the entries relating to the removed OSD are removed from the host vars.
 
