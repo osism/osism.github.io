@@ -148,7 +148,7 @@ by the [general procedure](#general-procedure) described above.
 
 5. Execute all steps in the [general procedure](#general-procedure) above
 
-### Generating TLS certificates with Let’s Encrypt
+### Generating TLS certificates with Let's Encrypt
 
 Using Let's encrypt certificates is a good alternative to traditional certificate authorities and
 greatly simplifies the administration of TLS certificates.

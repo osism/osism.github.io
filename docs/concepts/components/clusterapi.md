@@ -21,7 +21,7 @@ for managing the lifecycle of Kubernetes clusters.
   Kubernetes clusters, including provisioning, scaling, upgrading, and deletion. This consistency
   reduces operational overhead and ensures that clusters are managed uniformly across different
   environments.
-* Extensibility and Customization: Cluster API’s modular architecture allows for extensibility
+* Extensibility and Customization: Cluster API's modular architecture allows for extensibility
   through the use of custom resource definitions (CRDs) and controllers. Organizations can tailor
   the API to meet specific requirements, such as integrating with existing CI/CD pipelines or
   adding custom operational logic.
