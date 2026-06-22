@@ -19,7 +19,7 @@ Key benefits of OpenStack Ironic:
 * Support for Multiple Hardware Drivers: Ironic supports a wide range of hardware through
   various drivers, including IPMI, Redfish, and vendor-specific drivers. This flexibility
   ensures compatibility with a diverse set of hardware platforms and management interfaces.
-* Resource Management and Scheduling: Ironic leverages OpenStack’s scheduling capabilities
+* Resource Management and Scheduling: Ironic leverages OpenStack's scheduling capabilities
   to manage the allocation of physical servers, ensuring optimal utilization of hardware
   resources. Users can request specific hardware configurations and Ironic will match these
   requests with available resources.

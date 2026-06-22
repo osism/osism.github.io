@@ -58,7 +58,7 @@ $ openstack --os-cloud admin image list -f yaml
 
 These UUIDs are great for uniqueness, but 36-character strings are terrible
 for readability. Statistically, just the first few characters are enough for
-uniqueness in small environments, so let’s define a helper to make things more
+uniqueness in small environments, so let's define a helper to make things more
 readable:
 
 ```bash

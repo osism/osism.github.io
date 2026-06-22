@@ -3,7 +3,7 @@
 ## Lifecycle Management of OpenStack in OSISM
 
 The open source project Kolla from the [OpenInfra Foundation](https://openinfra.dev) is
-used in OSISM for the life cycle management of OpenStack. Kolla’s mission is to provide
+used in OSISM for the life cycle management of OpenStack. Kolla's mission is to provide
 production-ready containers and deployment tools for operating OpenStack clouds. Kolla has
 been actively developed by a very diverse team for 10 years and is one of the most common
 (if not the most common) life cycle management tool for OpenStack.
