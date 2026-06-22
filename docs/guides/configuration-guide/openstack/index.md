@@ -446,7 +446,7 @@ The number of workers used for the individual services can generally be configur
 
 ```yaml
 openstack_service_workers: "{{ [ansible_facts.processor_vcpus, 5] | min }}"
-openstack_service_rpc_workers: "{{ [ansible_facts.processor_vcpus, 3] | min }}“
+openstack_service_rpc_workers: "{{ [ansible_facts.processor_vcpus, 3] | min }}"
 ```
 
 The default for `openstack_service_workers` is set to `5` when using the cookiecutter for the initial creation
