@@ -45,6 +45,25 @@ cd environments/manager
 
 If you are working with Git branches, read [the instructions](../configuration-guide/manager.mdx).
 
+`run.sh` automatically uses the [seed container](./seed.md#option-1-seed-container) when a
+container engine (Docker or Podman) is available on the seed node. The default
+`SEED_CONTAINER=auto` means you do not need to choose a separate execution method —
+every step on this page is simply:
+
+```bash
+./run.sh <playbook>
+```
+
+Two environment variables control the seed-container behaviour. The rest are
+auto-detected and pull `registry.osism.tech/osism/seed:latest`, so you normally
+do not need to set anything:
+
+| Variable                    | Default  | Purpose                                                                                               |
+|:----------------------------|:---------|:------------------------------------------------------------------------------------------------------|
+| `SEED_CONTAINER`            | `auto`   | `auto` uses the container when an engine is present; `true` forces it; `false` forces the local venv. |
+| `CONTAINER_ENGINE`          | `docker` | Set to `podman` to use Podman.                                                                        |
+| `SEED_CONTAINER_MOUNT_OPTS` | (empty)  | Appended to the bind mount, e.g. `:z` or `:Z` for Podman on enforcing SELinux.                        |
+
 ### Step 1: Create operator user
 
 The operator user is created on each node. It is used as a service account for OSISM. All
