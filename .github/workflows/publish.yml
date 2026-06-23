@@ -25,7 +25,7 @@ jobs:
       # Popular action to deploy via FTP:
       # Docs: https://github.com/SamKirkland/FTP-Deploy-Action
       - name: Publish via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOSTNAME }}
           username: ${{ secrets.FTP_USERNAME }}
