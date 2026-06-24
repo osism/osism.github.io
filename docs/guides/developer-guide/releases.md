@@ -61,6 +61,20 @@ releases.
 
 :::
 
+:::note Major releases: sync the inventory first
+
+If the release moves to a new OpenStack series, bump `KOLLA_BRANCH` in
+[osism/generics](https://github.com/osism/generics)
+`src/check-kolla-inventory.py` to the matching `stable/<series>` branch and
+resolve the drift the `generics-tox-check-kolla` job then reports — add the
+new kolla-ansible service groups to the inventory (or, for services OSISM does
+not deploy, to the IGNORE lists) and merge. The inventory is baked into the
+`osism-ansible` and `inventory-reconciler` images, so it must match the new
+series before the release candidate is built and tested; otherwise the testing
+in the steps below validates an inventory that aborts on the new release.
+
+:::
+
 1. Create one or more release candidates (e.g. `10.1.0-rc.1`) in the
    osism/release repository as described in its README.
 
