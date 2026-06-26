@@ -13,17 +13,23 @@ What a configuration repository is and how it is created is described in the
 
 :::
 
-The seed node is used once for the initial bootstrap of the manager node. The seed node can
-also be used to initially create and prepare the configuration repository. The seed node is
-not the manager node itself. It is sufficient to use the local workstation. It doesn't have
-to be a dedicated system. The seed node is no longer needed in the further process. The seed
-node must be able to reach the manager node via SSH. It is important for the further process
-that no packages are installed manually on the manager. Especially not Docker.
+The seed node is used once for the initial bootstrap of the manager node.
+
+The seed node:
+
+- can also be used to initially create and prepare the configuration repository.
+- is not the manager node itself. It is sufficient to use the local workstation.
+- doesn't have to be a dedicated system.
+- is no longer needed after the installation of the manager is done.
+- must be able to reach the manager node via SSH.
+
+It is important for the further process that no packages are installed manually
+on the manager. Especially not Docker.
 
 
-The use of Linux on the seed node is recommended. Other operating systems should also
-work without problems. It is assumed in this documentation that Ubuntu 24.04 is used on
-the seed node.
+The use of a Linux operating system on the seed node is recommended. This
+documentation assumes that Ubuntu 24.04 is used. Other operating systems should
+also work, but are not actively tested by us.
 
 There are two ways to run the seed tooling:
 
