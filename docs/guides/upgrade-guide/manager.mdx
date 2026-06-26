@@ -37,6 +37,23 @@ how you deployed the cluster. Steps 1, 2 and 4 to 6 are the same for all of them
 
   This reuses the same seed tooling as the initial bootstrap, so the manager
   itself needs no local Ansible installation.
+* **Manager deployed with the seed container, seed discarded** (the manager has
+  no local Ansible venv and no seed node remains): run the update from the
+  configuration repository on the manager itself. `run.sh` ships in the repository
+  and is refreshed by `make sync` (step 1), so it does not depend on the manager's
+  installed tooling. With a container engine present and no local venv it runs the
+  playbook inside the `osism/seed` container automatically (`SEED_CONTAINER=auto`):
+
+    ```bash
+    cd /opt/configuration/environments/manager
+    ./run.sh manager
+    ```
+
+  The vault password must be reachable — ship `environments/.vault_pass` in the
+  configuration repository or export `ANSIBLE_ASK_VAULT_PASS=true` (see the vault
+  note in step 3). Once the manager runs a release whose wrapper supports it,
+  `osism update manager` (`CONTAINER=auto`) does the same thing and can be used
+  instead.
 
 :::
 
