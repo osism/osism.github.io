@@ -84,8 +84,13 @@ In the example, OSISM release 7.0.5 is used.
     osism update manager
     ```
 
-    * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the parameter
-      `--ask-vault-pass` is also appended. From OSISM >= 8.0.0 this is no longer necessary.
+    * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, append
+      `--ask-vault-pass` (or set `ANSIBLE_VAULT_PASSWORD_FILE` to the vault password file).
+      Unlike `osism apply`, `osism update manager` runs outside the OSISM workers — it
+      recreates the manager containers and therefore cannot use the worker-side vault
+      password set with `osism set vault password`. The password must be supplied directly
+      whenever `secrets.yml` is encrypted; the OSISM >= 8.0.0 relief from `--ask-vault-pass`
+      applies to `osism apply`, not to this command.
     * If `osism update manager` does not work yet, use `osism-update-manager` instead.
 
 
