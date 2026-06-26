@@ -17,6 +17,29 @@ adjustments are necessary. Read the release notes even if you are only updating 
 The update of a manager service with a stable release of OSISM is described here.
 In the example, OSISM release 7.0.5 is used.
 
+:::info Which update path applies to you
+
+Step 3 below drives the `osism.manager.manager` playbook against the manager over
+SSH. The same playbook is used in every case; only how it is launched depends on
+how you deployed the cluster. Steps 1, 2 and 4 to 6 are the same for all of them.
+
+* **Manager with a local Ansible venv** (a self-bootstrapped manager): run
+  `osism update manager` on the manager itself — this is the path described below.
+* **Seed node still available** (a separate workstation or VM that holds the
+  configuration repository, as in the [Seed deploy guide](../deploy-guide/seed.md)):
+  update from the seed instead of the manager. After bumping `manager_version`
+  (step 1) and syncing the configuration repository on the manager (step 2),
+  re-run the manager playbook from the seed:
+
+    ```bash
+    ./run.sh manager
+    ```
+
+  This reuses the same seed tooling as the initial bootstrap, so the manager
+  itself needs no local Ansible installation.
+
+:::
+
 1. Change the OSISM release in the configuration repository.
 
     1. Set the new OSISM version in the configuration repository.
