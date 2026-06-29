@@ -1,0 +1,15 @@
+# Extend the default ruleset to allowlist documentation example secrets that
+# are not real credentials.
+
+[extend]
+# CRITICAL: keep the full built-in ruleset active. Without this the custom
+# config would REPLACE all default rules and disable secret detection.
+useDefault = true
+
+[[allowlists]]
+description = "Documentation example secrets — not real credentials"
+targetRules = ["generic-api-key"]
+regexes = [
+  '''b9b6920d-e533-4728-8132-a5a0adfc24e5''',        # VNC console token in CLI output example
+  '''AQBiHV9nAAAAABAAhtxl8rdW/EBvxiOGw4iMJw==''',     # Ceph keyring key example
+]
