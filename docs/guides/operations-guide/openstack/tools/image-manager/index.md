@@ -125,6 +125,7 @@ the help of the OpenStack Image Manager.
          hw_watchdog_action: reset
          hypervisor_type: qemu
          os_distro: cirros
+         os_purpose: minimal
          replace_frequency: never
          uuid_validity: none
          provided_until: none
@@ -194,6 +195,7 @@ images:
       hw_scsi_model: virtio-scsi
       hw_watchdog_action: reset
       os_distro: ubuntu
+      os_purpose: generic
       os_version: '24.04'
     tags: []
     versions:
@@ -246,6 +248,7 @@ images:
       hw_disk_bus: scsi
       hw_scsi_model: virtio-scsi
       hw_watchdog_action: reset
+      os_purpose: k8snode
     tags: []
     versions:
       - version: '1.3.0'
