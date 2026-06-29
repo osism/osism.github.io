@@ -1,0 +1,20 @@
+# betterleaks (gitleaks fork) configuration for this documentation repository.
+#
+# This is a documentation-only site: values flagged as "secrets" are
+# illustrative example credentials (placeholder keys, demo tokens) shown in
+# guides, not real secrets. We keep the scanner enabled to catch genuine
+# accidental secrets and allowlist the known example values individually.
+#
+# Extend (do not replace) the built-in betterleaks/gitleaks rule set.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documentation example values (not real secrets)"
+regexes = [
+  # Example Ceph keyring in docs/guides/configuration-guide/ceph/index.mdx
+  '''AQBiHV9nAAAAABAAhtxl8rdW/EBvxiOGw4iMJw==''',
+  # Example noVNC console session token in
+  # docs/guides/user-guide/openstack/migration-vmware-esxi.md
+  '''b9b6920d-e533-4728-8132-a5a0adfc24e5''',
+]
