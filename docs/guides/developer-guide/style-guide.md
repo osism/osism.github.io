@@ -75,6 +75,37 @@ docker_hosts: "{{ docker_hosts_defaults + docker_hosts_extra }}"
 
 ## Commit messages
 
+We try to follow the
+[OpenStack git commit message guidelines](https://wiki.openstack.org/wiki/GitCommitMessages).
+Please read that document; the essentials are:
+
+* **One logical change per commit.** Do not mix unrelated changes, and keep
+  whitespace-only changes separate from functional ones.
+* **Subject line:** at most 50 characters, imperative mood ("Add feature", not
+  "Added feature"), no trailing period, and prefixed with the affected
+  component where applicable (e.g. `libvirt: ...`).
+* **Body:** separated from the subject by a blank line and wrapped at 72
+  characters. Explain *what* the problem is, *why* the change is needed, and
+  *how* it solves the problem. Include everything a reviewer needs to
+  understand the patch.
+* **Footer:** every commit carries a `Signed-off-by` trailer, which must be the
+  very last line. It records the human contributor who takes responsibility for
+  the change and signs off on it; it is never used for an AI agent.
+
+### Attribution for AI-assisted changes
+
+When a change was created with the help of an AI coding assistant, add an
+`Assisted-by` trailer, following the
+[Linux kernel coding-assistants guidelines](https://docs.kernel.org/process/coding-assistants.html).
+`Assisted-by` names the assistant and, when known, its exact model identifier.
+It attributes the AI contribution only; the responsible human still signs off
+via `Signed-off-by`, which remains the very last line:
+
+```text
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Jane Doe <jane@example.com>
+```
+
 ## Python
 
 [Black](https://github.com/psf/black) is a popular Python code formatter that automatically
