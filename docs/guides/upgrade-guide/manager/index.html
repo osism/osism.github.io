@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.1">
 <title data-rh="true">Manager | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/upgrade-guide/manager"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Manager | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Always read the release notes first to learn what has changed and what"><meta data-rh="true" property="og:description" content="Always read the release notes first to learn what has changed and what"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/upgrade-guide/manager"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/manager" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/manager" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Upgrade Guide","item":"https://osism.tech/docs/guides/upgrade-guide/"},{"@type":"ListItem","position":3,"name":"Manager","item":"https://osism.tech/docs/guides/upgrade-guide/manager"}]}</script><link rel="stylesheet" href="/assets/css/styles.b3e57e1f.css">
-<script src="/assets/js/runtime~main.8fa8baa6.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.90cfedf4.js" defer="defer"></script>
 <script src="/assets/js/main.d8a451cc.js" defer="defer"></script>
 </head>
 <body>
@@ -16,6 +16,38 @@
 adjustments are necessary. Read the release notes even if you are only updating from e.g. 7.0.2 to 7.0.5.</p></div></div>
 <p>The update of a manager service with a stable release of OSISM is described here.
 In the example, OSISM release 7.0.5 is used.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg></span>Which update path applies to you</div><div class="admonitionContent_BuS1"><p>Step 3 below drives the <code>osism.manager.manager</code> playbook against the manager over
+SSH. The same playbook is used in every case; only how it is launched depends on
+how you deployed the cluster. Steps 1, 2 and 4 to 6 are the same for all of them.</p><ul>
+<li class="">
+<p><strong>Manager with a local Ansible venv</strong> (a self-bootstrapped manager): run
+<code>osism update manager</code> on the manager itself — this is the path described below.</p>
+</li>
+<li class="">
+<p><strong>Seed node still available</strong> (a separate workstation or VM that holds the
+configuration repository, as in the <a class="" href="/docs/guides/deploy-guide/seed">Seed deploy guide</a>):
+update from the seed instead of the manager. After bumping <code>manager_version</code>
+(step 1) and syncing the configuration repository on the manager (step 2),
+re-run the manager playbook from the seed:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh manager</span><br></div></code></pre></div></div>
+<p>This reuses the same seed tooling as the initial bootstrap, so the manager
+itself needs no local Ansible installation.</p>
+</li>
+<li class="">
+<p><strong>Manager deployed with the seed container, seed discarded</strong> (the manager has
+no local Ansible venv and no seed node remains): run the update from the
+configuration repository on the manager itself. <code>run.sh</code> ships in the repository
+and is refreshed by <code>make sync</code> (step 1), so it does not depend on the manager&#x27;s
+installed tooling. With a container engine present and no local venv it runs the
+playbook inside the <code>osism/seed</code> container automatically (<code>SEED_CONTAINER=auto</code>):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">cd /opt/configuration/environments/manager</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh manager</span><br></div></code></pre></div></div>
+<p>The vault password must be reachable — ship <code>environments/.vault_pass</code> in the
+configuration repository or export <code>ANSIBLE_ASK_VAULT_PASS=true</code> (see the vault
+note in step 3). Once the manager runs a release whose wrapper supports it,
+<code>osism update manager</code> (<code>CONTAINER=auto</code>) does the same thing and can be used
+instead.</p>
+</li>
+</ul></div></div>
 <ol>
 <li class="">
 <p>Change the OSISM release in the configuration repository.</p>
@@ -57,8 +89,13 @@ workflows for changes to the configuration repository, only a generic example fo
 <p>Update the manager service on the manager node.</p>
 <div class="language-console codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-console codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism update manager</span><br></div></code></pre></div></div>
 <ul>
-<li class="">If Ansible Vault was used to encrypt <code>environments/manager/secrets.yml</code>, the parameter
-<code>--ask-vault-pass</code> is also appended. From OSISM &gt;= 8.0.0 this is no longer necessary.</li>
+<li class="">If Ansible Vault was used to encrypt <code>environments/manager/secrets.yml</code>, append
+<code>--ask-vault-pass</code> (or set <code>ANSIBLE_VAULT_PASSWORD_FILE</code> to the vault password file).
+Unlike <code>osism apply</code>, <code>osism update manager</code> runs outside the OSISM workers — it
+recreates the manager containers and therefore cannot use the worker-side vault
+password set with <code>osism set vault password</code>. The password must be supplied directly
+whenever <code>secrets.yml</code> is encrypted; the OSISM &gt;= 8.0.0 relief from <code>--ask-vault-pass</code>
+applies to <code>osism apply</code>, not to this command.</li>
 <li class="">If <code>osism update manager</code> does not work yet, use <code>osism-update-manager</code> instead.</li>
 </ul>
 </li>
