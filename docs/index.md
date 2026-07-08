@@ -30,9 +30,8 @@ component choices.
 
 ## Quick start
 
-For newcomers, we offer two ways to get started quickly:
+For newcomers, we offer a quick way to get started:
 
-* [Cloud in a Box](./cloud-in-a-box/) — A self-contained environment for testing
 * [Virtual testbed](./testbed/) — A virtual environment for experimentation
 
 We also offer regular on-site workshops near Stuttgart if there is sufficient demand.
