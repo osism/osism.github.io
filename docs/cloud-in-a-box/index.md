@@ -287,8 +287,18 @@ can be viewed in the file `/var/log/install-cloud-in-a-box.log`.
 The [OpenStack Image Manager](https://github.com/osism/openstack-image-manager/) is used to manage images.
 In the example, the `Garden Linux` image is imported.
 
+Without `--upload` the command only shows a preview of the images that would be uploaded and
+makes no changes. Add `--upload` to actually import the images.
+
+:::note
+
+Preview by default is available from OSISM `<RELEASE>` onwards. In earlier releases the command
+uploaded the images immediately, without requiring `--upload`.
+
+:::
+
 ```bash
-osism manage images --cloud=admin --filter 'Garden Linux'
+osism manage images --upload --cloud=admin --filter 'Garden Linux'
 ```
 
 All available images can be found in the [osism/openstack-image-manager](https://github.com/osism/openstack-image-manager/tree/main/etc/images) repository.

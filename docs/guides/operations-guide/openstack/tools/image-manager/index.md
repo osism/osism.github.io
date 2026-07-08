@@ -144,8 +144,26 @@ the help of the OpenStack Image Manager.
 3. Run the OpenStack Image Manager. It is assumed that a profile with the name `openstack` exists in the
    [clouds.yaml](https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#configuration-files).
 
+   By default `openstack-image-manager` (and `osism manage images`, which uses it in the
+   backend) only shows a **preview** of the images that would be uploaded, a rough estimate of
+   how long that would take and the command to actually perform the upload. It does not connect
+   to OpenStack and makes no changes:
+
+   :::note
+
+   Preview by default is available from OSISM `<RELEASE>` onwards. In earlier releases the
+   command uploaded the images immediately, without requiring `--upload`.
+
+   :::
+
    ```bash
    openstack-image-manager --cloud openstack --filter ".*Cirr.*" --images images/
+   ```
+
+   To actually import the images, add `--upload`:
+
+   ```bash
+   openstack-image-manager --upload --cloud openstack --filter ".*Cirr.*" --images images/
    ```
 
 ## Image definitions
