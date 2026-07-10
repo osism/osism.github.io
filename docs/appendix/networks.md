@@ -25,7 +25,6 @@ sidebar_label: Networks
 | `httpd_network`                    | `172.31.101.128/28` |
 | `scaphandre_network`               | `172.31.101.160/28` |
 | `metering_network`                 | `172.31.101.176/28` |
-| `thanos_sidecar_network`           | `172.31.101.192/28` |
 | `gnmic_network`                    | `172.31.101.208/28` |
 | `opentelemetry_collector_network`  | `172.31.101.240/28` |
 | `zuul_network`                     | `172.31.102.0/28`   |
