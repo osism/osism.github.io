@@ -82,7 +82,7 @@ The reconciler combines two inventory sources:
 
 * the [configuration repository](../guides/configuration-guide/configuration-repository.md)
   mounted read-only at `/opt/configuration`, and
-* a [NetBox](https://netbox.dev/) instance, if the inventory is generated from NetBox
+* a [NetBox](https://github.com/netbox-community/netbox) instance, if the inventory is generated from NetBox
   data (see [Inventory](../guides/configuration-guide/inventory.md)).
 
 From these sources it renders the effective inventory and writes it to the shared
