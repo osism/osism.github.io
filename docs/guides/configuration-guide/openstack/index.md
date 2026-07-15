@@ -366,8 +366,8 @@ is created and gets into the container.
       },
   ```
 
-* Entrypoint of a service is always [kolla_start](https://github.com/openstack/kolla/blob/master/docker/base/start.sh).
-  This script calls a script [set_configs.py](https://github.com/openstack/kolla/blob/master/docker/base/set_configs.py).
+* Entrypoint of a service is always [kolla_start](https://github.com/openstack/kolla/blob/master/kolla/docker/base/start.sh).
+  This script calls a script [set_configs.py](https://github.com/openstack/kolla/blob/master/kolla/docker/base/set_configs.py).
   This script takes care of copying files from `/var/lib/kolla/config_files` to the right place inside the container.
   For this purpose, the container has a
   [config.json](https://github.com/openstack/kolla-ansible/blob/master/ansible/roles/opensearch/templates/opensearch.json.j2)
