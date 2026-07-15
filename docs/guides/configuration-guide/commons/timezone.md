@@ -6,7 +6,7 @@ sidebar_label: Timezone
 
 With the `osism.commons.timezone` role, it is possible to manage the used timezone on a node.
 
-This role is just a wrapper for the [community.general.timezone](https://docs.ansible.com/ansible/latest/collections/community/general/timezone_module.html)
+This role is just a wrapper for the [community.general.timezone](https://docs.ansible.com/projects/ansible/latest/collections/community/general/timezone_module.html)
 module. The role also installs the `tzdata` package.
 
 | Parameter          | Default | Description                                                |

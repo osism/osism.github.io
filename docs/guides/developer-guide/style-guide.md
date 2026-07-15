@@ -7,7 +7,7 @@ sidebar_label: Style Guide
 ## Ansible
 
 We implement all the default rules of Ansible Lint. All default rules can be found in the
-[Ansible Lint documentation](https://ansible.readthedocs.io/projects/lint/rules/).
+[Ansible Lint documentation](https://docs.ansible.com/projects/lint/rules/).
 
 ### Task names
 

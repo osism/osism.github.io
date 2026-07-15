@@ -66,7 +66,7 @@ global
 
 ### Backup
 
-[Mariabackup](https://mariadb.com/kb/en/mariabackup-overview/) is used to create backups
+[Mariabackup](https://mariadb.com/docs/server/server-usage/backup-and-restore/mariadb-backup/mariadb-backup-overview) is used to create backups
 of MariaDB. For more details about backups, you can use the official
 [kolla-ansible](https://docs.openstack.org/kolla-ansible/latest/admin/mariadb-backup-and-restore.html) documentation.
 

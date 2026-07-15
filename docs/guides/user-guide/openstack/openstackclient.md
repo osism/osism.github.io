@@ -134,7 +134,7 @@ clouds = {
 print(yaml.dump(clouds))
 ```
 
-Source: [Adam Young's Web Log](https://adam.younglogic.com/2022/03/generating-a-clouds-yaml-file)
+Source: [Adam Young's Web Log](https://adam.younglogic.com/2022/03/generating-a-clouds-yaml-file/)
 
 First you need to source your `openrc` file so that the `OS_` variables are available.
 
@@ -175,4 +175,4 @@ clouds:
     identity_api_version: $OS_IDENTITY_API_VERSION
 EOF
 ```
-Source: [Andreas Karis Blog](https://andreaskaris.github.io/blog/openstack/using_clouds_yaml)
+Source: [Andreas Karis Blog](https://andreaskaris.github.io/blog/openstack/using_clouds_yaml/)

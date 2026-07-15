@@ -9,7 +9,7 @@ environment to be operated interactively.
 
 ## Ansible
 
-Used tool: [ansible-console](https://docs.ansible.com/ansible/latest/cli/ansible-console.html)
+Used tool: [ansible-console](https://docs.ansible.com/projects/ansible/latest/cli/ansible-console.html)
 
 ```console
 $ osism console --type ansible testbed-node-0
@@ -25,7 +25,7 @@ Shortcut: `osism console .testbed-node-0`
 
 ## Clush
 
-Used tool: [ClusterShell](https://clustershell.readthedocs.io)
+Used tool: [ClusterShell](https://clustershell.readthedocs.io/en/latest/)
 
 The same groups as defined in the Ansible Inventory can be used.
 
@@ -57,7 +57,7 @@ Shortcut: `osism console testbed-node-0/fluentd`
 
 ## SSH
 
-Used tool: [OpenSSH](https://www.openssh.com)
+Used tool: [OpenSSH](https://www.openssh.org/)
 
 ```console
 $ osism console --type ssh testbed-node-0

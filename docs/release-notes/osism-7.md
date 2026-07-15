@@ -37,7 +37,7 @@ Release date: 8. September 2024
     issues. Further details can be found in security advisory
     [OSSA-2024-003: Unvalidated image data passed to qemu-img](https://security.openstack.org/ossa/OSSA-2024-003.html)
     and in SCS blog post
-    [Sovereign Cloud Stack Security Advisory Image Processing in Ironic (CVE-2024-44082)](https://scs.community/de/security/2024/09/07/cve-2024-44082/). This upgrade is important.
+    [Sovereign Cloud Stack Security Advisory Image Processing in Ironic (CVE-2024-44082)](https://sovereigncloudstack.org/community_blog/sovereign-cloud-stack-security-advisory-image-processing-in-ironic-cve-2024-44082/). This upgrade is important.
 
 * New manager features.
 
@@ -131,7 +131,7 @@ Release date: 12. August 2024
     issues. Further details can be found in security advisory
     [OSSA-2024-002: Incomplete file access fix and regression for QCOW2 backing files and VMDK flat descriptors](https://security.openstack.org/ossa/OSSA-2024-002.html)
     and in SCS blog post
-    [SCS Security Advisory on incomplete QCOW2 and VMDK image handling protections (CVE-2024-40767)](https://scs.community/de/security/2024/07/23/cve-2024-40767/). This upgrade is important. If a hotfix for this problem has already
+    [SCS Security Advisory on incomplete QCOW2 and VMDK image handling protections (CVE-2024-40767)](https://sovereigncloudstack.org/community_blog/scs-security-advisory-on-incomplete-qcow2-and-vmdk-image-handling-protections-cve-2024-40767/). This upgrade is important. If a hotfix for this problem has already
     been deployed in advance, the parameters added for this in `environments/kolla/images.yml`
     must be removed again.
 
@@ -196,7 +196,7 @@ Release date: 10. July 2024
     issues. Further details can be found in security advisory
     [OSSA-2024-001: Arbitrary file access through custom QCOW2 external data](https://security.openstack.org/ossa/OSSA-2024-001.html)
     and in SCS blog post
-    [SCS Security Advisory on arbitrary file access through QCOW2 external data file (CVE-2024-32498)](https://scs.community/de/security/2024/07/02/cve-2024-32498/). This upgrade is important. If a hotfix for this problem has already
+    [SCS Security Advisory on arbitrary file access through QCOW2 external data file (CVE-2024-32498)](https://sovereigncloudstack.org/community_blog/scs-security-advisory-on-arbitrary-file-access-through-qcow2-external-data-file-cve-2024-32498/). This upgrade is important. If a hotfix for this problem has already
     been deployed in advance, the parameters added for this in `environments/kolla/images.yml`
     must be removed again.
 
@@ -398,7 +398,7 @@ Release date: 24. May 2024
 * New documentation.
 
   * The documentation for the
-    [initial creation of a configuration repository using Cookiecutter](https://osism.tech/docs/guides/configuration-guide/configuration-repository)
+    [initial creation of a configuration repository using Cookiecutter](https://osism.tech/docs/guides/configuration-guide/configuration-repository/)
     has been completely revised. In the Cookiecutter itself, notes have been added in many places to simplify
     the initial reworking of the created configuration repository.
 
@@ -477,8 +477,8 @@ the resulting effort.
   to perform significantly more tests than with the previously used `osism.validations.refstack` role. The new
   role will be used in the testbed in future to significantly increase the number of tests performed in the CI.
 
-* New documentation for the [project manager](https://osism.tech/docs/guides/operations-guide/openstack/tools/project-manager)
-  and the [simple stress](https://osism.tech/docs/guides/operations-guide/openstack/tools/simple-stress).
+* New documentation for the [project manager](https://osism.tech/docs/guides/operations-guide/openstack/tools/project-manager/)
+  and the [simple stress](https://osism.tech/docs/guides/operations-guide/openstack/tools/simple-stress/).
 
 * When using the reboot play, it is now possible to wait for the reboot to be completed ([osism/issues#758](https://github.com/osism/issues/issues/758)).
 

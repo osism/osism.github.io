@@ -86,7 +86,7 @@ running containers. This can lead to interruptions in individual services. A cha
 required restart.
 
 Whether the containers are restarted when the Docker Service is restarted depends on whether the
-[Live Restore feature](https://docs.docker.com/config/containers/live-restore/) is used.
+[Live Restore feature](https://docs.docker.com/engine/daemon/live-restore/) is used.
 This can be configured via the parameter `docker_live_restore`. Live restore is enabled by default.
 
 It is important to set the `docker_live_restore` parameter explicitly as a string. This means

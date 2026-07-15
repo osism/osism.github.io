@@ -15,7 +15,7 @@ Note: This is a rather classical snowflake setup -- we create a VM and do some m
 openstack-health-monitor implements a scripted scenario test with a large shell-script that uses the openstackclient tools to set up the scenario, test it and tear everything down again in a loop. Any errors are recorded, as well as timings and some very basic benchmarks. The script sets up some virtual network infrastructure (routers, networks, subnets, floating IPs), security groups, keypairs, volumes and finally boots some VMs. Access to these is tested (ensuring metadata injection works) and connectivity between them tested and measured. A loadbalancer (optionally) is set up with a health-monitor and access via it before and after killing some backends is tested.
 The scenario is described in a bit more detail in the [repository's README.md](https://github.com/SovereignCloudStack/openstack-health-monitor/blob/main/README.md) file.
 
-The openstack-health-monitor is not the intended long-term solution for monitoring your infrastructure. The SCS project has a project underway that will create more modern, flexible, and more maintainable monitoring infrastructure; the concepts are described on the [monitoring section](https://docs.scs.community/docs/category/monitoring) of the project's documentation. The openstack-health-monitor will thus not see any significant enhancements any more; it will be maintained and kept alive as long as there are users. This guide exclusively focuses on how to set it up.
+The openstack-health-monitor is not the intended long-term solution for monitoring your infrastructure. The SCS project has a project underway that will create more modern, flexible, and more maintainable monitoring infrastructure; the concepts are described on the [monitoring section](https://docs.scs.community/docs/category/monitoring/) of the project's documentation. The openstack-health-monitor will thus not see any significant enhancements any more; it will be maintained and kept alive as long as there are users. This guide exclusively focuses on how to set it up.
 
 ## Setting up the driver VM
 
@@ -82,7 +82,7 @@ Sidenote: The `tr` command is there to handle broken tooling that embeds a trail
 ```bash
 openstack server create --network oshm-network --key-name oshm-key --security-group default --security-group sshping --security-group grafana --flavor SCS-2V-4 --block-device boot_index=0,uuid=$IMGUUID,source_type=image,volume_size=10,destination_type=volume,delete_on_termination=true oshm-driver
 ```
-Chose a flavor that exists on your cloud. Here we have used  one without root disk and asked nova to create a volume on the fly by passing `--block-device`. See [diskless flavor blog article](https://scs.community/2023/08/21/diskless-flavors/). For flavors with local root disks, you could have used the `--image $IMGUUID` parameter instead.
+Chose a flavor that exists on your cloud. Here we have used  one without root disk and asked nova to create a volume on the fly by passing `--block-device`. See [diskless flavor blog article](https://sovereigncloudstack.org/en/community_blog/preferring-diskless-flavours-in-scs/). For flavors with local root disks, you could have used the `--image $IMGUUID` parameter instead.
 
 7. Wait for it to boot (optional)
 You can look at the boot log with `openstack console log show oshm-driver` or connect to it via VNC at the URL given by `openstack console url show oshm-driver`. You can of course also query openstack on the status `openstack server list` or `openstack server show oshm-driver`. You can also just create a simple loop:
@@ -607,7 +607,7 @@ Please replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the OAuth2 credent
 provided to you.
 Finally, don't forgot to restart Grafana with `sudo systemctl restart grafana-server` after adjusting the config.
 
-More information can be found in the [Grafana documentation for GitHub OAuth2](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github/).
+More information can be found in the [Grafana documentation for GitHub OAuth2](https://grafana.com/docs/grafana/latest/setup-grafana/configure-access/configure-authentication/github/).
 
 ## Maintenance
 
@@ -615,7 +615,7 @@ The driver VM is a snowflake: A manually set up system (unless you automate all 
 
 ### Unattended upgrades
 
-It is recommended to ensure maintenance updates are deployed automatically. These are unlikely to negatively impact the openstack-health-monitor. See https://wiki.debian.org/UnattendedUpgrades. If you decide against unattended upgrades, it is recommended to install updates manually regularly and especially watch out for issues that affect the services that are exposed to the world: sshd (port 22) and Caddy/Grafana (port 3000).
+It is recommended to ensure maintenance updates are deployed automatically. These are unlikely to negatively impact the openstack-health-monitor. See https://wiki.debian.org/PeriodicUpdates?action=show&redirect=UnattendedUpgrades. If you decide against unattended upgrades, it is recommended to install updates manually regularly and especially watch out for issues that affect the services that are exposed to the world: sshd (port 22) and Caddy/Grafana (port 3000).
 
 If you use `unattended-upgrades`, you should review your settings in `/etc/apt/apt.conf.d/50unattended-upgrades`,
 especially `Unattended-Upgrade::Origins-Pattern`. It controls which packages are upgraded. If you want Caddy to be

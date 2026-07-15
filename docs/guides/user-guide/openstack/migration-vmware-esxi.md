@@ -17,7 +17,7 @@ providers that perform migration from VMware ESXi to OpenStack. One of the offer
 
 A good overview and comparison of VMWare resources and their OpenStack
 counterparts is available
-[in the OpenStack documentation](https://www.openstack.org/vmware-migration-to-openstack).
+[in the OpenStack documentation](https://www.openstack.org/vmware-migration-to-openstack/).
 
 
 ## Scenario
