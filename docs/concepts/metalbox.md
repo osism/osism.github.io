@@ -6,7 +6,7 @@ sidebar_position: 6
 # OSISM MetalBox
 
 The OSISM MetalBox is a hardware-provisioning toolkit built around
-[OpenStack Ironic](https://docs.openstack.org/ironic/). It deploys bare-metal hosts
+[OpenStack Ironic](https://docs.openstack.org/ironic/latest/). It deploys bare-metal hosts
 and bundles every component required to install an OSISM environment offline, so a
 pod can be brought up without external network access. Operators use the MetalBox to
 bootstrap new environments and to manage their lifecycle over time — for example,
@@ -69,13 +69,13 @@ and the configuration volume — see the [OSISM Manager](./manager.md) concept.
 
 ### Ironic
 
-[Ironic](https://docs.openstack.org/ironic/) runs in standalone mode on the
+[Ironic](https://docs.openstack.org/ironic/latest/) runs in standalone mode on the
 MetalBox — that is, without the rest of OpenStack. The only OpenStack service
 deployed alongside it is Keystone for authentication; the supporting infrastructure
 components are MariaDB, Redis, and RabbitMQ.
 
 Servers are provisioned via virtual media: Ironic mounts a small image containing
-the [ironic-python-agent](https://docs.openstack.org/ironic-python-agent/) (IPA)
+the [ironic-python-agent](https://docs.openstack.org/ironic-python-agent/latest/) (IPA)
 over the OOB interface and boots the node from it. During boot, IPA brings up and
 minimally configures the data interfaces of the node, then uses them to talk back
 to Ironic on the MetalBox and to pull the target image, which is written to disk

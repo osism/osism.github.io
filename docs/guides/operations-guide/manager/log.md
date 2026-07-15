@@ -195,7 +195,7 @@ AH00558: apache2: Could not reliably determine the server's fully qualified doma
 
 ## OpenSearch
 
-OpenSearch can be queried with [SQL](https://opensearch.org/docs/latest/search-plugins/sql/sql/index/).
+OpenSearch can be queried with [SQL](https://docs.opensearch.org/latest/search-plugins/sql/sql/index/).
 
 ```console
 $ osism log opensearch

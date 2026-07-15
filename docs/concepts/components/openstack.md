@@ -2,7 +2,7 @@
 
 ## Lifecycle Management of OpenStack in OSISM
 
-The open source project Kolla from the [OpenInfra Foundation](https://openinfra.dev) is
+The open source project Kolla from the [OpenInfra Foundation](https://openinfra.org/) is
 used in OSISM for the life cycle management of OpenStack. Kolla's mission is to provide
 production-ready containers and deployment tools for operating OpenStack clouds. Kolla has
 been actively developed by a very diverse team for 10 years and is one of the most common
@@ -10,7 +10,7 @@ been actively developed by a very diverse team for 10 years and is one of the mo
 
 The container images provided by Kolla are not only used by Kolla itself. They are also used
 in TripleO, the basis for the now discontinued
-[RedHat OpenStack Platform](https://www.redhat.com/en/technologies/linux-platforms/openstack-platform),
+[RedHat OpenStack Platform](https://www.redhat.com/en/technologies/cloud-computing/openstack-services-on-openshift),
 and the [OpenStack Kubernetes Operators](https://github.com/openstack-k8s-operators),
 the basis for the new
 [RedHat OpenStack Services on OpenShift](https://www.redhat.com/en/blog/red-hat-openstack-services-openshift-next-generation-red-hat-openstack-platform).

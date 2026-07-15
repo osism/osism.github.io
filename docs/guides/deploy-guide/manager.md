@@ -125,7 +125,7 @@ When the `./run.sh operator` is executed, the following prompts are displayed:
   ```
 
 Details on all parameters can be found in
-[Ansible Configuration Settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
+[Ansible Configuration Settings](https://docs.ansible.com/projects/ansible/latest/reference_appendices/config.html)
 in the Ansible documentation.
 
 | Environment variable      | Type    | Description                                                                                                                                                          |

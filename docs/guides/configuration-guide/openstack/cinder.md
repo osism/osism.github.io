@@ -10,7 +10,7 @@ sidebar_label: Cinder
 
 ## Pure Storage FlashArray
 
-* https://support.purestorage.com/bundle/m_openstack/page/Solutions/topics/concept/c_openstack_02.html
+* https://support.everpuredata.com/r/openstack/openstack-02
 * [Pure Storage OpenStack (2023.2) Cinder Driver Best Practices](https://support-be.purestorage.com/bundle/Pure_Storage_OpenStack_2023.2_Bobcat_Cinder_Driver_Best_Practices/resource/Pure_Storage_OpenStack_2023.2_Bobcat_Cinder_Driver_Best_Practices.pdf)
 * https://github.com/openstack/cinder/blob/master/cinder/volume/drivers/pure.py
 * https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/everpure-driver.html

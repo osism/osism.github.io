@@ -594,7 +594,7 @@ ceph osd pool delete <pool_name> <pool_name> --yes-i-really-really-mean-it
 In order to be able to delete pools, it has to be enabled on the monitors
 by setting the ``mon_allow_pool_delete`` flag to true. Default is false.
 
-See: https://docs.ceph.com/en/latest/rados/configuration/mon-config-ref
+See: https://docs.ceph.com/en/latest/rados/configuration/mon-config-ref/
 
 :::
 

@@ -353,7 +353,7 @@ The required auth token can be generated on the Zuul control node with the `zuul
 docker exec -it zuul_scheduler zuul-admin create-auth-token --user USER --tenant osism --expires-in 3600 --auth-config zuul_operator
 ```
 
-With the [zuul-client](https://zuul-ci.org/docs/zuul-client/index.html) it is possible to
+With the [zuul-client](https://zuul-ci.org/docs/zuul-client/latest/index.html) it is possible to
 remove the two hanging jobs from the screenshot.
 
 ```bash

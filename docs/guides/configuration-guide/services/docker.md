@@ -8,7 +8,7 @@ With the `osism.services.docker` role, it is possible to manage Docker.
 
 ## Configure logging drivers
 
-Docker documentation: https://docs.docker.com/config/containers/logging/configure/
+Docker documentation: https://docs.docker.com/engine/logging/configure/
 
 The role currently supports the following parameters with their respective defaults.
 
@@ -21,10 +21,10 @@ docker_log_opts:
 ```
 
 The log driver to be used can be configured with `docker_log_driver`. By default,
-[json-file](https://docs.docker.com/config/containers/logging/json-file/) is used.
+[json-file](https://docs.docker.com/engine/logging/drivers/json-file/) is used.
 The log driver writes all logs of a container to a JSON file
 in `/var/lib/docker/containers`. All supported log drivers can be found in the
-[Docker documentation](https://docs.docker.com/config/containers/logging/configure/#supported-logging-drivers).
+[Docker documentation](https://docs.docker.com/engine/logging/configure/#supported-logging-drivers).
 
 The log level can be configured via `docker_log_level`.
 

@@ -8,7 +8,7 @@ sidebar_position: 51
 
 The OpenStack Flavor Manager manages the creation, modification, and removal of flavors.
 It operates as a facilitator that orchestrates compute flavors in alignment
-with the standard [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
+with the standard [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/)
 by utilizing YAML files provided by the SCS project.
 
 ## Installation
@@ -54,7 +54,7 @@ $ openstack-flavor-manager --help
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-To create the mandatory flavors by the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
+To create the mandatory flavors by the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/)
 standard, you run:
 
 ```bash
@@ -114,7 +114,7 @@ Each definition has its own set of mandatory and recommended flavors. The defini
 all definitions of SCS as well as some others.
 
 To run the OpenStack Flavor Manager with a specific definition, either `scs` or `osism`,
-use the optional `--name` parameter. By default the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100)
+use the optional `--name` parameter. By default the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/)
 standard definition will be used.
 
 ```bash

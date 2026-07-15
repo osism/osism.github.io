@@ -447,15 +447,15 @@ the content available in a configuration repository. In the section
 [Creating a new configuration repository](#creating-a-new-configuration-repository) is the creation
 of a new configuration repository documented.
 
-| Directory/File     | Description                                                                                                                                                                            |
-|:-------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `environments`     |                                                                                                                                                                                        |
-| `inventory`        |                                                                                                                                                                                        |
-| `netbox`           | optional                                                                                                                                                                               |
-| `requirements.txt` | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                            |
-| `gilt.yml`         |                                                                                                                                                                                        |
-| `Makefile`         |                                                                                                                                                                                        |
-| `gilt.yaml`        | [Gilt](https://gilt.readthedocs.io) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
+| Directory/File     | Description                                                                                                                                                                                       |
+|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `environments`     |                                                                                                                                                                                                   |
+| `inventory`        |                                                                                                                                                                                                   |
+| `netbox`           | optional                                                                                                                                                                                          |
+| `requirements.txt` | In the `requirements.txt` the necessary dependencies are listed to be able to execute Gilt.                                                                                                       |
+| `gilt.yml`         |                                                                                                                                                                                                   |
+| `Makefile`         |                                                                                                                                                                                                   |
+| `gilt.yaml`        | [Gilt](https://gilt.readthedocs.io/en/latest/) is a Git layering tool. We use Gilt to maintain the image versions, Ansible configuration and scripts within the `environments/manager` directory. |
 
 ## Synchronizing the configuration repository
 

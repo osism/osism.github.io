@@ -13,9 +13,9 @@ Error cases should be described in such a way that they are directly reproducibl
 the better.
 
 We use GitHub pull requests for contributions. The use of pull requests is documented in the
-official [GitHub documentation](https://docs.github.com/en/github/collaborating-with-pull-requests).
+official [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests).
 The process in detail for the creation of a fork, branch etc. is also documented in the
-official [GitHub documentation](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests).
+official [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests).
 It is recommended to use the [GitHub CLI](https://cli.github.com). Makes many steps easier.
 
 ## How to add a new service

@@ -26,9 +26,9 @@ the underlying Python API.
 
 ### Job queues (Celery + Redis)
 
-The manager uses [Celery](https://docs.celeryq.dev/) backed by a Redis instance
+The manager uses [Celery](https://docs.celeryq.dev/en/stable/) backed by a Redis instance
 (`manager-redis`) to dispatch and queue Ansible tasks. The same Redis instance also
-serves as the [Ansible facts cache](https://docs.ansible.com/ansible/latest/plugins/cache/redis.html),
+serves as the [Ansible facts cache](https://docs.ansible.com/projects/ansible/latest/plugins/cache/redis.html),
 so that all Ansible containers share the same gathered host facts. Separate
 queues exist for each workload type:
 
