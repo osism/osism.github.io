@@ -8,6 +8,16 @@ sidebar_position: 50
 The [OpenStack Image Manager](https://pypi.org/project/openstack-image-manager/) is
 a tool for managing all machine images on an OpenStack environment.
 
+There are two ways to use the OpenStack Image Manager:
+
+* **[Via the OSISM CLI](#usage-via-the-osism-cli)** with `osism manage images`. This is the
+  preferred way for operators of an OSISM environment. No separate installation is required.
+* **[Standalone](#standalone-usage)** by installing the `openstack-image-manager` package
+  directly. This is useful when the tool is used independent of OSISM.
+
+Regardless of the path, the [requirements](#requirements) on the OpenStack environment and the
+[image definitions](#image-definitions) are the same.
+
 ## Requirements
 
 :::info
@@ -63,9 +73,93 @@ image_import_plugins = ['image_decompression', 'image_conversion']
 output_format = raw
 ```
 
-## Getting started
+## Usage via the OSISM CLI
 
-This **Getting started** will upload a private image to your OpenStack environment with
+The OpenStack Image Manager can be used via the OSISM CLI. This is the preferred way to use it.
+No installation is then required. It is used via `osism manage images`.
+
+The image definitions are read from `/etc/images` on the manager by default. This directory is
+provided by OSISM and contains the image definitions maintained in the
+[osism/openstack-image-manager](https://github.com/osism/openstack-image-manager/tree/main/etc/images)
+repository. To manage your own image definitions, point the command at a different directory or a
+single image file with the `--filter` and `--images` options.
+
+By default the cloud profile with the name `admin` is used. The credentials of this profile
+must be allowed to create, update and delete images. Another profile can be selected with the
+`--cloud` parameter.
+
+```console
+$ osism manage images --help
+
+usage: osism manage images [-h] [--no-wait] [--dry-run] [--hide] [--delete]
+                           [--latest] [--cloud CLOUD] [--filter FILTER]
+                           [--images IMAGES]
+
+options:
+  -h, --help       show this help message and exit
+  --no-wait        Do not wait until image management has been completed
+  --dry-run        Do not perform any changes
+  --hide           Hide images that should be deleted
+  --delete         Delete images that should be deleted
+  --latest         Only import the latest version for images of type multi
+  --cloud CLOUD    Cloud name in clouds.yaml (default: admin)
+  --filter FILTER  Filter images with a regex on their name
+  --images IMAGES  Path to the directory containing all image files or path to
+                   single image file (default: /etc/images)
+```
+
+To check which images from `/etc/images` would be managed by default, you can run:
+
+```bash
+osism manage images --dry-run
+```
+
+To manage all of those images, run:
+
+```bash
+osism manage images
+```
+
+To restrict the run to specific images, filter them with a regular expression on their name.
+For example, to only manage the `Ubuntu 24.04` image:
+
+```bash
+osism manage images --filter 'Ubuntu 24.04$'
+```
+
+If you omit the `$` at the end of the regex here, the filter would match
+`Ubuntu 24.04`, as well as `Ubuntu 24.04 Minimal`.
+
+Before making any changes it is a good idea to check what the OpenStack Image Manager would do
+with `--dry-run`. No changes are applied in this mode:
+
+```bash
+osism manage images --dry-run --filter 'Ubuntu 24.04'
+```
+
+Images that are no longer required are hidden by default (their visibility is changed so that they
+are no longer offered to users). To actually delete images that should be removed, use the
+`--delete` parameter. Use this with care:
+
+```bash
+osism manage images --delete --filter 'Ubuntu 24.04'
+```
+
+For images of type `multi` (see [Image with regular rebuilds](#image-with-regular-rebuilds)), only
+the latest version can be imported with the `--latest` parameter instead of all versions listed in
+the definition:
+
+```bash
+osism manage images --latest --filter 'Ubuntu 24.04'
+```
+
+By default the command waits until the image management has been completed and streams the output.
+Use `--no-wait` to start the task in the background without waiting for it to finish.
+
+## Standalone usage
+
+For use independently of OSISM, the OpenStack Image Manager can be installed and run directly.
+The following steps will upload a private image to your OpenStack environment with
 the help of the OpenStack Image Manager.
 
 1. Install the [openstack-image-manager](https://pypi.org/project/openstack-image-manager/)
