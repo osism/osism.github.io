@@ -5,13 +5,6 @@ sidebar_position: 95
 
 # Release Notes
 
-:::info
-
-The old release notes (before OSISM 7) can be found on the archived page
-[release.osism.tech](https://release.osism.tech).
-
-:::
-
 | Series                    | Status               | Initial Release Date | Next Phase           |
 |:--------------------------|:---------------------|:---------------------|:---------------------|
 | [OSISM 10](./osism-10.md) | Maintained           | 20. March 2026       | Extended Maintenance |
