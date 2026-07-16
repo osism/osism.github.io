@@ -102,6 +102,13 @@ the Ceph keyrings into the Git configuration repository.
 * Logging, Monitoring & Telemetry with [Prometheus](https://prometheus.io/) & [Grafana](https://grafana.com/)
 * [Realtime insights with Netdata](./components/netdata.md)
 
+## Release Cadence
+
+OSISM cuts one major release per year, anchored on the spring SLURP (`YYYY.1`)
+OpenStack release, and supports the current release plus the one before it. The
+[Release Cadence](./release-cadence.md) chapter explains the release timing, which
+OpenStack releases OSISM ships, and how long each release is maintained.
+
 ## Technology Adaptability
 
 OSISM integrates proven open source projects into a cohesive cloud platform. As

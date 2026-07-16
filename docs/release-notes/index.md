@@ -28,6 +28,7 @@ The release notes for 7.0.3 must then also be taken into account.
 * We comply with the removals, deprecations, etc. of the individual upstream projects used. The release
   notes of the upstream projects used are not included in the OSISM release notes and must be considered
   separately.
+* [Release Cadence](../concepts/release-cadence.md) — how often OSISM releases, which OpenStack releases it supports, and how long each is maintained.
 * [How to use of a specific release in the configuration repository?](../guides/configuration-guide/manager.mdx#stable-release)
 * [How we handle releases?](../guides/developer-guide/releases.md#how-we-handle-releases)
 * [How to prepare and make a release?](../guides/developer-guide/releases.md#how-to-make-a-release)
