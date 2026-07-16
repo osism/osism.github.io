@@ -7,19 +7,24 @@ sidebar_position: 10
 
 ## How we handle releases
 
-Currently we do a major release every 6 months. Minor releases we do when
-needed and about every 2 weeks.
+We do one major release per year, anchored on the SLURP (`YYYY.1`) OpenStack
+release and cut about one month after the matching Kolla release. Minor releases
+we do when needed and about every 6 to 8 weeks. See the
+[Release Cadence](../../concepts/release-cadence.md) concept for the full
+cadence and support lifecycle.
 
-In a minor release, only updates, bug fixes, etc. take place. There are also
-no major upgrades of included components such as OpenStack, Keycloak or Ceph
-in a minor release.
+In a minor release, only updates, bug fixes, and security fixes take place. The
+OpenStack version is not upgraded in a minor release; it is tied to the major
+release. Kubernetes (managed with Gardener) and Ceph (managed with cephadm) are
+exceptions — they are not bound to the OSISM major release and can be updated
+independently of it.
 
 It is possible to jump from any minor version within a major version to higher
 minor versions without any intervention.
 
 Deprecations, removals, etc. take place in a major release. New mandatory
-features are also added in a major release. Upgrades of the included components
-can also take place during a major release (e.g. OpenStack Xena -> OpenStack Yoga).
+features are also added in a major release. The upgrade of the OpenStack release
+also happens during a major release (e.g. OpenStack 2025.1 -> OpenStack 2026.1).
 
 It is possible to jump from the previous major version to the next major version.
 It may be that manual intervention is necessary. For example, configuration
