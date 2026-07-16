@@ -14,11 +14,14 @@ Similar to the Ubuntu point release model, the first release of OSISM 10 is inte
 
 :::info
 
-Starting with OSISM 10, a specific OSISM version is no longer tied to a single version of
-Kubernetes, Docker, Ceph, or OpenStack. Instead, multiple versions of these components are
-supported within the same OSISM release. For OSISM 10, this means that both OpenStack 2025.1
-and OpenStack 2025.2 will be supported. OpenStack 2025.2 will be added with one of the next
-releases.
+OSISM 10 supports only OpenStack 2025.1 Epoxy. Following the
+[SLURP-only policy](../concepts/release-cadence.md), OSISM tracks exactly one
+OpenStack release per major version — the spring SLURP release (`YYYY.1`) — so
+the non-SLURP OpenStack 2025.2 Flamingo is not added to OSISM 10.
+
+Kubernetes (managed with Gardener), Docker, and Ceph (managed with cephadm) are
+not tied to a single version within an OSISM major release and can be updated
+independently of it.
 
 :::
 
