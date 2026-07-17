@@ -155,3 +155,56 @@ sidebar_position: 40
     openstack --os-cloud admin loadbalancer failover 7f46b3f1-a405-4bbd-b0d0-5bf33a8cc04f
     ```
     If the client or server CA certificates have also been changed then all amphora based loadbalancers will need to be failed over to reestablish communication.
+
+## OVN database reports "misrouted message" after reinstalling a node
+
+* Problem: After completely reinstalling one OVN node, the `ovn_nb_db` (and usually `ovn_sb_db`) logs errors like
+
+  ```console
+  syntax error: Parsing raft append_request RPC failed: misrouted message (addressed to <server-id>)
+  ```
+
+  The OVN NB and SB databases form an OVSDB RAFT cluster (usually three members). Every member has a unique **server ID (SID)** that is generated when its database file is first created. Reinstalling a node from scratch recreates its database file and therefore gives it a **new SID**, while the surviving members still have the **old SID** of that node in their RAFT configuration. RAFT RPCs are addressed to a specific SID, so the surviving members keep sending `append_request` RPCs addressed to the now-gone old SID and the reinstalled node rejects them as *misrouted*. The reinstalled node may also have bootstrapped its own standalone cluster instead of joining the existing one.
+
+* Solution:
+
+  * Make sure the remaining members still have quorum before changing anything. With one of three nodes gone the other two form a quorum and the cluster stays writable. If you lost two of three, the cluster is read-only and you must recover from the single surviving database first — this procedure does not apply.
+
+  * From a **healthy** member, look at the cluster state and identify the server IDs of the stale (old) member for both databases.
+
+    ```console
+    docker exec ovn_nb_db ovs-appctl -t /var/run/ovn/ovnnb_db.ctl cluster/status OVN_Northbound
+    docker exec ovn_sb_db ovs-appctl -t /var/run/ovn/ovnsb_db.ctl cluster/status OVN_Southbound
+    ```
+
+    The stale member is the one in the `Servers:` list whose address points at the reinstalled node but whose SID no longer matches the node's current one. Depending on the state it may show a large `last msg ... ms ago` value, appear as disconnected, or carry no `last msg` entry at all.
+
+  * To confirm which SID is the current (new) one, run `cluster/status` on the **reinstalled** node itself — it reports its own current SID marked `(self)`. Any SID listed at that node's address on the healthy members that differs from this `(self)` value is the stale one to remove.
+
+  * Remove the stale member from the cluster. Run this on a healthy member for each affected database, using the short server ID from `cluster/status`.
+
+    ```console
+    docker exec ovn_nb_db ovs-appctl -t /var/run/ovn/ovnnb_db.ctl cluster/kick OVN_Northbound <old-nb-sid>
+    docker exec ovn_sb_db ovs-appctl -t /var/run/ovn/ovnsb_db.ctl cluster/kick OVN_Southbound <old-sb-sid>
+    ```
+
+  * Only if OVN was already (re-)deployed on the reinstalled node and it came up with its own standalone cluster, remove the freshly created database containers and volumes there so it does not keep that wrong state when it rejoins. On a node that has not had OVN deployed yet there is nothing to clean up — skip straight to the redeploy.
+
+    ```console
+    docker stop ovn_nb_db ovn_sb_db
+    docker rm ovn_nb_db ovn_sb_db
+    docker volume rm ovn_nb_db ovn_sb_db
+    ```
+
+  * Re-deploy OVN so the reinstalled node joins the existing cluster as a fresh member.
+
+    ```console
+    osism apply ovn
+    ```
+
+  * Verify on all three nodes that each database again reports three connected members with a single leader.
+
+    ```console
+    docker exec ovn_nb_db ovs-appctl -t /var/run/ovn/ovnnb_db.ctl cluster/status OVN_Northbound
+    docker exec ovn_sb_db ovs-appctl -t /var/run/ovn/ovnsb_db.ctl cluster/status OVN_Southbound
+    ```
