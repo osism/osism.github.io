@@ -115,7 +115,15 @@ to monitor the link to the connected routers itself. Although this is not
 strictly needed, it provides a much faster network convergence in case of a link
 failure than just BGP itself.
 
-## CloudPod networking (underlay)
+## CloudPod network
+
+![BGP_unnumbered](./images/osism-cluster-network-openstack-api.drawio.svg)
+
+This diagram shows a simplified version of how the described network concepts
+work together in an OSISM CloudPod. The specifics of the under- and overlay
+network are explained in the sections below.
+
+### Cluster IPv4 network
 
 Within an OSISM CloudPod, we assign each server and switch one /32 IPv4 network
 on a dedicated loopback0 interface. All servers run FRR as a routing daemon. If
@@ -129,7 +137,18 @@ architecture, each leaf should also be connected to at least two spines. The
 number of required additional interconnects between switches depends on the
 exact topology and bandwidth requirements.
 
-## OpenStack networking (overlay)
+To allow binding the internal and public OpenStack APIs to separate networks,
+we recommend assigning dedicated /32 networks to the loopback0 of the control
+nodes. All control nodes can announce the same /32 network for the public
+OpenStack API endpoints (e.g. 10.10.10.254/32) and another one for the internal
+endpoints (e.g. 10.10.10.3/32). Since multiple control nodes announce the
+network for the endpoints of OpenStack, no additional virtual IP is needed to
+provide high availability for these. BGP in combination with BFD automatically
+remove unavailable nodes as routing targets. HAProxy binds on all control nodes
+to the assigned network addresses and takes care of the load balancing, as well
+as the service health checks.
+
+### OpenStack networking (overlay)
 
 OVN is used to provide Software Defined Networking (SDN) for OpenStack. Building
 on top of the MP-BGP unnumbered host-based routing underlay, OVN uses Geneve as
