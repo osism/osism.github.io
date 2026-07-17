@@ -128,12 +128,7 @@ networks to all peers. To provide redundancy, we recommend connecting each
 server to at least two different switches. In the case of a leaf-spine
 architecture, each leaf should also be connected to at least two spines. The
 number of required additional interconnects between switches depends on the
-exact topology and bandwidth requirements. At least one switch (typically a
-spine) should be connected to an external router providing outward connectivity
-to the internet. For redundancy, at least two such uplinks should exist from the
-network fabric. The external router should announce a default route to the
-connected switch, which will be distributed across the fabric to all connected
-servers to provide outward connectivity.
+exact topology and bandwidth requirements. 
 
 ## OpenStack networking (overlay)
 
@@ -156,6 +151,27 @@ Geneve tunnels between the /32 networks on the loopback0 interfaces of each
 compute and network node in the cluster across the fabric. OpenStack project
 networks are isolated via dedicated Geneve VNIs for each network, effectively
 providing L3 separation between them.
+
+## External connectivity
+
+There are three areas where external connectivity (to "the Internet" or possibly
+only to some other internal networks) for the CloudPod may be required:
+
+- Access from the servers, to install pkgs or containers
+- Access to the OpenStack APIs, to allow orchestrating cloud resources
+- Access to/from instances, so that deployed services can communicate
+
+One simple solution is to make everything connected via the underlay network, usually
+this connectivity will then be secured via a Firewall. More complex designs are
+possible, but discussing them is out of scope for this document.
+
+For the simple solution, at least one switch should be connected to an external
+firewall or router providing outward connectivity
+to the internet. For redundancy, at least two such uplinks should exist from the
+network fabric. The external router should announce a default route to the
+connected switch, which will be distributed across the fabric to all connected
+servers to provide outward connectivity.
+
 
 ## Further reading
 
