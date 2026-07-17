@@ -13,7 +13,7 @@ Multi-Protocol BGP unnumbered (
 [RFC 4861](https://datatracker.ietf.org/doc/html/rfc4861),
 [RFC 4291](https://datatracker.ietf.org/doc/html/rfc4291)
 ).
-On top of this L3 underlay, we recommend using OpenStack OVN to provide SDN for
+On top of this L3 underlay, we recommend using OpenStack Neutron with OVN as backend to provide SDN for
 the IaaS layer. The details of these concepts and how they are employed to
 provide the network fabric for a CloudPod are outlined below.
 
@@ -21,21 +21,21 @@ provide the network fabric for a CloudPod are outlined below.
 
 ![BGP_unnumbered](./images/bgp-unnumbered.drawio.svg)
 
-This diagram shows a simple example of one compute and one control node, with
-each two interfaces, connected to a switch with SONiC on it.
+This diagram shows a simple example of one compute and one control node, each
+with two interfaces, connected to a switch with SONiC on it.
 [Each node runs FRR](#host-based-routing)
 ([Free Range Routing](https://frrouting.org/)) and establishes direct
 [BGP sessions across the IPv6 link-local connections](#bgp-unnumbered)
 to the FRR running in the control-plane of the switch. All three have one /32
 network configured on their loopback0 interface and announce it to their BGP
 neighbors. Additionally, the switch also redistributes the routes from connected
-nodes. The switch itself receives the routes to both of the /32 networks of the
+interfaces. The switch itself receives the routes to both of the /32 networks of the
 nodes and redistributes them. Both nodes receive the route to the 10.10.20.11/32
 network on the switch and the route to the /32 network on the respective other
 node. Since there are two links between each node and the switch, all routes
 have two possible paths, which are used via [ECMP](#ecmp). All of those IPv4
 routes use the IPv6 link-local address of the far side of the connected
-interface as nexthop. This is only possible if [MP-BGP](#multi-protocol-bgp) is
+interface as next hop. This is only possible if [MP-BGP](#multi-protocol-bgp) is
 supported and enabled. On some switches/routers this needs to be specifically
 enabled before such IPv4 via IPv6 routes can be accepted.
 
@@ -43,7 +43,7 @@ enabled before such IPv4 via IPv6 routes can be accepted.
 
 It is possible to exclude the network provisioning of the underlay from the
 tasks of the OSISM framework and build a fully functional CloudPod on an
-existing network architecture. OpenStack OVN itself only requires L3
+existing network architecture. OpenStack Neutron with OVN itself only requires L3
 connectivity between all hosts and is not dependent on our recommended L3
 underlay design with BGP unnumbered host-based routing. The management and
 design of such network architectures are out of scope in this document.
@@ -56,7 +56,7 @@ design of such network architectures are out of scope in this document.
 
 Building upon the concept of BGP (Border Gateway Protocol) itself, BGP
 unnumbered utilizes IPv6 link-local addresses to establish BGP sessions between
-two directly connected peers.  Instead of explicitly configuring an IPv4 (or
+two directly connected peers. Instead of explicitly configuring an IPv4 (or
 IPv6) address as neighbor address
 for a BGP router, the automatically assigned IPv6 link-local addresses on each
 interface are used to establish a connection to the directly connected BGP
@@ -64,11 +64,11 @@ router on the other side. In most BGP configurations, this can be done by just
 enabling IPv6 on an interface and specifying the neighbor as connected via this
 interface. An example and more detailed description of how this configuration
 can be built on SONiC switches can be found
-[in this STORDIS blog post](https://stordis.com/bgp-unnumbered-in-enterprise-sonic/)
+[in this STORDIS blog post](https://stordis.com/bgp-unnumbered-in-enterprise-sonic/).
 
 ### Host-based routing
 
-The concept of host-based routing is independent from the chosen routing
+The concept of host-based routing is independent of the chosen routing
 technology but is most commonly used in combination with OSPF or BGP to
 dynamically connect networks on each host to the switch network fabric. In
 contrast to classical network topologies, where hosts statically get assigned a
@@ -96,7 +96,7 @@ otherwise purely IPv6 fabric, making services on the server reachable via IPv4.
 
 ### ECMP
 
-Equal Cost Multi Path (ECMP) routing is a concept where multiple possible paths
+Equal-Cost Multi-Path (ECMP) routing is a concept where multiple possible paths
 between two network endpoints exist and are chosen without any default
 precedence. In combination with BGP, ECMP provides a reliable and automatic way
 of failover, as long as a sufficient number of paths between two network
@@ -140,7 +140,7 @@ servers to provide outward connectivity.
 OVN is used to provide Software Defined Networking (SDN) for OpenStack. Building
 on top of the MP-BGP unnumbered host-based routing underlay, OVN uses Geneve as
 network encapsulation for the overlay. Although other L3 encapsulations like
-VXLAN are supported, Geneve is currently the default one used by OpenStack
+VXLAN are supported, Geneve is currently the default used by OpenStack
 Neutron and therefore our recommendation.
 
 :::info
@@ -151,11 +151,11 @@ transported via L3.
 
 :::
 
-OpenStack Neutron utilizes OVN. OVN itself uses OvS flows and bridges to build
+OpenStack Neutron utilizes OVN. OVN itself uses OVS flows and bridges to build
 Geneve tunnels between the /32 networks on the loopback0 interfaces of each
 compute and network node in the cluster across the fabric. OpenStack project
 networks are isolated via dedicated Geneve VNIs for each network, effectively
-providing L3 separation between those.
+providing L3 separation between them.
 
 ## Further reading
 
