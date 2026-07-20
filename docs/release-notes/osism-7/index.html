@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OSISM 7 | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/release-notes/osism-7"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OSISM 7 | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Instructions for the upgrade can be found in the Upgrade Guide."><meta data-rh="true" property="og:description" content="Instructions for the upgrade can be found in the Upgrade Guide."><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/release-notes/osism-7"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/release-notes/osism-7" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/release-notes/osism-7" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Release Notes","item":"https://osism.tech/docs/release-notes/"},{"@type":"ListItem","position":2,"name":"OSISM 7","item":"https://osism.tech/docs/release-notes/osism-7"}]}</script><link rel="stylesheet" href="/assets/css/styles.b3e57e1f.css">
-<script src="/assets/js/runtime~main.a400ab39.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.8902f103.js" defer="defer"></script>
 <script src="/assets/js/main.79dd1670.js" defer="defer"></script>
 </head>
 <body>
@@ -32,7 +32,7 @@ Upgrades of the Ironic service is recommended.</p>
 issues. Further details can be found in security advisory
 <a href="https://security.openstack.org/ossa/OSSA-2024-003.html" target="_blank" rel="noopener noreferrer" class="">OSSA-2024-003: Unvalidated image data passed to qemu-img</a>
 and in SCS blog post
-<a href="https://scs.community/de/security/2024/09/07/cve-2024-44082/" target="_blank" rel="noopener noreferrer" class="">Sovereign Cloud Stack Security Advisory Image Processing in Ironic (CVE-2024-44082)</a>. This upgrade is important.</li>
+<a href="https://sovereigncloudstack.org/community_blog/sovereign-cloud-stack-security-advisory-image-processing-in-ironic-cve-2024-44082/" target="_blank" rel="noopener noreferrer" class="">Sovereign Cloud Stack Security Advisory Image Processing in Ironic (CVE-2024-44082)</a>. This upgrade is important.</li>
 </ul>
 </li>
 <li class="">
@@ -153,7 +153,7 @@ The OVN, OVS and Fluentd service images have been rebuild.</p>
 issues. Further details can be found in security advisory
 <a href="https://security.openstack.org/ossa/OSSA-2024-002.html" target="_blank" rel="noopener noreferrer" class="">OSSA-2024-002: Incomplete file access fix and regression for QCOW2 backing files and VMDK flat descriptors</a>
 and in SCS blog post
-<a href="https://scs.community/de/security/2024/07/23/cve-2024-40767/" target="_blank" rel="noopener noreferrer" class="">SCS Security Advisory on incomplete QCOW2 and VMDK image handling protections (CVE-2024-40767)</a>. This upgrade is important. If a hotfix for this problem has already
+<a href="https://sovereigncloudstack.org/community_blog/scs-security-advisory-on-incomplete-qcow2-and-vmdk-image-handling-protections-cve-2024-40767/" target="_blank" rel="noopener noreferrer" class="">SCS Security Advisory on incomplete QCOW2 and VMDK image handling protections (CVE-2024-40767)</a>. This upgrade is important. If a hotfix for this problem has already
 been deployed in advance, the parameters added for this in <code>environments/kolla/images.yml</code>
 must be removed again.</p>
 </li>
@@ -230,7 +230,7 @@ and associated infrastructure services such as MariaDB or RabbitMQ are required.
 issues. Further details can be found in security advisory
 <a href="https://security.openstack.org/ossa/OSSA-2024-001.html" target="_blank" rel="noopener noreferrer" class="">OSSA-2024-001: Arbitrary file access through custom QCOW2 external data</a>
 and in SCS blog post
-<a href="https://scs.community/de/security/2024/07/02/cve-2024-32498/" target="_blank" rel="noopener noreferrer" class="">SCS Security Advisory on arbitrary file access through QCOW2 external data file (CVE-2024-32498)</a>. This upgrade is important. If a hotfix for this problem has already
+<a href="https://sovereigncloudstack.org/community_blog/scs-security-advisory-on-arbitrary-file-access-through-qcow2-external-data-file-cve-2024-32498/" target="_blank" rel="noopener noreferrer" class="">SCS Security Advisory on arbitrary file access through QCOW2 external data file (CVE-2024-32498)</a>. This upgrade is important. If a hotfix for this problem has already
 been deployed in advance, the parameters added for this in <code>environments/kolla/images.yml</code>
 must be removed again.</p>
 </li>
@@ -463,7 +463,7 @@ the bootstrap play of the Manager.</p>
 <ul>
 <li class="">
 <p>The documentation for the
-<a href="https://osism.tech/docs/guides/configuration-guide/configuration-repository" target="_blank" rel="noopener noreferrer" class="">initial creation of a configuration repository using Cookiecutter</a>
+<a href="https://osism.tech/docs/guides/configuration-guide/configuration-repository/" target="_blank" rel="noopener noreferrer" class="">initial creation of a configuration repository using Cookiecutter</a>
 has been completely revised. In the Cookiecutter itself, notes have been added in many places to simplify
 the initial reworking of the created configuration repository.</p>
 </li>
@@ -562,8 +562,8 @@ to perform significantly more tests than with the previously used <code>osism.va
 role will be used in the testbed in future to significantly increase the number of tests performed in the CI.</p>
 </li>
 <li class="">
-<p>New documentation for the <a href="https://osism.tech/docs/guides/operations-guide/openstack/tools/project-manager" target="_blank" rel="noopener noreferrer" class="">project manager</a>
-and the <a href="https://osism.tech/docs/guides/operations-guide/openstack/tools/simple-stress" target="_blank" rel="noopener noreferrer" class="">simple stress</a>.</p>
+<p>New documentation for the <a href="https://osism.tech/docs/guides/operations-guide/openstack/tools/project-manager/" target="_blank" rel="noopener noreferrer" class="">project manager</a>
+and the <a href="https://osism.tech/docs/guides/operations-guide/openstack/tools/simple-stress/" target="_blank" rel="noopener noreferrer" class="">simple stress</a>.</p>
 </li>
 <li class="">
 <p>When using the reboot play, it is now possible to wait for the reboot to be completed (<a href="https://github.com/osism/issues/issues/758" target="_blank" rel="noopener noreferrer" class="">osism/issues#758</a>).</p>

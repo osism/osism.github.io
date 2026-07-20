@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OSISM Manager | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/concepts/manager"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OSISM Manager | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="The OSISM Manager is the central management node in every OSISM deployment. It is the"><meta data-rh="true" property="og:description" content="The OSISM Manager is the central management node in every OSISM deployment. It is the"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/concepts/manager"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/manager" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/manager" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Concepts","item":"https://osism.tech/docs/concepts/"},{"@type":"ListItem","position":2,"name":"OSISM Manager","item":"https://osism.tech/docs/concepts/manager"}]}</script><link rel="stylesheet" href="/assets/css/styles.b3e57e1f.css">
-<script src="/assets/js/runtime~main.a400ab39.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.8902f103.js" defer="defer"></script>
 <script src="/assets/js/main.79dd1670.js" defer="defer"></script>
 </head>
 <body>
@@ -26,9 +26,9 @@ point. The CLI is provided by the
 <a href="https://github.com/osism/python-osism" target="_blank" rel="noopener noreferrer" class="">python-osism</a> library, which also exposes
 the underlying Python API.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="job-queues-celery--redis">Job queues (Celery + Redis)<a href="#job-queues-celery--redis" class="hash-link" aria-label="Direct link to Job queues (Celery + Redis)" title="Direct link to Job queues (Celery + Redis)" translate="no">​</a></h3>
-<p>The manager uses <a href="https://docs.celeryq.dev/" target="_blank" rel="noopener noreferrer" class="">Celery</a> backed by a Redis instance
+<p>The manager uses <a href="https://docs.celeryq.dev/en/stable/" target="_blank" rel="noopener noreferrer" class="">Celery</a> backed by a Redis instance
 (<code>manager-redis</code>) to dispatch and queue Ansible tasks. The same Redis instance also
-serves as the <a href="https://docs.ansible.com/ansible/latest/plugins/cache/redis.html" target="_blank" rel="noopener noreferrer" class="">Ansible facts cache</a>,
+serves as the <a href="https://docs.ansible.com/projects/ansible/latest/plugins/cache/redis.html" target="_blank" rel="noopener noreferrer" class="">Ansible facts cache</a>,
 so that all Ansible containers share the same gathered host facts. Separate
 queues exist for each workload type:</p>
 <ul>
@@ -70,7 +70,7 @@ container image is maintained at
 <ul>
 <li class="">the <a class="" href="/docs/guides/configuration-guide/configuration-repository">configuration repository</a>
 mounted read-only at <code>/opt/configuration</code>, and</li>
-<li class="">a <a href="https://netbox.dev/" target="_blank" rel="noopener noreferrer" class="">NetBox</a> instance, if the inventory is generated from NetBox
+<li class="">a <a href="https://github.com/netbox-community/netbox" target="_blank" rel="noopener noreferrer" class="">NetBox</a> instance, if the inventory is generated from NetBox
 data (see <a class="" href="/docs/guides/configuration-guide/inventory">Inventory</a>).</li>
 </ul>
 <p>From these sources it renders the effective inventory and writes it to the shared
