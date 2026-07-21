@@ -58,12 +58,13 @@ On the manager node:
 * Replace the content of `operator_private_key` in `environments/secrets.yml` of your configuration repository with the content of the newly created **private** key file. Decrypt and re-encrypt the file using your configuration repository's Ansible Vault password.
   ```yaml:environments/secrets.yml
   [...]
-  configuration_git_private_key: |
+  operator_private_key: |
     -----BEGIN RSA PRIVATE KEY-----
     [...]
     -----END RSA PRIVATE KEY-----
   [...]
   ```
+* *(Optional)* If you also use the operator key as the deploy key to access your configuration repository, replace the content of `configuration_git_private_key` in `environments/secrets.yml` with the new **private** key as well. In this case you must also update the corresponding deploy key (the **public** key) in the repository settings of your Git hosting platform (for example on GitHub).
 * Move the old public key to `operator_authorized_keys_delete` in `environments/configuration.yml` of your configuration repository. Usually the key is set in `operator_public_key` and only referenced in `operator_authorized_keys`, so the new key needs to be moved there. In the end your configuration should look similar to this:
   ```yaml:environments/configuration.yml
   [...]
