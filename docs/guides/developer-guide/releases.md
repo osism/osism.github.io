@@ -33,270 +33,96 @@ removed.
 
 ## How to make a release
 
-1. On all repositories that are used, check that the versions to be used have an
-   appropriate version tag (e.g. `v0.20230308.0`).
+All component versions of a release are pinned in the
+[osism/release](https://github.com/osism/release) repository. The mechanics
+inside that repository — continuous version updates via Renovate, tagging the
+core container image projects with `scripts/create-tags.sh`, freezing a
+release with `src/create-version.py`, and changelog generation — are
+documented in the
+[README of the osism/release repository](https://github.com/osism/release#release-process).
 
-   ```text
-   osism/ansible-collection-commons
-   osism/ansible-collection-services
-   osism/ansible-collection-validations
-   osism/ansible-defaults
-   osism/ansible-playbooks
-   osism/ansible-playbooks-manager
-   osism/cf-generics
-   osism/kolla-operations
-   osism/python-osism
-   ```
+The checklist below covers the overall release flow, including the steps that
+happen outside the osism/release repository.
 
-2. Copy the `latest` directory. The release to be created is used as the new name.
+:::note Major releases: sync the inventory first
 
-   ```text
-   latest -> 6.0.0b
-   ```
+If the release moves to a new OpenStack series, bump `KOLLA_BRANCH` in
+[osism/generics](https://github.com/osism/generics)
+`src/check-kolla-inventory.py` to the matching `stable/<series>` branch and
+resolve the drift the `generics-tox-check-kolla` job then reports — add the
+new kolla-ansible service groups to the inventory (or, for services OSISM does
+not deploy, to the IGNORE lists) and merge. The inventory is baked into the
+`osism-ansible` and `inventory-reconciler` images, so it must match the new
+series before the release candidate is built and tested; otherwise the testing
+in the steps below validates an inventory that aborts on the new release.
 
-3. Remove all `# renovate` lines from the `base.yml` file.
+:::
 
-4. Remove all Ceph and OpenStack releases that should not be part of the pre-release.
-   There is only one OpenStack version and one Ceph version per (pre-)release.
+1. Create one or more release candidates (e.g. `10.1.0-rc.1`) in the
+   osism/release repository as described in its README.
 
-5. Ensure that the symlinks `openstack.yml` and `ceph.yml` point to the releases
-   to be used in this pre-release.
+2. Add temporary release candidate jobs to `.zuul.yaml` in the
+   [osism/testbed](https://github.com/osism/testbed) repository that deploy
+   the release candidate and upgrade from the current stable release to the
+   release candidate (e.g. `abstract-testbed-deploy-rc` with
+   `manager_version: 10.1.0-rc.1` and `abstract-testbed-upgrade-rc`).
 
-   ```text
-   base.yml
-   ceph-pacific.yml
-   ceph.yml -> ceph-pacific.yml
-   openstack-zed.yml
-   openstack.yml -> openstack-zed.yml
-   ```
+3. Test. Test. Test.
 
-6. Run `src/prepare-release.py`.
+4. Create the final release version (e.g. `10.1.0`) in the osism/release
+   repository as described in its README.
 
-   ```bash
-   RELEASE=6.0.0b python3 src/prepare-release.py
-   ```
+5. Switch the pinned stable jobs in the
+   [osism/testbed](https://github.com/osism/testbed) repository to the new
+   release and remove the temporary release candidate jobs added in step 2.
+   Do this before the documentation steps that follow: the stable jobs are
+   what validate the release, so they must pass before it is announced. For
+   the `10.1.0` example the version variables change as follows.
 
-7. Do the steps from the `Stable release` starting from the 4th step.
+   - Deploy jobs (`abstract-testbed-deploy-stable` and
+     `abstract-testbed-deploy-stable-in-a-nutshell`): set `manager_version`
+     to the new release — `10.1.0`.
 
-### Stable release
+   - Upgrade job (`testbed-upgrade-stable-*`): a major upgrade across the
+     series boundary, from the last release of the previous major series to
+     the new release — `manager_version: 9.5.0`,
+     `manager_version_next: 10.1.0`.
 
-1. Copy the directory of the last pre-release or the previous stable release.
-   The release to be created is used as the new name.
+   - Update job (`testbed-update-stable-*`): a minor update within the same
+     major series, from the preceding release in the series to the new
+     release — `manager_version: 10.0.0`, `manager_version_next: 10.1.0`.
+     The first release of a new major series has no in-series predecessor,
+     so this job only becomes meaningful from the second release of a series
+     onwards.
 
-   ```text
-   5.0.0a -> 5.0.0b
-   5.0.0b -> 5.0.0
-   5.0.0  -> 5.1.0
-   5.1.0  -> 5.2.0
-   5.2.0  -> 5.3.0
-   ```
+   The jobs that track the development head instead of a pinned release —
+   `testbed-update-stable-current-*` (update to `latest`) and
+   `testbed-upgrade-stable-next-*` (upgrade to `latest`) — are not touched
+   here. All stable jobs must pass successfully.
 
-2. Change all necessary versions in the YAML files within the new directory.
-   In any case, the version of the pre-release or the version of the stable
-   release must be replaced by the release to be created.
+6. Add release notes to the
+   [osism/osism.github.io](https://github.com/osism/osism.github.io)
+   repository: a new `docs/release-notes/osism-N.md` file for a major
+   release, or a new entry in the existing file for a minor release.
 
-3. The release to be created is submitted as a pull request as usual and then
-   merged.
+7. Update the version examples in the documentation that reference a concrete
+   release, e.g. `docs/guides/configuration-guide/manager.mdx`,
+   `docs/guides/upgrade-guide/manager.mdx` and
+   `docs/guides/configuration-guide/configuration-repository.md`.
 
-4. Add a tag with the name of the new release to the listed repositories.
-
-   ```text
-   osism/container-image-ceph-ansible
-   osism/container-image-inventory-reconciler
-   osism/container-image-osism-ansible
-   osism/container-images-kolla
-   ```
-
-5. After completing the creation of the images in repository `container-images-kolla`,
-   the file `images.yml` must be added to repository `osism/sbom` as
-   `5.0.0/openstack.yml` (instead of `5.0.0`, the corresponding release is used).
-   The file is available as a build artifact of the `Release container images` action
-   on the created tag.
-
-   Before the file is added, it is enhanced with the checksums of the images. The script
-   is available in the `osism/sbom` repository.
-
-   ```bash
-   VERSION=5.0.0 python3 scripts/add-image-checksum.py
-   ```
-
-6. If `5.0.0/openstack.yml` is present in `osism/sbom`, repository
-   `osism/container-image-kolla-ansible` can be tagged like the other
-   repositories before.
-
-7. Add the created SPDX files from the listed repositories to the `osism/sbom` repository.
-   The file are available as build artifacts of the ``Build container image`` action
-   on the created tags.
-
-   ```text
-   osism/container-image-ceph-ansible
-   osism/container-image-kolla-ansible
-   osism/container-image-osism-ansible
-   ```
-
-8. Add and run temporary CI jobs in `osism/testbed` that uses the pre-release.
-
-   ```yaml
-   - job:
-       name: testbed-deploy-stable-next
-       parent: testbed-deploy
-       vars:
-         manager_version: "5.0.0a"
-         refstack: true
-       nodeset: testbed-orchestrator
-
-   - job:
-       name: testbed-upgrade-stable-next
-       parent: testbed-deploy
-       vars:
-         manager_version: "4.2.0"
-         manager_version_next: "5.0.0a"
-       nodeset: testbed-orchestrator
-   ```
-
-9. Test. Test. Test.
-
-10. Prepare a PR to change the stable version to the new stable version in the following Zuul jobs
-    in the `osism/testbed` repository. All tests there must pass successfully before the tag is
-    set on this repository in the next step. The temporary CI jobs (step 8)  are removed again with
-    this PR.
-
-    ```text
-    testbed-deploy-stable
-    testbed-update-stable
-    testbed-update-stable
-    testbed-upgrade-stable
-    ```
-
-11. Add a new release notes file to `doc/source/notes`. Generate the versions table with the
-    help of the `release-table.py` script in the `osism/sbom` repository.
-
-12. After all known issues are documented, a corresponding tag, e.g. `5.0.0`, is set on the
-    [osism/release](https://github.com/osism/release/releases) repository.
-
-13. Create a [GitHub release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with the new tag on the
-    [osism/release](https://github.com/osism/release/releases) repository. The release is
-    now public available.
-
-14. As the last of the release process, the previously prepared PR is merged on the
-    `osism/testbed` repository to change the stable version.
+8. As the last step, bump the `manager_version` default in the
+   [osism/cfg-cookiecutter](https://github.com/osism/cfg-cookiecutter)
+   repository so that newly created configuration repositories use the new
+   release. The documentation promises that this default is always the latest
+   stable release.
 
 ## How we write release notes
 
-We use [Reno](https://docs.openstack.org/reno/latest/) to manage the release notes.
+Release notes for OSISM releases are maintained as Markdown pages in the
+[osism/osism.github.io](https://github.com/osism/osism.github.io) repository
+(`docs/release-notes/`) and published at
+[osism.tech/docs/release-notes](https://osism.tech/docs/release-notes/).
 
-### Installation
-
-Reno is provided as a [Python package](https://pypi.org/project/reno/) and can be installed with pip.
-
-```bash
-pip3 install reno
-```
-
-### Usage
-
-For each change in a repository, a release note is created with Reno.
-Something meaningful is used as the name for the note. For example, if the
-requirements file for Ansible is removed, `remove-ansible-requirements` is a good name.
-
-```console
-$ reno new remove-ansible-requirements
-no configuration file in: ./releasenotes/config.yaml, ./reno.yaml
-Created new notes file in releasenotes/notes/remove-ansible-requirements-6c6eba43f616bc6b.yaml
-```
-
-The created file contains prepared entries for several categories. It is described briefly
-in each instance which contents belong in which category. What is not needed is deleted.
-
-```yaml
-prelude: >
-    Replace this text with content to appear at the top of the section for this
-    release. All of the prelude content is merged together and then rendered
-    separately from the items listed in other parts of the file, so the text
-    needs to be worded so that both the prelude and the other items make sense
-    when read independently. This may mean repeating some details. Not every
-    release note requires a prelude. Usually only notes describing major
-    features or adding release theme details should have a prelude.
-features:
-  - |
-    List new features here, or remove this section.  All of the list items in
-    this section are combined when the release notes are rendered, so the text
-    needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-issues:
-  - |
-    List known issues here, or remove this section.  All of the list items in
-    this section are combined when the release notes are rendered, so the text
-    needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-upgrade:
-  - |
-    List upgrade notes here, or remove this section.  All of the list items in
-    this section are combined when the release notes are rendered, so the text
-    needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-deprecations:
-  - |
-    List deprecations notes here, or remove this section.  All of the list
-    items in this section are combined when the release notes are rendered, so
-    the text needs to be worded so that it does not depend on any information
-    only available in another section, such as the prelude. This may mean
-    repeating some details.
-critical:
-  - |
-    Add critical notes here, or remove this section.  All of the list items in
-    this section are combined when the release notes are rendered, so the text
-    needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-security:
-  - |
-    Add security notes here, or remove this section.  All of the list items in
-    this section are combined when the release notes are rendered, so the text
-    needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-fixes:
-  - |
-    Add normal bug fixes here, or remove this section.  All of the list items
-    in this section are combined when the release notes are rendered, so the
-    text needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-other:
-  - |
-    Add other notes here, or remove this section.  All of the list items in
-    this section are combined when the release notes are rendered, so the text
-    needs to be worded so that it does not depend on any information only
-    available in another section, such as the prelude. This may mean repeating
-    some details.
-```
-
-### Example
-
-Here is an example of a [commit from the osism/generics repository](https://github.com/osism/generics/commit/e2f04a9f4a51eb058446d7a8ab6835df53989099).
-
-```yaml
----
-features:
-  - |
-    The `requirements.yml` has been removed. The version will be set in the `run.sh`
-    script for the seed process in the future exactly as later in the update process
-    via the parameters `ANSIBLE_COLLECTION_SERVICES_VERSION` and
-    `ANSIBLE_PLAYBOOKS_MANAGER_VERSION`.
-upgrade:
-  - |
-    In existing configuration repositories, the `environments/manager/requirements.yml`
-    file can be removed after the generics have been synced.
-```
-
-### Repositories without release notes
-
-We do not create release notes in the following repositories:
-
-* osism/github-manager
-* osism/osism.github.io
-* osism/release
+Per-component changelogs are generated from the git history in the
+osism/release repository. This is documented in the
+[README of the osism/release repository](https://github.com/osism/release#release-process).
