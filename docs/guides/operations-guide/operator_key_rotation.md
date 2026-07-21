@@ -5,7 +5,7 @@ sidebar_label: Rotate Operator Key
 # Rotation of the operator key
 
 The operator key is used to gain access to all nodes managed by the OSISM
-manager and usually also to access the manager itself.
+Manager and usually also to access the manager itself.
 Rotation of the key is a multi-step process.
 
 ## Generating a new key and adding it to the list of authorized keys
@@ -39,19 +39,19 @@ On the manager node:
 * Actually append the new key by applying the operator role. It is advisable to test the change by limiting the rollout to a single node using the `--limit` parameter.
   ```bash
   osism apply operator -- --limit node01
-  ```  
-* Test the new access by explicitly specifying the private key explicitly.
+  ```
+* Test the new access by explicitly specifying the private key.
   ```bash
   ssh -o IdentitiesOnly=yes -i ~/.ssh/id_new_private_key dragon@node01
   ```
-* If the login is successful proceed with the rollout across the fleet.
+* If the login is successful, proceed with the rollout across the fleet.
   ```bash
   osism apply operator
-  ```  
+  ```
 
 ## Preparing the configuration repository to use the new key in the manager
 
-* Replace the content of `operator_private_key` in `environments/secrets.yml` of your configuration repository with the content of the newly created **private** key file. Decrypt and Rencrypt the file using your configuration repositories ansible vault password.
+* Replace the content of `operator_private_key` in `environments/secrets.yml` of your configuration repository with the content of the newly created **private** key file. Decrypt and re-encrypt the file using your configuration repository's Ansible Vault password.
   ```yaml:environments/secrets.yml
   [...]
   configuration_git_private_key: |
@@ -103,30 +103,30 @@ On the manager node:
 * Remove the old key by applying the operator role. It is advisable to test the change by limiting the rollout to a single node using the `--limit` parameter.
   ```bash
   osism apply operator -- --limit node01
-  ```  
+  ```
 * Test whether the manager can still access the node
   ```bash
   osism apply ping -- --limit node01
   ```
-* If the ping is successful proceed with the rollout across the fleet.
+* If the ping is successful, proceed with the rollout across the fleet.
   ```bash
   osism apply operator
   ```
 
-The manager now uses the new key to access the nodes and access for the old key has been revoked.
+The manager now uses the new key to access the nodes, and access for the old key has been revoked.
 
 ## Clean up the configuration repository
 
-Since the old key has been removed and may be removed from the configuration repository as well.
+Since the old key has been removed, it may be removed from the configuration repository as well.
 
 * Remove the key `operator_authorized_keys_delete` in `environments/configuration.yml` of your configuration repository.
 * Commit and push the change to the repository.
 
-## Rotating the key in the NetBox (metalbox)
+## Rotating the key in the NetBox (MetalBox)
 
-In case the hardware is provisioned using the OSISM metalbox the operator key also needs to be replaced the `local_context` of each device, so that a newly provisioned system is accessible through the manager.
-If your setup uses a separate Repository for NetBox management apply the following change there and update the git submodule in the configuration repository afterwards by running `git submodule update --init`. Remember to also commit the updated submodule
-In case your setup manages the NetBox from the configuration directory apply the changes there and commit them directly.
+In case the hardware is provisioned using the OSISM MetalBox, the operator key also needs to be replaced in the `local_context` of each device, so that a newly provisioned system is accessible through the manager.
+If your setup uses a separate repository for NetBox management, apply the following change there and update the git submodule in the configuration repository afterwards by running `git submodule update --init`. Remember to also commit the updated submodule.
+In case your setup manages the NetBox from the configuration directory, apply the changes there and commit them directly.
 
 * Find each occurrence of
   ```yaml
@@ -139,7 +139,7 @@ In case your setup manages the NetBox from the configuration directory apply the
   and replace the old key with the new **public** key.
 * Commit and push the change to the repository.
 
-On your metalbox(es):
+On your MetalBox(es):
 
 * Update the NetBox data in `/opt/configuration` with the change just committed.
 * Manage the local NetBox to update it
@@ -148,7 +148,6 @@ On your metalbox(es):
   ```
 
 Do the same on your manager:
-
 
 * Update the NetBox data in `/opt/configuration` with the change just committed.
   ```bash
