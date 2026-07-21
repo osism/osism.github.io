@@ -4,16 +4,22 @@ sidebar_label: Rotate Operator Key
 
 # Rotation of the operator key
 
-The operator key is used to gain access to all nodes managed by the OSISM
-Manager and usually also to access the manager itself.
+The operator key is used by the OSISM Manager to access all nodes it manages,
+including systems provisioned via the MetalBox.
 Rotation of the key is a multi-step process.
 
-## Generating a new key and adding it to the list of authorized keys
+## Generating a new key
 
-* Generate a new ssh key, using `ssh-keygen` or any other tool suiting your
-  requirements
-* Distribute the private key to all jumphosts used to access the manager node
-  with the operator user (usually `dragon`)
+* Generate a new SSH key, for example using `ssh-keygen`:
+  ```bash
+  ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_new_private_key
+  ```
+* Make the new private key available wherever you need it, so that SSH access to
+  the manager, MetalBox and nodes is possible in your environment. The exact
+  location depends on your setup.
+
+## Adding the new public key to the nodes
+
 * Append the **public** key to the list of `operator_authorized_keys` in `environments/configuration.yml` of your configuration repository.
   ```yaml:environments/configuration.yml
   [...]
@@ -23,8 +29,6 @@ Rotation of the key is a multi-step process.
   [...]
   ```
 * Commit and push the change to the repository.
-
-## Adding the new public key to the nodes
 
 On the manager node:
 
@@ -115,9 +119,9 @@ On the manager node:
 
 The manager now uses the new key to access the nodes, and access for the old key has been revoked.
 
-## Clean up the configuration repository
+## Clean up the configuration repository (optional)
 
-Since the old key has been removed, it may be removed from the configuration repository as well.
+This step is optional. Since the old key has been removed from the nodes, it may also be removed from the configuration repository.
 
 * Remove the key `operator_authorized_keys_delete` in `environments/configuration.yml` of your configuration repository.
 * Commit and push the change to the repository.
@@ -125,6 +129,7 @@ Since the old key has been removed, it may be removed from the configuration rep
 ## Rotating the key in the NetBox (MetalBox)
 
 In case the hardware is provisioned using the OSISM MetalBox, the operator key also needs to be replaced in the `local_context` of each device, so that a newly provisioned system is accessible through the manager.
+This step is independent of the rotation described above and can be performed at any time; it only affects systems that are newly provisioned via the MetalBox afterwards.
 If your setup uses a separate repository for NetBox management, apply the following change there and update the git submodule in the configuration repository afterwards by running `git submodule update --init`. Remember to also commit the updated submodule.
 In case your setup manages the NetBox from the configuration directory, apply the changes there and commit them directly.
 
