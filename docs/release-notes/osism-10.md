@@ -22,11 +22,90 @@ releases.
 
 :::
 
-| Release     | Release Date     |
-|:------------|:-----------------|
-| 10.0.0-rc.1 | 8. December 2025 |
-| 10.0.0-rc.2 | 30. January 2026 |
-| 10.0.0      | 22. March 2026   |
+| Release | Release Date   |
+|:--------|:---------------|
+| 10.1.0  | 16. June 2026  |
+| 10.0.0  | 22. March 2026 |
+
+## 10.1.0
+
+### ProxySQL 3.0.x becomes the default
+
+OSISM now overrides `proxysql_version` to `3` (kolla-ansible's own default is `2`). ProxySQL 2.7.x has a bug where the TLS handshake omits the full certificate chain, which breaks database TLS verification whenever an intermediate certificate is used; the fix only ships in ProxySQL 3.0.x. On the next `osism apply` that touches the database layer, an existing ProxySQL 2.7.x deployment is upgraded to 3.0.x. To stay on 2.7.x for now, override the variable:
+
+```yaml title="environments/kolla/configuration.yml"
+proxysql_version: 2
+```
+
+### MariaDB InnoDB redo log grows to 2 GB by default
+
+OSISM now pins `mariadb_innodb_log_file_size_mb: 2048`, matching the new kolla-ansible upstream default that replaces the previous 96 MB. A larger redo log means less checkpoint flushing during normal operation, but recovery after an unclean shutdown takes longer and the log files need more space in the MariaDB data volume. Check available disk space before the next `osism apply mariadb` and lower `mariadb_innodb_log_file_size_mb` if a long recovery window is not acceptable.
+
+### Ceph require-min-compat-client raised to mimic
+
+OSISM now sets `ceph_require_min_compat_client: mimic`. This is applied automatically during the Ceph pools setup step of the Ceph deployment playbooks, which runs after the cluster is up and before Glance and Nova are configured. It fixes Glance image deletions failing with HTTP 409 when the image still has active Nova ephemeral RBD clones: at `mimic` compat level Ceph uses RBD clone v2, which no longer needs to protect the parent snapshot, so the deletion goes through the RBD trash instead of being blocked.
+
+Two things to plan for:
+
+* Any Ceph client older than mimic (roughly the Ubuntu 18.04 era) is rejected cluster-wide once this is applied. That is a hard gate, not a warning.
+* A deleted Glance image that still has active clones moves to the Ceph trash rather than being freed immediately; the space is only reclaimed once all clones are gone.
+
+The setting only ever raises the compat level, never lowers it, and is effectively one-way on a live cluster once clone v2 objects exist. To keep a cluster at `luminous` compat level, set the variable to an empty string before applying:
+
+```yaml title="environments/kolla/configuration.yml"
+ceph_require_min_compat_client: ""
+```
+
+### OpenStack services (2025.1)
+
+* **Valkey as a Redis replacement**: kolla-ansible adds a `valkey` role and a `migrate-valkey` command (`osism apply migrate-valkey`) for moving an existing Sentinel-based Redis deployment across. OSISM ships the required defaults (`valkey_server_port`, `valkey_sentinel_port`, `valkey_sentinel_quorum`, `valkey_connection_string`) and the `valkey` inventory group; `enable_valkey` stays `"no"` by default, so nothing changes until you opt in.
+* **Designate rejects empty TSIG secrets**: after `osism apply designate`, creating or updating a TSIG key with an empty secret returns HTTP 400 instead of HTTP 201. Existing keys with empty secrets keep working; only new create/update calls are validated.
+* **Horizon healthcheck catches broken static assets**: the healthcheck now follows the redirect from `/` to the login page, so a stale or missing django-compressor offline manifest marks the container `unhealthy` instead of HAProxy silently routing to a backend that serves HTTP 500 on roughly every other request.
+* **OpenSearch shard allocation after upgrade**: rolling OpenSearch upgrades on 3+ node clusters no longer leave replica shards unassigned with the cluster stuck `yellow`; allocation is re-enabled once the upgraded node rejoins.
+* **Horizon endpoint URLs respect the FQDN variables**: `horizon_internal_endpoint`/`horizon_public_endpoint` are now built from `horizon_internal_fqdn`/`horizon_external_fqdn` instead of always using `kolla_internal_fqdn`/`kolla_external_fqdn`. If you set a custom `horizon_internal_fqdn` or `horizon_external_fqdn`, the generated endpoint now actually uses it.
+* Permissions on `/var/lib/kolla/share/ca-certificates` are fixed, so containers that need to read those certificates can do so again.
+* Containerd-based containers on Ubuntu now get sane default `nofile` ulimits; previously they were left unset, which could cause services to fail to start under load.
+* A patch that copied the pacemaker authentication key into the wrong file (corosync's) is fixed, restoring authentication for HA cluster services that rely on corosync/pacemaker.
+* Destroying an Octavia deployment no longer fails while cleaning up the `octavia-interface` service.
+* `nova-compute` containers now get `multipath.conf` copied in, needed for multipath-enabled Cinder backends.
+* `cinder-backup` now runs with `ipc_mode: host`.
+
+### Inventory reconciler improvements
+
+* **Netplan bonds from NetBox LAGs**: a device with a port channel/LAG configured in NetBox (`type: lag`, member interfaces referencing it via their `lag` field) now gets a `network_bonds` entry generated automatically instead of requiring manual netplan bond configuration. The default is an LACP (802.3ad) bond (`lacp-rate: fast`, `mii-monitor-interval: 100`, `transmit-hash-policy: layer3+4`); set a `parameters` dict on the LAG interface's `netplan_parameters` custom field to replace the defaults entirely, for example to configure `active-backup` mode.
+* **NetBox connectivity pre-check**: the reconciler now fails fast with a clear error message if NetBox is unreachable or the configured API token lacks the required permissions.
+
+### Baremetal
+
+* **Node adoption**: `osism baremetal sync --adopt` adopts existing baremetal nodes instead of re-enrolling them, and nodes are adopted automatically whenever their NetBox `provision_state` is `active`. This helps when recovering the Ironic database or rebuilding the metalbox during an upgrade or disaster recovery.
+* **Burn-in on active nodes**: `osism baremetal burnin` can now target nodes that are already `active`, guarded by a required `--yes-i-really-really-mean-it` flag. Disk burn-in is skipped automatically on active nodes to avoid touching data in place; the other configured stress tests still run.
+* **RAID configuration fixes**: baremetal deploy now runs an `erase_devices_metadata` step before applying the target RAID configuration, clearing stale RAID/partition signatures first. Changing `target_raid_config` on a node that is already enrolled and picked up again via `osism baremetal sync` is now actually applied; previously the update was silently dropped outside of node creation.
+* SW-RAID is now supported for baremetal deployment and cleaning.
+
+### SONiC
+
+* **`osism sonic validate`** now checks `config_db.json` against generated Pydantic schemas instead of the previous `sonic-yang-mgmt`/libyang-based validator, so no native YANG tooling is required at runtime. Tables not yet covered by the upstream YANG models are reported as warnings rather than errors.
+* Port configuration and vendor support added for the DellEMC S5212f-P-25G switch.
+* BGP neighbors on VLAN interfaces support IPv6 now, with dual-stack peer detection.
+* `--refresh-host-key` on SONiC SSH commands refreshes `known_hosts` entries after a switch has been redeployed, avoiding a stale-host-key error.
+* ACL_TABLE/ACL_RULE entries written by different control-plane helpers (SSH, SNMP, gNMI) are now merged per key instead of overwriting each other's configuration.
+
+### NetBox-manager
+
+* **Segment-level interface labels**: the device interface label can now be set once per segment via the `_segment_device_interface_label` config context key instead of on every device individually. The per-device `device_interface_label` custom field still takes precedence when set.
+* Duplicate device interface labels on multi-homed nodes, where repeated links go to the same switch, are now disambiguated instead of colliding.
+* The loopback IP multiplicator used for segment loopback address calculation is now configurable per segment via `_segment_loopback_network_multiplicator`.
+
+### Notable changes
+
+* `osism vault view`/`decrypt` no longer build a shell command from the given path, closing a shell-injection risk from crafted file paths, and both commands now propagate the underlying `ansible-vault` exit code correctly.
+* CLI commands across the reconciler, validate, netbox, report and wait subcommands now return a non-zero exit code on failures (bad lookups, failed preconditions, invalid arguments, task-wait timeouts) instead of silently reporting success; check exit codes in any scripts that call `osism` directly.
+* **FRR BFD support**: BGP neighbors managed by the FRR role can enable Bidirectional Forwarding Detection via the new `frr_bfd_profiles` variable and per-neighbor `bfd`/`bfd_profile` attributes. BFD stays off unless configured.
+* **WireGuard gateway mode fix**: gateway-mode WireGuard now adds a MASQUERADE rule for the outbound interface, so forwarded client traffic is no longer dropped by Neutron port security; a startup check aborts clearly if IP forwarding is disabled instead of forwarding silently failing.
+* dnsdist can run in host network mode via the new `dnsdist_network_mode` variable.
+* **External netplan templates**: `network_netplan_config_template` lets you supply the complete netplan configuration as an external Jinja2 template, for example from a NetBox config context, for environments where the config repository itself cannot be modified, such as metalbox.
+* Per-user sudoers overrides: entries in `user_list` can carry their own `sudoers` key to override the generated sudoers rule for that user.
+* The `openstack-database-exporter` image jumps from v0.4.2 to v1.1.0; check dashboards and alerts that scrape its metrics, since a 0.x to 1.x jump can change exposed metric names.
 
 ## Upgrade notes
 
