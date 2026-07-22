@@ -11,13 +11,70 @@ It operates as a facilitator that orchestrates compute flavors in alignment
 with the standard [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/)
 by utilizing YAML files provided by the SCS project.
 
-## Installation
+There are two ways to use the OpenStack Flavor Manager:
 
-The OpenStack Flavor Manager can be used via the OSISM CLI. This is the preferred way to use it.
-No installation is then required. It is used via `osism manage flavors`.
+* **[Via the OSISM CLI](#usage-via-the-osism-cli)** with `osism manage flavors`. This is the
+  preferred way for operators of an OSISM environment. No separate installation is required.
+* **[Standalone](#standalone-usage)** by installing the `openstack-flavor-manager` package
+  directly. This is useful when the tool is used independent of OSISM.
 
-For use independent of OSISM install the `openstack-flavor-manager` package with pip. It is likely
-that additional dependencies such as `pkg-config` or `libssl-dev` must be installed in advance.
+Regardless of the path, the available [flavor definitions](#definitions) are the same. The cloud
+profile used must be allowed to create and delete flavors. By default the cloud profile with the
+name `admin` is used; another profile can be selected with the `--cloud` parameter.
+
+## Usage via the OSISM CLI
+
+No `clouds.yaml` needs to be provided. The cloud credentials are taken from the OSISM configuration
+(the `environments/openstack` directory of your configuration repository, where the secrets are
+kept in `secure.yml`) that has been deployed to the manager.
+
+```console
+$ osism manage flavors --help
+
+usage: osism manage flavors [-h] [--no-wait] [--cloud CLOUD]
+                            [--name {cloudpod,scs,osism,local,url}] [--url URL]
+                            [--recommended]
+
+options:
+  -h, --help            show this help message and exit
+  --no-wait             Do not wait until flavor management has been completed
+  --cloud CLOUD         Cloud name in clouds.yaml (default: admin)
+  --name {cloudpod,scs,osism,local,url}
+                        Name of flavor definitions (default: local)
+  --url URL             Overwrite the default URL where the flavor definitions
+                        are available
+  --recommended         Also create recommended flavors
+```
+
+To create the mandatory flavors of the selected [flavor definition](#definitions), run (the OSISM
+CLI uses the `local` definition by default):
+
+```bash
+osism manage flavors
+```
+
+To additionally create the recommended flavors of the definition, add the `--recommended`
+parameter:
+
+```bash
+osism manage flavors --recommended
+```
+
+Another definition can be selected with the `--name` parameter, for example the
+[`scs` definition](#definitions):
+
+```bash
+osism manage flavors --name scs
+```
+
+By default the command waits until the flavor management has been completed and streams the output.
+Use `--no-wait` to start the task in the background without waiting for it to finish.
+
+## Standalone usage
+
+For use independently of OSISM, the OpenStack Flavor Manager can be installed and run directly.
+Install the `openstack-flavor-manager` package with pip. It is likely that additional dependencies
+such as `pkg-config` or `libssl-dev` must be installed in advance.
 
 ```bash
 pip install openstack-flavor-manager
@@ -30,15 +87,8 @@ and use the OpenStack Flavor Manager from source with tox.
 tox -- --help
 ```
 
-## Usage
-
-There must be a `clouds.yml` and a `secure.yml` file in the directory where the OpenStack Flavor Manager
-will be executed. When using the OSISM CLI, the files are expected in `environments/openstack`
-in your configuration repository.
-
-The cloud profile to be used can be specified via the optional `--cloud` parameter.
-By default the cloud profile with the name `admin` is used. It must be possible to create and delete
-flavors with the used cloud credentials.
+There must be a `clouds.yaml` file with the cloud profile in the directory where the OpenStack
+Flavor Manager is executed. Secrets can optionally be split out into a `secure.yml` file.
 
 ```console
 $ openstack-flavor-manager --help
@@ -54,14 +104,14 @@ $ openstack-flavor-manager --help
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-To create the mandatory flavors by the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/)
-standard, you run:
+To create the mandatory flavors of the [`scs` definition](#definitions) (the default for the
+standalone tool), you run:
 
 ```bash
 openstack-flavor-manager
 ```
 
-To create the recommended flavors by the SCS Flavor Naming Standard, you run:
+To additionally create the recommended flavors, you run:
 
 ```bash
 openstack-flavor-manager --recommended
@@ -77,7 +127,7 @@ The output should look like this:
 ...
 ```
 
-All recommended flavors are now be available in your OpenStack environment.
+All flavors of the definition are now available in your OpenStack environment.
 Check yourself by running:
 
 ```bash
@@ -107,19 +157,31 @@ $ openstack --os-cloud admin flavor show SCS-2V-4-20s
 
 ## Definitions
 
-There are two flavor definitions available by default. One for
-[SCS](https://raw.githubusercontent.com/SovereignCloudStack/standards/main/Tests/iaas/SCS-Spec.MandatoryFlavors.verbose.yaml)
-and one for [OSISM](https://raw.githubusercontent.com/osism/openstack-flavor-manager/main/flavors.yaml).
-Each definition has its own set of mandatory and recommended flavors. The definition of OSISM contains
-all definitions of SCS as well as some others.
+A flavor definition is a YAML file with a `mandatory` list and an optional `recommended` list of
+flavors. By default only the mandatory flavors are created; the recommended flavors are additionally
+created when the `--recommended` parameter is used.
 
-To run the OpenStack Flavor Manager with a specific definition, either `scs` or `osism`,
-use the optional `--name` parameter. By default the [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/)
-standard definition will be used.
+The definition to use is selected with the `--name` parameter:
 
-```bash
-openstack-flavor-manager --name osism
-```
+* `scs` – *downloaded at runtime* from GitHub: the mandatory and recommended flavors of the
+  [SCS-0100: Flavor Naming](https://docs.scs.community/standards/iaas/scs-0100/) standard, defined in
+  [`SCS-Spec.MandatoryFlavors.verbose.yaml`](https://github.com/SovereignCloudStack/standards/blob/main/Tests/iaas/SCS-Spec.MandatoryFlavors.verbose.yaml).
+* `osism` – *downloaded at runtime* from GitHub: the OSISM flavor set, defined in
+  [`flavors.yaml`](https://github.com/osism/openstack-flavor-manager/blob/main/flavors.yaml). It
+  contains all flavors of the `scs` definition as well as some additional ones.
+* `cloudpod` – *read from disk on the manager* (`/data/cloudpod.yml`): the flavor set for OSISM
+  CloudPods. This file is shipped with OSISM as
+  [`cloudpod.yml`](https://github.com/osism/python-osism/blob/main/files/data/cloudpod.yml).
+* `local` – *read from disk on the manager* (`/data/flavors.yaml` by default). This file is shipped
+  with OSISM as
+  [`flavors.yaml`](https://github.com/osism/python-osism/blob/main/files/data/flavors.yaml) (kept in
+  sync with the `osism` definition). This is the default when using the OSISM CLI.
+* `url` – *downloaded at runtime* from an arbitrary URL, which must be provided with the `--url`
+  parameter.
+
+For the `local`, `cloudpod` and `url` definitions the source location can be overwritten with the
+`--url` parameter. The default `--name` differs between the two usage paths: the OSISM CLI uses
+`local`, while the standalone tool uses `scs`.
 
 ## Name parser and generator
 
