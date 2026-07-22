@@ -60,6 +60,9 @@ parameter:
 osism manage flavors --recommended
 ```
 
+Unlike the [standalone tool](#standalone-usage), the OSISM CLI does not expose the `--limit-memory`
+option. Recommended flavors are therefore always filtered with its default limit of 32 GB.
+
 Another definition can be selected with the `--name` parameter, for example the
 [`scs` definition](#definitions):
 
@@ -117,6 +120,16 @@ To additionally create the recommended flavors, you run:
 
 ```bash
 openstack-flavor-manager --recommended
+```
+
+The `--limit-memory` option caps the RAM (in GB, default 32) of the recommended flavors that get
+created: any recommended flavor requesting more than the limit is skipped. This is useful to avoid
+creating large recommended flavors that the compute hosts in the environment could never schedule.
+Mandatory flavors are never filtered and are always created regardless of their RAM. To also create
+recommended flavors with up to 64 GB of RAM, you run:
+
+```bash
+openstack-flavor-manager --recommended --limit-memory 64
 ```
 
 The output should look like this:
