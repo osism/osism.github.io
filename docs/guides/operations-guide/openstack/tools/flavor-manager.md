@@ -95,13 +95,15 @@ $ openstack-flavor-manager --help
 
  Usage: openstack-flavor-manager [OPTIONS]
 
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────╮
-│ --name               TEXT  Name of flavor definitions. [default: scs]                        │
-│ --debug                    Enable debug logging.                                             │
-│ --cloud              TEXT  Cloud name in clouds.yaml. [default: admin]                       │
-│ --recommended              Create recommended flavors.                                       │
-│ --help                     Show this message and exit.                                       │
-╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --name                TEXT     Source of flavor definitions. [default: scs]                                │
+│ --url                 TEXT     Overwrite the default URL where the flavor definitions are available.       │
+│ --debug                        Enable debug logging.                                                       │
+│ --cloud               TEXT     Cloud name in clouds.yaml. [default: admin]                                 │
+│ --recommended                  Create recommended flavors.                                                 │
+│ --limit-memory        INTEGER  Limit memory in GB for recommended flavors. [default: 32]                   │
+│ --help                         Show this message and exit.                                                 │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 To create the mandatory flavors of the [`scs` definition](#definitions) (the default for the
