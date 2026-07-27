@@ -304,6 +304,49 @@ If your deployment relies on the short hostname, set the following parameter in
 openvswitch_hostname: "{{ ansible_facts.hostname }}"
 ```
 
+### OVN Southbound DB relay is deployed by default
+
+kolla-ansible 2025.1 adds support for the [OVN Southbound database relay](https://docs.ovn.org/en/latest/tutorials/ovn-ovsdb-relay.html)
+([kolla-ansible change](https://opendev.org/openstack/kolla-ansible/commit/8670c3f9d334d45bf47add8c2a5ebd34ccd47e56)),
+and it is active out of the box: `enable_ovn_sb_db_relay` defaults to the value of `enable_ovn`, which is
+true in every OSISM environment because `neutron_plugin_agent` is set to `ovn`. After the upgrade, new
+`ovn_sb_db_relay_*` containers therefore appear on all control nodes. A relay is a read-only cache in front
+of the Southbound database cluster and exists to keep the connections of a large number of `ovn-controller`
+instances away from the cluster itself. It runs alongside the existing `ovn_sb_db` cluster, so there is no
+data migration and no manual step involved.
+
+Which component connects where changes as follows:
+
+* `ovn-controller` on the compute and network nodes, `neutron-ovn-metadata-agent` and `neutron-ovn-agent`
+  now talk to the relays instead of the Southbound cluster. For `ovn-controller` the new address is written
+  into the `external_ids:ovn-remote` key of the local Open vSwitch database.
+* `neutron-server`, `ovn-northd` and Octavia keep connecting to the Southbound cluster directly.
+
+The number of relay groups follows the size of the `ovn-controller` group: `ovn_sb_db_relay_count` is
+`ovn-controller hosts / ovn_sb_db_relay_compute_per_relay`, rounded up, with
+`ovn_sb_db_relay_compute_per_relay` defaulting to `50`. Every group runs one relay container on each host
+of the `ovn-sb-db-relay` inventory group, that is on the control nodes, and listens on port `16641` for the
+first group, `16642` for the second and so on. An environment with up to 50 hypervisors therefore ends up
+with a single relay group on port `16641`, which has to be reachable from the compute and network nodes on
+the API interface. Each `ovn-controller` host is assigned to a group deterministically, seeded with its
+inventory hostname; the assignment can be pinned per host with `ovn_sb_db_relay_client_group_id`.
+
+To keep the previous behaviour and have all `ovn-controller` instances connect to the Southbound cluster
+directly, disable the relays:
+
+```yaml title="environments/kolla/configuration.yml"
+enable_ovn_sb_db_relay: false
+```
+
+Independently of the relays, the `ovn-nb-db`, `ovn-northd` and `ovn-sb-db` containers now carry `OVN_NB_DB`
+and `OVN_SB_DB` environment variables. `ovn-nbctl` and `ovn-sbctl` can therefore be run on any control node
+without passing `--db`, regardless of which node currently holds the cluster leader:
+
+```bash
+docker exec ovn_northd ovn-nbctl show
+docker exec ovn_northd ovn-sbctl show
+```
+
 ### Remove of the Apache2 Shibboleth module in Keystone image
 
 Due to repeated problems with the Apache2 Shibboleth module in conjunction with the Apache2 OIDC
