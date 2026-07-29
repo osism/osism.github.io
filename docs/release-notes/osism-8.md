@@ -1,5 +1,6 @@
 ---
 sidebar_label: OSISM 8
+sidebar_position: 30
 ---
 
 # OSISM 8
