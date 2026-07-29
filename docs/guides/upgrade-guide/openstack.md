@@ -100,3 +100,17 @@ of the APIs. This downtime is usually less than 1 minute.
     osism apply -a pull horizon
     osism apply -a upgrade horizon
     ```
+
+    Horizon generates its compressed static files and the offline manifest only when the checksum of its
+    settings and themes has changed. After an upgrade the settings are often unchanged, the new image is
+    then used together with the manifest of the old one and Horizon answers with `Something went wrong!`.
+    To avoid this, remove the checksum file on every control node on which Horizon runs and restart the
+    container afterwards.
+
+    ```bash
+    docker exec horizon rm -f /var/lib/kolla/.settings.md5sum.txt
+    docker restart horizon
+    ```
+
+    Details on this error are documented in the
+    [OpenStack Troubleshooting Guide](../troubleshooting-guide/openstack.md).

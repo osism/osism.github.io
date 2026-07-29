@@ -208,3 +208,54 @@ sidebar_position: 40
     docker exec ovn_nb_db ovs-appctl -t /var/run/ovn/ovnnb_db.ctl cluster/status OVN_Northbound
     docker exec ovn_sb_db ovs-appctl -t /var/run/ovn/ovnsb_db.ctl cluster/status OVN_Southbound
     ```
+
+## Horizon shows "Something went wrong!" after an upgrade
+
+* Problem: Horizon answers with the error page `Something went wrong!` instead of the requested page. Often
+  only a part of the requests is affected, because only some of the control nodes have the problem. On such a
+  node, `/var/log/kolla/horizon/horizon-error.log` contains an `OfflineGenerationError` followed by the
+  complete HTML of the requested page.
+
+  ```console
+  compressor.exceptions.OfflineGenerationError: You have offline compression enabled but key
+  "2ea3a0ed8d1c74d8faae7819d923c890da5126d18db513410ac36f43bbce22b8" is missing from offline manifest.
+  You may need to run "python manage.py compress".
+  ```
+
+  Horizon uses offline compression (`COMPRESS_OFFLINE = True`). With that, the compressed CSS and JavaScript
+  files and an offline manifest, which maps each template fragment to its compressed file, are generated
+  inside the `horizon` container. The container only regenerates them when it starts and the checksum of its
+  settings and themes stored in `/var/lib/kolla/.settings.md5sum.txt` is missing or no longer matches. If the
+  manifest does not belong to the templates of the image that is currently in use, which can happen after an
+  upgrade to a new OSISM release, Horizon does not find the key of a template fragment while rendering a page
+  and aborts with the error above.
+
+* Solution: remove the checksum file and restart the container. The container then regenerates the static
+  files and the offline manifest during the next start, using the same code path as a configuration change.
+  This is the reliable way to fix the error.
+
+  ```console
+  docker exec horizon rm -f /var/lib/kolla/.settings.md5sum.txt
+  docker restart horizon
+  ```
+
+  Generating the files manually inside the container does not always resolve the error and should only be
+  used if removing the checksum file is not possible. Keep this order, `collectstatic --clear` empties the
+  static directory and would delete a manifest that was created before.
+
+  ```console
+  docker exec horizon /var/lib/kolla/venv/bin/python /var/lib/kolla/venv/bin/manage.py collectstatic --noinput --clear
+  docker exec horizon /var/lib/kolla/venv/bin/python /var/lib/kolla/venv/bin/manage.py compress --force
+  docker restart horizon
+  ```
+
+  The restart at the end is necessary because the running Horizon processes keep the offline manifest in
+  memory. `--force` is used because `manage.py` does not always read the local settings when it is called
+  this way and then aborts with `CommandError: Offline compression is disabled.` although
+  `COMPRESS_OFFLINE = True` is set.
+
+  Repeat this on every control node on which Horizon runs. The manifest is only valid inside its own
+  container.
+
+* Do not disable the offline compression with `COMPRESS_OFFLINE = False` to get rid of the error. The error
+  disappears, but afterwards every page is compressed again on each request.
