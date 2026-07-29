@@ -1,5 +1,6 @@
 ---
 sidebar_label: OSISM 7
+sidebar_position: 40
 ---
 
 # OSISM 7

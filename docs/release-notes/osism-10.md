@@ -1,5 +1,6 @@
 ---
 sidebar_label: OSISM 10
+sidebar_position: 10
 ---
 
 # OSISM 10
