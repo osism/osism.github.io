@@ -31,9 +31,20 @@ release through its lifecycle:
 3. **End of life (EOL)** — the branch is **deleted**. Its final state is
    preserved as the immutable `<version>-eol` tag (for example `2024.2-eol`).
 
-Anything that referred to `stable/<version>` or `unmaintained/<version>`
-**breaks** the moment upstream deletes that branch. That broken build is
-usually the first visible sign that a release has reached EOL.
+How a reference reacts to these transitions depends on what kind of reference
+it is, and this distinction matters more than it looks:
+
+- **Git refs** — a checkout of `stable/<version>` **breaks** the moment
+  upstream renames or deletes the branch. That broken build is usually the
+  first visible sign that a release has changed phase.
+- **Tarball refs** — `tarballs.opendev.org` publishes one artifact per branch
+  (`<project>-stable-<version>.tar.gz`). When the branch is renamed or deleted,
+  the artifact **keeps being served but stops being regenerated**. The download
+  still succeeds and the build stays green, while silently using the sources as
+  they were at the moment of the rename.
+
+So a git ref tells you when a release moves on; a tarball ref does not — see
+[Moving a release to unmaintained](#unmaintained).
 
 ### SLURP vs. non-SLURP
 
@@ -47,6 +58,76 @@ can be in different phases at the same time. For example:
 
 This is why a non-SLURP release is typically the first one you need to retire,
 while the older SLURP release next to it is still being built.
+
+## Moving a release to unmaintained {#unmaintained}
+
+When upstream renames `stable/<version>` to `unmaintained/<version>`, both kinds
+of reference have to be moved **in the same change**:
+
+- the **git refs**, which break loudly and therefore get fixed;
+- the **tarball refs**, which keep working and therefore get forgotten.
+
+Fixing only the git refs leaves the images building from sources frozen at the
+moment of the rename. No upstream change can reach them after that — including
+security fixes merged to `unmaintained/<version>`.
+
+### What to change
+
+Only repositories that still build the version need changing — check each
+one's `.zuul.yaml`, or the GitHub Actions matrix for `container-images`, before
+editing.
+
+| Repository                      | Reference                                                              | Kind    |
+|:--------------------------------|:-----------------------------------------------------------------------|:--------|
+| `release`                       | `latest/openstack-<version>.yml` — every `openstack_projects` ref      | tarball |
+| `container-images-kolla`        | `scripts/001-prepare.sh` — kolla checkout                              | git     |
+| `container-images-kolla`        | `scripts/002-generate.sh` — `requirements-<branch>`                    | tarball |
+| `container-images`              | `openstackclient/Containerfile` — `requirements-<branch>`              | tarball |
+| `container-image-kolla-ansible` | `Containerfile` — kolla-ansible clone                                  | git     |
+| `container-image-kolla-ansible` | `files/playbooks/kolla-ironic-download-ipa-images.yml` — IPA artifacts | tarball |
+
+Search for **both** spellings: `stable/<version>` for git refs and
+`stable-<version>` for tarball names. Some are assembled by string
+interpolation (`stable-$OPENSTACK_VERSION`, `stable-{{ openstack_version }}`),
+so grepping for the bare version string will miss them.
+
+Projects that follow their own branch naming, such as `gnocchi`
+(`stable/4.6`), are not affected and stay as they are.
+
+### Sequencing across repositories
+
+The source refs live in `release` while any downstream patches that upstream
+has meanwhile backported live in `container-images-kolla`. Put a `Depends-On:`
+reference to the `release` pull request in the other pull request body, so the
+check pipeline tests the combination before either side merges.
+
+The merges themselves are not atomic — there is no `gate` pipeline — so
+**merge the `release` change first**. With the new refs and the old patches
+still present the build fails on an already-applied patch, which is loud and
+ships nothing. In the opposite order the build succeeds while silently dropping
+every fix those patches carried.
+
+### Confirm the published images moved
+
+The image labels record the OSISM-side provenance as git commits, which can be
+looked up to establish what a given image was built from:
+
+```bash
+docker inspect <image> \
+  --format '{{ index .Config.Labels "de.osism.commit.release" }}'
+```
+
+- `de.osism.commit.release` — the `release` commit, and therefore which source
+  refs this build was configured with.
+- `de.osism.commit.docker_images_kolla` — the `container-images-kolla` commit,
+  and therefore which patches were applied.
+
+One limitation to be aware of: the labels do not record the source snapshot
+itself. Branch tarballs float, so the same `release` commit resolves to
+different sources over time, and
+`org.opencontainers.image.version` carries the project version with the pbr
+`.devN` suffix stripped — which is exactly the part that would identify the
+snapshot.
 
 ## Retiring a release {#retiring}
 
@@ -244,11 +325,14 @@ literal is what goes stale, because nothing forces the copies to move together.
   reaching them, so they are shadowed and are *not* pointers to advance. The
   per-version `case` in `scripts/include.sh` is version-keyed logic, not a
   pointer — see [Removing the version](#removing).
-- `release` — the per-version release manifests
-  (`release/latest/openstack-<version>.yml`) and the per-component
+- `release` — which version is current, and the per-component
   `origin/stable/<version>` map in `src/git-diff-log.py`. That map is pinned at
   `2023.1` and has not been moved forward with the releases, so check whether it
-  is still used before treating it as a pointer to advance.
+  is still used before treating it as a pointer to advance. The
+  `openstack_projects` refs *inside* `release/latest/openstack-<version>.yml`
+  are **not** forward pointers: each per-version file stays in place and its
+  refs move as that version changes phase (see [Moving a release to
+  unmaintained](#unmaintained)).
 - `defaults` — nothing here advances. `all/002-images-kolla.yml` gates image
   selection on the OpenStack version in more than one place, and
   `all/099-kolla.yml` gates service enablement and a few other settings the same
@@ -267,12 +351,15 @@ literal is what goes stale, because nothing forces the copies to move together.
   `requirements-stable-<version>.tar.gz`.
 
 :::caution
-Some of these pins use `stable/<version>` directly. If such a pin is left
-pointing at a version that reaches EOL, it breaks the same way a retired build
-job does, because the upstream branch is deleted. Advance these pins to a
-maintained release in good time; if one must keep targeting an EOL release,
-point it at the `<version>-eol` tag as in [Keep building during security
-support](#keep-building).
+Some of these pins use `stable/<version>` directly. A **git** pin left on a
+version that reaches EOL breaks the same way a retired build job does, because
+the upstream branch is deleted. A **tarball** pin — such as
+`requirements-stable-<version>.tar.gz` in `container-images` and
+`ipa-…-stable-<version>` in `container-image-kolla-ansible` — does *not* break;
+it keeps resolving to a frozen artifact and has to be advanced deliberately.
+Advance these pins to a maintained release in good time; if one must keep
+targeting an EOL release, point it at the `<version>-eol` tag as in [Keep
+building during security support](#keep-building).
 :::
 
 ## Tracking the work
