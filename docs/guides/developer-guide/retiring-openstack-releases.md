@@ -200,18 +200,47 @@ Several repositories carry a *single* "current" OpenStack version that advances
 as part of normal release work rather than retirement cleanup. They do not hold
 a per-version matrix, so there is no version to "remove" from them — the
 reference is simply moved forward to the next release. They are listed here so
-they are not mistaken for retirement targets:
+they are not mistaken for retirement targets.
+
+Two rules of thumb for telling the kinds apart, because getting it wrong sends
+you editing the wrong file:
+
+- **One version or a set?** A forward pointer names the *one* version that is
+  current. Anything enumerating a *set* — a shell `case` arm, a Jinja
+  `in [...]` list, a per-version job — is version-keyed logic: it grows with
+  every release and is cleaned up at [retirement](#removing), not advanced.
+- **Which layer actually supplies the value?** A repository often has defaults
+  behind defaults, and only the outermost one governs. The inner ones are
+  shadowed on every automated path, so advancing them changes nothing while
+  leaving the real pointer untouched. Follow the value from where the job or
+  playbook sets it before editing anything.
+
+Ideally each repository holds the version in exactly *one* place and everything
+else derives from it — as `ansible-collection-services` does below. A repeated
+literal is what goes stale, because nothing forces the copies to move together.
 
 - `testbed` — `openstack_version` / `openstack_version_next` in `.zuul.yaml`,
-  defaults in `config/scripts/*.sh`, and per-version conditionals in the deploy
-  scripts.
+  backed by the `| default(...)` values in `playbooks/*.yml`. Those are the ones
+  that govern. Further down the chain `terraform/` and `scripts/` carry their own
+  version defaults, but every automated path supplies the value explicitly before
+  reaching them, so they are shadowed and are *not* pointers to advance. The
+  per-version `case` in `scripts/include.sh` is version-keyed logic, not a
+  pointer — see [Removing the version](#removing).
 - `release` — the per-version release manifests
   (`release/latest/openstack-<version>.yml`) and the per-component
-  `origin/stable/<version>` map in `src/git-diff-log.py`.
-- `defaults` — version-conditional image selection (e.g. in
-  `all/002-images-kolla.yml`).
+  `origin/stable/<version>` map in `src/git-diff-log.py`. That map is pinned at
+  `2023.1` and has not been moved forward with the releases, so check whether it
+  is still used before treating it as a pointer to advance.
+- `defaults` — nothing here advances. `all/002-images-kolla.yml` gates image
+  selection on the OpenStack version in more than one place, and
+  `all/099-kolla.yml` gates service enablement and a few other settings the same
+  way. Every one of them enumerates a set of versions, so they are all
+  compatibility shims to simplify at [retirement](#removing) rather than pointers
+  to advance. Listed only so they are not mistaken for pins.
 - `ansible-collection-services` — `openstackclient_version` in
-  `roles/openstackclient/defaults/main.yml`.
+  `roles/openstackclient/defaults/main.yml` is derived from `openstack_version`
+  rather than pinned, so there is nothing to advance here. Listed only so it is
+  not mistaken for a pin.
 - `openstack-ironic-images` — `DIB_REPOREF_*: origin/stable/<version>` in
   `files/osism-ipa.yml`.
 - `zuul-jobs` — `devstack_release: stable/<version>` in
