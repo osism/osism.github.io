@@ -71,6 +71,14 @@ Fixing only the git refs leaves the images building from sources frozen at the
 moment of the rename. No upstream change can reach them after that — including
 security fixes merged to `unmaintained/<version>`.
 
+This is the *only* move a tarball ref ever makes. Upstream marks both
+transitions with a tag — `<version>-eom` when the stable branch becomes
+unmaintained, `<version>-eol` when the unmaintained branch is deleted — but
+`tarballs.opendev.org` publishes one artifact per **branch**, so no tarball is
+built for either tag. `unmaintained-<version>` is therefore the last tarball a
+version gets; after that, see the caution in [Version pointers that move
+forward](#forward-pointers).
+
 ### What to change
 
 Only repositories that still build the version need changing — check each
@@ -357,9 +365,16 @@ the upstream branch is deleted. A **tarball** pin — such as
 `requirements-stable-<version>.tar.gz` in `container-images` and
 `ipa-…-stable-<version>` in `container-image-kolla-ansible` — does *not* break;
 it keeps resolving to a frozen artifact and has to be advanced deliberately.
-Advance these pins to a maintained release in good time; if one must keep
-targeting an EOL release, point it at the `<version>-eol` tag as in [Keep
-building during security support](#keep-building).
+Advance both kinds to a maintained release in good time. If one must keep
+targeting an EOL release, what to do next depends on the kind, because the
+`<version>-eol` escape hatch only exists for git:
+
+- A **git** pin can move to the `<version>-eol` tag, as in [Keep building during
+  security support](#keep-building).
+- A **tarball** pin cannot: `tarballs.opendev.org` builds an artifact per
+  *branch*, not per tag, so there is no `<version>-eol` tarball to point at. The
+  frozen `stable-<version>` artifact is the only one there will ever be. Treat
+  that as a reason to advance the pin rather than a place to settle.
 :::
 
 ## Tracking the work
