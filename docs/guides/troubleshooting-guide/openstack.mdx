@@ -2,6 +2,8 @@
 sidebar_label: OpenStack
 sidebar_position: 40
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # OpenStack
 
@@ -305,3 +307,56 @@ sidebar_position: 40
       fi
   done < /tmp/neutron-network-types
   ```
+
+## Redis/Valkey: "Bad file format reading the append only file..."
+
+<Tabs>
+<TabItem value="redis" label="Redis">
+
+* Problem: A `redis` instance refuses to start with error message: "Bad file format reading the append only file appendonly.aof.11.incr.aof: make a backup of your AOF file, then use ./redis-check-aof --fix &lt;filename.manifest&gt;"
+
+* Solution: Fix the append-only-file with the mentioned command.
+
+  :::note
+
+  The following commands apply to a redis instance belonging to the OpenStack control plane. Please make sure to adjust the commands if you are fixing this error on another redis instance, like the manager or netbox.
+
+  :::
+
+  On the node with the broken instance run
+
+  ```console
+  docker run --rm -it -v redis:/var/lib/redis <osism redis image>:<osism redis tag>  bash
+  redis-check-aof --fix /var/lib/redis/appendonlydir/redis-staging-ao.aof.manifest
+  ```
+
+  and follow the given instructions to fix any corruptions.
+  Once the append-only-file is fixed restart the `redis` instance.
+
+  ```console
+  docker restart redis
+  ```
+
+</TabItem>
+<TabItem value="valkey" label="Valkey">
+
+* Problem: A `valkey` instance refuses to start with error message: "Bad file format reading the append only file appendonly.aof.11.incr.aof: make a backup of your AOF file, then use ./valkey-check-aof --fix &lt;filename.manifest&gt;"
+
+* Solution: Fix the append-only-file with the mentioned command.
+
+  On the node with the broken instance run
+
+  ```console
+  docker run --rm -it -v valkey:/var/lib/valkey <osism valkey image>:<osism valkey tag>  bash
+  valkey-check-aof --fix /var/lib/valkey/appendonlydir/valkey-staging-ao.aof.manifest
+  ```
+
+  and follow the given instructions to fix any corruptions.
+  Once the append-only-file is fixed restart the `valkey` instance.
+
+  ```console
+  docker restart valkey
+  ```
+
+</TabItem>
+</Tabs>
