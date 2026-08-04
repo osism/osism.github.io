@@ -259,3 +259,54 @@ sidebar_position: 40
 
 * Do not disable the offline compression with `COMPRESS_OFFLINE = False` to get rid of the error. The error
   disappears, but afterwards every page is compressed again on each request.
+
+## Neutron OVN router creation with external gateways fails with "KeyError: 'neutron:provnet-network-type'"
+
+* Problem: Neutron router creation with OVN backend fails despite HTTP status 200 returned by the API. The neutron log shows tracebacks similar to the following
+
+  ```console
+  ERROR neutron_lib.callbacks.manager [...] Error during notification for neutron.services.ovn_l3.service_providers.ovn.OvnDriver._process_router_create-33955 router, after_create: KeyError: 'neutron:provnet-network-type'
+  ```
+
+* Solution: [For an unknown reason Neutron OVN maintenance never converted existing OVN logical switches to include 'neutron:provnet-network-type' attribute in their `external_ids`](https://bugs.launchpad.net/neutron/+bug/2111498), therefore we need to explicitly sync the network type to OVN logical switches.
+  On a control node, read the neutron database password into the environment and pipe the network IDs and types into a file in the OVN northb container.
+
+  ```console
+  read -rs PW
+  docker exec mariadb mysql -uneutron -p${PW} neutron -N -B -e 'SELECT network_id, network_type FROM networksegments ORDER BY network_id;' | docker exec -i ovn_nb_db /usr/bin/tee /tmp/neutron-network-types
+  ```
+
+  Open an interactive shell inside the OVN northb container
+
+  ```console
+  docker exec -it ovn_nb_db bash
+  ```
+
+  and execute the following script
+
+  ```console
+  while read -r NETWORK_ID NETWORK_TYPE; do
+      LS="neutron-${NETWORK_ID}"
+  
+      if ! ovn-nbctl get Logical_Switch "$LS" name >/dev/null 2>&1; then
+          echo "SKIP missing switch: $LS"
+          continue
+      fi
+  
+      CURRENT=$(ovn-nbctl --if-exists get Logical_Switch "$LS" \
+          'external_ids:"neutron:provnet-network-type"' 2>/dev/null \
+          | tr -d '"')
+  
+      if [ -z "$CURRENT" ] || [ "$CURRENT" = "[]" ]; then
+          echo "SET  $LS -> $NETWORK_TYPE"
+  
+          if ! ovn-nbctl set Logical_Switch "$LS" \
+              "external_ids:\"neutron:provnet-network-type\"=\"$NETWORK_TYPE\""; then
+              echo "ERROR setting $LS - aborting"
+              break
+          fi
+      else
+          echo "SKIP $LS already=$CURRENT"
+      fi
+  done < /tmp/neutron-network-types
+  ```
