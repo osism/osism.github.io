@@ -169,23 +169,41 @@ remain open and are merged once 2024.2 can be fully retired and removed.
 
 This is the end state of every retirement, reached either immediately or after
 the security-update bridge above. Remove the version from every repository that
-carries a per-version reference to it. The repositories below encode
-per-OpenStack-version build matrices; use the linked changes as examples.
+carries a per-version reference to it. Most of the repositories below encode
+per-OpenStack-version build matrices; the last two instead gate behaviour on the
+release. Use the linked changes as examples.
 
 | Repository                        | What to change                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                            |
 |:----------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------|
 | `cfg-cookiecutter`                | Remove the per-version tox job (e.g. `cfg-cookiecutter-tox-2024.2`) from `.zuul.yaml` and its entry in the check pipeline.                                                                                                                                                                                                                                                                                                 | [#843](https://github.com/osism/cfg-cookiecutter/pull/843) (2024.2)                |
 | `openstack-octavia-amphora-image` | Drop the per-version build jobs from `.zuul.yaml`, the version rows in `README.md`, and the version block in `playbooks/cleanup.yml`.                                                                                                                                                                                                                                                                                      | [#142](https://github.com/osism/openstack-octavia-amphora-image/pull/142) (2024.2) |
 | `container-images-kolla`          | Remove the per-version build branch in `.zuul.yaml` and the matching `elif` in `scripts/001-prepare.sh`.                                                                                                                                                                                                                                                                                                                   | [#573](https://github.com/osism/container-images-kolla/pull/573) (2023.2)          |
-| `container-image-kolla-ansible`   | Remove the per-version build/push jobs in `.zuul.yaml` and the matching `elif` in the `Containerfile`.                                                                                                                                                                                                                                                                                                                     | [#745](https://github.com/osism/container-image-kolla-ansible/pull/745) (2023.2)   |
+| `container-image-kolla-ansible`   | Remove the per-version build/push jobs in `.zuul.yaml`, the matching `elif` in the `Containerfile`, and the retired version from the `case` in `scripts/test.sh`.                                                                                                                                                                                                                                                           | [#745](https://github.com/osism/container-image-kolla-ansible/pull/745) (2023.2)   |
 | `container-images`                | Remove the version from the `matrix` in the per-version GitHub Actions workflows (not Zuul) under `.github/workflows/`: `build-openstackclient-container-image.yml`, `build-keystone-shib-container-image.yml`, `build-cinder-volume-extra-image.yml`, `build-cinder-volume-huawei-image.yml`. These builds do not fail at EOL — the requirements tarball outlives the deleted branch — so remove the entries proactively. | [#560](https://github.com/osism/container-images/pull/560) (2023.1)                |
-| `metalbox`                        | Remove `zuul/vars/container-images-openstack-<version>.yml`, the per-image entries in `zuul/vars/container-images-metalbox.yml`, the version from the `openstack_versions` default in `zuul/mirror-octavia-image.yml`, and any `.zuul.yaml` jobs.                                                                                                                                                                          | (no prior precedent — see note)                                                    |
-| `testbed`                         | No per-version matrix; verify that no version lane in `.zuul.yaml` still targets the retired release. If release upgrades are done right, the lanes have already moved forward as part of normal release preparation (see [Version pointers that move forward](#forward-pointers)).                                                                                                                                        | (verification only)                                                                |
+| `metalbox`                        | Remove `zuul/vars/container-images-openstack-<version>.yml`, the per-image entries in `zuul/vars/container-images-metalbox.yml`, the version from the `openstack_versions` default in `zuul/mirror-octavia-image.yml`, any `.zuul.yaml` jobs, and the retired version from the `case` in `scripts/include.sh`.                                                                                                              | (no prior precedent — see note)                                                    |
+| `testbed`                         | No per-version matrix, but not verification-only: remove the retired version from the `case` in `scripts/include.sh`, and check that no version lane in `.zuul.yaml` still targets it. If release upgrades are done right, the lanes have already moved forward as part of normal release preparation (see [Version pointers that move forward](#forward-pointers)).                                                        | (no prior example)                                                                 |
+| `defaults`                        | Remove the retired version from the version gates in `all/002-images-kolla.yml` (image selection) and `all/099-kolla.yml` (service enablement and related settings), and delete `all/010-<version>.yml` if one exists. A gate left matching no supported release is dead and can be dropped entirely, collapsing the expression to whichever branch remains; the per-version file is a backward-compat layer that exists only while that release is supported. | (no prior example)                                                                 |
 
 For builds that we kept on the `<version>-eol` tag during security support
 (see [Keep building during security support](#keep-building)), removal means
 deleting those build/push jobs and the `elif` branch that selected the
 `-eol` tag.
+
+:::note Version-keyed logic is duplicated across repositories
+The build matrices above are not the only thing keyed on the release. Several
+repositories also gate *behaviour* on it, and the same gate is often copied
+rather than shared — the redis/valkey selection currently appears in three
+repositories as near-identical shell `case` statements plus once more
+declaratively in `defaults`. Editing one copy and not the others leaves the
+deployment and the image test disagreeing about which service a release runs,
+which is why the rows above name each copy individually.
+
+Treat a retirement as incomplete until nothing still names the retired release.
+A gate left behind is dead rather than broken, so no build fails to remind you —
+`victoria` sat in a `defaults` image gate for years unnoticed. The rows above are
+therefore the control: work through them, rather than waiting for something to
+break.
+:::
 
 :::note metalbox has no precedent
 `metalbox` has not had a release retired before, so there is no prior change to
