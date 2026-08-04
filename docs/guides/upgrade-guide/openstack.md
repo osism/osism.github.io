@@ -103,4 +103,4 @@ of the APIs. This downtime is usually less than 1 minute.
 
     If Horizon answers with `Something went wrong!` afterwards, check its log for an `OfflineGenerationError`.
     That error and its solution are documented in the
-    [OpenStack Troubleshooting Guide](../troubleshooting-guide/openstack.md).
+    [OpenStack Troubleshooting Guide](../troubleshooting-guide/openstack.mdx).
