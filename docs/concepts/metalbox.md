@@ -129,9 +129,10 @@ its initial state (most notably the OSISM Manager image). It is then filled and
 kept up to date from registry tarballs hosted on the OSISM S3 storage. Two
 variants are published — a rolling `2025.1` build and a pinned `stable` build —
 and they are produced automatically by Zuul. See
-[Container registry tarballs](https://github.com/osism/metalbox/tree/main#container-registry-tarballs)
-in the metalbox repository for the available artifacts and the procedure to
-import them.
+[Container registry tarballs](../guides/deploy-guide/metalbox.md#container-registry-tarballs)
+for the available artifacts, and
+[Update of the container registry](../guides/upgrade-guide/metalbox/data-updates.md#update-of-the-container-registry)
+for the procedure to import them.
 
 ### APT repository
 
@@ -142,9 +143,10 @@ as a fallback. All CloudPod nodes use it as their APT source during deployment
 and operations.
 
 Like the container registry, the APT repository is populated from a tarball
-hosted on the OSISM S3 storage. For the available artifacts and the procedure to
-enable, disable, or update the repository, see the
-[metalbox documentation](https://github.com/osism/metalbox/tree/main#readme).
+hosted on the OSISM S3 storage. For the procedure to import the tarball, see
+[Using the MetalBox as an Ubuntu repository server](../guides/deploy-guide/metalbox.md#ubuntu-repository-server);
+for updating it, see
+[Update of the Ubuntu repository files](../guides/upgrade-guide/metalbox/data-updates.md#update-of-the-ubuntu-repository-files).
 
 ### Base services (DHCP, DNS, NTP)
 
@@ -226,8 +228,12 @@ The provisioning sequence is:
 
 ## Further reading
 
-For installing, operating, and updating a MetalBox — including the air-gap
-procedures and the data-update workflows — see the
+For installing a MetalBox — including the air-gap procedures — see
+[Installation of the MetalBox](../guides/deploy-guide/metalbox.md) in the Deploy
+Guide. For keeping it up to date, see
+[Data updates](../guides/upgrade-guide/metalbox/data-updates.md) and
+[Service updates](../guides/upgrade-guide/metalbox/service-updates.md) in the
+Upgrade Guide. The MetalBox itself is developed in the
 [metalbox repository](https://github.com/osism/metalbox).
 
 For populating NetBox from a netbox-configuration repository, see the
