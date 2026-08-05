@@ -22,3 +22,8 @@ What a configuration repository is and how it is created is described in the
 * Step 5: [Bootstrap of the bare-metal nodes](./bootstrap.md)
 * Step 6: [Deployment of the services](./services/index.md)
 
+If the bare-metal nodes of the cluster are provisioned with an
+[OSISM MetalBox](../../concepts/metalbox.md), the MetalBox itself is installed before
+these steps. Its installation is described in
+[Installation of the MetalBox](./metalbox.md).
+
