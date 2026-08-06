@@ -19,22 +19,16 @@ with the images that are already present. See
 
 ## Update of the Manager service
 
-1. The container registry must be updated first in order to receive Manager updates.
-2. Run `update-manager.sh` to update the Manager service.
+Run `update-manager.sh` to update the Manager service.
 
 ## Update of the NetBox service
 
-1. The container registry must be updated first in order to receive a NetBox update.
-2. Run `update-netbox.sh` to update the NetBox service.
+Run `update-netbox.sh` to update the NetBox service.
 
 ## Update of the infrastructure services
 
-1. The container registry must be updated first in order to receive infrastructure
-   service updates.
-2. Run `update-infrastructure.sh` to update the infrastructure services.
+Run `update-infrastructure.sh` to update the infrastructure services.
 
 ## Update of the OpenStack services
 
-1. The container registry must be updated first in order to receive OpenStack service
-   updates.
-2. Run `update-openstack.sh` to update the OpenStack services.
+Run `update-openstack.sh` to update the OpenStack services.
