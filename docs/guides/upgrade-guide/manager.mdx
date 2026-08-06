@@ -111,13 +111,14 @@ force the venv path even when a container engine is present.
     ./run.sh manager
     ```
 
-    * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, pass
-      `--ask-vault-pass` (or set `ANSIBLE_VAULT_PASSWORD_FILE` to the vault password file).
-      Unlike `osism apply`, the playbook runs outside the OSISM workers — it recreates the
-      manager containers and therefore cannot use the worker-side vault password set with
-      `osism set vault password`. The password must be supplied directly whenever
-      `secrets.yml` is encrypted; the OSISM >= 8.0.0 relief from `--ask-vault-pass`
-      applies to `osism apply`, not here.
+    * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the vault
+      password must be reachable. Its place in the configuration repository is
+      `environments/.vault_pass`; `run.sh` finds that file on its own. It either contains
+      the password or is an executable script that prints it — use the script form if the
+      password is kept elsewhere, for example in `secrets/vaultpass`.
+    * The playbook runs outside the OSISM workers — it recreates the manager containers —
+      so it cannot use the worker-side vault password set with `osism set vault password`.
+      The OSISM >= 8.0.0 relief from `--ask-vault-pass` applies to `osism apply`, not here.
     * Arguments after the playbook name are passed on to `ansible-playbook`, so
       `./run.sh manager --ask-vault-pass` works as well.
 
