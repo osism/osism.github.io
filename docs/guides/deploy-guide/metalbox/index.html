@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-guides/deploy-guide/metalbox" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.2">
+<title data-rh="true">Installation of the MetalBox | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/deploy-guide/metalbox"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Installation of the MetalBox | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="For the architecture of the MetalBox and the purpose of its individual components —"><meta data-rh="true" property="og:description" content="For the architecture of the MetalBox and the purpose of its individual components —"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/deploy-guide/metalbox"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/metalbox" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/metalbox" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Deploy Guide","item":"https://osism.tech/docs/guides/deploy-guide/"},{"@type":"ListItem","position":3,"name":"MetalBox","item":"https://osism.tech/docs/guides/deploy-guide/metalbox"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
+<script src="/assets/js/runtime~main.ad1ccbcc.js" defer="defer"></script>
+<script src="/assets/js/main.c98b5f69.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/logo.svg"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><a href="https://osism.tech/docs" target="_blank" rel="noopener noreferrer" class="navbar__brand"><div class="navbar__logo"><img src="/img/logo.svg" alt="OSISM Logo" class="themedComponent_mlkZ themedComponent--light_NVdE" style="display:none"><img src="/img/logo.svg" alt="OSISM Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU" style="display:none"></div><b class="navbar__title text--truncate">OSISM</b></a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><svg aria-hidden="true" class="searchIcon_T3tP" focusable="false" viewBox="0 0 16 16"><path fill="currentColor" d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"></path></svg><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/"><span class="linkLabel_WmDU">Getting started</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/concepts/"><span class="categoryLinkLabel_W154">Concepts</span></a><button aria-label="Expand sidebar category &#x27;Concepts&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--active" href="/docs/guides/"><span class="categoryLinkLabel_W154">Guides</span></a><button aria-label="Collapse sidebar category &#x27;Guides&#x27;" aria-expanded="true" type="button" class="clean-btn menu__caret"></button></div><ul class="menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--active" tabindex="0" href="/docs/guides/deploy-guide/"><span class="categoryLinkLabel_W154">Deploy Guide</span></a><button aria-label="Collapse sidebar category &#x27;Deploy Guide&#x27;" aria-expanded="true" type="button" class="clean-btn menu__caret"></button></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/guides/deploy-guide/metalbox"><span class="linkLabel_WmDU">MetalBox</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/guides/deploy-guide/seed"><span class="linkLabel_WmDU">Seed</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/guides/deploy-guide/manager"><span class="linkLabel_WmDU">Manager</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/guides/deploy-guide/provisioning"><span class="linkLabel_WmDU">Provisioning</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/guides/deploy-guide/bootstrap"><span class="linkLabel_WmDU">Bootstrap</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-3 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/deploy-guide/services/"><span class="categoryLinkLabel_W154">Services</span></a><button aria-label="Expand sidebar category &#x27;Services&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/upgrade-guide/"><span class="categoryLinkLabel_W154">Upgrade Guide</span></a><button aria-label="Expand sidebar category &#x27;Upgrade Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/configuration-guide/"><span class="categoryLinkLabel_W154">Configuration Guide</span></a><button aria-label="Expand sidebar category &#x27;Configuration Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/operations-guide/"><span class="categoryLinkLabel_W154">Operations Guide</span></a><button aria-label="Expand sidebar category &#x27;Operations Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/troubleshooting-guide/"><span class="categoryLinkLabel_W154">Troubleshooting Guide</span></a><button aria-label="Expand sidebar category &#x27;Troubleshooting Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/user-guide/"><span class="categoryLinkLabel_W154">User Guide</span></a><button aria-label="Expand sidebar category &#x27;User Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/developer-guide/"><span class="categoryLinkLabel_W154">Developer Guide</span></a><button aria-label="Expand sidebar category &#x27;Developer Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/guides/migration-guide/"><span class="categoryLinkLabel_W154">Migration Guide</span></a><button aria-label="Expand sidebar category &#x27;Migration Guide&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/testbed/"><span class="categoryLinkLabel_W154">Testbed</span></a><button aria-label="Expand sidebar category &#x27;Testbed&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/release-notes/"><span class="categoryLinkLabel_W154">Release Notes</span></a><button aria-label="Expand sidebar category &#x27;Release Notes&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/appendix/"><span class="categoryLinkLabel_W154">Appendix</span></a><button aria-label="Expand sidebar category &#x27;Appendix&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/docs/guides/"><span>Guides</span></a></li><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/docs/guides/deploy-guide/"><span>Deploy Guide</span></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">MetalBox</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Installation of the MetalBox</h1></header>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg></span>info</div><div class="admonitionContent_BuS1"><p>For the architecture of the MetalBox and the purpose of its individual components —
+NetBox, the OSISM Manager, Ironic, the HTTPd, the container registry, the APT
+repository, and the base services — see the
+<a class="" href="/docs/concepts/metalbox">OSISM MetalBox</a> concept.</p></div></div>
+<p>There are two ways to install a MetalBox:</p>
+<ul>
+<li class=""><strong>MetalBox image</strong> — a preconfigured machine image is written to the first disk of a
+physical server. After the initial downloads have been made, the complete
+installation can be carried out in an air-gapped environment without any access to
+external sources. This is the recommended way.</li>
+<li class=""><strong>Existing server or VM</strong> — the MetalBox services are deployed on an existing
+Ubuntu 24.04 machine, which can be either a physical server or a virtual machine.
+This installation requires external connectivity, as packages, container images, and
+the configuration repository are fetched from the Internet.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<ul>
+<li class="">A <strong>NetBox configuration repository</strong> that describes the site: the MetalBox itself,
+the bare-metal nodes, the switches, and the addressing. The data is applied to
+NetBox with the <a href="https://github.com/osism/netbox-manager" target="_blank" rel="noopener noreferrer" class="">netbox-manager</a>. The
+MetalBox reads everything it needs to know about the environment from NetBox.</li>
+<li class="">Enough <strong>local storage</strong> for the container registry, the Ubuntu repository, and the
+Ironic images if the environment is air-gapped.</li>
+</ul>
+<p>All scripts referenced on this page come from the
+<a href="https://github.com/osism/metalbox" target="_blank" rel="noopener noreferrer" class="">metalbox repository</a>, which is checked out to
+<code>/opt/configuration</code> on the MetalBox — already contained in the machine image in
+<a href="#option-1-metalbox-image" class="">Option 1</a>, cloned manually in
+<a href="#option-2-existing-server" class="">Option 2</a>. They are therefore located in
+<code>/opt/configuration/scripts</code> and are available on the <code>PATH</code> of the <code>dragon</code> user, so
+they can be called by their plain name.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="release-variants">Release variants<a href="#release-variants" class="hash-link" aria-label="Direct link to Release variants" title="Direct link to Release variants" translate="no">​</a></h2>
+<p>For the <a class="" href="/docs/concepts/metalbox#docker-registry">container registry</a> — the mirror
+that serves all container images to the MetalBox and to the nodes of the CloudPod —
+two variants are available:</p>
+<ul>
+<li class=""><strong>2025.1</strong> — a rolling build of the current <code>2025.1</code> release. The images are rebuilt
+and republished regularly, so the tags inside <code>registry-2025.1-full.tar.bz2</code> move
+forward over time.</li>
+<li class=""><strong>stable</strong> — always points to the current stable OSISM release. The <code>stable</code> name
+itself does not change as new releases are published; which release it currently
+resolves to is listed in the <a class="" href="/docs/release-notes/">Release Notes</a>. The
+image versions inside <code>registry-stable-full.tar.bz2</code> are pinned per release and only
+change when a new stable OSISM release is published. Use this variant for
+reproducible deployments that should not track the rolling <code>2025.1</code> build.</li>
+</ul>
+<p>The following sections default to the <code>2025.1</code> artifacts. Replace the file name with
+the <code>stable</code> counterpart (e.g. <code>registry-stable-full.tar.bz2</code> instead of
+<code>registry-2025.1-full.tar.bz2</code>) to deploy the pinned variant.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_BuS1"><p>Only the full container registry is provided as a <code>stable</code> variant. The non-full
+registry is published as a single version-independent <code>registry.tar.bz2</code>. The Octavia
+image (<code>octavia-export-2025.1.img</code>) is only published for <code>2025.1</code>.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="container-registry-tarballs">Container registry tarballs<a href="#container-registry-tarballs" class="hash-link" aria-label="Direct link to Container registry tarballs" title="Direct link to Container registry tarballs" translate="no">​</a></h3>
+<p>Four tarballs are published, all built from
+<a href="https://github.com/osism/metalbox/blob/main/zuul/mirror-container-images.yml" target="_blank" rel="noopener noreferrer" class=""><code>zuul/mirror-container-images.yml</code></a>
+using the image lists under
+<a href="https://github.com/osism/metalbox/tree/main/zuul/vars" target="_blank" rel="noopener noreferrer" class=""><code>zuul/vars/</code></a>.</p>
+<table><thead><tr><th style="text-align:left">Tarball</th><th style="text-align:left">Contents</th></tr></thead><tbody><tr><td style="text-align:left"><code>registry.tar.bz2</code></td><td style="text-align:left">Version-independent base tarball for the MetalBox itself. Built from <a href="https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-metalbox.yml" target="_blank" rel="noopener noreferrer" class=""><code>container-images-metalbox.yml</code></a> only.</td></tr><tr><td style="text-align:left"><code>registry-2024.2-full.tar.bz2</code></td><td style="text-align:left">Contents of <code>registry.tar.bz2</code> plus the OpenStack image set from <a href="https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-openstack-2024.2.yml" target="_blank" rel="noopener noreferrer" class=""><code>container-images-openstack-2024.2.yml</code></a>.</td></tr><tr><td style="text-align:left"><code>registry-2025.1-full.tar.bz2</code></td><td style="text-align:left">Contents of <code>registry.tar.bz2</code> plus the OpenStack image set from <a href="https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-openstack-2025.1.yml" target="_blank" rel="noopener noreferrer" class=""><code>container-images-openstack-2025.1.yml</code></a>.</td></tr><tr><td style="text-align:left"><code>registry-stable-full.tar.bz2</code></td><td style="text-align:left">Contents of <code>registry.tar.bz2</code> plus the OpenStack image set from <a href="https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-openstack-stable.yml" target="_blank" rel="noopener noreferrer" class=""><code>container-images-openstack-stable.yml</code></a> and the Manager image set from <a href="https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-manager-stable.yml" target="_blank" rel="noopener noreferrer" class=""><code>container-images-manager-stable.yml</code></a>, pinned to the current OSISM stable release.</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="option-1-metalbox-image">Option 1: Installation from the MetalBox image<a href="#option-1-metalbox-image" class="hash-link" aria-label="Direct link to Option 1: Installation from the MetalBox image" title="Direct link to Option 1: Installation from the MetalBox image" translate="no">​</a></h2>
+<p>This option requires a <strong>physical server</strong> with a BMC that supports mounting virtual
+media (vHDD and vDVD), connected to the out-of-band (OOB) management network of the
+pod.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="preparation">Preparation<a href="#preparation" class="hash-link" aria-label="Direct link to Preparation" title="Direct link to Preparation" translate="no">​</a></h3>
+<ol>
+<li class="">Download the MetalBox image
+<a href="https://nbg1.your-objectstorage.com/osism/openstack-ironic-images/osism-metalbox-image.zip" target="_blank" rel="noopener noreferrer" class="">osism-metalbox-image.zip</a>.
+Unzip the <code>osism-metalbox-image.zip</code> file. The unzipped file is named
+<code>osism-metalbox-image.raw</code>.</li>
+<li class="">Download the latest small <a href="https://grml.org/download/" target="_blank" rel="noopener noreferrer" class="">Grml</a> live ISO file. When
+creating this document, the file name was <code>grml-small-2025.05-amd64.iso</code>.</li>
+<li class="">If SONiC is to be used: Download the SONiC image for the switches from the vendor
+that provides it. Place the <code>.bin</code> files in a directory and run <code>sonic-export.sh</code>
+in that directory to pack them into the <code>sonic-export.img</code> file that is imported on
+the MetalBox. By default the script picks up files matching
+<code>sonic-broadcom-enterprise-base*.bin</code>; set <code>SONIC_PATTERN</code> for other file names.</li>
+<li class="">Export the NetBox configuration repository with
+<code>netbox-manager export-archive -i</code>. When using a NetBox configuration repository
+provided by OSISM, the file <code>netbox-export.img</code> can be downloaded from GitHub after
+a trigger of the <code>Run export</code> action.</li>
+<li class="">Download the Ironic images:<!-- -->
+<ul>
+<li class=""><a href="https://nbg1.your-objectstorage.com/osism/openstack-ironic-images/osism-ipa.initramfs" target="_blank" rel="noopener noreferrer" class="">osism-ipa.initramfs</a></li>
+<li class=""><a href="https://nbg1.your-objectstorage.com/osism/openstack-ironic-images/osism-ipa.kernel" target="_blank" rel="noopener noreferrer" class="">osism-ipa.kernel</a></li>
+<li class=""><a href="https://nbg1.your-objectstorage.com/osism/openstack-ironic-images/osism-node.qcow2" target="_blank" rel="noopener noreferrer" class="">osism-node.qcow2</a></li>
+<li class=""><a href="https://nbg1.your-objectstorage.com/osism/openstack-ironic-images/osism-node.qcow2.CHECKSUM" target="_blank" rel="noopener noreferrer" class="">osism-node.qcow2.CHECKSUM</a></li>
+<li class=""><a href="https://nbg1.your-objectstorage.com/osism/openstack-ironic-images/osism-esp.raw" target="_blank" rel="noopener noreferrer" class="">osism-esp.raw</a></li>
+</ul>
+</li>
+</ol>
+<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>tip</div><div class="admonitionContent_BuS1"><p>Downloads from the Hetzner Object Storage can occasionally be interrupted. Use
+<code>aria2c</code> for resumable, multi-connection downloads as described in the
+<a class="" href="/docs/guides/troubleshooting-guide/metalbox#resumable-downloads-with-aria2c">Troubleshooting Guide</a>.</p></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-downloads-for-air-gapped-environments">Additional downloads for air-gapped environments<a href="#additional-downloads-for-air-gapped-environments" class="hash-link" aria-label="Direct link to Additional downloads for air-gapped environments" title="Direct link to Additional downloads for air-gapped environments" translate="no">​</a></h4>
+<ol>
+<li class="">If the MetalBox is to be used as an Ubuntu repository server for nodes inside the
+CloudPod, download
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/ubuntu-noble.tar.bz2" target="_blank" rel="noopener noreferrer" class="">ubuntu-noble.tar.bz2</a>.</li>
+<li class="">If the MetalBox is to be used as a container registry for nodes inside the
+CloudPod, download
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/registry-2025.1-full.tar.bz2" target="_blank" rel="noopener noreferrer" class="">registry-2025.1-full.tar.bz2</a>
+or, for the pinned variant,
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2" target="_blank" rel="noopener noreferrer" class="">registry-stable-full.tar.bz2</a>.</li>
+<li class="">If the MetalBox is to be used as a file server for nodes inside the CloudPod,
+download
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/octavia-export-2025.1.img" target="_blank" rel="noopener noreferrer" class="">octavia-export-2025.1.img</a>.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="writing-the-image-to-disk">Writing the image to disk<a href="#writing-the-image-to-disk" class="hash-link" aria-label="Direct link to Writing the image to disk" title="Direct link to Writing the image to disk" translate="no">​</a></h3>
+<p>All steps in this section are carried out through the BMC of the server over the
+out-of-band (OOB) management network: the files are attached as virtual media, the
+Grml live system is operated from the remote console, and the node is power-cycled
+through the BMC as well.</p>
+<ol>
+<li class="">
+<p>Use the <code>osism-metalbox-image.raw</code> file as virtual media (vHDD).</p>
+</li>
+<li class="">
+<p>Use the <code>grml-small-2025.05-amd64.iso</code> file as virtual media (vDVD) and boot it.</p>
+</li>
+<li class="">
+<p>Write the MetalBox image to the first disk. Note that the exact names of the disks
+may vary depending on the server type, use <code>lsblk</code> to verify.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">dd if=/dev/sdc of=/dev/sda bs=4M status=progress</span><br></div></code></pre></div></div>
+<p>Afterwards power off the node, remove all virtual media devices and power on the
+node again.</p>
+</li>
+</ol>
+<p>Log in on the remote console as the operator user <code>dragon</code> with the default password
+<code>password</code>. At this point the network of the MetalBox is not configured yet — that
+happens later with <code>osism apply network</code> — so the remote console is the only way in.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>warning</div><div class="admonitionContent_BuS1"><p>Both the default password and the shipped SSH key are public. They are built into the
+MetalBox image through the <code>operator_password</code> and <code>operator_authorized_keys</code>
+variables in
+<a href="https://github.com/osism/openstack-ironic-images/blob/main/elements/metalbox/static/root/part1.yml" target="_blank" rel="noopener noreferrer" class=""><code>elements/metalbox/static/root/part1.yml</code></a>
+of the openstack-ironic-images repository. Change the password of the <code>dragon</code> user
+and replace the SSH key before the MetalBox is reachable from anywhere untrusted.</p></div></div>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_BuS1"><p>The initial boot can take some time as the local container registry is created on
+first boot. The boot is finished once the <code>registry</code> container is up and running.
+Verify with <code>docker ps</code>:</p><div class="language-console codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-console codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">dragon@metalbox:~$ docker ps</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS          PORTS                    NAMES</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">2ff7d1d57b06   registry:3   &quot;/entrypoint.sh /etc…&quot;   44 seconds ago   Up 43 seconds   0.0.0.0:5001-&gt;5000/tcp   registry</span><br></div></code></pre></div></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deployment-of-the-services">Deployment of the services<a href="#deployment-of-the-services" class="hash-link" aria-label="Direct link to Deployment of the services" title="Direct link to Deployment of the services" translate="no">​</a></h3>
+<p>Continue as the <code>dragon</code> user on the MetalBox (default credentials <code>dragon</code> /
+<code>password</code>).</p>
+<ol>
+<li class="">Import the NetBox files.<!-- -->
+<ul>
+<li class="">Use the <code>netbox-export.img</code> file as virtual media (vHDD) and run
+<code>netbox-import.sh</code> to import the NetBox files. Afterwards remove the virtual
+media (vHDD).</li>
+<li class=""><strong>or</strong> Make the <code>netbox-export.img</code> file available in <code>/home/dragon</code> — the
+network is not configured at this point, so it has to come from local media such
+as a USB stick or another disk that is not touched during the deployment — and
+run <code>mount-images.sh</code>. Run <code>netbox-import.sh</code> to import the NetBox files.
+Afterwards run <code>unmount-images.sh</code>.</li>
+</ul>
+</li>
+<li class="">Run <code>deploy-netbox.sh</code> to deploy the NetBox service.</li>
+<li class="">Run <code>netbox-manage.sh</code> to initialise the NetBox service. Note that this can take a
+couple of minutes to complete depending on the size of the installation.</li>
+<li class="">Run <code>get-netbox-config.sh NODE</code> to get the specific configuration for this MetalBox
+from NetBox. Replace <code>NODE</code> with the name of the MetalBox device in NetBox. This
+also sets the site that the MetalBox manages, taken from the site the device is
+assigned to.</li>
+<li class="">Run <code>deploy-manager.sh</code> to deploy the OSISM Manager service.</li>
+<li class="">Run <code>osism sync inventory</code> to sync the inventory.</li>
+<li class="">Run <code>osism apply hosts</code> to sync the <code>/etc/hosts</code> file.</li>
+<li class="">Run <code>osism apply network</code> to sync the network configuration.</li>
+<li class="">Run <code>osism apply frr</code> to sync the FRR configuration.</li>
+<li class="">Run <code>osism apply facts</code> to sync the facts.</li>
+<li class="">Run <code>osism apply chrony</code> to sync the NTP configuration.</li>
+<li class="">Decide whether the MetalBox is used as an Ubuntu repository server.<!-- -->
+<ul>
+<li class="">If the MetalBox is to be used as an Ubuntu repository server for nodes inside
+the CloudPod, do all steps in
+<a href="#ubuntu-repository-server" class="">Using the MetalBox as an Ubuntu repository server</a>.</li>
+<li class=""><strong>or</strong> Disable the use of the MetalBox as a repository server by running
+<code>disable-repository.sh</code>.</li>
+</ul>
+</li>
+<li class="">Decide whether the MetalBox is used as a SONiC ZTP server.<!-- -->
+<ul>
+<li class="">If the MetalBox is to be used as a SONiC ZTP server, import the SONiC files:<!-- -->
+<ul>
+<li class="">Use the file <code>sonic-export.img</code> as virtual media (vHDD) and run
+<code>deploy-sonic.sh</code> to deploy the SONiC ZTP services. Afterwards remove the
+virtual media (vHDD).</li>
+<li class=""><strong>or</strong> Copy the <code>sonic-export.img</code> file to <code>/home/dragon</code> and run
+<code>mount-images.sh</code>. Run <code>deploy-sonic.sh</code> to deploy the SONiC ZTP services.
+Afterwards run <code>unmount-images.sh</code>.</li>
+</ul>
+</li>
+<li class=""><strong>or</strong> Disable the use of SONiC by running <code>disable-sonic.sh</code>.</li>
+</ul>
+</li>
+<li class="">Run <code>deploy-infrastructure.sh</code> to deploy the infrastructure services.</li>
+<li class="">Run <code>deploy-openstack.sh</code> to deploy the OpenStack services.</li>
+<li class="">Upload the Ironic image files downloaded in <a href="#preparation" class="">Preparation</a> to
+<code>/opt/httpd/data/root</code>.</li>
+<li class="">Run <code>osism sync ironic</code> to sync the bare-metal nodes.</li>
+<li class="">Additional steps for air-gapped environments:<!-- -->
+<ul>
+<li class="">If the MetalBox is to be used as a container registry for nodes inside the
+CloudPod, do all steps in
+<a href="#full-container-registry" class="">Using the MetalBox as a full container registry</a>.</li>
+<li class="">If the MetalBox is to be used as a file server for nodes inside the CloudPod, do
+all steps in <a href="#file-server" class="">Using the MetalBox as a file server</a>.</li>
+</ul>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="option-2-existing-server">Option 2: Installation on an existing server or VM<a href="#option-2-existing-server" class="hash-link" aria-label="Direct link to Option 2: Installation on an existing server or VM" title="Direct link to Option 2: Installation on an existing server or VM" translate="no">​</a></h2>
+<p>This option deploys the MetalBox services on an existing machine instead of using the
+preconfigured MetalBox image. The machine can be a physical server or a virtual
+machine.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites-1">Prerequisites<a href="#prerequisites-1" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h3>
+<p>The server needs to be running Ubuntu 24.04 LTS. We recommend having at least 8
+vCPUs, 32 GB RAM and 100 GB SSD disk.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="basic-preparation">Basic preparation<a href="#basic-preparation" class="hash-link" aria-label="Direct link to Basic preparation" title="Direct link to Basic preparation" translate="no">​</a></h3>
+<p>Execute these commands as any user on the server that has <code>sudo</code> access.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">cd</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo apt update</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo apt full-upgrade -y</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo apt install -y git pipx python3-venv sshpass</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">git clone https://github.com/osism/metalbox/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo mv metalbox /opt/configuration</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">cd /opt/configuration/environments/manager/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">echo &quot;ansible_connection: local&quot; &gt;&gt; host_vars/metalbox/vars.yml</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh operator</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo chown -R dragon:dragon /opt/configuration</span><br></div></code></pre></div></div>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>warning</div><div class="admonitionContent_BuS1"><p>The <code>./run.sh operator</code> playbook invocation creates the <code>dragon</code> user and installs a
+public SSH key for it — the same key the MetalBox image ships. It comes from the
+<code>operator_authorized_keys</code> variable in
+<a href="https://github.com/osism/metalbox/blob/main/environments/configuration.yml" target="_blank" rel="noopener noreferrer" class=""><code>environments/configuration.yml</code></a>
+of the metalbox repository. Replace the key with a locally generated one before the
+machine is reachable from anywhere untrusted. No password is set for the <code>dragon</code> user
+in this variant; the account is created with a locked password.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="log-in-again-as-dragon">Log in again as dragon<a href="#log-in-again-as-dragon" class="hash-link" aria-label="Direct link to Log in again as dragon" title="Direct link to Log in again as dragon" translate="no">​</a></h3>
+<p>The previous steps created the <code>dragon</code> user account which will be used to run the
+MetalBox services. Switch to it in one of two ways:</p>
+<ul>
+<li class="">Run <code>sudo -iu dragon</code> from the account used so far.</li>
+<li class="">Log in over SSH with the private key that matches the installed public key. It is
+published as <code>operator_private_key</code> in
+<a href="https://github.com/osism/openstack-ironic-images/blob/main/elements/metalbox/static/root/part1.yml" target="_blank" rel="noopener noreferrer" class=""><code>elements/metalbox/static/root/part1.yml</code></a>
+of the openstack-ironic-images repository.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="prepare-the-metalbox-installation">Prepare the MetalBox installation<a href="#prepare-the-metalbox-installation" class="hash-link" aria-label="Direct link to Prepare the MetalBox installation" title="Direct link to Prepare the MetalBox installation" translate="no">​</a></h3>
+<p>Prepare the environment:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">cd</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">git clone https://github.com/osism/openstack-ironic-images</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">cd /opt/configuration/environments/manager/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"># Install ansible roles</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh noop</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"># Run the metalbox preparation playbook</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">venv/bin/ansible-playbook ~/openstack-ironic-images/elements/metalbox/static/root/part1.yml</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"># Install some more python libs and another ansible collection</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">pipx install netbox-manager</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">pipx install &#x27;ansible-core&gt;=2.19.0,&lt;2.20.0&#x27;</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">/home/dragon/.local/bin/ansible-galaxy collection install netbox.netbox</span><br></div></code></pre></div></div>
+<p>The MetalBox installation runs a set of Docker containers from a local registry. Fill
+the registry volume with the container images and start the registry:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">cd</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">wget -O registry.tar.bz2 https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">docker run --rm -v registry:/volume -v /home/dragon:/import library/alpine:3 sh -c &#x27;cd /volume &amp;&amp; tar xjf /import/registry.tar.bz2&#x27;</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">docker run -d -p 0.0.0.0:5001:5000 -v registry:/var/lib/registry --name registry --restart always library/registry:3</span><br></div></code></pre></div></div>
+<p>Add the internal address of the MetalBox. The configuration is pinned to the fixed
+address <code>192.168.42.10</code> on a dummy interface named <code>metalbox</code>, and several components
+expect to find it there:</p>
+<ul>
+<li class="">it is the <code>kolla_internal_vip_address</code> under which Keystone and Ironic are reached,</li>
+<li class="">it is the endpoint of the NetBox API (<code>http://192.168.42.10:8121</code>), which
+<code>get-netbox-config.sh</code> and the Manager query,</li>
+<li class="">it is the <code>ansible_host</code> of the MetalBox in its own inventory, so the Manager
+reaches the node it runs on through it,</li>
+<li class="">and it is what the <code>metalbox.osism.xyz</code> and <code>api.metalbox.osism.xyz</code> host entries
+resolve to.</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">sudo ip link add metalbox type dummy</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo ip addr add 192.168.42.10/32 dev metalbox</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sudo ip link set up metalbox</span><br></div></code></pre></div></div>
+<p>On the MetalBox image this interface is created by <code>osism apply network</code> from the
+<code>network_dummy_devices</code> variable. On an existing server it is set up by hand as shown
+above, and because a dummy interface does not survive a reboot, it should also be
+added to the permanent network configuration, for example in a file in
+<code>/etc/netplan</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="fill-the-netbox-directory">Fill the NetBox directory<a href="#fill-the-netbox-directory" class="hash-link" aria-label="Direct link to Fill the NetBox directory" title="Direct link to Fill the NetBox directory" translate="no">​</a></h3>
+<p>In the directory containing the NetBox data — this can be either a dedicated Git
+repository or the <code>netbox</code> subdirectory of the CloudPod repository — run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">netbox-manager export-archive</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">netbox-manager import-archive</span><br></div></code></pre></div></div>
+<p>This copies the relevant data into <code>/opt/configuration/netbox/</code>.</p>
+<p>Deploy NetBox and fill it with data. Each of the following commands can take a couple
+of minutes to complete.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">deploy-netbox.sh</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">netbox-manage.sh</span><br></div></code></pre></div></div>
+<p>Run <code>get-netbox-config.sh NODE</code> to get the specific configuration for this MetalBox
+from NetBox. Replace <code>NODE</code> with the name of the MetalBox device in NetBox. This also
+sets the site that the MetalBox manages, taken from the site the device is assigned
+to.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="finish-the-metalbox-installation">Finish the MetalBox installation<a href="#finish-the-metalbox-installation" class="hash-link" aria-label="Direct link to Finish the MetalBox installation" title="Direct link to Finish the MetalBox installation" translate="no">​</a></h3>
+<p>Deploy the Manager and import the inventory from NetBox:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">deploy-manager.sh</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism sync inventory</span><br></div></code></pre></div></div>
+<p>Ironic and the services it depends on are not deployed yet. Continue with the
+remaining steps of <a href="#deployment-of-the-services" class="">Option 1</a>:</p>
+<ol>
+<li class="">Run <code>osism apply hosts</code> to sync the <code>/etc/hosts</code> file. The OpenStack services are
+reached under <code>api.metalbox.osism.xyz</code> and <code>metalbox.osism.xyz</code>, which resolve
+through these entries.</li>
+<li class="">Run <code>osism apply facts</code> to sync the facts.</li>
+<li class="">Run <code>osism apply chrony</code> to sync the NTP configuration.</li>
+<li class="">Decide whether the MetalBox is used as an Ubuntu repository server and as a SONiC
+ZTP server, as in steps 12 and 13 of Option 1.</li>
+<li class="">Run <code>deploy-infrastructure.sh</code> to deploy the infrastructure services.</li>
+<li class="">Run <code>deploy-openstack.sh</code> to deploy the OpenStack services.</li>
+<li class="">Upload the Ironic image files listed in <a href="#preparation" class="">Preparation</a> to
+<code>/opt/httpd/data/root</code>.</li>
+<li class="">Run <code>osism sync ironic</code> to sync the bare-metal nodes.</li>
+</ol>
+<p><code>osism apply network</code> and <code>osism apply frr</code> are not part of this variant. The network
+of an existing server is managed outside the MetalBox, which is why the dummy
+interface above is created by hand.</p>
+<p>Further tasks can then be performed on the MetalBox as documented in the rest of the
+documentation, e.g. managing Ironic nodes or SONiC switches.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-steps-for-air-gapped-environments">Additional steps for air-gapped environments<a href="#additional-steps-for-air-gapped-environments" class="hash-link" aria-label="Direct link to Additional steps for air-gapped environments" title="Direct link to Additional steps for air-gapped environments" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ubuntu-repository-server">Using the MetalBox as an Ubuntu repository server<a href="#ubuntu-repository-server" class="hash-link" aria-label="Direct link to Using the MetalBox as an Ubuntu repository server" title="Direct link to Using the MetalBox as an Ubuntu repository server" translate="no">​</a></h3>
+<ol>
+<li class="">Download the Ubuntu repository archive
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/ubuntu-noble.tar.bz2" target="_blank" rel="noopener noreferrer" class="">ubuntu-noble.tar.bz2</a>.</li>
+<li class="">Copy <code>ubuntu-noble.tar.bz2</code> to <code>/home/dragon</code> on the MetalBox node.</li>
+<li class="">Run <code>SKIP_DOWNLOAD=true update-repository.sh</code> to import the Ubuntu repository
+files. Note that this can take a couple of minutes to finish.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="full-container-registry">Using the MetalBox as a full container registry<a href="#full-container-registry" class="hash-link" aria-label="Direct link to Using the MetalBox as a full container registry" title="Direct link to Using the MetalBox as a full container registry" translate="no">​</a></h3>
+<ol>
+<li class="">
+<p>Download
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/registry-2025.1-full.tar.bz2" target="_blank" rel="noopener noreferrer" class="">registry-2025.1-full.tar.bz2</a>
+or, to use the pinned variant,
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2" target="_blank" rel="noopener noreferrer" class="">registry-stable-full.tar.bz2</a>.</p>
+</li>
+<li class="">
+<p>Copy the file to <code>/home/dragon</code> on the MetalBox node.</p>
+</li>
+<li class="">
+<p>Import it with <code>REGISTRY_FILE</code> set to its name — it defaults to <code>registry.tar.bz2</code>,
+so it has to be set for any other name. Note that this can take a couple of minutes
+to finish.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">SKIP_DOWNLOAD=true REGISTRY_FILE=registry-2025.1-full.tar.bz2 update-registry.sh</span><br></div></code></pre></div></div>
+</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="file-server">Using the MetalBox as a file server<a href="#file-server" class="hash-link" aria-label="Direct link to Using the MetalBox as a file server" title="Direct link to Using the MetalBox as a file server" translate="no">​</a></h3>
+<ol>
+<li class="">Download the Octavia image export
+<a href="https://nbg1.your-objectstorage.com/osism/metalbox/octavia-export-2025.1.img" target="_blank" rel="noopener noreferrer" class="">octavia-export-2025.1.img</a>.</li>
+<li class="">Copy <code>octavia-export-2025.1.img</code> to <code>/home/dragon</code> on the MetalBox node.</li>
+<li class="">Run <code>mount-images.sh</code> to mount the <code>octavia-export-2025.1.img</code> image.</li>
+<li class="">Run <code>octavia-import.sh</code> to import the Octavia image files.</li>
+<li class="">Run <code>unmount-images.sh</code> to unmount the <code>octavia-export-2025.1.img</code> image.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="appendix">Appendix<a href="#appendix" class="hash-link" aria-label="Direct link to Appendix" title="Direct link to Appendix" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="writing-the-metalbox-image-directly-to-disk-without-unpacking">Writing the MetalBox image directly to disk without unpacking<a href="#writing-the-metalbox-image-directly-to-disk-without-unpacking" class="hash-link" aria-label="Direct link to Writing the MetalBox image directly to disk without unpacking" title="Direct link to Writing the MetalBox image directly to disk without unpacking" translate="no">​</a></h3>
+<p>To avoid the intermediate <code>osism-metalbox-image.raw</code> file, <code>funzip</code> can stream the
+contents of <code>osism-metalbox-image.zip</code> straight to the target disk. Export the target
+device as an environment variable first so the command does not accidentally reference
+the wrong disk. Verify the target with <code>lsblk</code> before running the command — the write
+is destructive.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">DEVICE=/dev/sda</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">funzip osism-metalbox-image.zip | dd of=$DEVICE bs=4M status=progress</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next steps" title="Direct link to Next steps" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="/docs/guides/upgrade-guide/metalbox/data-updates">Data updates on the MetalBox</a> —
+update the NetBox data, the Ironic images, the container registry, and the Ubuntu
+repository files.</li>
+<li class=""><a class="" href="/docs/guides/upgrade-guide/metalbox/service-updates">Service updates on the MetalBox</a> —
+update the Manager, NetBox, the infrastructure services, and the OpenStack services.</li>
+<li class=""><a class="" href="/docs/guides/configuration-guide/metalbox/software-raid">Software RAID</a> — configure a
+software RAID for the bare-metal nodes that are provisioned by the MetalBox.</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/osism/osism.github.io/tree/main/docs/guides/deploy-guide/metalbox.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/guides/deploy-guide/"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Deploy Guide</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/guides/deploy-guide/seed"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Seed</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#prerequisites" class="table-of-contents__link toc-highlight">Prerequisites</a></li><li><a href="#release-variants" class="table-of-contents__link toc-highlight">Release variants</a><ul><li><a href="#container-registry-tarballs" class="table-of-contents__link toc-highlight">Container registry tarballs</a></li></ul></li><li><a href="#option-1-metalbox-image" class="table-of-contents__link toc-highlight">Option 1: Installation from the MetalBox image</a><ul><li><a href="#preparation" class="table-of-contents__link toc-highlight">Preparation</a></li><li><a href="#writing-the-image-to-disk" class="table-of-contents__link toc-highlight">Writing the image to disk</a></li><li><a href="#deployment-of-the-services" class="table-of-contents__link toc-highlight">Deployment of the services</a></li></ul></li><li><a href="#option-2-existing-server" class="table-of-contents__link toc-highlight">Option 2: Installation on an existing server or VM</a><ul><li><a href="#prerequisites-1" class="table-of-contents__link toc-highlight">Prerequisites</a></li><li><a href="#basic-preparation" class="table-of-contents__link toc-highlight">Basic preparation</a></li><li><a href="#log-in-again-as-dragon" class="table-of-contents__link toc-highlight">Log in again as dragon</a></li><li><a href="#prepare-the-metalbox-installation" class="table-of-contents__link toc-highlight">Prepare the MetalBox installation</a></li><li><a href="#fill-the-netbox-directory" class="table-of-contents__link toc-highlight">Fill the NetBox directory</a></li><li><a href="#finish-the-metalbox-installation" class="table-of-contents__link toc-highlight">Finish the MetalBox installation</a></li></ul></li><li><a href="#additional-steps-for-air-gapped-environments" class="table-of-contents__link toc-highlight">Additional steps for air-gapped environments</a><ul><li><a href="#ubuntu-repository-server" class="table-of-contents__link toc-highlight">Using the MetalBox as an Ubuntu repository server</a></li><li><a href="#full-container-registry" class="table-of-contents__link toc-highlight">Using the MetalBox as a full container registry</a></li><li><a href="#file-server" class="table-of-contents__link toc-highlight">Using the MetalBox as a file server</a></li></ul></li><li><a href="#appendix" class="table-of-contents__link toc-highlight">Appendix</a><ul><li><a href="#writing-the-metalbox-image-directly-to-disk-without-unpacking" class="table-of-contents__link toc-highlight">Writing the MetalBox image directly to disk without unpacking</a></li></ul></li><li><a href="#next-steps" class="table-of-contents__link toc-highlight">Next steps</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Resources</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/docs">Documentation</a></li><li class="footer__item"><a href="https://osism.cloud/de/partner" target="_blank" rel="noopener noreferrer" class="footer__link-item">Partner<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">External links</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.linkedin.com/company/osism/" target="_blank" rel="noopener noreferrer" class="footer__link-item">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/osism" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/osism/issues/issues/new/choose" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open issue on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zuul.services.osism.tech/t/osism/status" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zuul CI<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Company</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://osism.cloud/de/ueber-uns" target="_blank" rel="noopener noreferrer" class="footer__link-item">About Us<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud" target="_blank" rel="noopener noreferrer" class="footer__link-item">Contact Us<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:info@osism.tech?subject=OSISM Demo" target="_blank" rel="noopener noreferrer" class="footer__link-item">Schedule a demo<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/subskription" target="_blank" rel="noopener noreferrer" class="footer__link-item">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/datenschutz" target="_blank" rel="noopener noreferrer" class="footer__link-item">Privacy Policy<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/impressum" target="_blank" rel="noopener noreferrer" class="footer__link-item">Legals<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2026 OSISM GmbH. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>

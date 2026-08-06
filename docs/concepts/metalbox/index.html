@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OSISM MetalBox | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/concepts/metalbox"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OSISM MetalBox | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="The OSISM MetalBox is a hardware-provisioning toolkit built around"><meta data-rh="true" property="og:description" content="The OSISM MetalBox is a hardware-provisioning toolkit built around"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/concepts/metalbox"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/metalbox" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/metalbox" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Concepts","item":"https://osism.tech/docs/concepts/"},{"@type":"ListItem","position":2,"name":"OSISM MetalBox","item":"https://osism.tech/docs/concepts/metalbox"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.f493849f.js" defer="defer"></script>
-<script src="/assets/js/main.dc939ac2.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.ad1ccbcc.js" defer="defer"></script>
+<script src="/assets/js/main.c98b5f69.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -113,9 +113,10 @@ its initial state (most notably the OSISM Manager image). It is then filled and
 kept up to date from registry tarballs hosted on the OSISM S3 storage. Two
 variants are published — a rolling <code>2025.1</code> build and a pinned <code>stable</code> build —
 and they are produced automatically by Zuul. See
-<a href="https://github.com/osism/metalbox/tree/main#container-registry-tarballs" target="_blank" rel="noopener noreferrer" class="">Container registry tarballs</a>
-in the metalbox repository for the available artifacts and the procedure to
-import them.</p>
+<a class="" href="/docs/guides/deploy-guide/metalbox#container-registry-tarballs">Container registry tarballs</a>
+for the available artifacts, and
+<a class="" href="/docs/guides/upgrade-guide/metalbox/data-updates#update-of-the-container-registry">Update of the container registry</a>
+for the procedure to import them.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="apt-repository">APT repository<a href="#apt-repository" class="hash-link" aria-label="Direct link to APT repository" title="Direct link to APT repository" translate="no">​</a></h3>
 <p>The APT repository serves the same purpose as the Docker registry, just for
 <code>.deb</code> packages: in offline scenarios it provides every Ubuntu package required
@@ -123,9 +124,10 @@ to install the CloudPod, and in environments with external connectivity it acts
 as a fallback. All CloudPod nodes use it as their APT source during deployment
 and operations.</p>
 <p>Like the container registry, the APT repository is populated from a tarball
-hosted on the OSISM S3 storage. For the available artifacts and the procedure to
-enable, disable, or update the repository, see the
-<a href="https://github.com/osism/metalbox/tree/main#readme" target="_blank" rel="noopener noreferrer" class="">metalbox documentation</a>.</p>
+hosted on the OSISM S3 storage. For the procedure to import the tarball, see
+<a class="" href="/docs/guides/deploy-guide/metalbox#ubuntu-repository-server">Using the MetalBox as an Ubuntu repository server</a>;
+for updating it, see
+<a class="" href="/docs/guides/upgrade-guide/metalbox/data-updates#update-of-the-ubuntu-repository-files">Update of the Ubuntu repository files</a>.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="base-services-dhcp-dns-ntp">Base services (DHCP, DNS, NTP)<a href="#base-services-dhcp-dns-ntp" class="hash-link" aria-label="Direct link to Base services (DHCP, DNS, NTP)" title="Direct link to Base services (DHCP, DNS, NTP)" translate="no">​</a></h3>
 <p>The MetalBox also provides the base network services that any provisioning workflow
 relies on: DHCP and DNS are served by <a href="https://thekelleys.org.uk/dnsmasq/doc.html" target="_blank" rel="noopener noreferrer" class="">dnsmasq</a>,
@@ -207,8 +209,12 @@ forwarding traffic on its data ports.</p>
 </li>
 </ol>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
-<p>For installing, operating, and updating a MetalBox — including the air-gap
-procedures and the data-update workflows — see the
+<p>For installing a MetalBox — including the air-gap procedures — see
+<a class="" href="/docs/guides/deploy-guide/metalbox">Installation of the MetalBox</a> in the Deploy
+Guide. For keeping it up to date, see
+<a class="" href="/docs/guides/upgrade-guide/metalbox/data-updates">Data updates</a> and
+<a class="" href="/docs/guides/upgrade-guide/metalbox/service-updates">Service updates</a> in the
+Upgrade Guide. The MetalBox itself is developed in the
 <a href="https://github.com/osism/metalbox" target="_blank" rel="noopener noreferrer" class="">metalbox repository</a>.</p>
 <p>For populating NetBox from a netbox-configuration repository, see the
 <a href="https://github.com/osism/netbox-manager" target="_blank" rel="noopener noreferrer" class="">netbox-manager</a>.</p>
