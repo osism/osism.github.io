@@ -450,6 +450,8 @@ funzip osism-metalbox-image.zip | dd of=$DEVICE bs=4M status=progress
 
 ## Next steps
 
+* [Node deployment](../operations-guide/metalbox/node-deployment.md) — deploy the
+  bare-metal nodes of the CloudPod with the MetalBox.
 * [Data updates on the MetalBox](../upgrade-guide/metalbox/data-updates.md) —
   update the NetBox data, the Ironic images, the container registry, and the Ubuntu
   repository files.

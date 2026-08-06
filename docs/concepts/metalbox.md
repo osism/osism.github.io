@@ -230,7 +230,9 @@ The provisioning sequence is:
 
 For installing a MetalBox — including the air-gap procedures — see
 [Installation of the MetalBox](../guides/deploy-guide/metalbox.md) in the Deploy
-Guide. For keeping it up to date, see
+Guide. For deploying and redeploying nodes with it, see
+[MetalBox](../guides/operations-guide/metalbox/index.md) in the Operations Guide. For
+keeping it up to date, see
 [Data updates](../guides/upgrade-guide/metalbox/data-updates.md) and
 [Service updates](../guides/upgrade-guide/metalbox/service-updates.md) in the
 Upgrade Guide. The MetalBox itself is developed in the
