@@ -34,23 +34,29 @@ There are two ways to install a MetalBox:
 * Enough **local storage** for the container registry, the Ubuntu repository, and the
   Ironic images if the environment is air-gapped.
 
-All scripts referenced on this page are part of the MetalBox configuration repository.
-They are located in `/opt/configuration/scripts` and are available on the `PATH` of
-the `dragon` user, so they can be called by their plain name.
+All scripts referenced on this page come from the
+[metalbox repository](https://github.com/osism/metalbox), which is checked out to
+`/opt/configuration` on the MetalBox — already contained in the machine image in
+[Option 1](#option-1-metalbox-image), cloned manually in
+[Option 2](#option-2-existing-server). They are therefore located in
+`/opt/configuration/scripts` and are available on the `PATH` of the `dragon` user, so
+they can be called by their plain name.
 
 ## Release variants {#release-variants}
 
-For the container registry two variants are available:
+For the [container registry](../../concepts/metalbox.md#docker-registry) — the mirror
+that serves all container images to the MetalBox and to the nodes of the CloudPod —
+two variants are available:
 
 * **2025.1** — a rolling build of the current `2025.1` release. The images are rebuilt
   and republished regularly, so the tags inside `registry-2025.1-full.tar.bz2` move
   forward over time.
-* **stable** — always points to the current stable OSISM release (currently OSISM
-  `10.0.0` on kolla `2025.1`; future releases such as `10.1.0` will be published under
-  the same `stable` name). The image versions inside `registry-stable-full.tar.bz2`
-  are pinned per release and only change when a new stable OSISM release is published.
-  Use this variant for reproducible deployments that should not track the rolling
-  `2025.1` build.
+* **stable** — always points to the current stable OSISM release. The `stable` name
+  itself does not change as new releases are published; which release it currently
+  resolves to is listed in the [Release Notes](../../release-notes/index.md). The
+  image versions inside `registry-stable-full.tar.bz2` are pinned per release and only
+  change when a new stable OSISM release is published. Use this variant for
+  reproducible deployments that should not track the rolling `2025.1` build.
 
 The following sections default to the `2025.1` artifacts. Replace the file name with
 the `stable` counterpart (e.g. `registry-stable-full.tar.bz2` instead of
@@ -92,9 +98,11 @@ pod.
    `osism-metalbox-image.raw`.
 2. Download the latest small [Grml](https://grml.org/download/) live ISO file. When
    creating this document, the file name was `grml-small-2025.05-amd64.iso`.
-3. If SONiC is to be used: Download the SONiC export image `sonic-export.img` from the
-   well known URL. This file can also be created locally by running `sonic-export.sh`
-   inside a directory containing the SONiC images.
+3. If SONiC is to be used: Download the SONiC image for the switches from the vendor
+   that provides it. Place the `.bin` files in a directory and run `sonic-export.sh`
+   in that directory to pack them into the `sonic-export.img` file that is imported on
+   the MetalBox. By default the script picks up files matching
+   `sonic-broadcom-enterprise-base*.bin`; set `SONIC_PATTERN` for other file names.
 4. Export the NetBox configuration repository with
    `netbox-manager export-archive -i`. When using a NetBox configuration repository
    provided by OSISM, the file `netbox-export.img` can be downloaded from GitHub after
@@ -130,6 +138,11 @@ Downloads from the Hetzner Object Storage can occasionally be interrupted. Use
 
 ### Writing the image to disk
 
+All steps in this section are carried out through the BMC of the server over the
+out-of-band (OOB) management network: the files are attached as virtual media, the
+Grml live system is operated from the remote console, and the node is power-cycled
+through the BMC as well.
+
 1. Use the `osism-metalbox-image.raw` file as virtual media (vHDD).
 2. Use the `grml-small-2025.05-amd64.iso` file as virtual media (vDVD) and boot it.
 3. Write the MetalBox image to the first disk. Note that the exact names of the disks
@@ -141,6 +154,21 @@ Downloads from the Hetzner Object Storage can occasionally be interrupted. Use
 
    Afterwards power off the node, remove all virtual media devices and power on the
    node again.
+
+Log in on the remote console as the operator user `dragon` with the default password
+`password`. At this point the network of the MetalBox is not configured yet — that
+happens later with `osism apply network` — so the remote console is the only way in.
+
+:::warning
+
+Both the default password and the shipped SSH key are public. They are built into the
+MetalBox image through the `operator_password` and `operator_authorized_keys`
+variables in
+[`elements/metalbox/static/root/part1.yml`](https://github.com/osism/openstack-ironic-images/blob/main/elements/metalbox/static/root/part1.yml)
+of the openstack-ironic-images repository. Change the password of the `dragon` user
+and replace the SSH key before the MetalBox is reachable from anywhere untrusted.
+
+:::
 
 :::note
 
@@ -158,20 +186,25 @@ CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS    
 
 ### Deployment of the services
 
-Continue as the `dragon` user on the MetalBox.
+Continue as the `dragon` user on the MetalBox (default credentials `dragon` /
+`password`).
 
 1. Import the NetBox files.
    * Use the `netbox-export.img` file as virtual media (vHDD) and run
      `netbox-import.sh` to import the NetBox files. Afterwards remove the virtual
      media (vHDD).
-   * **or** Copy the `netbox-export.img` file to `/home/dragon` and run
-     `mount-images.sh`. Run `netbox-import.sh` to import the NetBox files. Afterwards
-     run `unmount-images.sh`.
+   * **or** Make the `netbox-export.img` file available in `/home/dragon` — the
+     network is not configured at this point, so it has to come from local media such
+     as a USB stick or another disk that is not touched during the deployment — and
+     run `mount-images.sh`. Run `netbox-import.sh` to import the NetBox files.
+     Afterwards run `unmount-images.sh`.
 2. Run `deploy-netbox.sh` to deploy the NetBox service.
 3. Run `netbox-manage.sh` to initialise the NetBox service. Note that this can take a
    couple of minutes to complete depending on the size of the installation.
 4. Run `get-netbox-config.sh NODE` to get the specific configuration for this MetalBox
-   from NetBox. Replace `NODE` with the name of the MetalBox device in NetBox.
+   from NetBox. Replace `NODE` with the name of the MetalBox device in NetBox. This
+   also sets the site that the MetalBox manages, taken from the site the device is
+   assigned to.
 5. Run `deploy-manager.sh` to deploy the OSISM Manager service.
 6. Run `osism sync inventory` to sync the inventory.
 7. Run `osism apply hosts` to sync the `/etc/hosts` file.
@@ -196,7 +229,8 @@ Continue as the `dragon` user on the MetalBox.
     * **or** Disable the use of SONiC by running `disable-sonic.sh`.
 14. Run `deploy-infrastructure.sh` to deploy the infrastructure services.
 15. Run `deploy-openstack.sh` to deploy the OpenStack services.
-16. Upload the Ironic image files to `/opt/httpd/data/root`.
+16. Upload the Ironic image files downloaded in [Preparation](#preparation) to
+    `/opt/httpd/data/root`.
 17. Run `osism sync ironic` to sync the bare-metal nodes.
 18. Additional steps for air-gapped environments:
     * If the MetalBox is to be used as a container registry for nodes inside the
@@ -204,32 +238,6 @@ Continue as the `dragon` user on the MetalBox.
       [Using the MetalBox as a full container registry](#full-container-registry).
     * If the MetalBox is to be used as a file server for nodes inside the CloudPod, do
       all steps in [Using the MetalBox as a file server](#file-server).
-
-### Automated deployment with run-all.sh
-
-Instead of running the deployment steps individually, `run-all.sh` runs the sequence
-unattended. It takes the name of the managed site in NetBox as its argument, which it
-writes into the Manager configuration with `netbox-site.sh`:
-
-```bash
-run-all.sh SITE
-```
-
-The SONiC deployment steps can be skipped by setting `ENABLE_SONIC=false`. By
-default, SONiC is enabled.
-
-```bash
-ENABLE_SONIC=false run-all.sh SITE
-```
-
-:::note
-
-`run-all.sh` does not cover the full sequence above. `osism apply frr`, `osism apply
-chrony`, the decision about the Ubuntu repository server, and the upload of the Ironic
-image files to `/opt/httpd/data/root` are not part of it and still have to be carried
-out where they apply.
-
-:::
 
 ## Option 2: Installation on an existing server or VM {#option-2-existing-server}
 
@@ -244,9 +252,7 @@ vCPUs, 32 GB RAM and 100 GB SSD disk.
 
 ### Basic preparation
 
-Execute these commands as a user on the server that has `sudo` access at least via a
-password. In the command example below this user is named `osism`, amend the commands
-accordingly if a different username is used.
+Execute these commands as any user on the server that has `sudo` access.
 
 ```bash
 cd
@@ -263,18 +269,26 @@ sudo chown -R dragon:dragon /opt/configuration
 
 :::warning
 
-The `./run.sh operator` playbook invocation creates the `dragon` user and allows SSH
-login for it with a well-known SSH key that is contained in the metalbox repository.
-If the machine is reachable from the Internet via SSH, replace that key with a
-locally-generated secure SSH key.
+The `./run.sh operator` playbook invocation creates the `dragon` user and installs a
+public SSH key for it — the same key the MetalBox image ships. It comes from the
+`operator_authorized_keys` variable in
+[`environments/configuration.yml`](https://github.com/osism/metalbox/blob/main/environments/configuration.yml)
+of the metalbox repository. Replace the key with a locally generated one before the
+machine is reachable from anywhere untrusted. No password is set for the `dragon` user
+in this variant; the account is created with a locked password.
 
 :::
 
 ### Log in again as dragon
 
 The previous steps created the `dragon` user account which will be used to run the
-MetalBox services. Log in as that user either directly or by executing
-`sudo -iu dragon` from the existing account.
+MetalBox services. Switch to it in one of two ways:
+
+* Run `sudo -iu dragon` from the account used so far.
+* Log in over SSH with the private key that matches the installed public key. It is
+  published as `operator_private_key` in
+  [`elements/metalbox/static/root/part1.yml`](https://github.com/osism/openstack-ironic-images/blob/main/elements/metalbox/static/root/part1.yml)
+  of the openstack-ironic-images repository.
 
 ### Prepare the MetalBox installation
 
@@ -304,15 +318,29 @@ docker run --rm -v registry:/volume -v /home/dragon:/import library/alpine:3 sh 
 docker run -d -p 0.0.0.0:5001:5000 -v registry:/var/lib/registry --name registry --restart always library/registry:3
 ```
 
-Add a well-known IP address in order for some API operations to work. Depending on how
-the network is configured, it may make sense to add this configuration to the
-permanent configuration, e.g. by adding it to a file in `/etc/netplan`.
+Add the internal address of the MetalBox. The configuration is pinned to the fixed
+address `192.168.42.10` on a dummy interface named `metalbox`, and several components
+expect to find it there:
+
+* it is the `kolla_internal_vip_address` under which Keystone and Ironic are reached,
+* it is the endpoint of the NetBox API (`http://192.168.42.10:8121`), which
+  `get-netbox-config.sh` and the Manager query,
+* it is the `ansible_host` of the MetalBox in its own inventory, so the Manager
+  reaches the node it runs on through it,
+* and it is what the `metalbox.osism.xyz` and `api.metalbox.osism.xyz` host entries
+  resolve to.
 
 ```bash
 sudo ip link add metalbox type dummy
 sudo ip addr add 192.168.42.10/32 dev metalbox
 sudo ip link set up metalbox
 ```
+
+On the MetalBox image this interface is created by `osism apply network` from the
+`network_dummy_devices` variable. On an existing server it is set up by hand as shown
+above, and because a dummy interface does not survive a reboot, it should also be
+added to the permanent network configuration, for example in a file in
+`/etc/netplan`.
 
 ### Fill the NetBox directory
 
@@ -335,7 +363,9 @@ netbox-manage.sh
 ```
 
 Run `get-netbox-config.sh NODE` to get the specific configuration for this MetalBox
-from NetBox. Replace `NODE` with the name of the MetalBox device in NetBox.
+from NetBox. Replace `NODE` with the name of the MetalBox device in NetBox. This also
+sets the site that the MetalBox manages, taken from the site the device is assigned
+to.
 
 ### Finish the MetalBox installation
 
@@ -346,20 +376,25 @@ deploy-manager.sh
 osism sync inventory
 ```
 
-:::note
+Ironic and the services it depends on are not deployed yet. Continue with the
+remaining steps of [Option 1](#deployment-of-the-services):
 
-`deploy-manager.sh` refuses to run as long as the default site name `Discworld` is
-still configured in `/opt/configuration/environments/manager/configuration.yml`. Set
-the actual site name with `netbox-site.sh <your_site_name>` first.
+1. Run `osism apply hosts` to sync the `/etc/hosts` file. The OpenStack services are
+   reached under `api.metalbox.osism.xyz` and `metalbox.osism.xyz`, which resolve
+   through these entries.
+2. Run `osism apply facts` to sync the facts.
+3. Run `osism apply chrony` to sync the NTP configuration.
+4. Decide whether the MetalBox is used as an Ubuntu repository server and as a SONiC
+   ZTP server, as in steps 12 and 13 of Option 1.
+5. Run `deploy-infrastructure.sh` to deploy the infrastructure services.
+6. Run `deploy-openstack.sh` to deploy the OpenStack services.
+7. Upload the Ironic image files listed in [Preparation](#preparation) to
+   `/opt/httpd/data/root`.
+8. Run `osism sync ironic` to sync the bare-metal nodes.
 
-:::
-
-To deploy Ironic and the services it depends on, continue with the infrastructure and
-OpenStack services as in
-[Option 1, steps 12 to 17](#deployment-of-the-services): decide about the Ubuntu
-repository server and the SONiC ZTP server, then run `deploy-infrastructure.sh` and
-`deploy-openstack.sh`, upload the Ironic image files to `/opt/httpd/data/root`, and run
-`osism sync ironic`.
+`osism apply network` and `osism apply frr` are not part of this variant. The network
+of an existing server is managed outside the MetalBox, which is why the dummy
+interface above is created by hand.
 
 Further tasks can then be performed on the MetalBox as documented in the rest of the
 documentation, e.g. managing Ironic nodes or SONiC switches.
@@ -380,10 +415,14 @@ documentation, e.g. managing Ironic nodes or SONiC switches.
    [registry-2025.1-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-2025.1-full.tar.bz2)
    or, to use the pinned variant,
    [registry-stable-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2).
-2. Rename the downloaded file to `registry.tar.bz2`.
-3. Copy `registry.tar.bz2` to `/home/dragon` on the MetalBox node.
-4. Run `SKIP_DOWNLOAD=true update-registry.sh` to update the container registry. Note
-   that this can take a couple of minutes to finish.
+2. Copy the file to `/home/dragon` on the MetalBox node.
+3. Import it with `REGISTRY_FILE` set to its name — it defaults to `registry.tar.bz2`,
+   so it has to be set for any other name. Note that this can take a couple of minutes
+   to finish.
+
+   ```bash
+   SKIP_DOWNLOAD=true REGISTRY_FILE=registry-2025.1-full.tar.bz2 update-registry.sh
+   ```
 
 ### Using the MetalBox as a file server {#file-server}
 

@@ -64,27 +64,53 @@ netbox-manager run --limit 300-node10
 
 ## Update of the container registry
 
+Which tarball is the right one depends on what the registry has to serve:
+
+* **`registry.tar.bz2`** — the version-independent base tarball. It contains the images
+  for the MetalBox services themselves and is enough when the nodes of the CloudPod
+  pull their images from somewhere else.
+* **a full variant** — `registry-2025.1-full.tar.bz2` or `registry-stable-full.tar.bz2`,
+  which additionally contain the OpenStack images the CloudPod nodes need. In
+  air-gapped environments this is almost always the one to use, because the nodes have
+  no other source. The variants are described in
+  [Container registry tarballs](../../deploy-guide/metalbox.md#container-registry-tarballs).
+
+:::warning
+
+`update-registry.sh` removes the registry volume and recreates it from the tarball, so
+an update replaces the entire content of the registry rather than adding to it.
+Updating a MetalBox that serves the CloudPod with the base `registry.tar.bz2` therefore
+drops the OpenStack images from it.
+
+:::
+
 ### Without external connectivity
 
-1. Download
-   [registry.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2).
-2. Copy `registry.tar.bz2` to `/home/dragon` on the MetalBox node.
-3. Run `SKIP_DOWNLOAD=true update-registry.sh` to update the container registry.
+1. Download the tarball, for example
+   [registry-stable-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2).
+2. Copy it to `/home/dragon` on the MetalBox node.
+3. Run the update. `REGISTRY_FILE` names the file to import and defaults to
+   `registry.tar.bz2`, so it has to be set for any other name.
+
+   ```bash
+   SKIP_DOWNLOAD=true REGISTRY_FILE=registry-stable-full.tar.bz2 update-registry.sh
+   ```
 
 ### With external connectivity
 
-1. Run `update-registry.sh` to update the container registry.
+Run `update-registry.sh` to update the container registry. It downloads
+`registry.tar.bz2` on its own, nothing else has to be set.
 
-:::info
+```bash
+update-registry.sh
+```
 
-`registry.tar.bz2` is the version-independent base tarball for the MetalBox itself. To
-serve all container images required by the nodes inside the CloudPod, one of the full
-variants is needed instead. The available tarballs are described in
-[Container registry tarballs](../../deploy-guide/metalbox.md#container-registry-tarballs),
-the import procedure in
-[Using the MetalBox as a full container registry](../../deploy-guide/metalbox.md#full-container-registry).
+Setting `REGISTRY_URL` is optional and only needed to fetch a full variant instead of
+the base tarball.
 
-:::
+```bash
+REGISTRY_URL=https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2 update-registry.sh
+```
 
 ### Update from a single image on the container registry
 
