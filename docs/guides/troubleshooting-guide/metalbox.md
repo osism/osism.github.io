@@ -21,6 +21,24 @@ list-registry-images.sh -h       # show full help
 
 ## Manual preparation of the Ironic volume
 
+The `ironic` Docker volume is shared between Ironic and the HTTPd. Ironic writes the
+boot artifacts for the nodes into `/var/lib/ironic/httpboot`, and the HTTPd publishes
+that directory as `/ironic` — the path the nodes fetch from through
+`external_http_url`. For this to work, the directory has to exist and belong to
+uid/gid `42422`, the `ironic` user inside the containers.
+
+Preparing the volume is part of `osism apply httpd`, which normally runs through
+[`deploy-infrastructure.sh`](https://github.com/osism/metalbox/blob/main/scripts/deploy-infrastructure.sh#L15)
+during the deployment. Use `osism apply httpd` whenever it is available — it covers the
+volume and the rest of the HTTPd configuration. Note that `deploy-infrastructure.sh`
+only calls it when the `httpd` container is not already running, so re-running that
+script does not repair an emptied volume on a MetalBox whose HTTPd is up.
+
+The command below is the fallback for when the play cannot run at all: `osism apply`
+dispatches through the Manager and its task queue, so it is unavailable before the
+Manager and the infrastructure services are deployed, and while they are broken. The
+manual invocation only needs Docker and the local registry:
+
 ```bash
 docker run --rm --name httpd-ironic \
   --entrypoint /prepare-ironic-volume.sh \
@@ -28,6 +46,9 @@ docker run --rm --name httpd-ironic \
   -v ironic:/var/lib/ironic \
   localhost:5001/library/httpd:alpine
 ```
+
+The script only does something when `/var/lib/ironic/httpboot` does not exist, so
+running it against an already prepared volume changes nothing.
 
 ## Resumable downloads with aria2c {#resumable-downloads-with-aria2c}
 
