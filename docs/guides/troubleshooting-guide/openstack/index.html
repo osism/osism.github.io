@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OpenStack | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/troubleshooting-guide/openstack"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OpenStack | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Database creation fails"><meta data-rh="true" property="og:description" content="Database creation fails"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/troubleshooting-guide/openstack"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/troubleshooting-guide/openstack" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/troubleshooting-guide/openstack" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Troubleshooting Guide","item":"https://osism.tech/docs/guides/troubleshooting-guide/"},{"@type":"ListItem","position":3,"name":"OpenStack","item":"https://osism.tech/docs/guides/troubleshooting-guide/openstack"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.ad1ccbcc.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.66825548.js" defer="defer"></script>
 <script src="/assets/js/main.c98b5f69.js" defer="defer"></script>
 </head>
 <body>
@@ -185,32 +185,32 @@ Beware that this will destroy rabbitmq state which may result in inconsistent re
 <li class="">
 <p>Problem: Horizon answers with the error page <code>Something went wrong!</code> instead of the requested page. Often
 only a part of the requests is affected, because only some of the control nodes have the problem. On such a
-node, <code>/var/log/kolla/horizon/horizon-error.log</code> contains an <code>OfflineGenerationError</code> followed by the
-complete HTML of the requested page.</p>
+node the log of the web server that serves Horizon contains an <code>OfflineGenerationError</code> followed by the
+complete HTML of the requested page. Which log that is depends on the release: with OpenStack 2025.2 and
+later Horizon runs behind uWSGI and logs to <code>/var/log/kolla/horizon/horizon-uwsgi.log</code>, with OpenStack
+2025.1 and earlier it runs behind Apache and logs to <code>/var/log/kolla/horizon/horizon-error.log</code>.</p>
 <div class="language-console codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-console codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">compressor.exceptions.OfflineGenerationError: You have offline compression enabled but key</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;2ea3a0ed8d1c74d8faae7819d923c890da5126d18db513410ac36f43bbce22b8&quot; is missing from offline manifest.</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">You may need to run &quot;python manage.py compress&quot;.</span><br></div></code></pre></div></div>
 <p>Horizon uses offline compression (<code>COMPRESS_OFFLINE = True</code>). With that, the compressed CSS and JavaScript
 files and an offline manifest, which maps each template fragment to its compressed file, are generated
 inside the <code>horizon</code> container. The container only regenerates them when it starts and the checksum of its
-settings and themes stored in <code>/var/lib/kolla/.settings.md5sum.txt</code> is missing or no longer matches. If the
-manifest does not belong to the templates of the image that is currently in use, which can happen after an
-upgrade to a new OSISM release, Horizon does not find the key of a template fragment while rendering a page
-and aborts with the error above.</p>
+settings and themes stored in <code>/var/lib/kolla/.settings.md5sum.txt</code> is missing or no longer matches.</p>
+<p>The error therefore only occurs if the container still has the files of an older image: because it was
+restarted instead of recreated, or because its writable layer is preserved with an additional volume. Both
+the offline manifest and the checksum file live in that layer, so an upgrade that recreates the container is
+not affected, no matter whether the settings changed: the checksum is missing on the first start and the
+files are regenerated from the templates of the new image. If the manifest does not belong to those
+templates, Horizon does not find the key of a template fragment while rendering a page and aborts with the
+error above.</p>
 </li>
 <li class="">
 <p>Solution: remove the checksum file and restart the container. The container then regenerates the static
 files and the offline manifest during the next start, using the same code path as a configuration change.
 This is the reliable way to fix the error.</p>
 <div class="language-console codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-console codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">docker exec horizon rm -f /var/lib/kolla/.settings.md5sum.txt</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">docker restart horizon</span><br></div></code></pre></div></div>
-<p>Generating the files manually inside the container does not always resolve the error and should only be
-used if removing the checksum file is not possible. Keep this order, <code>collectstatic --clear</code> empties the
-static directory and would delete a manifest that was created before.</p>
-<div class="language-console codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-console codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">docker exec horizon /var/lib/kolla/venv/bin/python /var/lib/kolla/venv/bin/manage.py collectstatic --noinput --clear</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">docker exec horizon /var/lib/kolla/venv/bin/python /var/lib/kolla/venv/bin/manage.py compress --force</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">docker restart horizon</span><br></div></code></pre></div></div>
-<p>The restart at the end is necessary because the running Horizon processes keep the offline manifest in
-memory. <code>--force</code> is used because <code>manage.py</code> does not always read the local settings when it is called
-this way and then aborts with <code>CommandError: Offline compression is disabled.</code> although
-<code>COMPRESS_OFFLINE = True</code> is set.</p>
-<p>Repeat this on every control node on which Horizon runs. The manifest is only valid inside its own
-container.</p>
+<p>Do this on every control node on which Horizon runs. The manifest is only valid inside its own container.</p>
+<p>Running <code>collectstatic --clear</code> and <code>compress --force</code> inside the container by hand generates the same
+files, but it does not update the checksum, so a manifest generated that way is not corrected again on the
+next start. Removing the checksum file is the better option.</p>
 </li>
 <li class="">
 <p>Do not disable the offline compression with <code>COMPRESS_OFFLINE = False</code> to get rid of the error. The error
