@@ -189,7 +189,8 @@ queues there when upgrading the services.
 
 When the Manager's listener service is used (`enable_listener` in `environments/manager/configuration.yml`)
 add the new `openstack` RabbitMQ vhost to the `manager_listener_broker_uri` parameter.
-Then update the manager with `osism update manager` and delete the old queues with
+Then update the manager service as described in the
+[Upgrade Guide](../guides/upgrade-guide/manager.mdx) and delete the old queues with
 `osism migrate rabbitmq3to4 delete manager`.
 
 Finally, you can re-run the check command. There should now be no more classic queues.
