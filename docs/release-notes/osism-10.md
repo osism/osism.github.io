@@ -215,6 +215,17 @@ different OpenStack versions with a specific OSISM release.
 docker_namespace: kolla/release/2025.1
 ```
 
+The images in this namespace are tagged with an immutable `<project version>.<build date>` tag, for
+example `26.0.4.20260615`. The versions used are pinned per OSISM release and are shipped in the
+`osism/kolla-ansible` image, so they do not need to be configured.
+
+:::warning
+This namespace does not contain the rolling tags named after an OpenStack release, such as `2025.1`.
+Those exist only in the `kolla` namespace. Overriding a single image tag with a rolling tag therefore
+also requires overriding the image itself, see
+[Rolling tags and release tags](../guides/configuration-guide/openstack/index.md#rolling-tags-and-release-tags).
+:::
+
 ### New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own

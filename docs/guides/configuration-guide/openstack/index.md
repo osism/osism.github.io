@@ -26,6 +26,49 @@ The image tags can be set in the `environments/kolla/images.yml` file.
   barbican_worker_tag: "2023.1"
   ```
 
+### Rolling tags and release tags
+
+Kolla images are published in two namespaces on `registry.osism.tech`, and each namespace uses its own
+tagging scheme. The two schemes are not interchangeable — which tags you can use depends on the
+`docker_namespace` parameter set in `environments/kolla/configuration.yml`.
+
+| Namespace                           | Tag scheme                       | Example           | Meaning                                                               |
+|:------------------------------------|:---------------------------------|:------------------|:----------------------------------------------------------------------|
+| `kolla`                             | OpenStack release                | `2025.1`          | Rolling tag. Always points to the most recent build for that release. |
+| `kolla/release/<openstack_version>` | `<project version>.<build date>` | `26.0.4.20260615` | Immutable tag. Always points to exactly one build.                    |
+
+* **Rolling tags** exist only in the `kolla` namespace. A rolling tag such as `2025.1` is a moving
+  reference: it is republished whenever new images are built for OpenStack 2025.1 (Epoxy), so it always
+  resolves to the latest available build — including the latest security patches. It is a safe choice to
+  keep such a pin in place permanently, but the image it resolves to changes over time.
+
+* **Release tags** exist only in the `kolla/release/<openstack_version>` namespaces, which is what
+  deployments using an OSISM release consume (see
+  [New namespace for Kolla images](../../../release-notes/osism-10.md#new-namespace-for-kolla-images)).
+  These tags are immutable and are pinned per OSISM release, so a deployment always gets the exact same
+  images. The versions are shipped in the `osism/kolla-ansible` image and do not need to be configured.
+
+:::warning
+The `kolla/release/<openstack_version>` namespaces do **not** contain rolling tags. Setting
+`neutron_server_tag: "2025.1"` in a deployment with `docker_namespace: kolla/release/2025.1` therefore
+resolves to `registry.osism.tech/kolla/release/2025.1/neutron-server:2025.1`, which does not exist and
+fails with `unknown: artifact ... not found`.
+:::
+
+To use a rolling tag for a single image in a deployment that otherwise uses release tags, override the
+corresponding `*_image` parameter along with the tag, so that this one image is pulled from the `kolla`
+namespace:
+
+```yaml title="environments/kolla/images.yml"
+neutron_server_image: "registry.osism.tech/kolla/neutron-server"
+neutron_server_tag: "2025.1"
+```
+
+All images of a service that are derived from the same base image are covered by such an override. For
+Neutron, `neutron_rpc_server_image`, `neutron_periodic_worker_image` and
+`neutron_ovn_maintenance_worker_image` default to `neutron_server_image` and therefore do not need to be
+set individually.
+
 ## Endpoints
 
 ### Public endpoints
