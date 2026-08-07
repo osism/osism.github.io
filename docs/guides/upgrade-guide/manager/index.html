@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Manager | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/upgrade-guide/manager"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Manager | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Always read the release notes first to learn what has changed and what"><meta data-rh="true" property="og:description" content="Always read the release notes first to learn what has changed and what"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/upgrade-guide/manager"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/manager" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/manager" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Upgrade Guide","item":"https://osism.tech/docs/guides/upgrade-guide/"},{"@type":"ListItem","position":3,"name":"Manager","item":"https://osism.tech/docs/guides/upgrade-guide/manager"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.9e7023e2.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.7359e636.js" defer="defer"></script>
 <script src="/assets/js/main.c98b5f69.js" defer="defer"></script>
 </head>
 <body>
@@ -63,25 +63,46 @@ workflows for changes to the configuration repository, only a generic example fo
 configuration repository.</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh manager</span><br></div></code></pre></div></div>
 <ul>
-<li class="">The <code>osism.manager.manager</code> playbook is driven against the manager over SSH, so it
+<li class="">
+<p>The <code>osism.manager.manager</code> playbook is driven against the manager over SSH, so it
 does not matter which machine runs it, as long as that machine has a checkout of
-the configuration repository and can reach the manager.</li>
-<li class=""><code>run.sh</code> ships in the configuration repository and is refreshed by <code>make sync</code>
-(step 1), so it does not depend on the tooling installed on the machine that runs
-it. It also chooses how to execute the playbook by itself: with a container engine
-available it runs it inside the <code>osism/seed</code> container (<code>SEED_CONTAINER=auto</code>, the
-default), otherwise it uses a local Ansible venv. Set <code>SEED_CONTAINER=false</code> to
-force the venv path even when a container engine is present.</li>
-<li class="">If Ansible Vault was used to encrypt <code>environments/manager/secrets.yml</code>, the vault
+the configuration repository and can reach the manager.</p>
+</li>
+<li class="">
+<p><code>run.sh</code> ships in the configuration repository and is refreshed by <code>make sync</code>
+(step 1). Note that <code>make sync</code> pins it to the release you are upgrading <strong>to</strong>:
+it rewrites the <code>version</code> in <code>gilt.yml</code> to that release&#x27;s <code>generics_version</code>, so
+the <code>run.sh</code> you end up with is the one that release ships, not the newest one.
+How the playbook is executed follows from that:</p>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">OSISM &gt;= 10.2.0 and latest</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">OSISM &lt; 10.2.0</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><code>run.sh</code> runs the playbook inside the <code>osism/seed</code> container when a container
+engine is available (<code>SEED_CONTAINER=auto</code>, the default), so it does not depend
+on the Ansible tooling installed on the machine that runs it. Set
+<code>SEED_CONTAINER=false</code> to force a local Ansible venv instead.</p></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p>These releases pin a <code>generics_version</code> older than the seed-container support,
+so their <code>run.sh</code> has no container path — it always builds a local Ansible venv
+under <code>environments/manager</code>. The machine running this step therefore needs
+<code>python3-venv</code> and access to PyPI. A manager deployed with the seed container
+does not necessarily have <code>python3-venv</code>; in that case run this step from the
+machine the cluster was deployed from, or install <code>python3-venv</code> on the manager
+first.</p><p><code>run.sh</code> also refuses to run unless <code>configuration_git_version</code> in
+<code>environments/manager/configuration.yml</code> names the branch the checkout is on
+(see step 2 of the <a class="" href="/docs/guides/configuration-guide/manager">manager configuration guide</a>).</p></div></div></div>
+</li>
+<li class="">
+<p>If Ansible Vault was used to encrypt <code>environments/manager/secrets.yml</code>, the vault
 password must be reachable. Its place in the configuration repository is
 <code>environments/.vault_pass</code>; <code>run.sh</code> finds that file on its own. It either contains
 the password or is an executable script that prints it — use the script form if the
-password is kept elsewhere, for example in <code>secrets/vaultpass</code>.</li>
-<li class="">The playbook runs outside the OSISM workers — it recreates the manager containers —
+password is kept elsewhere, for example in <code>secrets/vaultpass</code>.</p>
+</li>
+<li class="">
+<p>The playbook runs outside the OSISM workers — it recreates the manager containers —
 so it cannot use the worker-side vault password set with <code>osism set vault password</code>.
-The OSISM &gt;= 8.0.0 relief from <code>--ask-vault-pass</code> applies to <code>osism apply</code>, not here.</li>
-<li class="">Arguments after the playbook name are passed on to <code>ansible-playbook</code>, so
-<code>./run.sh manager --ask-vault-pass</code> works as well.</li>
+The OSISM &gt;= 8.0.0 relief from <code>--ask-vault-pass</code> applies to <code>osism apply</code>, not here.</p>
+</li>
+<li class="">
+<p>Arguments after the playbook name are passed on to <code>ansible-playbook</code>, so
+<code>./run.sh manager --ask-vault-pass</code> works as well.</p>
+</li>
 </ul>
 </li>
 <li class="">
