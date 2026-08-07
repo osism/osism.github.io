@@ -101,11 +101,36 @@ are at the same commit by the time step 3 runs.
       does not matter which machine runs it, as long as that machine has a checkout of
       the configuration repository and can reach the manager.
     * `run.sh` ships in the configuration repository and is refreshed by `make sync`
-      (step 1), so it does not depend on the tooling installed on the machine that runs
-      it. It also chooses how to execute the playbook by itself: with a container engine
-      available it runs it inside the `osism/seed` container (`SEED_CONTAINER=auto`, the
-      default), otherwise it uses a local Ansible venv. Set `SEED_CONTAINER=false` to
-      force the venv path even when a container engine is present.
+      (step 1). Note that `make sync` pins it to the release you are upgrading **to**:
+      it rewrites the `version` in `gilt.yml` to that release's `generics_version`, so
+      the `run.sh` you end up with is the one that release ships, not the newest one.
+      How the playbook is executed follows from that:
+
+        <Tabs>
+        <TabItem value="runsh-11" label="OSISM >= 10.2.0 and latest">
+
+        `run.sh` runs the playbook inside the `osism/seed` container when a container
+        engine is available (`SEED_CONTAINER=auto`, the default), so it does not depend
+        on the Ansible tooling installed on the machine that runs it. Set
+        `SEED_CONTAINER=false` to force a local Ansible venv instead.
+
+        </TabItem>
+        <TabItem value="runsh-10" label="OSISM < 10.2.0">
+
+        These releases pin a `generics_version` older than the seed-container support,
+        so their `run.sh` has no container path — it always builds a local Ansible venv
+        under `environments/manager`. The machine running this step therefore needs
+        `python3-venv` and access to PyPI. A manager deployed with the seed container
+        does not necessarily have `python3-venv`; in that case run this step from the
+        machine the cluster was deployed from, or install `python3-venv` on the manager
+        first.
+
+        `run.sh` also refuses to run unless `configuration_git_version` in
+        `environments/manager/configuration.yml` names the branch the checkout is on
+        (see step 2 of the [manager configuration guide](../configuration-guide/manager.mdx)).
+
+        </TabItem>
+        </Tabs>
     * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the vault
       password must be reachable. Its place in the configuration repository is
       `environments/.vault_pass`; `run.sh` finds that file on its own. It either contains
