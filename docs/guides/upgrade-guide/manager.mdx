@@ -146,22 +146,26 @@ are at the same commit by the time step 3 runs.
       as well.
 
 
-4. Refresh the facts cache. This and the remaining steps use the `osism` command, so
-   log in to the manager node that was just updated first.
+4. Make the Ansible vault password known again. This and the remaining steps use the
+   `osism` command, so log in to the manager node that was just updated first.
+
+    ```console
+    osism set vault password
+    ```
+
+    * Step 3 recreated the manager containers, which discards the password held by the
+      OSISM workers. The `osism apply` runs below need it whenever `secrets.yml` is
+      encrypted, so set it before them rather than after.
+
+5. Refresh the facts cache.
 
     ```console
     osism apply facts
     ```
 
-5. If Traefik is used on the manager node (`traefik_enable: true` in `environments/infrastructure/configuration.yml`)
+6. If Traefik is used on the manager node (`traefik_enable: true` in `environments/infrastructure/configuration.yml`)
    then Traefik should also be upgraded.
 
     ```console
     osism apply traefik
-    ```
-
-6. Finally, the Ansible vault password must be made known again.
-
-    ```console
-    osism set vault password
     ```
