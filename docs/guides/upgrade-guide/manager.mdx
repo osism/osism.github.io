@@ -17,6 +17,18 @@ adjustments are necessary. Read the release notes even if you are only updating 
 The update of a manager service with a stable release of OSISM is described here.
 In the example, OSISM release 7.0.5 is used.
 
+:::info Where these steps run
+
+Steps 1 and 3 are run in a checkout of the configuration repository — the machine
+the cluster was deployed from, or the manager itself, where the repository is at
+`/opt/configuration`. Steps 2 and 4 to 6 use the `osism` command and are run on the
+manager.
+
+Step 1 pushes the change and step 2 pulls it onto the manager, so both checkouts
+are at the same commit by the time step 3 runs.
+
+:::
+
 1. Change the OSISM release in the configuration repository.
 
     1. Set the new OSISM version in the configuration repository.
@@ -78,16 +90,16 @@ In the example, OSISM release 7.0.5 is used.
     osism apply configuration
     ```
 
-3. Update the manager service. The `osism.manager.manager` playbook is driven against
-   the manager over SSH, so this can run on any machine that has a checkout of the
-   configuration repository and can reach the manager — the machine the cluster was
-   deployed from, or the manager itself, where the repository is at
-   `/opt/configuration`. Run it in the `environments/manager` directory.
+3. Update the manager service. Run this in the `environments/manager` directory of the
+   configuration repository.
 
     ```bash
     ./run.sh manager
     ```
 
+    * The `osism.manager.manager` playbook is driven against the manager over SSH, so it
+      does not matter which machine runs it, as long as that machine has a checkout of
+      the configuration repository and can reach the manager.
     * `run.sh` ships in the configuration repository and is refreshed by `make sync`
       (step 1), so it does not depend on the tooling installed on the machine that runs
       it. It also chooses how to execute the playbook by itself: with a container engine
