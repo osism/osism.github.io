@@ -17,31 +17,6 @@ adjustments are necessary. Read the release notes even if you are only updating 
 The update of a manager service with a stable release of OSISM is described here.
 In the example, OSISM release 7.0.5 is used.
 
-:::info Which update path applies to you
-
-Step 3 below drives the `osism.manager.manager` playbook against the manager over
-SSH, with the `run.sh` script from the configuration repository. The playbook and
-the script are the same in every case; only where you run them depends on how you
-deployed the cluster. Steps 1, 2 and 4 to 6 are the same for all of them.
-
-* **Seed node still available** (a separate workstation or VM that holds the
-  configuration repository, as in the [Seed deploy guide](../deploy-guide/seed.md)):
-  update from the seed. This reuses the same tooling as the initial bootstrap, so
-  the manager itself needs no local Ansible installation. Run step 3 in the
-  `environments/manager` directory of the configuration repository on the seed.
-* **No seed node** (it was discarded after the deployment, or the manager was
-  bootstrapped by itself): run the update from the configuration repository on the
-  manager. `run.sh` ships in the repository and is refreshed by `make sync`
-  (step 1), so it does not depend on the tooling installed on the manager. Run
-  step 3 in `/opt/configuration/environments/manager`.
-
-`run.sh` chooses how to execute the playbook by itself: with a container engine
-available it runs it inside the `osism/seed` container (`SEED_CONTAINER=auto`, the
-default), otherwise it uses a local Ansible venv. Set `SEED_CONTAINER=false` to
-force the venv path even when a container engine is present.
-
-:::
-
 1. Change the OSISM release in the configuration repository.
 
     1. Set the new OSISM version in the configuration repository.
@@ -103,14 +78,22 @@ force the venv path even when a container engine is present.
     osism apply configuration
     ```
 
-3. Update the manager service. Run this in the `environments/manager` directory of the
-   configuration repository, on the seed node or on the manager itself — see the note
-   above for which applies to you.
+3. Update the manager service. The `osism.manager.manager` playbook is driven against
+   the manager over SSH, so this can run on any machine that has a checkout of the
+   configuration repository and can reach the manager — the machine the cluster was
+   deployed from, or the manager itself, where the repository is at
+   `/opt/configuration`. Run it in the `environments/manager` directory.
 
     ```bash
     ./run.sh manager
     ```
 
+    * `run.sh` ships in the configuration repository and is refreshed by `make sync`
+      (step 1), so it does not depend on the tooling installed on the machine that runs
+      it. It also chooses how to execute the playbook by itself: with a container engine
+      available it runs it inside the `osism/seed` container (`SEED_CONTAINER=auto`, the
+      default), otherwise it uses a local Ansible venv. Set `SEED_CONTAINER=false` to
+      force the venv path even when a container engine is present.
     * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the vault
       password must be reachable. Its place in the configuration repository is
       `environments/.vault_pass`; `run.sh` finds that file on its own. It either contains
