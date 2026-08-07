@@ -213,8 +213,10 @@ sidebar_position: 40
 
 * Problem: Horizon answers with the error page `Something went wrong!` instead of the requested page. Often
   only a part of the requests is affected, because only some of the control nodes have the problem. On such a
-  node, `/var/log/kolla/horizon/horizon-error.log` contains an `OfflineGenerationError` followed by the
-  complete HTML of the requested page.
+  node the log of the web server that serves Horizon contains an `OfflineGenerationError` followed by the
+  complete HTML of the requested page. Which log that is depends on the release: with OpenStack 2025.2 and
+  later Horizon runs behind uWSGI and logs to `/var/log/kolla/horizon/horizon-uwsgi.log`, with OpenStack
+  2025.1 and earlier it runs behind Apache and logs to `/var/log/kolla/horizon/horizon-error.log`.
 
   ```console
   compressor.exceptions.OfflineGenerationError: You have offline compression enabled but key
@@ -225,10 +227,15 @@ sidebar_position: 40
   Horizon uses offline compression (`COMPRESS_OFFLINE = True`). With that, the compressed CSS and JavaScript
   files and an offline manifest, which maps each template fragment to its compressed file, are generated
   inside the `horizon` container. The container only regenerates them when it starts and the checksum of its
-  settings and themes stored in `/var/lib/kolla/.settings.md5sum.txt` is missing or no longer matches. If the
-  manifest does not belong to the templates of the image that is currently in use, which can happen after an
-  upgrade to a new OSISM release, Horizon does not find the key of a template fragment while rendering a page
-  and aborts with the error above.
+  settings and themes stored in `/var/lib/kolla/.settings.md5sum.txt` is missing or no longer matches.
+
+  The error therefore only occurs if the container still has the files of an older image: because it was
+  restarted instead of recreated, or because its writable layer is preserved with an additional volume. Both
+  the offline manifest and the checksum file live in that layer, so an upgrade that recreates the container is
+  not affected, no matter whether the settings changed: the checksum is missing on the first start and the
+  files are regenerated from the templates of the new image. If the manifest does not belong to those
+  templates, Horizon does not find the key of a template fragment while rendering a page and aborts with the
+  error above.
 
 * Solution: remove the checksum file and restart the container. The container then regenerates the static
   files and the offline manifest during the next start, using the same code path as a configuration change.
@@ -239,23 +246,11 @@ sidebar_position: 40
   docker restart horizon
   ```
 
-  Generating the files manually inside the container does not always resolve the error and should only be
-  used if removing the checksum file is not possible. Keep this order, `collectstatic --clear` empties the
-  static directory and would delete a manifest that was created before.
+  Do this on every control node on which Horizon runs. The manifest is only valid inside its own container.
 
-  ```console
-  docker exec horizon /var/lib/kolla/venv/bin/python /var/lib/kolla/venv/bin/manage.py collectstatic --noinput --clear
-  docker exec horizon /var/lib/kolla/venv/bin/python /var/lib/kolla/venv/bin/manage.py compress --force
-  docker restart horizon
-  ```
-
-  The restart at the end is necessary because the running Horizon processes keep the offline manifest in
-  memory. `--force` is used because `manage.py` does not always read the local settings when it is called
-  this way and then aborts with `CommandError: Offline compression is disabled.` although
-  `COMPRESS_OFFLINE = True` is set.
-
-  Repeat this on every control node on which Horizon runs. The manifest is only valid inside its own
-  container.
+  Running `collectstatic --clear` and `compress --force` inside the container by hand generates the same
+  files, but it does not update the checksum, so a manifest generated that way is not corrected again on the
+  next start. Removing the checksum file is the better option.
 
 * Do not disable the offline compression with `COMPRESS_OFFLINE = False` to get rid of the error. The error
   disappears, but afterwards every page is compressed again on each request.
