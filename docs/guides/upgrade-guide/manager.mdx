@@ -19,10 +19,11 @@ In the example, OSISM release 10.1.0 is used.
 
 :::info Where these steps run
 
-Steps 1 and 3 are run in a checkout of the configuration repository — the machine
+Steps 1 to 3 are run in a checkout of the configuration repository — the machine
 the cluster was deployed from, or the manager itself, where the repository is at
-`/opt/configuration`. Steps 2 and 4 to 6 use the `osism` command and are run on the
-manager.
+`/opt/configuration`. Steps 2 and 3 run `run.sh` from the `environments/manager`
+directory of that checkout, the same way the manager was deployed. Steps 4 to 6
+use the `osism` command and are run on the manager.
 
 Step 1 pushes the change and step 2 pulls it onto the manager, so both checkouts
 are at the same commit by the time step 3 runs.
@@ -86,30 +87,23 @@ are at the same commit by the time step 3 runs.
 
 2. Update the configuration repository on the manager node.
 
-    ```console
-    osism apply configuration
-    ```
-
-3. Update the manager service. Run this in the `environments/manager` directory of the
-   configuration repository.
-
     ```bash
-    ./run.sh manager
+    ./run.sh configuration
     ```
 
-    * The `osism.manager.manager` playbook is driven against the manager over SSH, so it
-      does not matter which machine runs it, as long as that machine has a checkout of
-      the configuration repository and can reach the manager.
+    * The playbooks in steps 2 and 3 are driven against the manager over SSH, so it does
+      not matter which machine runs them, as long as that machine has a checkout of the
+      configuration repository and can reach the manager.
     * `run.sh` ships in the configuration repository and is refreshed by `make sync`
       (step 1). Note that `make sync` pins it to the release you are upgrading **to**:
       it rewrites the `version` in `gilt.yml` to that release's `generics_version`, so
       the `run.sh` you end up with is the one that release ships, not the newest one.
-      How the playbook is executed follows from that:
+      How these playbooks are executed follows from that:
 
         <Tabs>
         <TabItem value="runsh-11" label="OSISM >= 10.2.0 and latest">
 
-        `run.sh` runs the playbook inside the `osism/seed` container when a container
+        `run.sh` runs a playbook inside the `osism/seed` container when a container
         engine is available (`SEED_CONTAINER=auto`, the default), so it does not depend
         on the Ansible tooling installed on the machine that runs it. Set
         `SEED_CONTAINER=false` to force a local Ansible venv instead.
@@ -119,9 +113,9 @@ are at the same commit by the time step 3 runs.
 
         These releases pin a `generics_version` older than the seed-container support,
         so their `run.sh` has no container path — it always builds a local Ansible venv
-        under `environments/manager`. The machine running this step therefore needs
+        under `environments/manager`. The machine running steps 2 and 3 therefore needs
         `python3-venv` and access to PyPI. A manager deployed with the seed container
-        does not necessarily have `python3-venv`; in that case run this step from the
+        does not necessarily have `python3-venv`; in that case run both steps from the
         machine the cluster was deployed from, or install `python3-venv` on the manager
         first.
 
@@ -136,14 +130,24 @@ are at the same commit by the time step 3 runs.
       `environments/.vault_pass`; `run.sh` finds that file on its own. It either contains
       the password or is an executable script that prints it — use the script form if the
       password is kept elsewhere, for example in `secrets/vaultpass`.
-    * The playbook runs outside the OSISM workers — it recreates the manager containers —
-      so it cannot use the worker-side vault password set with `osism set vault password`.
-      The OSISM >= 8.0.0 relief from `--ask-vault-pass` applies to `osism apply`, not here.
+    * Unlike `osism apply`, these playbooks run outside the OSISM workers, so they cannot
+      use the worker-side vault password set with `osism set vault password`. The
+      OSISM >= 8.0.0 relief from `--ask-vault-pass` applies to `osism apply`, not here.
     * Arguments after the playbook name are passed on to `ansible-playbook`, so
-      `./run.sh manager --ask-vault-pass` works as well.
+      `./run.sh configuration --ask-vault-pass` works as well.
+
+3. Update the manager service.
+
+    ```bash
+    ./run.sh manager
+    ```
+
+    * This recreates the manager containers. The notes on `run.sh` in step 2 apply here
+      as well.
 
 
-4. Refresh the facts cache.
+4. Refresh the facts cache. This and the remaining steps use the `osism` command, so
+   log in to the manager node that was just updated first.
 
     ```console
     osism apply facts
