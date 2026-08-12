@@ -33,3 +33,4 @@ handling of security-related information.
 | [OSSA-2026-015](ossa-2026-015.md) | Credential delegation and authorization bypass issues | OpenStack Keystone           |
 | [OSSA-2026-022](ossa-2026-022.md) | Scheduler hint injection bypasses Placement claims    | OpenStack Nova               |
 | [OSSA-2026-032](ossa-2026-032.md) | Cross-project subnet mutation via subnetpool onboard  | OpenStack Neutron            |
+| [OSSA-2026-034](ossa-2026-034.md) | Cross-tenant DNS zone overlap and mDNS DoS            | OpenStack Designate          |
