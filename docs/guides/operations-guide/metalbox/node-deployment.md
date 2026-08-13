@@ -44,6 +44,12 @@ A node that is in none of the listed states is skipped with a warning naming its
 current state, so a command that appears to do nothing is usually a node in an
 unexpected state rather than a failure.
 
+The states above are the ones the commands are built around. The complete state
+machine, including the intermediate and failure states a node passes through when a
+transition does not follow the expected path, is documented in
+[Ironic's node states](https://docs.openstack.org/ironic/latest/user/states.html). It is
+worth consulting whenever a node ends up in a state that is not listed here.
+
 ## Register the node in Ironic
 
 **MetalBox.** Read the inventory from NetBox and create or update the corresponding
@@ -128,7 +134,7 @@ osism sync inventory
 ```
 
 **Manager.** Wait until the node answers. The first command reports the current state,
-the second blocks until the node is reachable:
+the second blocks until the node is reachable via SSH:
 
 ```bash
 osism apply ping -- --limit node101
@@ -144,6 +150,13 @@ osism apply bootstrap -- --limit node101
 osism apply sshconfig
 osism apply known-hosts
 ```
+
+`bootstrap` only has to touch the new node, so it is limited to it. `facts`, `hosts`,
+`sshconfig` and `known-hosts` are run without `--limit` because they generate files from
+the data of all nodes: `/etc/hosts` is written on every node and has to contain the new
+node afterwards, and the `.ssh/config` and `known_hosts` of the Manager get an entry per
+node. Limiting them to the new node would leave the other nodes without its address and
+would write those files from incomplete data.
 
 **Manager.** Apply the network configuration, reboot the node so that it takes effect,
 and wait for the node to come back:

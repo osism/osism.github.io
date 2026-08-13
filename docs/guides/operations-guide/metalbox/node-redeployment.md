@@ -80,7 +80,7 @@ connectivity of the node, either by polling:
 osism apply ping -- --limit node101
 ```
 
-or by blocking until the node answers:
+or by blocking until the node is reachable via SSH:
 
 ```bash
 osism apply wait-for-connection -- --limit node101
@@ -99,6 +99,9 @@ osism apply bootstrap -- --limit node101
 osism apply sshconfig
 osism apply known-hosts
 ```
+
+Why some of these commands are run without `--limit` is explained in
+[Node deployment](./node-deployment.md#hand-the-node-over-to-the-manager).
 
 **Manager.** Apply the network configuration, reboot the node so that it takes effect,
 and wait for the node to come back:
@@ -135,8 +138,8 @@ docker exec rabbitmq rabbitmqctl forget_cluster_node rabbit@ctl101
 
 :::
 
-**Manager.** Deploy the services of a control node in this order. The `--limit`
-parameter restricts the run to the group of controllers:
+**Manager.** Deploy the services of a control node in this order. The runs are limited to
+the `control` group, not to the reprovisioned node:
 
 ```bash
 osism apply common -- --limit control
@@ -158,6 +161,28 @@ osism apply neutron -- --limit control
 osism apply nova -- --limit control
 osism apply horizon -- --limit control
 ```
+
+The limit is the `control` group and not the single node that was reprovisioned. The
+control nodes are peers of one another, so a run against one of them alone is not enough:
+
+* The configuration of the other control nodes references the reprovisioned node. The
+  peer list in `rabbitmq.conf` and the `wsrep_cluster_address` of MariaDB are generated
+  from all members of the group, and every control node needs an `/etc/hosts` entry for
+  every other one. Those files are only rewritten on the nodes that are part of the run.
+* The playbooks determine the state of a cluster from the hosts of the run. MariaDB for
+  example decides from them whether the cluster already exists, whether it is stopped
+  and which member is in sync. A run that contains only the freshly installed node
+  answers those questions from a node that knows nothing of the running cluster.
+
+Deploying the whole group lets the reprovisioned node join the existing clusters and
+keeps the configuration of the other control nodes consistent with it. This is also what
+Kolla Ansible requires, see
+[Adding new controllers](https://docs.openstack.org/kolla-ansible/latest/user/adding-and-removing-hosts.html#adding-new-controllers).
+
+Network and compute nodes are not peers of the other nodes of their role. Their
+configuration refers to the control nodes, whose data Ansible collects even when they
+are not part of the run, and no other node has to be reconfigured because of them. The
+runs for those roles are therefore limited to the single node.
 
 ## Network
 
