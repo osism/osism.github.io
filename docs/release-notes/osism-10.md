@@ -28,8 +28,109 @@ independently of it.
 
 | Release | Release Date   |
 |:--------|:---------------|
+| 10.2.0  | 14.August      |
 | 10.1.0  | 16. June 2026  |
 | 10.0.0  | 22. March 2026 |
+
+## 10.2.0
+
+### Rook removed as a Ceph deployment option
+
+Rook never moved beyond a technical preview in OSISM and was never exercised in the nightly pipelines. It has been removed completely: the `rook` and `rook_operator` roles, the vendored Helm charts, the `kubernetes-rook*` playbooks in osism-kubernetes, the `rook` install type in cephclient, and the related node label defaults are all gone. If you deployed rook for Ceph via osism-kubernetes we recommend to migrate directly to the upstream project. This, and future OSISM release no longer provide integrations beyond the scrope of the upstream project.
+
+### FRR
+
+- The new `frr_version_lock` variable defaults to `true` and pins the installed `frr` package (`apt-mark hold` on Debian/Ubuntu, `dnf versionlock` on the RedHat family), so a plain `apt-get upgrade` can no longer pull in a new frr version and restart the daemon unexpectedly. On existing Debian/Ubuntu deployments, the package is put on hold the next time the role runs. Set `frr_version_lock: false` to keep the previous, unpinned behavior.
+- The `frr_leaf`, `frr_loadbalancer` and `frr_loadbalancer_external_uplink` templates hardcoded `maximum-paths 2`. With four or more uplinks, FRR then only installed two of the available ECMP paths, which didn't always match the paths the switches picked for return traffic and could break connections. The hardcoded value is gone; FRR now uses its built-in default of 256 paths. Set the new `frr_maximum_paths` variable to limit the number of paths again.
+- Set `frr_exporter_enable: true` to run `prometheus-frr-exporter` alongside FRR on Debian-family hosts (binds to `127.0.0.1:9342` by default, configurable via `frr_exporter_host`/`frr_exporter_port`). Off by default, and not available on the RedHat family.
+
+### Configuration repository updates now preserve local files
+
+`osism apply configuration` force-checks out the configuration repository, which used to discard local modifications to tracked files. In a monorepo setup (NetBox as a directory instead of a submodule), this reset `netbox/settings.toml` to the repository placeholder on every update, dropping the local NetBox URL and API token and breaking manager-to-NetBox communication until it was fixed manually.
+
+Set `configuration_git_preserve_files` to keep specific files intact across an update:
+
+```yaml
+configuration_git_preserve_files:
+  - netbox/settings.toml
+```
+
+The default is an empty list, so existing deployments are unaffected until you opt in.
+
+### OpenStack services
+
+- Keystone's `OIDCXForwardedHeaders` Apache directive can now list multiple forwarded headers. Previously the value was wrapped in quotes that made Apache treat the whole list as one argument, so only a single header could effectively be configured.
+- A new playbook fully removes a disabled RabbitMQ service, including its container, data volume, host configuration and HAProxy frontend, none of which upstream's teardown ever cleaned up:
+
+  ```bash
+  osism apply purge-rabbitmq
+  ```
+
+  This is destructive: all messages, queues, vhosts and cluster state are lost permanently, and it needs an explicit confirmation flag.
+- `nova_libvirt`: libvirtd's connection limits were raised (`max_client_requests` 5 to 20, `max_workers` 20 to 50, tunable via `libvirt_max_client_requests`/`libvirt_max_workers`), fixing intermittent instance build failures under concurrent builds. `virtlogd` now runs alongside `libvirtd` and rotates guest console logs instead of letting them grow unbounded. Existing instances need a hard reboot to pick up the new console handler.
+- A deploy-time check now verifies the `nova_libvirt` image ships the helper script current kolla-ansible requires before deploying. If you upgrade kolla-ansible ahead of pulling a matching `nova_libvirt` image, the deploy now fails fast with a clear message instead of leaving the container unable to start.
+- RabbitMQ: draining a single-node cluster now uses `stop_app` instead of `drain`, which never worked on single-node setups.
+- OpenSearch Dashboards logs are now included in logrotate; they previously accumulated unbounded under `/var/log/kolla/opensearch-dashboards/`.
+- `nova-compute` now starts correctly after `/var/lib/nova` has been wiped, for example after reprovisioning a compute host.
+- Cinder: a NetApp NVMe/TCP multipath fix so `initialize_connection` returns all available target portals.
+- The experimental `kolla-mariadb-ng`, `kolla-rabbitmq-ng` and `kolla-loadbalancer-ng` playbooks and their client-side roles were removed; they never moved beyond a tech preview. `osism apply mariadb`, `rabbitmq` and `loadbalancer` already run the regular, actively maintained plays.
+
+#### Security fixes
+
+- Keystone: fixed unauthorized EC2 credential creation and deletion (CVE-2026-33551) and an RBAC policy bypass (CVE-2026-42999), plus further CVE patches.
+- Nova: instance creation no longer accepts forged internal scheduler hints (CVE-2026-46448), and the websocket proxy no longer mutates its allowed-origins config from request Host headers (OSSN-0101).
+- Neutron: fixed cross-project access to router conntrack helpers and floating IP port forwarding (OSSN-0102), and non-admin users onboarding subnets of networks they don't own (CVE-2026-55707).
+- Designate: fixed split-horizon DNS query pool scoping, zones scheduled to non-default pools now require TSIG keys, and a cross-tenant zone-ownership bypass was closed.
+
+### CLI and manager service
+
+- New `osism openstack` command passes any subcommand straight through to the OpenStack CLI using the credentials from your configuration repository, so a separate openstack container is no longer needed to reach the encrypted `secure.yml`. Defaults to the `admin` cloud; override with `--cloud`.
+- New `osism reset facts` command clears the cached Ansible facts in Redis, useful when troubleshooting stale or incorrect facts. Use `-l/--limit` to scope it to specific hosts or groups. It only clears the cache and asks for no confirmation; the cache rebuilds on the next fact-gathering run.
+- `osism baremetal list` gained a `UUID` column so nodes can be cross-referenced with Ironic logs.
+- `osism baremetal clean` gained `--metadata-only`, which runs only the `erase_device_metadata` clean step. Use it as a workaround on hardware where secure erase fails and blocks the metadata-erase fallback.
+- Octavia amphora image import now falls back to aria2 plus glance-direct after a single failed web-download attempt instead of retrying the slow source repeatedly, and the task timeout was raised to accommodate it.
+- `osism manage images --cloud` now defaults to the `admin` profile from `clouds.yml`, so a bare `osism manage images` no longer fails with a missing-cloud error.
+- `status` and `loadbalancer` commands now detect the correct MariaDB superuser on ProxySQL-sharded clusters, fixing authentication failures there.
+- Baremetal commands (validation, deployment, config drive creation, provisioning, burn-in, cleaning, maintenance, power state, deletion) now return a non-zero exit code on failure instead of always succeeding, and `redfish list` no longer connects with empty credentials due to a lookup bug.
+- `osism configuration sync` forwards option-like arguments and the log format correctly again, `osism task revoke` no longer crashes on an unpacked task id, and `osism service`/`osism worker` reject unknown types instead of producing malformed commands.
+- `CELERY_BROKER_URL` and `CELERY_RESULT_BACKEND` environment variables can now override the Redis-derived Celery broker/result backend URLs. Ansible facts freshness checks no longer produce permanent stale warnings for localhost.
+
+### Inventory reconciler
+
+- New Ceph extractor: set `ceph_parameters` in a device's NetBox custom field or config context to have the reconciler resolve and write the enriched Ceph device variables to `999-netbox-ceph.yml`.
+- `accept-ra` is now disabled on BGP-unnumbered leaf connections, so nodes no longer install IPv6 routes from router advertisements into the kernel. On these links, routes should come from BGP only.
+- Netplan/FRR defaults derived purely from a device's config context are no longer silently dropped when interface auto-generation itself produces no output before the config-context merge.
+- The routed metalbox dnsmasq writer now guards against an unresolved out-of-band interface, preventing a broken `metalbox,None,None` configuration from being emitted.
+- Reconciler runs no longer deadlock when `/run.sh` produces more output than the pipe buffer holds.
+
+### SONiC
+
+- ZTP firmware installs now fetch a per-device image built from the switch's serial number instead of one fixed image for all switches. `sync sonic` creates and reconciles a matching per-serial symlink from `sonic_parameters.version` in NetBox to the right firmware image.
+- SNMP, gNMI and SSH access to SONiC switches' control plane is now restricted to the out-of-band management network via generated ACLs. Previously, front-panel interfaces could also reach these services, including TCP/22.
+- The config generator now regenerates the default VRF's BGP entries again, restoring EVPN route advertisement for the default VRF, which had silently stopped working.
+- Several interface-speed and breakout detection bugs were fixed: speeds are now normalized to Mbps consistently between NetBox and SONiC detection, 4x10G breakouts on `EthernetX`-named interfaces are no longer dropped, and native low-speed ports are no longer misdetected as breakouts.
+- A failed SONiC configuration reload is now reported as a failure instead of being swallowed.
+
+### NTP validation is now stricter
+
+The NTP check (`validate-ntp`) moved into a dedicated role and, in doing so, closed a gap in the synchronization check: a `chronyd` that never synchronized to any source used to pass all of its assertions. Hosts whose `chronyd` never synchronized now correctly fail validation. Thresholds are configurable via `chrony_max_stratum`, `chrony_max_system_clock_deviation` and `chrony_max_upper_clock_error_bound`.
+
+### Notable changes
+
+- Remote SSH key fetches (`key: "github"` or a `https://` URL) for the `user` role now run on the Ansible controller by default instead of on the target host, so keys can be installed even when the target has no outbound internet access. Set `user_fetch_keys_delegate_to` to change where the fetch runs, and `user_fetch_keys_allowed_hosts` (default `github.com`) to allow additional key servers.
+- `smartd` can now manage `/etc/smartd.conf` directly via `smartd_devices`/`smartd_configure`, useful when the default `DEVICESCAN` line finds no devices, for example behind a RAID controller.
+- `dnsdist` backend servers accept arbitrary `newServer()` parameters and the ACL is configurable via `dnsdist_acls`. Configuration changes now restart the service, which previously required a manual restart to take effect.
+- `squid` can run with Docker host networking via `squid_network_mode: host`, avoiding manual SNAT rules in routed setups. The default stays `bridge`.
+- The manager, NetBox and stepca containers are now recreated after pulling a new image, fixing rolling-tag deployments where a new image was pulled but the container kept running the old one. NetBox no longer restarts while its initial database migration is still running.
+- `cephclient` and `openstackclient` images now track the deployed Ceph/OpenStack series automatically instead of a frozen default version.
+- The `thanos_sidecar` role, its deploy playbook and inventory group were removed; this integration is retired.
+- RabbitMQ node address resolution was rewritten to go through Ansible's own host-context templating on the controller instead of a hand-written resolver, fixing lookups for VLAN interfaces such as `bond0.100`, hosts without a working Python interpreter, and `internal_interface` not falling back to `console_interface` when unset.
+- NetBox device lookups now query the correct `ipam.ip_addresses` endpoint (previously a non-existent `dcim.addresses`) and match the `primary` filter keyword as a whole word, so a site named e.g. `primary-region` is no longer matched by substring. Maintenance/provision/power-state updates now correctly report failure instead of always succeeding when the underlying device update fails.
+- Ceph rolling upgrades on reef and squid no longer intermittently fail during the mon quorum check, which now probes the live monmap instead of a recomputed address.
+- Image tags for dnsmasq, gnmic, pgautoupgrade, scaphandre, stepca, opentelemetry_collector and substation are now wired into the images template, so pinned release versions reach the deployed containers instead of drifting to each role's own default tag.
+- The sshd hardening role now creates the privilege-separation directory before validating `sshd_config`, fixing a failure on hosts where it didn't already exist.
+- The `nginx` and `registry` container images are no longer part of OSISM's image set; the last, orphaned references to them in the image and manager environment templates were removed.
+- Several bundled Ansible collections and roles moved to new major versions: community.general (11 to 13), community.mysql (4 to 5), and the CIS hardening role ubuntu22_cis (2 to 3). If you call their modules directly from custom overlays or playbooks, check each project's changelog for breaking changes.
 
 ## 10.1.0
 
