@@ -64,23 +64,23 @@ of the ARA service.
    Depending on what the manager service looks like, this output may vary.
 
    ```console
-   NAME                             IMAGE                                        COMMAND                  SERVICE                CREATED              STATUS                        PORTS
-   ceph-ansible                     quay.io/osism/ceph-ansible:quincy            "/entrypoint.sh osis…"   ceph-ansible           About a minute ago   Up About a minute (healthy)
-   kolla-ansible                    quay.io/osism/kolla-ansible:2023.2           "/entrypoint.sh osis…"   kolla-ansible          About a minute ago   Up About a minute (healthy)
-   manager-api-1                    quay.io/osism/osism:latest                   "osism service api"      api                    About a minute ago   Up About a minute (healthy)   192.168.16.5:8000->8000/tcp
-   manager-ara-server-1             quay.io/osism/ara-server:latest              "sh -c '/wait && /ru…"   ara-server             About a minute ago   Up About a minute (healthy)   8000/tcp
-   manager-beat-1                   quay.io/osism/osism:latest                   "osism service beat"     beat                   About a minute ago   Up About a minute (healthy)
-   manager-conductor-1              quay.io/osism/osism:latest                   "osism worker conduc…"   conductor              About a minute ago   Up About a minute (healthy)
-   manager-flower-1                 quay.io/osism/osism:latest                   "osism service flower"   flower                 About a minute ago   Up About a minute (healthy)
-   manager-inventory_reconciler-1   quay.io/osism/inventory-reconciler:latest    "/sbin/tini -- /entr…"   inventory_reconciler   About a minute ago   Up About a minute (healthy)
-   manager-listener-1               quay.io/osism/osism:latest                   "osism service liste…"   listener               About a minute ago   Up About a minute (healthy)
-   manager-mariadb-1                index.docker.io/library/mariadb:11.3.2       "docker-entrypoint.s…"   mariadb                About a minute ago   Up About a minute (healthy)   3306/tcp
-   manager-netbox-1                 quay.io/osism/osism-netbox:latest            "osism worker netbox"    netbox                 About a minute ago   Up About a minute (healthy)
-   manager-openstack-1              quay.io/osism/osism:latest                   "osism worker openst…"   openstack              About a minute ago   Up About a minute (healthy)
-   manager-redis-1                  index.docker.io/library/redis:7.2.4-alpine   "docker-entrypoint.s…"   redis                  About a minute ago   Up About a minute (healthy)   6379/tcp
-   manager-watchdog-1               quay.io/osism/osism:latest                   "osism service watch…"   watchdog               About a minute ago   Up About a minute (healthy)
-   osism-ansible                    quay.io/osism/osism-ansible:latest           "/entrypoint.sh osis…"   osism-ansible          About a minute ago   Up About a minute (healthy)
-   osismclient                      quay.io/osism/osism:latest                   "sleep infinity"         osismclient            About a minute ago   Up About a minute
+   NAME                             IMAGE                                                   COMMAND                  SERVICE                CREATED              STATUS                        PORTS
+   ceph-ansible                     registry.osism.tech/osism/ceph-ansible:reef             "/entrypoint.sh osis…"   ceph-ansible           About a minute ago   Up About a minute (healthy)
+   kolla-ansible                    registry.osism.tech/osism/kolla-ansible:latest          "/entrypoint.sh osis…"   kolla-ansible          About a minute ago   Up About a minute (healthy)
+   manager-api-1                    registry.osism.tech/osism/osism:latest                  "osism service api"      api                    About a minute ago   Up About a minute (healthy)   192.168.16.5:8000->8000/tcp
+   manager-ara-server-1             registry.osism.tech/osism/ara-server:latest             "sh -c '/wait && /ru…"   ara-server             About a minute ago   Up About a minute (healthy)   8000/tcp
+   manager-beat-1                   registry.osism.tech/osism/osism:latest                  "osism service beat"     beat                   About a minute ago   Up About a minute (healthy)
+   manager-conductor-1              registry.osism.tech/osism/osism:latest                  "osism worker conduc…"   conductor              About a minute ago   Up About a minute (healthy)
+   manager-flower-1                 registry.osism.tech/osism/osism:latest                  "osism service flower"   flower                 About a minute ago   Up About a minute (healthy)
+   manager-inventory_reconciler-1   registry.osism.tech/osism/inventory-reconciler:latest   "/sbin/tini -- /entr…"   inventory_reconciler   About a minute ago   Up About a minute (healthy)
+   manager-listener-1               registry.osism.tech/osism/osism:latest                  "osism service liste…"   listener               About a minute ago   Up About a minute (healthy)
+   manager-mariadb-1                index.docker.io/library/mariadb:11.3.2                  "docker-entrypoint.s…"   mariadb                About a minute ago   Up About a minute (healthy)   3306/tcp
+   manager-netbox-1                 registry.osism.tech/osism/osism-netbox:latest           "osism worker netbox"    netbox                 About a minute ago   Up About a minute (healthy)
+   manager-openstack-1              registry.osism.tech/osism/osism:latest                  "osism worker openst…"   openstack              About a minute ago   Up About a minute (healthy)
+   manager-redis-1                  index.docker.io/library/redis:7.2.4-alpine              "docker-entrypoint.s…"   redis                  About a minute ago   Up About a minute (healthy)   6379/tcp
+   manager-watchdog-1               registry.osism.tech/osism/osism:latest                  "osism service watch…"   watchdog               About a minute ago   Up About a minute (healthy)
+   osism-ansible                    registry.osism.tech/osism/osism-ansible:latest          "/entrypoint.sh osis…"   osism-ansible          About a minute ago   Up About a minute (healthy)
+   osismclient                      registry.osism.tech/osism/osism:latest                  "sleep infinity"         osismclient            About a minute ago   Up About a minute
    ```
 
 7. When the manager service is healthy, the inventory and the fact cache

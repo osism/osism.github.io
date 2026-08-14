@@ -143,22 +143,22 @@ if you have not deployed the optional OpenStack telemetry service.
 
 ```console
 $ docker ps
-CONTAINER ID   IMAGE                                                      COMMAND                  CREATED         STATUS                   PORTS                         NAMES
-559e5176695c   quay.io/osism/nova-compute:27.1.1.20230919                 "dumb-init --single-…"   5 minutes ago   Up 5 minutes (healthy)                                 nova_compute
-31248d71ab7d   quay.io/osism/nova-libvirt:8.0.0.20230919                  "dumb-init --single-…"   6 minutes ago   Up 6 minutes (healthy)                                 nova_libvirt
-9292030d706c   quay.io/osism/nova-ssh:27.1.1.20230919                     "dumb-init --single-…"   6 minutes ago   Up 6 minutes (healthy)                                 nova_ssh
-fda4b6fb30c8   quay.io/osism/neutron-metadata-agent:22.0.3.20230919       "dumb-init --single-…"   2 hours ago     Up 2 hours (healthy)                                   neutron_ovn_metadata_agent
-0e3ec450b668   quay.io/osism/ceilometer-compute:20.0.1.20230919           "dumb-init --single-…"   6 hours ago     Up 6 hours (healthy)                                   ceilometer_compute
-25ff9702e0e5   quay.io/osism/prometheus-libvirt-exporter:6.0.0.20230919   "dumb-init --single-…"   6 hours ago     Up 6 hours                                             prometheus_libvirt_exporter
-1bff2e29923b   quay.io/osism/prometheus-cadvisor:0.45.0.20230919          "dumb-init --single-…"   6 hours ago     Up 6 hours                                             prometheus_cadvisor
-602832daf237   quay.io/osism/prometheus-node-exporter:1.4.0.20230919      "dumb-init --single-…"   6 hours ago     Up 6 hours                                             prometheus_node_exporter
-d4de2f32cdf8   quay.io/osism/ovn-controller:23.6.1.20230919               "dumb-init --single-…"   6 hours ago     Up 6 hours                                             ovn_controller
-3bf43ae5a94f   quay.io/osism/openvswitch-vswitchd:3.1.2.20230919          "dumb-init --single-…"   7 hours ago     Up 7 hours (healthy)                                   openvswitch_vswitchd
-ebc048b02ab2   quay.io/osism/openvswitch-db-server:3.1.2.20230919         "dumb-init --single-…"   7 hours ago     Up 7 hours (healthy)                                   openvswitch_db
-4f33dfa66c14   hubblo/scaphandre:0.5.0                                    "scaphandre promethe…"   7 hours ago     Up 7 hours               10.10.129.64:9155->8080/tcp   scaphandre
-9b1f6342dc60   quay.io/osism/cron:3.0.20230919                            "dumb-init --single-…"   7 hours ago     Up 7 hours                                             cron
-718aecaddde1   quay.io/osism/kolla-toolbox:16.1.1.20230919                "dumb-init --single-…"   7 hours ago     Up 7 hours                                             kolla_toolbox
-f6f9422c1853   quay.io/osism/fluentd:4.5.1.20230919                       "dumb-init --single-…"   7 hours ago     Up 7 hours                                             fluentd
+CONTAINER ID   IMAGE                                                                                 COMMAND                  CREATED         STATUS                   PORTS                         NAMES
+559e5176695c   registry.osism.tech/kolla/release/2025.1/nova-compute:31.3.1.20260615                 "dumb-init --single-…"   5 minutes ago   Up 5 minutes (healthy)                                 nova_compute
+31248d71ab7d   registry.osism.tech/kolla/release/2025.1/nova-libvirt:10.0.0.20260615                 "dumb-init --single-…"   6 minutes ago   Up 6 minutes (healthy)                                 nova_libvirt
+9292030d706c   registry.osism.tech/kolla/release/2025.1/nova-ssh:31.3.1.20260615                     "dumb-init --single-…"   6 minutes ago   Up 6 minutes (healthy)                                 nova_ssh
+fda4b6fb30c8   registry.osism.tech/kolla/release/2025.1/neutron-metadata-agent:26.0.4.20260615       "dumb-init --single-…"   2 hours ago     Up 2 hours (healthy)                                   neutron_ovn_metadata_agent
+0e3ec450b668   registry.osism.tech/kolla/release/2025.1/ceilometer-compute:24.0.1.20260615           "dumb-init --single-…"   6 hours ago     Up 6 hours (healthy)                                   ceilometer_compute
+25ff9702e0e5   registry.osism.tech/kolla/release/2025.1/prometheus-libvirt-exporter:2.2.0.20260615   "dumb-init --single-…"   6 hours ago     Up 6 hours                                             prometheus_libvirt_exporter
+1bff2e29923b   registry.osism.tech/kolla/release/2025.1/prometheus-cadvisor:0.49.2.20260615          "dumb-init --single-…"   6 hours ago     Up 6 hours                                             prometheus_cadvisor
+602832daf237   registry.osism.tech/kolla/release/2025.1/prometheus-node-exporter:1.8.2.20260615      "dumb-init --single-…"   6 hours ago     Up 6 hours                                             prometheus_node_exporter
+d4de2f32cdf8   registry.osism.tech/kolla/release/2025.1/ovn-controller:25.3.1.20260615               "dumb-init --single-…"   6 hours ago     Up 6 hours                                             ovn_controller
+3bf43ae5a94f   registry.osism.tech/kolla/release/2025.1/openvswitch-vswitchd:3.5.1.20260615          "dumb-init --single-…"   7 hours ago     Up 7 hours (healthy)                                   openvswitch_vswitchd
+ebc048b02ab2   registry.osism.tech/kolla/release/2025.1/openvswitch-db-server:3.5.1.20260615         "dumb-init --single-…"   7 hours ago     Up 7 hours (healthy)                                   openvswitch_db
+4f33dfa66c14   hubblo/scaphandre:0.5.0                                                               "scaphandre promethe…"   7 hours ago     Up 7 hours               10.10.129.64:9155->8080/tcp   scaphandre
+9b1f6342dc60   registry.osism.tech/kolla/release/2025.1/cron:3.0.20260615                            "dumb-init --single-…"   7 hours ago     Up 7 hours                                             cron
+718aecaddde1   registry.osism.tech/kolla/release/2025.1/kolla-toolbox:20.4.1.20260615                "dumb-init --single-…"   7 hours ago     Up 7 hours                                             kolla_toolbox
+f6f9422c1853   registry.osism.tech/kolla/release/2025.1/fluentd:5.0.9.20260615                       "dumb-init --single-…"   7 hours ago     Up 7 hours                                             fluentd
 ```
 
 ## Remove a compute node
