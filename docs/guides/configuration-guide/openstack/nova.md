@@ -240,25 +240,9 @@ As Ceph is still used as the storage backend for Glance and Cinder, the image ty
 set to `raw`. To allow to download and cache images from Ceph via rbd rather than the
 Glance API via http  `enable_rbd_download` is set to `true`.
 
-Parameters must also be added in the inventory. This differs depending on the OSISM
-version used.
-
-Up to OSISM 6 it looks like this:
-
-In the inventory, the parameter `nova_instance_datadir_volume`
-is added in the section for the `kolla` environment.
-
-```yaml title="inventory/host_vars/testbed-node-0.yml"
-##########################################################
-# kolla
-
-nova_instance_datadir_volume: /var/lib/nova
-```
-
-Starting with OSISM 7, it looks like this:
-
-In the inventory, the parameters `nova_instance_datadir_volume` and `nova_backend`,
-are added in the section for the `kolla` environment.
+Parameters must also be added in the inventory. The parameters
+`nova_instance_datadir_volume` and `nova_backend` are added in the section for the
+`kolla` environment.
 
 ```yaml title="inventory/host_vars/testbed-node-0.yml"
 ##########################################################

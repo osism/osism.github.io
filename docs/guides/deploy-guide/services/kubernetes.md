@@ -7,9 +7,9 @@ sidebar_position: 12
 
 :::info
 
-As of OSISM 7, it is possible to create a Kubernetes cluster on all nodes.
-At the moment, this is still optional. In the future, it will be necessary
-to deploy this Kubernetes cluster.
+It is possible to create a Kubernetes cluster on all nodes. At the moment,
+this is still optional. In the future, it will be necessary to deploy this
+Kubernetes cluster.
 
 :::
 

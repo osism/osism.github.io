@@ -167,10 +167,6 @@ Step 3 is then performed **later after** the OpenStack Keystone service has been
 
 ### Avoiding service restarts
 
-:::info
-Usable from OSISM 7.0.3 onwards.
-:::
-
 If Ceph services are deployed sequentially, this can lead to unwanted service restarts.
 This can also happen if, for example, new OSDs are added later or a new control node is
 added.
@@ -194,10 +190,6 @@ ceph_handler_rgws_restart
 ```
 
 ### Throttling service restarts
-
-:::info
-Usable from OSISM 7.0.3 onwards.
-:::
 
 Sometimes service restarts are required. For example, if the configuration has changed
 or if new OSDs have been added. It may be necessary and useful to only restart the
