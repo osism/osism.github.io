@@ -7,7 +7,7 @@ sidebar_position: 15
 
 ## Netplan
 
-```yaml title="Since OSISM 6.1.0, the default network type is a netplan and no longer needs to be set explicitly"
+```yaml title="The default network type is a netplan and does not need to be set explicitly"
 network_type: netplan
 ```
 

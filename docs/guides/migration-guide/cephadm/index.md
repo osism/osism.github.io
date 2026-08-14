@@ -47,8 +47,8 @@ For the full upstream documentation, refer to
 * A running Ceph cluster deployed with ceph-ansible via OSISM.
 * All Ceph daemons are healthy (`ceph -s` reports `HEALTH_OK` or only expected warnings).
 * SSH access from the OSISM manager node to all Ceph nodes (required by cephadm for orchestration).
-* The Ceph cluster must be running at least Ceph Octopus (15.2.x) or later. Clusters on
-  OSISM 7 or later already meet this requirement.
+* The Ceph cluster must be running at least Ceph Octopus (15.2.x) or later. Clusters
+  deployed with a supported OSISM release already meet this requirement.
 * Python 3 and `lvm2` must be installed on all Ceph nodes (these are typically already present).
 
 TODO: Consider replacing the manual prerequisite checks with an `osism apply ready-for-cephadm`

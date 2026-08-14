@@ -175,12 +175,6 @@ For more details about this topic, we recommend the [official kolla-ansible docu
 
 ## Second Loadbalancer
 
-:::info
-
-This feature is available from OSISM 7.0.5.
-
-:::
-
 With OSISM, it is possible to manage any number of independent loadbalancers via a single OSISM
 manager service using sub-environments. A sub environment is basically nothing more than another directory
 below the `environments` directory of the configuration repository with a special name.

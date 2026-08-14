@@ -93,8 +93,7 @@ placement_public_endpoint: https://placement.services.a.regiocloud.tech
 ```
 
 Since we bind the `name_based_external_front` frontend to the same ports as the
-`horizon_external_front`, the external Horizon frontend must be disabled. This is
-only possible as of OSISM 7.0.6.
+`horizon_external_front`, the external Horizon frontend must be disabled.
 
 ```yaml title="environments/kolla/configuration.yml"
 haproxy_enable_horizon_external: false

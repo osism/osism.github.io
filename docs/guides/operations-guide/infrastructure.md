@@ -7,15 +7,7 @@ sidebar_label: Infrastructure
 ## Loadbalancer
 
 For the `manage-loadbalancer` play to work, the internal control socket
-of the HAProxy service must be set to admin level. As of OSISM 7.0.6 this
-is the default. Before this, the parameter `haproxy_socket_level_admin` must
-be added to the configuration repository and then a reconfigure
-(`osism apply -a reconfigure loadbalancer`) must be done for the loadbalancer
-service.
-
-```yaml title="environments/kolla/configuration.yml"
-haproxy_socket_level_admin: "yes"
-```
+of the HAProxy service must be set to admin level. This is the default.
 
 You can check in the HAProxy configuration whether the control socket is
 configured correctly.
@@ -76,7 +68,7 @@ of MariaDB. For more details about backups, you can use the official
   osism apply mariadb_backup
   ```
 
-* Create a incremental backup (supported as of OSISM 7.0.6)
+* Create a incremental backup
 
   ```bash
   osism apply mariadb_backup -e mariadb_backup_type=incremental

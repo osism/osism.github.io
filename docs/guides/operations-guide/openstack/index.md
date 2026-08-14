@@ -7,7 +7,7 @@ sidebar_key: operations-guide-openstack
 
 ## Create an external network
 
-The play `network-external` is available and usable as of OSISM 7.0.6.
+The play `network-external` is used to create an external network.
 
 ```bash
 osism apply network-external
