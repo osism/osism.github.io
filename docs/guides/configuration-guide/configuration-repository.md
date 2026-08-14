@@ -72,7 +72,7 @@ listed there will be queried during the execution of Cookiecutter.
    this is always set to the latest stable version.
 
    ```yaml
-   manager_version [7.0.4]: latest
+   manager_version [10.2.0]: latest
    ```
 
    If the `manager_version` parameter is set to `latest` it is also possible to explicitly
@@ -81,7 +81,7 @@ listed there will be queried during the execution of Cookiecutter.
    ```console
    [1/18] with_ceph (1):
    [2/18] ceph_network(192.168.16.0/20):
-   [3/18] ceph_version (quincy):
+   [3/18] ceph_version (reef):
    [4/18] domain (osism.xyz):
    [5/18] fqdn_external (api.osism.xyz):
    [6/18] fqdn_internal (api-int.osism.xyz):
@@ -92,10 +92,10 @@ listed there will be queried during the execution of Cookiecutter.
    [11/18] git_version (main):
    [12/18] ip_external (192.168.16.254):
    [13/18] ip_internal (192.168.16.9):
-   [14/18] manager_version (7.0.4):
+   [14/18] manager_version (10.2.0):
    [15/18] name_server (149.112.112.112):
    [16/18] ntp_server (de.pool.ntp.org):
-   [17/18] openstack_version (2023.2):
+   [17/18] openstack_version (2025.1):
    [18/18] project_name (configuration):
    ```
 
@@ -411,7 +411,7 @@ If you want to use the latest version, this is done using the `manager_version` 
 this is always set to the latest stable version.
 
 ```yaml
-manager_version [7.0.0]: latest
+manager_version [10.2.0]: latest
 ```
 
 If the `manager_version` parameter is set to `latest` it is also possible to explicitly
@@ -422,7 +422,7 @@ set the `openstack_version` and the `ceph_version` explicitly.
 | Parameter           | Description                                                                                                                                | Default                                  |
 |:--------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
 | `ceph_network`      | Address range for Ceph's network                                                                                                           | `192.168.16.0/20`                        |
-| `ceph_version`      | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `quincy`                                 |
+| `ceph_version`      | The version of Ceph. When using a stable OSISM release (`manager_version != latest`), this value is ignored                                | `reef`                                   |
 | `domain`            | The domain used by hostnames                                                                                                               | `osism.xyz`                              |
 | `fqdn_external`     | External API FQDN                                                                                                                          | `api.osism.xyz`                          |
 | `fqdn_internal`     | Internal API FQDN                                                                                                                          | `api-int.osism.xyz`                      |
@@ -433,10 +433,10 @@ set the `openstack_version` and the `ceph_version` explicitly.
 | `git_version`       | Git branch name                                                                                                                            | `main`                                   |
 | `ip_external`       | The external IP address of the API (resolves to `fqdn_external`)                                                                           | `192.168.16.254`                         |
 | `ip_internal`       | The internal IP address of the API (resolves to `fqdn_internal`)                                                                           | `192.168.16.9`                           |
-| `manager_version`   | The version of OSISM. An overview of available OSISM releases can be found on the [release page](https://osism.tech/docs/release-notes/)   | `7.0.4`                                  |
+| `manager_version`   | The version of OSISM. An overview of available OSISM releases can be found on the [release page](https://osism.tech/docs/release-notes/)   | `10.2.0`                                 |
 | `name_server`       | Nameserver. Only one nameserver is set here because the query of multiple values in Cookiecutter is weird. Add more nameservers afterward. | `149.112.112.112`                        |
 | `ntp_server`        | NTP server. Only one NTP server is set here because the query of multiple values in Cookiecutter is weird. Add more NTP servers afterward. | `de.pool.ntp.org`                        |
-| `openstack_version` | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2023.2`                                 |
+| `openstack_version` | The version of OpenStack. When using a stable OSISM release (`manager_version != latest`), this value is ignored                           | `2025.1`                                 |
 | `project_name`      | Name of the configuration repository directory                                                                                             | `configuration`                          |
 | `with_ceph`         | `1` to use Ceph, `0` to not use Ceph                                                                                                       | `1`                                      |
 

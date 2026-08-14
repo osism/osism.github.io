@@ -10,16 +10,16 @@ sidebar_position: 15
 :::warning
 
 Always read the [release notes](https://osism.tech/docs/release-notes/) first to learn what has changed and what
-adjustments are necessary. Read the release notes even if you are only updating from e.g. 7.0.2 to 7.0.5.
+adjustments are necessary. Read the release notes even if you are only updating from e.g. 10.0.0 to 10.1.0.
 
 :::
 
-In the example, OSISM release 7.0.5 is used.
+In the example, OSISM release 10.1.0 is used.
 
 1. Set the new manager version in the configuration repository.
 
    ```bash
-   MANAGER_VERSION="7.0.5"
+   MANAGER_VERSION="10.1.0"
    sed -i "~s,^manager_version:.*\$,manager_version: ${MANAGER_VERSION}," environments/manager/configuration.yml
    ```
 
