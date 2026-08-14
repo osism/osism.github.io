@@ -2,8 +2,6 @@
 sidebar_label: Manager
 sidebar_position: 15
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 # Manager
 
@@ -31,33 +29,9 @@ In the example, OSISM release 7.0.5 is used.
 
 3. Sync the image versions in the configuration repository.
 
-   <Tabs>
-   <TabItem value="osism-7" label="OSISM >= 7.0.0">
    ```bash
    make sync
    ```
-   </TabItem>
-   <TabItem value="osism-6" label="OSISM < 7.0.0">
-   If Gilt is not installed via the `requirements.txt` of the manager environment it is
-   important to use a version smaller v2. The v2 of Gilt is not yet usable.
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-     gilt overlay && gilt overlay
-   ```
-
-   Optionally, this is normally not necessary, it is possible to reference a specific tag of the
-   [osism/generics](https://github.com/osism/generics) repository. To do this, first
-   check which version of osism/generics is used in a particular release. The version is
-   defined in `generics_version` in the `base.yml` file in the `osism/release` repository. For OSISM 6.0.0,
-   for example, this is version [v0.20230919.0](https://github.com/osism/release/blob/main/6.0.0/base.yml#L6).
-   This version is then added to the file `gilt.yml` in the configuration repository instead of
-   `main` at `version`. This change must be made again after each execution of `gilt overlay` as
-   it is overwritten by the call of `gilt overlay`. This cannot be realized differently in the
-   current implementation of [Gilt](https://github.com/retr0h/gilt).
-   </TabItem>
-   </Tabs>
 
 4. Commit and push changes in the configuration repository. Since everyone here has their own
    workflows for changes to the configuration repository, only a generic example for Git.

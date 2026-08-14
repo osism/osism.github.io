@@ -3,8 +3,6 @@ sidebar_label: Ceph
 sidebar_key: deploy-guide-ceph
 sidebar_position: 50
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 # Ceph
 
@@ -50,7 +48,7 @@ OSD devices must be completed. The steps that are required for this can be found
      osism apply ceph-osds
      ```
 
-   * Generate pools and keys. This step is only necessary for OSISM >= 7.0.0.
+   * Generate pools and keys.
 
      ```bash
      osism apply ceph-pools
@@ -68,8 +66,6 @@ OSD devices must be completed. The steps that are required for this can be found
    This speeds up the entire process and avoids unnecessary restarts of individual
    services.
 
-   <Tabs>
-   <TabItem value="osism-7" label="OSISM >= 7.0.0">
    ```bash
    osism apply ceph
    ```
@@ -79,13 +75,6 @@ OSD devices must be completed. The steps that are required for this can be found
    ```bash
    osism apply ceph-pools
    ```
-   </TabItem>
-   <TabItem value="osism-6" label="OSISM < 7.0.0">
-   ```bash
-   osism apply ceph-base
-   ```
-   </TabItem>
-   </Tabs>
 
    :::
 
