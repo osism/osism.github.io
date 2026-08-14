@@ -18,7 +18,6 @@ DISABLE_LINTERS:
   - COPYPASTE_JSCPD # we copy paste a lot of things to keep pages easy to read
   - CSS_STYLELINT # we focus on the documentation for now
   - ACTION_ZIZMOR # workflows use mutable tags; pinning to SHAs not adopted yet
-  - REPOSITORY_GITLEAKS # avoid false positives in documentation repo
   - REPOSITORY_GRYPE # not needed
   - REPOSITORY_TRIVY # not needed
   - REPOSITORY_TRIVY_SBOM # not needed
