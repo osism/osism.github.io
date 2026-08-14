@@ -30,7 +30,7 @@ but this can also lead to higher latencies or to inferred availability problems
 if the proxy is temporarily unavailable.
 
 :::warning
-As [Gitlab has described in 2021](https://about.gitlab.com/blog/2021/01/27/we-need-to-talk-no-proxy/#no_proxy), there are subtle differences depending on the technology, implementation and age as to whether environment variables should be lowercase or uppercase, or what types of exclusions are possible.
+As [Gitlab has described](https://about.gitlab.com/blog/we-need-to-talk-no-proxy/), there are subtle differences depending on the technology, implementation and age as to whether environment variables should be lowercase or uppercase, or what types of exclusions are possible.
 
 Furthermore, the documentation of certain implementations is not very clear in its statements.
 
