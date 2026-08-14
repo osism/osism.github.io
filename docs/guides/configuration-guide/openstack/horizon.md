@@ -1,8 +1,6 @@
 ---
 sidebar_label: Horizon
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 # Horizon
 
@@ -30,8 +28,6 @@ By default, only the `openrc` file is offered for download in Horizon. It makes 
 `clouds.yaml` as a download. To do this, the menu is customized. The change can be deployed with
 `osism apply -a reconfigure horizon`.
 
-<Tabs>
-<TabItem value="osism-8" label="OSISM >= 8.0.0">
 ```yaml title="environments/kolla/files/overlays/horizon/_9999-custom-settings.py"
 SHOW_KEYSTONE_V2_RC = False
 USER_MENU_LINKS = [
@@ -47,25 +43,6 @@ USER_MENU_LINKS = [
    }
 ]
 ```
-</TabItem>
-<TabItem value="osism-7" label="OSISM < 8.0.0">
-```yaml title="environments/kolla/files/overlays/horizon/custom_local_settings"
-SHOW_KEYSTONE_V2_RC = False
-USER_MENU_LINKS = [
-  {'name': _('OpenStack clouds.yml File'),
-   'icon_classes': ['fa-download', ],
-   'url': 'horizon:project:api_access:clouds.yaml',
-   'external': False,
-   },
-  {'name': _('OpenStack RC File v3'),
-   'icon_classes': ['fa-download', ],
-   'url': 'horizon:project:api_access:openrc',
-   'external': False,
-   }
-]
-```
-</TabItem>
-</Tabs>
 
 ## Custom themes
 
@@ -86,15 +63,6 @@ USER_MENU_LINKS = [
 
 3. If the custom theme should be the default then add the `DEFAULT_THEME` parameter.
 
-   <Tabs>
-   <TabItem value="osism-8" label="OSISM >= 8.0.0">
    ```python title="environments/kolla/files/overlays/horizon/_9999-custom-settings.py"
    DEFAULT_THEME = 'custom_theme'
    ```
-   </TabItem>
-   <TabItem value="osism-7" label="OSISM < 8.0.0">
-   ```python title="environments/kolla/files/overlays/horizon/custom_local_settings"
-   DEFAULT_THEME = 'custom_theme'
-   ```
-   </TabItem>
-   </Tabs>
