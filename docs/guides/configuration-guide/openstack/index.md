@@ -194,6 +194,26 @@ supported, assuming that you have services using `nova.conf` running on hosts ca
 Using this mechanism, overrides can be configured per-project (Nova), per-project-service (Nova scheduler service) or
 per-project-service-on-specified-host (Nova services on ctl1).
 
+:::warning
+
+Overlay files are picked up by exact name and exact path. A file whose name or
+location does not match one of the supported locations is not an error and
+produces no warning — it is simply never read, and the deployment succeeds with
+the settings silently having no effect.
+
+Two examples that look right but are ignored:
+
+* `environments/kolla/files/overlays/ml2_conf.ini` — `ml2_conf.ini` is only read
+  from the `neutron/` subdirectory, so a copy at the top level does nothing.
+* `environments/kolla/files/overlays/neutron/ml2.conf` — a misspelling of
+  `ml2_conf.ini`; nothing matches `ml2.conf`.
+
+After adding an overlay, confirm the setting actually arrived rather than
+assuming it did, for example by checking the generated configuration on the
+target host under `/etc/kolla/SERVICENAME/`.
+
+:::
+
 Overriding an option is as simple as setting the option under the relevant section. For example, to set
 override `scheduler_max_attempts` in the Nova scheduler service, the operator could create
 `environments/kolla/files/overlays/nova/nova-scheduler.conf` in the configuration repository with this content:
