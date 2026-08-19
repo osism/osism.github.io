@@ -98,6 +98,14 @@ are at the same commit by the time step 3 runs.
 
         </TabItem>
         </Tabs>
+    * Whenever the local venv path is used, the venv installs `ansible-pylibssh`, which
+      needs libssh on the machine that builds it. On Ubuntu this is `libssh-dev`. On
+      macOS with Apple Silicon there is no wheel for that package at all, so it is
+      compiled from source and the build fails with a missing `libssh` until
+      `brew install libssh pkg-config` has been run. See
+      [Option 2 of the seed chapter](../deploy-guide/seed.md#option-2-manual-installation)
+      for the details. On macOS the seed container path is the easier route, since
+      nothing is built locally then.
     * If Ansible Vault was used to encrypt `environments/manager/secrets.yml`, the vault
       password must be reachable. Its place in the configuration repository is
       `environments/.vault_pass`; `run.sh` finds that file on its own. It either contains
