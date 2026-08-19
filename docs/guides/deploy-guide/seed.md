@@ -66,9 +66,33 @@ present, set `SEED_CONTAINER=false` before running any playbook.
 
 ## Option 2: Manual installation
 
+On Ubuntu all required packages come from the archive:
+
 ```bash
 sudo apt-get install git python3-pip python3-virtualenv sshpass libssh-dev
 ```
+
+On macOS the equivalent packages come from Homebrew:
+
+```bash
+brew install libssh pkg-config
+```
+
+`libssh` is not optional here. The local venv installs `ansible-pylibssh`, and
+that package only ships wheels for Linux and for x86_64 macOS. On macOS with
+Apple Silicon there is no matching wheel, so `uv` falls back to the source
+distribution and compiles it, which fails with a missing `libssh` unless the
+library and its headers are present. If the build still does not find them,
+point it at the Homebrew prefix explicitly:
+
+```bash
+export CFLAGS="-I$(brew --prefix libssh)/include"
+export LDFLAGS="-L$(brew --prefix libssh)/lib"
+```
+
+The [seed container](#option-1-seed-container) avoids all of this, because the
+playbooks then run inside the image and nothing is built on the seed node. It is
+the recommended option on macOS.
 
 ## Get a copy of the configuration repository
 
