@@ -76,6 +76,17 @@ On the manager node:
   [...]
   ```
 * Commit and push the change to the repository.
+* In every checkout of the configuration repository that is used with
+  `environments/manager/run.sh` — the seed node, a workstation, the manager itself —
+  delete the operator private key that earlier runs left behind:
+  ```bash
+  rm -f environments/manager/id_rsa.operator
+  ```
+  `run.sh` writes this file from `operator_private_key` in `environments/secrets.yml`,
+  but only when it does not exist yet, and the file is listed in `.gitignore`. A copy
+  created before the rotation therefore survives every `git pull` unnoticed and
+  `run.sh` keeps authenticating with the old key. Removing it lets the next `run.sh`
+  write it again from the updated `secrets.yml`.
 
 ## Switching the manager to the new key
 
