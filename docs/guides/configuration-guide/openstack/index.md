@@ -69,6 +69,62 @@ single service tag, `neutron_server_tag` from `neutron_tag` or `nova_api_tag` fr
 example. Overriding such a service tag therefore applies to all images of that service, and the `*_image`
 parameter of each of them has to be overridden as well.
 
+### Image parameters and tags of a specific OSISM version
+
+The [002-images-kolla.yml](https://github.com/osism/defaults/blob/main/all/002-images-kolla.yml) file
+linked at the beginning of this section points to the `main` branch of the
+[osism/defaults](https://github.com/osism/defaults) repository, which does not necessarily match the
+OSISM version in use. The parameters of a specific OSISM version are found through the
+[osism/release](https://github.com/osism/release) repository, which pins the version of every OSISM
+component. The `defaults_version` parameter in the `base.yml` of a release pins the tag of the
+`osism/defaults` repository, for OSISM 10.2.0 in
+[10.2.0/base.yml](https://github.com/osism/release/blob/main/10.2.0/base.yml).
+
+```yaml title="10.2.0/base.yml"
+manager_version: 10.2.0
+[...]
+defaults_version: v0.20260712.0
+```
+
+Following that tag, all image parameters available in OSISM 10.2.0 are listed in
+[all/002-images-kolla.yml at v0.20260712.0](https://github.com/osism/defaults/blob/v0.20260712.0/all/002-images-kolla.yml)
+for the OpenStack images and in
+[all/002-images-ceph.yml at v0.20260712.0](https://github.com/osism/defaults/blob/v0.20260712.0/all/002-images-ceph.yml)
+for the Ceph images.
+
+Which tags can be set for such a parameter depends on the tags published in the registry. They can be
+listed per image with `skopeo`, no credentials are required for this. The rolling tags of the Neutron API
+image in the `kolla` namespace:
+
+```console
+$ skopeo list-tags docker://registry.osism.tech/kolla/neutron-server
+{
+    "Repository": "registry.osism.tech/kolla/neutron-server",
+    "Tags": [
+        "2024.1",
+        "2024.2",
+        "2025.1",
+        "2025.2"
+    ]
+}
+```
+
+And the release tags of the same image in the `kolla/release/2025.1` namespace:
+
+```console
+$ skopeo list-tags docker://registry.osism.tech/kolla/release/2025.1/neutron-server
+{
+    "Repository": "registry.osism.tech/kolla/release/2025.1/neutron-server",
+    "Tags": [
+        "26.0.3.20251208",
+        "26.0.3.20260128",
+        "26.0.3.20260328",
+        "26.0.4.20260615",
+        "26.0.6.20260814"
+    ]
+}
+```
+
 ## Endpoints
 
 ### Public endpoints
