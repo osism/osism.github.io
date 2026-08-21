@@ -26,6 +26,105 @@ The image tags can be set in the `environments/kolla/images.yml` file.
   barbican_worker_tag: "2023.1"
   ```
 
+### Rolling tags and release tags
+
+Kolla images are published in two namespaces on `registry.osism.tech`, and each namespace uses its own
+tagging scheme. The two schemes are not interchangeable — which tags you can use depends on the
+`docker_namespace` parameter set in `environments/kolla/configuration.yml`.
+
+| Namespace                           | Tag scheme                       | Example           | Meaning                                                               |
+|:------------------------------------|:---------------------------------|:------------------|:----------------------------------------------------------------------|
+| `kolla`                             | OpenStack release                | `2025.1`          | Rolling tag. Always points to the most recent build for that release. |
+| `kolla/release/<openstack_version>` | `<project version>.<build date>` | `26.0.4.20260615` | Immutable tag. Always points to exactly one build.                    |
+
+* **Rolling tags** exist only in the `kolla` namespace. A rolling tag such as `2025.1` is a moving
+  reference: it is republished whenever new images are built for OpenStack 2025.1 (Epoxy), so it always
+  resolves to the latest available build — including the latest security patches. It is a safe choice to
+  keep such a pin in place permanently, but the image it resolves to changes over time.
+
+* **Release tags** exist only in the `kolla/release/<openstack_version>` namespaces, which is what
+  deployments using an OSISM release consume (see
+  [New namespace for Kolla images](../../../release-notes/osism-10.md#new-namespace-for-kolla-images)).
+  These tags are immutable and are pinned per OSISM release, so a deployment always gets the exact same
+  images. The versions are shipped in the `osism/kolla-ansible` image and do not need to be configured.
+
+:::warning
+The `kolla/release/<openstack_version>` namespaces do **not** contain rolling tags. Setting
+`neutron_server_tag: "2025.1"` in a deployment with `docker_namespace: kolla/release/2025.1` therefore
+resolves to `registry.osism.tech/kolla/release/2025.1/neutron-server:2025.1`, which does not exist and
+fails with `unknown: artifact ... not found`.
+:::
+
+To use a rolling tag for a single image in a deployment that otherwise uses release tags, override the
+corresponding `*_image` parameter along with the tag, so that this one image is pulled from the `kolla`
+namespace:
+
+```yaml title="environments/kolla/images.yml"
+neutron_server_image: "registry.osism.tech/kolla/neutron-server"
+neutron_server_tag: "2025.1"
+```
+
+All images of a service that are derived from the same base image are covered by such an override. For
+Neutron, `neutron_rpc_server_image`, `neutron_periodic_worker_image` and
+`neutron_ovn_maintenance_worker_image` default to `neutron_server_image` and therefore do not need to be
+set individually.
+
+### Image parameters and tags of a specific OSISM version
+
+The [002-images-kolla.yml](https://github.com/osism/defaults/blob/main/all/002-images-kolla.yml) file
+linked at the beginning of this section points to the `main` branch of the
+[osism/defaults](https://github.com/osism/defaults) repository, which does not necessarily match the
+OSISM version in use. The parameters of a specific OSISM version are found through the
+[osism/release](https://github.com/osism/release) repository, which pins the version of every OSISM
+component. The `defaults_version` parameter in the `base.yml` of a release pins the tag of the
+`osism/defaults` repository, for OSISM 10.2.0 in
+[10.2.0/base.yml](https://github.com/osism/release/blob/main/10.2.0/base.yml).
+
+```yaml title="10.2.0/base.yml"
+manager_version: 10.2.0
+[...]
+defaults_version: v0.20260712.0
+```
+
+Following that tag, all image parameters available in OSISM 10.2.0 are listed in
+[all/002-images-kolla.yml at v0.20260712.0](https://github.com/osism/defaults/blob/v0.20260712.0/all/002-images-kolla.yml)
+for the OpenStack images and in
+[all/002-images-ceph.yml at v0.20260712.0](https://github.com/osism/defaults/blob/v0.20260712.0/all/002-images-ceph.yml)
+for the Ceph images.
+
+Which tags can be set for such a parameter depends on the tags published in the registry. They can be
+listed per image with `skopeo`, no credentials are required for this. The rolling tags of the Neutron API
+image in the `kolla` namespace:
+
+```console
+$ skopeo list-tags docker://registry.osism.tech/kolla/neutron-server
+{
+    "Repository": "registry.osism.tech/kolla/neutron-server",
+    "Tags": [
+        "2024.1",
+        "2024.2",
+        "2025.1",
+        "2025.2"
+    ]
+}
+```
+
+And the release tags of the same image in the `kolla/release/2025.1` namespace:
+
+```console
+$ skopeo list-tags docker://registry.osism.tech/kolla/release/2025.1/neutron-server
+{
+    "Repository": "registry.osism.tech/kolla/release/2025.1/neutron-server",
+    "Tags": [
+        "26.0.3.20251208",
+        "26.0.3.20260128",
+        "26.0.3.20260328",
+        "26.0.4.20260615",
+        "26.0.6.20260814"
+    ]
+}
+```
+
 ## Endpoints
 
 ### Public endpoints
