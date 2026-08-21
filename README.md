@@ -16,6 +16,14 @@ yarn start
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
+### Containerized Development
+
+```bash
+docker run --rm -it -v .:/srv --workdir /srv --network host node:current-alpine /bin/sh -c "npm install --global yarn && yarn install --frozen-lockfile && yarn start"
+```
+
+Manually open the development documentation at http://localhost:3000/docs.
+
 ## Linting
 
 To run the megalinter locally, please follow
