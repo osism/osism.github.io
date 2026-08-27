@@ -132,6 +132,15 @@ touched. Under `--all` such nodes are skipped and reported instead, so one
 misconfigured node does not stop the rest of the fleet, and the command exits non-zero
 so the gap is visible to whatever called it.
 
+A fleet that mixes nodes with and without RAID needs no special handling, and there is
+nothing to select. The modes only ever apply to nodes that have a RAID interface, so a
+single run erases the nodes without one and rebuilds the declared arrays of those that
+have one:
+
+```bash
+osism baremetal clean --all --yes-i-really-really-mean-it --raid recreate
+```
+
 Building the array on its own, without deploying an image, is described in
 [Software RAID](../../configuration-guide/metalbox/software-raid.md).
 
