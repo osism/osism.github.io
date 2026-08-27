@@ -95,9 +95,12 @@ so only the disk metadata is erased:
 osism baremetal clean --metadata-only --raid recreate node101
 ```
 
-`recreate` refuses a node that has no `target_raid_config`, rather than deleting the
-array it was asked to rebuild. If the node was configured as described above but is
-refused, its configuration has most likely not been synchronized yet; run
+`recreate` refuses a node that has no `target_raid_config` rather than passing the
+request on. Ironic accepts such a request and fails on the create step, which runs
+last: the disks have already been erased by then, and the node ends up in
+`clean failed` with maintenance mode set, so it needs the maintenance flag cleared and
+the clean repeated. If a node configured as described above is refused, its
+configuration has most likely not been synchronized yet; run
 `osism sync ironic node101` first.
 
 The remaining modes and the flag's argument order are described under
