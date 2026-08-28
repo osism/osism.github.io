@@ -63,6 +63,44 @@ Release date: 17. January 2025
 
 * New `osism.services.teleport` role was added.
 
+### Upgrade notes
+
+#### RabbitMQ quorum queues
+
+The kolla default `om_enable_rabbitmq_quorum_queues` changed from `false` to `true` in the
+[defaults](https://github.com/osism/defaults) repository. It reaches a deployment through the
+`defaults_version` pinned by the release (`v0.20240924.0` in 8.0.2, `v0.20250113.0` in 8.1.0).
+
+**This new default is intended for new clusters, not for upgraded ones.** New deployments start
+with quorum queues from the beginning. For an existing deployment we recommend adding
+`om_enable_rabbitmq_quorum_queues: false` to the configuration before upgrading to OSISM 8.1 or
+OSISM 9. In configuration repositories created before this change the parameter is not present
+at all, so the new default takes effect unless it is set explicitly.
+
+Without the parameter, all OpenStack services receive `rabbit_quorum_queue = true` in the
+`[oslo_messaging_rabbit]` section of their configuration file and declare their RPC and
+notification queues as quorum queues instead of classic queues.
+
+:::warning
+The switch from classic queues to quorum queues was not tested for OSISM 8.1 and OSISM 9, a
+migration path for it was only developed for OSISM 10. An existing classic queue cannot be
+redeclared as a quorum queue, and the affected services fail as long as the old queues are
+still present. We therefore recommend setting the parameter explicitly to `false` before the
+upgrade.
+:::
+
+```yaml title="environments/kolla/configuration.yml"
+om_enable_rabbitmq_quorum_queues: false
+```
+
+The switch to quorum queues is supported with OSISM 10 as part of the
+[RabbitMQ 3 to RabbitMQ 4 migration](osism-10.md#rabbitmq-3-to-rabbitmq-4-migration).
+
+If you have already upgraded without setting the parameter and your queues have switched to
+quorum queues, leave them as they are. The OSISM 10 migration covers this case as well. The
+`osism migrate rabbitmq3to4` command that reports and performs the migration is only available
+in OSISM 10, there is no equivalent in OSISM 8 or OSISM 9.
+
 ## 8.0.2 (20241006)
 
 Release date: 6. October 2024

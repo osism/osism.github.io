@@ -98,6 +98,20 @@ playbooks.
 
 ## 9.0.0 (20250408)
 
+## RabbitMQ quorum queues
+
+Quorum queues have been the default since OSISM 8.1.0, so when upgrading from 8.0.x the change
+takes effect with this release. The default is intended for new clusters. For an existing
+deployment we recommend setting the parameter explicitly before the upgrade, as the switch to
+quorum queues was not tested for OSISM 9 and a migration path for it was only developed for
+OSISM 10.
+
+```yaml title="environments/kolla/configuration.yml"
+om_enable_rabbitmq_quorum_queues: false
+```
+
+See [RabbitMQ quorum queues](osism-8.md#rabbitmq-quorum-queues) for details.
+
 ## New container registry
 
 Container images are no longer pushed to Quay.io and are only made available on our own
