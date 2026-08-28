@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OSSA-2026-037: Inconsistent scope enforcement for delegated tokens in Keystone | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/appendix/security/ossa-2026-037"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OSSA-2026-037: Inconsistent scope enforcement for delegated tokens in Keystone | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="| Property         | Value                                                                                                                                |"><meta data-rh="true" property="og:description" content="| Property         | Value                                                                                                                                |"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/appendix/security/ossa-2026-037"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/appendix/security/ossa-2026-037" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/appendix/security/ossa-2026-037" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Appendix","item":"https://osism.tech/docs/appendix/"},{"@type":"ListItem","position":2,"name":"Security","item":"https://osism.tech/docs/appendix/security/"},{"@type":"ListItem","position":3,"name":"OSSA-2026-037","item":"https://osism.tech/docs/appendix/security/ossa-2026-037"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.a6530779.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.5f6cc8d3.js" defer="defer"></script>
 <script src="/assets/js/main.e9142393.js" defer="defer"></script>
 </head>
 <body>
@@ -34,21 +34,22 @@ credentials, EC2 credentials, trusts, and the token authentication method are av
 Keystone deployment, <code>[token] allow_rescope_scoped_token</code> is enabled by default, and there is no
 configuration that makes a deployment immune. Exploitation requires possession of a delegated
 credential, for example a leaked application credential or EC2 key pair.</p>
-<p>Upstream has not published a CVSS score for this issue, and the two CVE ids requested from MITRE are
-still pending. The severity rating above is OSISM&#x27;s assessment: an attacker holding a delegated
-credential can turn it into persistent access that survives revocation of that credential, obtain
-roles beyond the delegation, and reach other projects of the credential owner.</p>
+<p>Upstream has not published a CVSS score for this issue. The severity rating above is OSISM&#x27;s
+assessment: an attacker holding a delegated credential can turn it into persistent access that
+survives revocation of that credential, obtain roles beyond the delegation, and reach other projects
+of the credential owner.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="affected-versions">Affected Versions<a href="#affected-versions" class="hash-link" aria-label="Direct link to Affected Versions" title="Direct link to Affected Versions" translate="no">​</a></h2>
 <p>The upstream advisory states the affected ranges as <code>&gt;=13.0.0 &lt;27.0.3</code>, <code>&gt;=28.0.0 &lt;28.0.3</code> and
 <code>&gt;=29.0.0 &lt;29.0.3</code>, so the fixes are expected in Keystone 27.0.3 (Epoxy), 28.0.3 (Flamingo) and
 29.0.3 (Gazpacho).</p>
 <p><strong>At the time of this advisory there is no fixed Keystone release available upstream for any
 series.</strong> The upstream fixes are still under review on OpenDev and have not merged yet.</p>
-<table><thead><tr><th style="text-align:left">OpenStack Release</th><th style="text-align:left">Upstream Status</th><th style="text-align:left">Fix in OSISM Images</th></tr></thead><tbody><tr><td style="text-align:left">Caracal (2024.1)</td><td style="text-align:left">Unmaintained, no upstream fix</td><td style="text-align:left">Community-curated backport in preparation</td></tr><tr><td style="text-align:left">Dalmatian (2024.2)</td><td style="text-align:left">End of life since 2026-04-29, no fix</td><td style="text-align:left">Community-curated backport in preparation</td></tr><tr><td style="text-align:left">Epoxy (2025.1)</td><td style="text-align:left">Vulnerable — fix proposed (27.0.3), not yet merged</td><td style="text-align:left">Proposed upstream patch (<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>)</td></tr><tr><td style="text-align:left">Flamingo (2025.2)</td><td style="text-align:left">Vulnerable — fix proposed (28.0.3), not yet merged</td><td style="text-align:left">Proposed upstream patch (<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>)</td></tr><tr><td style="text-align:left">Gazpacho (2026.1)</td><td style="text-align:left">Vulnerable — fix proposed (29.0.3), not yet merged</td><td style="text-align:left">Patch included (<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>), images not published yet</td></tr><tr><td style="text-align:left">Hibiscus (2026.2, dev)</td><td style="text-align:left">Fix proposed on master, not yet merged</td><td style="text-align:left">Not shipped by OSISM yet</td></tr></tbody></table>
+<table><thead><tr><th style="text-align:left">OpenStack Release</th><th style="text-align:left">Upstream Status</th><th style="text-align:left">Fix in OSISM Images</th></tr></thead><tbody><tr><td style="text-align:left">Caracal (2024.1)</td><td style="text-align:left">Unmaintained — backport proposed, not yet merged</td><td style="text-align:left">Community-curated backport (<a href="https://github.com/osism/container-images-kolla/pull/778" target="_blank" rel="noopener noreferrer" class="">PR #778</a>)</td></tr><tr><td style="text-align:left">Dalmatian (2024.2)</td><td style="text-align:left">End of life since 2026-04-29, no fix</td><td style="text-align:left">Community-curated backport (<a href="https://github.com/osism/container-images-kolla/pull/782" target="_blank" rel="noopener noreferrer" class="">PR #782</a>)</td></tr><tr><td style="text-align:left">Epoxy (2025.1)</td><td style="text-align:left">Vulnerable — fix proposed (27.0.3), not yet merged</td><td style="text-align:left">Proposed upstream patch (<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>)</td></tr><tr><td style="text-align:left">Flamingo (2025.2)</td><td style="text-align:left">Vulnerable — fix proposed (28.0.3), not yet merged</td><td style="text-align:left">Proposed upstream patch (<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>)</td></tr><tr><td style="text-align:left">Gazpacho (2026.1)</td><td style="text-align:left">Vulnerable — fix proposed (29.0.3), not yet merged</td><td style="text-align:left">Patch included (<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>), images not published yet</td></tr><tr><td style="text-align:left">Hibiscus (2026.2, dev)</td><td style="text-align:left">Fix proposed on master, not yet merged</td><td style="text-align:left">Not shipped by OSISM yet</td></tr></tbody></table>
 <p>Caracal (2024.1) is unmaintained and Dalmatian (2024.2) reached end of life on 2026-04-29 upstream;
-neither will receive an official fixed release. For these two releases OSISM is preparing the fix as
-community-curated backports, shipped as downstream patches in the Keystone container images. This
-advisory will be updated as soon as the patched images are available.</p>
+neither will receive an official fixed release. A backport of both patches has been proposed on the
+<code>unmaintained/2024.1</code> branch but has not merged yet. For these two releases OSISM provides the fix
+as community-curated backports, shipped as downstream patches in the Keystone container images; the
+patched images for 2024.1 and 2024.2 have been available since 2026-08-27.</p>
 <p>For Epoxy (2025.1) and Flamingo (2025.2) OSISM already ships container images that carry the
 proposed upstream patches ahead of their official upstream release. The same patches are included
 for Gazpacho (2026.1), whose images will be published with the upcoming OSISM 11 release.</p>
@@ -151,23 +152,30 @@ authentication method is rejected with HTTP 403. Clients must authenticate with 
 credential directly instead.</li>
 </ul></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-hardening-in-the-osism-images">Additional Hardening in the OSISM Images<a href="#additional-hardening-in-the-osism-images" class="hash-link" aria-label="Direct link to Additional Hardening in the OSISM Images" title="Direct link to Additional Hardening in the OSISM Images" translate="no">​</a></h3>
-<p>Besides the two upstream patches, the patched OSISM images for 2025.1, 2025.2, and 2026.1 contain
-the upstream change <em>Ban ec2credential tokens from Keystone API</em>, which is merged on master but not
-backported to the stable branches upstream. It rejects tokens derived from EC2 credentials for every
-Keystone API call except token validation and re-authentication, closing the whole class of EC2
-token issues at the API boundary. The behavior is controlled by the new option <code>[auth] ban_ec2credential_tokens</code> (default <code>True</code>). Deployments that use EC2-derived tokens directly against
-the Keystone API must set it to <code>False</code>.</p>
+<p>Besides the two upstream patches, the patched OSISM images for 2024.2, 2025.1, 2025.2, and 2026.1
+contain the upstream change <em>Ban ec2credential tokens from Keystone API</em>, which is merged on master;
+its backports to the stable branches are proposed but not merged upstream. It rejects tokens derived
+from EC2 credentials for every Keystone API call except token validation and re-authentication,
+closing the whole class of EC2 token issues at the API boundary. The behavior is controlled by the
+new option <code>[auth] ban_ec2credential_tokens</code> (default <code>True</code>). Deployments that use EC2-derived
+tokens directly against the Keystone API must set it to <code>False</code>. The 2024.1 images contain only the
+two patches of the upstream fix, not this additional change.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="remediation">Remediation<a href="#remediation" class="hash-link" aria-label="Direct link to Remediation" title="Direct link to Remediation" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="for-osism-releases">For OSISM Releases<a href="#for-osism-releases" class="hash-link" aria-label="Direct link to For OSISM Releases" title="Direct link to For OSISM Releases" translate="no">​</a></h3>
 <p>Because no fixed Keystone release is available upstream, OSISM provides the fix as downstream
-patches for the Keystone container images via the following change:</p>
+patches for the Keystone container images via the following changes:</p>
 <ul>
 <li class=""><a href="https://github.com/osism/container-images-kolla/commit/01ae42cdce2dc6c86927116fcce10c90a930122b" target="_blank" rel="noopener noreferrer" class="">container-images-kolla commit 01ae42c</a>
-(<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>)</li>
+(<a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">PR #776</a>) — patches for 2025.1
+(Epoxy), 2025.2 (Flamingo), and 2026.1 (Gazpacho)</li>
+<li class=""><a href="https://github.com/osism/container-images-kolla/commit/59fa2a2c9f118764844df1f06a989e8f658338f4" target="_blank" rel="noopener noreferrer" class="">container-images-kolla commit 59fa2a2</a>
+(<a href="https://github.com/osism/container-images-kolla/pull/778" target="_blank" rel="noopener noreferrer" class="">PR #778</a>) — community-curated
+backport for 2024.1 (Caracal)</li>
+<li class=""><a href="https://github.com/osism/container-images-kolla/commit/2c082f0c54daa1e53ea9b6248e86aa7db49d2f32" target="_blank" rel="noopener noreferrer" class="">container-images-kolla commit 2c082f0</a>
+(<a href="https://github.com/osism/container-images-kolla/pull/782" target="_blank" rel="noopener noreferrer" class="">PR #782</a>) — community-curated
+backport for 2024.2 (Dalmatian)</li>
 </ul>
-<p>This change adds the patches for 2025.1 (Epoxy), 2025.2 (Flamingo), and 2026.1 (Gazpacho). The
-community-curated backports for 2024.1 (Caracal) and 2024.2 (Dalmatian) are in preparation and will
-be announced in an update of this advisory.</p>
+<p>Patched rolling images are available for 2024.1, 2024.2, 2025.1, and 2025.2.</p>
 <p>A fix will be included in upcoming OSISM releases that ship the patched Keystone container images.
 Consult the <a class="" href="/docs/release-notes/">OSISM Release Notes</a> for version information and availability.</p>
 <p>The affected code runs in the Keystone API service (<code>keystone</code> container). Using rolling tags,
@@ -176,15 +184,15 @@ release the Kolla images are pulled from the <code>kolla/release/&lt;openstack_v
 pinned version tags (<code>docker_namespace</code> in <code>environments/kolla/configuration.yml</code>), whereas the
 rolling images live in the <code>kolla</code> namespace. The image parameters therefore have to be overridden
 together with the tag; the tag override alone would point at an image that does not exist:</p>
-<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">environments/kolla/images.yml</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">keystone_tag</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;2025.1&quot;</span><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># or &quot;2025.2&quot;, depending on your OpenStack release</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">keystone_image</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;registry.osism.tech/kolla/keystone&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">keystone_fernet_image</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;registry.osism.tech/kolla/keystone-fernet&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">keystone_ssh_image</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;registry.osism.tech/kolla/keystone-ssh&quot;</span><br></div></code></pre></div></div>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">environments/kolla/images.yml</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">keystone_tag</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;2024.1&quot;</span><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># or &quot;2024.2&quot;, &quot;2025.1&quot;, &quot;2025.2&quot;, depending on your OpenStack release</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">keystone_image</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;registry.osism.tech/kolla/keystone&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">keystone_fernet_image</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;registry.osism.tech/kolla/keystone-fernet&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">keystone_ssh_image</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;registry.osism.tech/kolla/keystone-ssh&quot;</span><br></div></code></pre></div></div>
 <p>Replace <code>registry.osism.tech</code> if you pull the images from a mirror. From 2025.2 on the Keystone
 role additionally runs an <code>httpd</code> container (<code>keystone_httpd_image</code>, <code>keystone_httpd_tag</code>) that
 contains no Keystone code; its tag follows <code>keystone_tag</code> by default, so pin <code>keystone_httpd_tag</code>
 to the currently deployed tag when overriding <code>keystone_tag</code>.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mitigation">Mitigation<a href="#mitigation" class="hash-link" aria-label="Direct link to Mitigation" title="Direct link to Mitigation" translate="no">​</a></h3>
 <p>Because all deployments are affected and the vulnerabilities require only a delegated credential,
-applying the patched container image is the only complete remediation. Until the fix is deployed —
-in particular on 2024.1 and 2024.2 — consider the following measures:</p>
+applying the patched container image is the only complete remediation. Until the fix is deployed,
+consider the following measures:</p>
 <ol>
 <li class="">
 <p>Disabling the rescoping of scoped tokens closes the token reauthentication path (Bug #2158538).
@@ -219,6 +227,10 @@ from unexpected sources.</p>
 <li class=""><a href="https://security.openstack.org/ossa/OSSA-2026-037.html" target="_blank" rel="noopener noreferrer" class="">OSSA-2026-037 Advisory</a></li>
 <li class=""><a href="https://github.com/osism/container-images-kolla/commit/01ae42cdce2dc6c86927116fcce10c90a930122b" target="_blank" rel="noopener noreferrer" class="">OSISM Fix (container-images-kolla commit 01ae42c)</a></li>
 <li class=""><a href="https://github.com/osism/container-images-kolla/pull/776" target="_blank" rel="noopener noreferrer" class="">OSISM Fix (container-images-kolla PR #776)</a></li>
+<li class=""><a href="https://github.com/osism/container-images-kolla/commit/59fa2a2c9f118764844df1f06a989e8f658338f4" target="_blank" rel="noopener noreferrer" class="">OSISM Fix for 2024.1 (container-images-kolla commit 59fa2a2)</a></li>
+<li class=""><a href="https://github.com/osism/container-images-kolla/pull/778" target="_blank" rel="noopener noreferrer" class="">OSISM Fix for 2024.1 (container-images-kolla PR #778)</a></li>
+<li class=""><a href="https://github.com/osism/container-images-kolla/commit/2c082f0c54daa1e53ea9b6248e86aa7db49d2f32" target="_blank" rel="noopener noreferrer" class="">OSISM Fix for 2024.2 (container-images-kolla commit 2c082f0)</a></li>
+<li class=""><a href="https://github.com/osism/container-images-kolla/pull/782" target="_blank" rel="noopener noreferrer" class="">OSISM Fix for 2024.2 (container-images-kolla PR #782)</a></li>
 <li class=""><a href="https://review.opendev.org/1002301" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 1/2 - Hibiscus)</a></li>
 <li class=""><a href="https://review.opendev.org/1002302" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 2/2 - Hibiscus)</a></li>
 <li class=""><a href="https://review.opendev.org/1002303" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 1/2 - Gazpacho)</a></li>
@@ -227,6 +239,8 @@ from unexpected sources.</p>
 <li class=""><a href="https://review.opendev.org/1002306" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 2/2 - Flamingo)</a></li>
 <li class=""><a href="https://review.opendev.org/1002307" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 1/2 - Epoxy)</a></li>
 <li class=""><a href="https://review.opendev.org/1002308" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 2/2 - Epoxy)</a></li>
+<li class=""><a href="https://review.opendev.org/1002452" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 1/2 - Caracal, unmaintained)</a></li>
+<li class=""><a href="https://review.opendev.org/1002453" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Proposed Fix 2/2 - Caracal, unmaintained)</a></li>
 <li class=""><a href="https://review.opendev.org/997369" target="_blank" rel="noopener noreferrer" class="">OpenDev Review (Ban ec2credential tokens from Keystone API)</a></li>
 <li class=""><a href="https://bugs.launchpad.net/keystone/+bug/2153453" target="_blank" rel="noopener noreferrer" class="">Launchpad Bug #2153453</a></li>
 <li class=""><a href="https://bugs.launchpad.net/keystone/+bug/2158538" target="_blank" rel="noopener noreferrer" class="">Launchpad Bug #2158538</a></li>
