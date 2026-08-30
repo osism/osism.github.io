@@ -313,6 +313,10 @@ target host under `/etc/kolla/SERVICENAME/`.
 
 :::
 
+An overlay does not replace the file that OSISM generates. The two are merged key by key: the keys set in the
+overlay win, and every key left out of it keeps the value OSISM generated. An overlay therefore holds only the
+settings being changed, never a full copy of the configuration file.
+
 Overriding an option is as simple as setting the option under the relevant section. For example, to set
 override `scheduler_max_attempts` in the Nova scheduler service, the operator could create
 `environments/kolla/files/overlays/nova/nova-scheduler.conf` in the configuration repository with this content:
@@ -339,8 +343,8 @@ of the SCS-nV-* (moderate oversubscription) flavors. If you do not use SMT/hyper
 
 This method of merging configuration sections is supported for all services using [oslo.config](https://docs.openstack.org/oslo.config/latest/),
 which includes the vast majority of OpenStack services, and in some cases for services using YAML configuration.
-Since the INI format is an informal standard, not all INI files can be merged in this way. In these cases OSISM supports
-overriding the entire config file.
+Since the INI format is an informal standard, not all INI files can be merged in this way. Only in those cases does
+the overlay replace the generated file entirely.
 
 Additional flexibility can be introduced by using Jinja conditionals in the config files. For example, you may create
 Nova cells which are homogeneous with respect to the hypervisor model. In each cell, you may wish to configure the
