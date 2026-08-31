@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OpenStack | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/configuration-guide/openstack/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OpenStack | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Image tags"><meta data-rh="true" property="og:description" content="Image tags"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/configuration-guide/openstack/"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/configuration-guide/openstack/" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/configuration-guide/openstack/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Configuration Guide","item":"https://osism.tech/docs/guides/configuration-guide/"},{"@type":"ListItem","position":3,"name":"OpenStack","item":"https://osism.tech/docs/guides/configuration-guide/openstack/"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.5f6cc8d3.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.b399a813.js" defer="defer"></script>
 <script src="/assets/js/main.e9142393.js" defer="defer"></script>
 </head>
 <body>
@@ -121,6 +121,20 @@ supported, assuming that you have services using <code>nova.conf</code> running 
 </ul>
 <p>Using this mechanism, overrides can be configured per-project (Nova), per-project-service (Nova scheduler service) or
 per-project-service-on-specified-host (Nova services on ctl1).</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>warning</div><div class="admonitionContent_BuS1"><p>Overlay files are picked up by exact name and exact path. A file whose name or
+location does not match one of the supported locations is not an error and
+produces no warning — it is simply never read, and the deployment succeeds with
+the settings silently having no effect.</p><p>Two examples that look right but are ignored:</p><ul>
+<li class=""><code>environments/kolla/files/overlays/ml2_conf.ini</code> — <code>ml2_conf.ini</code> is only read
+from the <code>neutron/</code> subdirectory, so a copy at the top level does nothing.</li>
+<li class=""><code>environments/kolla/files/overlays/neutron/ml2.conf</code> — a misspelling of
+<code>ml2_conf.ini</code>; nothing matches <code>ml2.conf</code>.</li>
+</ul><p>After adding an overlay, confirm the setting actually arrived rather than
+assuming it did, for example by checking the generated configuration on the
+target host under <code>/etc/kolla/SERVICENAME/</code>.</p></div></div>
+<p>An overlay does not replace the file that OSISM generates. The two are merged key by key: the keys set in the
+overlay win, and every key left out of it keeps the value OSISM generated. An overlay therefore holds only the
+settings being changed, never a full copy of the configuration file.</p>
 <p>Overriding an option is as simple as setting the option under the relevant section. For example, to set
 override <code>scheduler_max_attempts</code> in the Nova scheduler service, the operator could create
 <code>environments/kolla/files/overlays/nova/nova-scheduler.conf</code> in the configuration repository with this content:</p>
@@ -134,8 +148,8 @@ of the SCS-nV-* (moderate oversubscription) flavors. If you do not use SMT/hyper
 5.0 here (for the V flavors).</p>
 <p>This method of merging configuration sections is supported for all services using <a href="https://docs.openstack.org/oslo.config/latest/" target="_blank" rel="noopener noreferrer" class="">oslo.config</a>,
 which includes the vast majority of OpenStack services, and in some cases for services using YAML configuration.
-Since the INI format is an informal standard, not all INI files can be merged in this way. In these cases OSISM supports
-overriding the entire config file.</p>
+Since the INI format is an informal standard, not all INI files can be merged in this way. Only in those cases does
+the overlay replace the generated file entirely.</p>
 <p>Additional flexibility can be introduced by using Jinja conditionals in the config files. For example, you may create
 Nova cells which are homogeneous with respect to the hypervisor model. In each cell, you may wish to configure the
 hypervisors differently, for example the following override shows one way of setting the <code>bandwidth_poll_interval</code>
