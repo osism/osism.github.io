@@ -60,9 +60,31 @@ are at the same commit by the time step 3 runs.
 
 2. Update the configuration repository on the manager node.
 
+    <Tabs>
+    <TabItem value="with-external-connectivity" label="With external connectivity">
     ```bash
     ./run.sh configuration
     ```
+    </TabItem>
+    <TabItem value="without-external-connectivity" label="Without external connectivity">
+    * Follow the instructions for your local environment to manually copy the
+      configuration repository on the manager node(s).
+    * Make sure your MetalBox registry is updated to contain the new release
+      images by following the
+      [procedure described in the MetalBox data update section](./metalbox/data-updates.md#update-of-the-container-registry)
+    * When using the seed container for the upgrade (see notes below ), point
+      the `run.sh` script to the correct registry, using the
+      `SEED_CONTAINER_REGISTRY` environment. In case of a MetalBox-based
+      installation:
+
+      ```bash
+      export SEED_CONTAINER_REGISTRY=metalbox:5001
+      ```
+
+    </TabItem>
+    </Tabs>
+
+    :::note
 
     * The playbooks in steps 2 and 3 are driven against the manager over SSH, so it does
       not matter which machine runs them, as long as that machine has a checkout of the
@@ -129,7 +151,20 @@ are at the same commit by the time step 3 runs.
     * Arguments after the playbook name are passed on to `ansible-playbook`, so
       `./run.sh configuration --ask-vault-pass` works as well.
 
+    :::
+
 3. Update the manager service.
+
+    :::note
+
+    In case of multiple manager nodes, consider doing the update sequentially
+    by limiting each run to a single manager. To do so append the `--limit
+    $MANAGER` parameter to the command below and repeat it for each manager
+    instance once the upgrade on the previous manager was successful.
+    Without the parameter the command will upgrade all managers in a single
+    run.
+
+    :::
 
     ```bash
     ./run.sh manager
