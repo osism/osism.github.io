@@ -69,6 +69,43 @@ however requires a reconfiguration of the Manager running on the MetalBox by exe
 is replaced. Individual nodes with a differing `target_raid_config` may be overridden in
 the NetBox device's custom field `ironic_parameters` as described above.
 
+## Building the array without a deployment
+
+The RAID configuration is applied during `osism baremetal deploy`, and a full
+`osism baremetal clean` removes it again: the default is `--raid delete`, so a node that
+had a mirror comes back from a clean without one. To build or rebuild the declared array
+on its own, without deploying an image, name the `recreate` mode:
+
+```bash
+osism baremetal clean --raid recreate node101
+```
+
+This deletes any existing configuration, erases the disks and then builds
+`target_raid_config`. That order is dictated by Ironic: the create step does not remove
+existing disks and fails if the target disks are already partitioned, so the delete and
+erase steps have to run first. The details are in the
+[Ironic RAID documentation](https://docs.openstack.org/ironic/latest/admin/raid.html).
+
+On hardware whose disks cannot be erased in band, the erase step has no working path and
+a full clean fails before the array is ever built. Platform firmware that freezes the
+ATA erase paths during POST is one cause. Combine the mode with `--metadata-only` there,
+so only the disk metadata is erased:
+
+```bash
+osism baremetal clean --metadata-only --raid recreate node101
+```
+
+`recreate` refuses a node that has no `target_raid_config` rather than passing the
+request on. Ironic accepts such a request and fails on the create step, which runs
+last: the disks have already been erased by then, and the node ends up in
+`clean failed` with maintenance mode set, so it needs the maintenance flag cleared and
+the clean repeated. If a node configured as described above is refused, its
+configuration has most likely not been synchronized yet; run
+`osism sync ironic node101` first.
+
+The remaining modes and the flag's argument order are described under
+[Node deployment](../../operations-guide/metalbox/node-deployment.md).
+
 ## Configuring rebuild speed limits for nodes with software RAID
 
 To configure the rebuild speed, `mdraid` provides the `speed_limit_min` and

@@ -103,6 +103,47 @@ Cleaning runs in the `manageable` state, so the command moves the node there and
 by itself. On nodes with a RAID interface the RAID configuration is deleted as part of
 it.
 
+`--raid` decides what is left behind on those nodes:
+
+| Mode              | Result                                                      |
+|:------------------|:------------------------------------------------------------|
+| `--raid delete`   | removes the existing RAID configuration (the default)       |
+| `--raid keep`     | leaves it in place and erases through the existing array    |
+| `--raid recreate` | removes it and builds the node's `target_raid_config` again |
+
+Written without a value, `--raid` means `recreate`. Nodes without a RAID interface are
+unaffected by any of the modes.
+
+`--metadata-only` erases only the disk metadata rather than the disk contents. That is
+much faster, but it leaves the data itself in place. It defaults to `--raid keep`, so a
+metadata-only clean does not touch the array unless a mode is named:
+
+```bash
+osism baremetal clean --metadata-only node101
+```
+
+Because `--raid` takes an optional value, a node name cannot follow it directly. Write
+the name first, `osism baremetal clean node101 --raid`, or name the mode,
+`osism baremetal clean --raid recreate node101`.
+
+`--raid recreate` needs something to build. A named node that has no
+`target_raid_config`, or no RAID interface at all, is refused before the node is
+touched. Under `--all` such nodes are skipped and reported instead, so one
+misconfigured node does not stop the rest of the fleet, and the command exits non-zero
+so the gap is visible to whatever called it.
+
+A fleet that mixes nodes with and without RAID needs no special handling, and there is
+nothing to select. The modes only ever apply to nodes that have a RAID interface, so a
+single run erases the nodes without one and rebuilds the declared arrays of those that
+have one:
+
+```bash
+osism baremetal clean --all --yes-i-really-really-mean-it --raid recreate
+```
+
+Building the array on its own, without deploying an image, is described in
+[Software RAID](../../configuration-guide/metalbox/software-raid.md).
+
 ## Deploy the node
 
 **MetalBox.** Write the operating system to the node:
