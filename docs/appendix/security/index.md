@@ -35,3 +35,4 @@ handling of security-related information.
 | [OSSA-2026-032](ossa-2026-032.md) | Cross-project subnet mutation via subnetpool onboard  | OpenStack Neutron            |
 | [OSSA-2026-034](ossa-2026-034.md) | Cross-tenant DNS zone overlap and mDNS DoS            | OpenStack Designate          |
 | [OSSA-2026-037](ossa-2026-037.md) | Inconsistent scope enforcement for delegated tokens   | OpenStack Keystone           |
+| [OSSA-2026-038](ossa-2026-038.md) | Multiple SSRF vulnerabilities in Glance               | OpenStack Glance             |
