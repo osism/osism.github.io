@@ -4,16 +4,35 @@ description: Write or update an OSISM security advisory page (docs/appendix/secu
 argument-hint: <OSSA review URL | change number | OSSA-YYYY-NNN>
 allowed-tools:
   - Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/collect.py:*)
-  - Bash(curl:*)
-  - Bash(base64:*)
-  - Bash(gh api:*)
-  - Bash(gh pr view:*)
-  - Bash(gh pr list:*)
+  # allowed-tools pre-approves, it does not sandbox: every entry is a grant. curl is therefore
+  # limited to the hosts of reference/sources.md (unquoted and single-quoted URL, as written
+  # there) and gh api to the read-only endpoints the workflow uses. Anything else prompts.
+  - Bash(curl -s https://review.opendev.org/*)
+  - Bash(curl -s 'https://review.opendev.org/*)
+  - Bash(curl -s https://opendev.org/*)
+  - Bash(curl -s 'https://opendev.org/*)
+  - Bash(curl -s https://api.launchpad.net/1.0/bugs/*)
+  - Bash(curl -s https://cveawg.mitre.org/api/cve/*)
+  - Bash(curl -s https://raw.githubusercontent.com/osism/*)
+  - Bash(curl -s 'https://registry.osism.tech/service/token?*)
+  - Bash(base64 -d)
+  - Bash(gh api 'repos/osism/container-images-kolla/git/trees/*)
+  - Bash(gh api 'repos/osism/container-images-kolla/commits?path=*)
+  - Bash(gh api repos/osism/container-images-kolla/commits/*)
+  - Bash(gh api repos/openstack/*/git/ref/tags/*)
+  - Bash(gh pr view * --repo osism/container-images-kolla *)
+  - Bash(gh pr list --repo osism/container-images-kolla *)
   - Bash(git log:*)
   - Bash(git diff:*)
   - Bash(git status:*)
   - Bash(npx --no-install markdownlint-cli2:*)
   - Bash(npx --no-install markdown-table-formatter:*)
+  - Read
+  - Glob
+  - Grep
+  - AskUserQuestion
+  - Edit(docs/appendix/security/**)
+  - Write(docs/appendix/security/**)
   - WebFetch(domain:review.opendev.org)
   - WebFetch(domain:opendev.org)
   - WebFetch(domain:security.openstack.org)
@@ -52,9 +71,17 @@ Supporting files: [reference/style.md](reference/style.md) (content and wording 
   (bug descriptions, commit messages, CVE JSON, patch headers) — consult it whenever the dossier only
   shows an excerpt. Section 13 lists sources that could not be reached; fetch those manually with
   the commands in `reference/sources.md`.
-- Stop and tell the author when the need-to-know principle applies: a Launchpad bug is still
-  private, or the OSSA change is not merged and the bugs are not `Public Security`.
-- If GitHub is unreachable, rerun with `--no-github` and look up the OSISM pull requests manually.
+- The dossier never turns a failed lookup into a negative: `lookup failed`, `unknown` and
+  `unverified` mean "not known", and each of them has an open point in section 12. Resolve them
+  manually or with the author; never write them into the advisory as "none" or "no".
+- Apply the need-to-know rule — it is defined once, in `reference/style.md` ("Need-to-know
+  principle"). The collector raises every violation as a `STOP` point at the top of dossier
+  section 12: stop there and tell the author. A merged OSSA change does not lift a `STOP`.
+- If GitHub is unreachable, rerun with `--no-github` and look up the OSISM patch files and pull
+  requests manually. The dossier then marks all GitHub data as unknown and asks the coverage
+  question for every release.
+- A change that adds several advisories at once is only accepted together with the OSSA id; the
+  collector refuses to pick one of them on its own.
 
 ## 2. Load the conventions
 
@@ -86,11 +113,14 @@ Supporting files: [reference/style.md](reference/style.md) (content and wording 
   fixes in practice — plus the newest upstream release and the development series with their
   upstream status.
 - Map versions to series only through dossier section 6 (upstream deliverables), never from
-  memory: the major version of a project does not equal its OpenStack release.
+  memory: the major version of a project does not equal its OpenStack release. Where section 6
+  says **unverified**, take the series from the branch of the fix review (section 4).
 - For every listed release whose coverage column says "Covered = no" (no OSISM patch, no merged
-  upstream fix): **ask the author about the status before writing** (AskUserQuestion; typical
-  answers: backport in preparation, shipped with the next rebuild, will not be fixed). Never assume
-  and never leave the release out. Record the answer in the Affected Versions table and in the
+  upstream fix) **or "Covered = unverified"** (only hints: a patch file matched by name or bug
+  number, a merged review that is not a fix listed in the OSSA): **ask the author about the status
+  before writing** (AskUserQuestion; typical answers: backport in preparation, shipped with the
+  next rebuild, will not be fixed, yes that patch is the fix). Never assume and never leave the
+  release out. Record the answer in the Affected Versions table and in the
   Remediation section with the wording from `style.md`, and list it under open points in the
   report so the page is updated when the fix ships.
 - Per covered release choose the "Fix in OSISM Images" wording from `style.md`: community-curated

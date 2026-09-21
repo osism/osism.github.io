@@ -1,7 +1,7 @@
 # Style and content rules for OSISM security advisories
 
-Distilled from the advisories in `docs/appendix/security/`. When in doubt, imitate the two newest
-files there; they are the canonical examples.
+Distilled from the advisories in `docs/appendix/security/`. When in doubt, imitate the two
+exemplar advisories named in dossier section 10; they are the canonical examples.
 
 ## File and page
 
@@ -17,13 +17,13 @@ files there; they are the canonical examples.
 
 ## Property table (first table under the H1)
 
-| Property         | Rule                                                                                                                                                                                                                             |
-|:-----------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Date             | The `date` of the OSSA document (not the day the page is written). With errata: `2026-01-15 (Errata: 2026-01-16)`.                                                                                                               |
-| CVE              | Linked ids `[CVE-…](https://www.cve.org/CVERecord?id=CVE-…)`, comma separated. Four or more ids: plain ids in the cell, links only in References. Not assigned yet: `CVE pending (requested from MITRE)`.                        |
-| Severity         | CVSS base severity from the CVE record when it contains one (`High`, `Medium`, …). Otherwise OSISM's assessment; then the Summary must contain the sentence below. A qualifier is allowed: `High (multi-pool deployments only)`. |
-| Affected Project | Project name without "OpenStack": `Keystone`, `Nova`, `Neutron`, `Designate`, `keystonemiddleware`.                                                                                                                              |
-| Reporter         | `Name (Affiliation)`, comma separated, in the order of the OSSA.                                                                                                                                                                 |
+| Property         | Rule                                                                                                                                                                                                                                                                        |
+|:-----------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Date             | The `date` of the OSSA document (not the day the page is written). With errata: `2026-01-15 (Errata: 2026-01-16)` — `date` stays the original publication date, the errata date is the leading date of the newest `errata_history` entry (dossier section 2, newest first). |
+| CVE              | Linked ids `[CVE-…](https://www.cve.org/CVERecord?id=CVE-…)`, comma separated. Four or more ids: plain ids in the cell, links only in References. Not assigned yet: `CVE pending (requested from MITRE)`.                                                                   |
+| Severity         | CVSS base severity from the CVE record when it contains one (`High`, `Medium`, …). Otherwise OSISM's assessment; then the Summary must contain the sentence below. A qualifier is allowed: `High (multi-pool deployments only)`.                                            |
+| Affected Project | Project name without "OpenStack": `Keystone`, `Nova`, `Neutron`, `Designate`, `keystonemiddleware`. Several projects: comma separated, in the order of the OSSA (see "Advisories covering several projects").                                                               |
+| Reporter         | `Name (Affiliation)`, comma separated, in the order of the OSSA.                                                                                                                                                                                                            |
 
 Standard sentence when no CVSS exists (put it in the Summary):
 
@@ -56,13 +56,17 @@ Standard sentence when no CVSS exists (put it in the Summary):
 - Quote the upstream ranges verbatim in a sentence: ``The upstream advisory states the affected
   ranges as `>=14.0.0 <26.0.6`, `>=27.0.0 <27.0.4` and `>=28.0.0 <28.0.2` …``. Derive the fixed
   versions from the upper bounds (`<26.0.6` → fixed in 26.0.6). `==X.Y.Z` means only that version is
-  vulnerable and the fix is the next point release.
+  vulnerable and the fix is the next point release. `<=X.Y.Z` names the last vulnerable version,
+  not the fixed one: the fix is the next release of that series — take it from dossier section 6,
+  do not compute it.
 - Choose one table variant:
   - **A — OSISM fix exists** (preferred): `OpenStack Release | Upstream Status | Fix in OSISM Images`
   - **B — nothing fixed upstream yet**: `OpenStack Release | Latest Released <Project> Version | Upstream Status`
   - **C — simple upstream-only case**: `<Project> Version | Status` with `Vulnerable`/`Fixed` rows
-- Release naming in tables: `Caracal (2024.1)`, `Dalmatian (2024.2)`, `Epoxy (2025.1)`,
-  `Flamingo (2025.2)`, `Gazpacho (2026.1)`, `Hibiscus (2026.2, dev)`. In prose: `2025.1 (Epoxy)`.
+- Release naming in tables: `<Codename> (<release id>)`, for example `Epoxy (2025.1)`; the
+  development series gets `, dev` appended inside the parentheses. In prose: `2025.1 (Epoxy)`.
+  Take release id, codename and status of every release from dossier section 5 — this file
+  deliberately contains no list of releases, it would be stale within one cycle.
 - Status phrases (reuse verbatim):
   - `Unmaintained, no upstream fix`
   - `End of life since YYYY-MM-DD, no fix`
@@ -91,8 +95,9 @@ Standard sentence when no CVSS exists (put it in the Summary):
   (`docs/concepts/release-cadence.md`, `docs/release-notes/index.md`), but ships security fixes for
   the intermediate `YYYY.2` releases as well. Treat 2024.2, 2025.2, … exactly like the supported
   releases: list them and state their fix status.
-- **A release without a fix is never guessed.** When the dossier shows no OSISM patch and no merged
-  upstream fix for a listed release (coverage column "Covered = no"), ask the author about the
+- **A release without a confirmed fix is never guessed.** When the dossier shows no OSISM patch and
+  no merged upstream fix for a listed release (coverage column "Covered = no"), or only hints it
+  could not tie to the fix ("Covered = unverified"), ask the author about the
   status before writing (typical answers: backport in preparation, will be shipped with the next
   image rebuild, will not be fixed). Record the answer in the table (`Community-curated backport in
   preparation`, `Patched image in preparation`) and in the Remediation section ("A fix for
@@ -160,9 +165,12 @@ Standard sentence when no CVSS exists (put it in the Summary):
   [osism/defaults all/002-images-kolla.yml](https://github.com/osism/defaults/blob/main/all/002-images-kolla.yml))
   and list only images that exist in the rolling registry (also shown in section 9):
   ```yaml title="environments/kolla/images.yml"
-  neutron_server_tag: "2025.1"  # or "2024.1", "2024.2", "2025.2", depending on your OpenStack release
+  neutron_server_tag: "<release id>"  # or "<id>", "<id>", … depending on your OpenStack release
   neutron_server_image: "registry.osism.tech/kolla/neutron-server"
   ```
+  Put one covered release id into the tag and the other covered ones into the comment (dossier
+  section 11: the releases with a fix in the OSISM images). An image whose registry lookup failed
+  in section 9 is unknown, not missing — verify it before leaving it out.
   Add the sentence "Replace `registry.osism.tech` if you pull the images from a mirror." Prefer the
   most specific variables when only one service is affected and say which images do not need an
   update; use the umbrella tag (`designate_tag`) plus all `designate_*_image` parameters when
@@ -189,7 +197,7 @@ Standard sentence when no CVSS exists (put it in the Summary):
 2. `[OSISM Fix (container-images-kolla commit abc1234)](…/commit/<full sha>)`
 3. `[OSISM Fix (container-images-kolla PR #N)](…/pull/N)`
 4. `[OpenDev Review (Fix - <Series>)](https://review.opendev.org/<number>)` per series, newest
-   series first (Hibiscus, Gazpacho, Flamingo, Epoxy, …). Unmerged: `(Proposed Fix - <Series>)`.
+   series first (order of dossier section 5). Unmerged: `(Proposed Fix - <Series>)`.
    Several patches per series: `(Fix 1/2 - <Series>)`.
 5. `[Launchpad Bug #N](https://bugs.launchpad.net/<project>/+bug/N)` per bug
 6. `[CVE-…](https://www.cve.org/CVERecord?id=CVE-…)` per CVE
@@ -204,13 +212,41 @@ Add one row to the OSSA table, sorted by advisory id:
 ```
 
 The description is a short noun phrase (aim for ≤ 55 characters, no trailing period); the
-component is `OpenStack <Project>`. Re-run `markdown-table-formatter` on the index afterwards.
+component is `OpenStack <Project>` (several projects: `OpenStack Cinder, Glance, Nova`). Re-run `markdown-table-formatter` on the index afterwards.
+
+## Advisories covering several projects
+
+An OSSA can name several deliverables (`aodh, watcher`; `Cinder, Glance, Nova`). The dossier
+handles each of them separately; the advisory stays one page:
+
+- Property table: `Affected Project` lists all projects, comma separated, in the order of the OSSA.
+- Affected Versions: quote the ranges per project, then one table per project under a
+  `### <Project>` heading — fixed versions, upstream status and the OSISM fix differ per project.
+  The paragraphs after the tables are written once.
+- How to Check if You Are Affected: one running-version step per project
+  (`#### Check the Running <Project> Version`).
+- Remediation: one fix reference per container-images-kolla change, stating the projects and
+  releases it covers; the override snippet lists the tag and image parameters of all affected
+  services.
+- Index: one row, component `OpenStack <Project 1>, <Project 2>`.
 
 ## Need-to-know principle
 
-Only write about issues that are public: the OSSA change is merged or the Launchpad bugs are
-*Public Security*. If a bug is still private, stop and tell the author. Never include exploit
-payloads beyond what the upstream advisory and the public fix already disclose.
+This is the only statement of the rule; `SKILL.md`, `sources.md` and the collector refer to it.
+
+**Only write about an issue when every Launchpad bug referenced by the OSSA is positively
+established as `Public Security`. A merged OSSA change is not sufficient on its own.**
+
+- "Positively established" means you have seen `information_type: Public Security` — from the
+  Launchpad API (dossier section 3) or, when the API is unavailable, on the bug page. A bug that
+  cannot be read (HTTP 404 is what a private or embargoed bug looks like to an anonymous client),
+  a failed lookup and every other information type (`Private Security`, `Private`, `Embargoed`,
+  `Proprietary`, plain `Public`) are all *not established*.
+- The collector raises each such bug as a `STOP` point in dossier section 12. Stop and tell the
+  author; continue only after the author has confirmed the public status.
+- An OSSA without any Launchpad bug is public once its change is merged.
+- Never include exploit payloads beyond what the upstream advisory and the public fix already
+  disclose.
 
 ## Commit message
 

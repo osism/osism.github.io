@@ -38,8 +38,9 @@ curl -s https://api.launchpad.net/1.0/bugs/2153453/bug_tasks    # per-project st
 curl -s https://api.launchpad.net/1.0/bugs/2153453/attachments  # patches attached during the embargo
 ```
 
-`information_type` must be `Public Security` before anything is published. Bug titles are updated
-with the CVE ids once MITRE assigns them.
+`information_type` is what the need-to-know rule in [style.md](style.md) is checked against
+(`Public Security`). A private or embargoed bug answers 404 to anonymous requests. Bug titles are
+updated with the CVE ids once MITRE assigns them.
 
 ## Upstream fix reviews (Gerrit)
 
@@ -80,7 +81,8 @@ curl -s https://cveawg.mitre.org/api/cve/CVE-2026-55707   # JSON: state, descrip
 ```
 
 HTTP 404 means the record is not published yet; the `https://www.cve.org/CVERecord?id=…` link still
-belongs in the advisory and resolves later.
+belongs in the advisory and resolves later. Any other failure (5xx, timeout) says nothing about the
+record — retry instead of writing that upstream published no CVSS score.
 
 ## OSISM: container-images-kolla
 
@@ -93,8 +95,11 @@ commit subject. `defaults/<version>.sh` lists the OpenStack versions that are bu
 # whole tree in one call
 gh api 'repos/osism/container-images-kolla/git/trees/main?recursive=1' --jq '.tree[].path' | grep '^patches/2025.1/keystone/'
 
-# commit that added a patch file, and its pull request
+# oldest commit of a patch file path — NOT necessarily the commit that added the patch, see below
 gh api 'repos/osism/container-images-kolla/commits?path=patches/2025.1/keystone/0001-x.patch' --jq 'last(.[]).sha'
+# was the file added or only renamed by that commit? ("renamed" → repeat with previous_filename)
+gh api repos/osism/container-images-kolla/commits/<sha> --jq '.files[] | select(.filename | endswith("0001-x.patch")) | "\(.status) \(.previous_filename)"'
+# pull request of the commit that added it
 gh api repos/osism/container-images-kolla/commits/<sha>/pulls --jq '.[] | "#\(.number) \(.title) \(.merge_commit_sha) \(.html_url)"'
 
 # pull request details
@@ -104,6 +109,13 @@ gh pr view 776 --repo osism/container-images-kolla --json title,body,mergeCommit
 gh pr list --repo osism/container-images-kolla --state all --search "CVE-2026-55707"
 curl -s https://raw.githubusercontent.com/osism/container-images-kolla/main/CHANGELOG.md | grep -n -i "cve-2026-55707"
 ```
+
+The commit list of a path does not follow renames, and the patch files are renumbered whenever a
+CVE batch is added. The oldest commit of the current path is then the renumbering commit, not the
+fix. Walk back while the commit detail reports `status: renamed` (use `previous_filename` as the
+next path) and stop at `status: added` — that is `git log --follow`, and that commit and its pull
+request are the ones to cite. The collector does this automatically and flags attributions it
+could not verify.
 
 The images for a release are built from the upstream branch tarballs (`stable/<version>`,
 `unmaintained/<version>`); a fix merged upstream on that branch is therefore included on the next
@@ -136,8 +148,8 @@ curl -s -H "Authorization: Bearer $tok" https://registry.osism.tech/v2/kolla/key
 
 ## Local repository
 
-- `docs/appendix/security/ossa-*.md` — existing advisories (the two newest are the style
-  reference), `docs/appendix/security/index.md` — the table to extend.
+- `docs/appendix/security/ossa-*.md` — existing advisories (the style exemplars are named in
+  dossier section 10), `docs/appendix/security/index.md` — the table to extend.
 - `docs/release-notes/index.md` — OSISM release status; `docs/release-notes/osism-N.md` — the
   OpenStack releases each OSISM release ships (`### OpenStack YYYY.N` headings).
 - `docs/concepts/release-cadence.md` — SLURP-only support policy and the OSISM ↔ OpenStack mapping.

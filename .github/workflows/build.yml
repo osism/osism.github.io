@@ -19,3 +19,17 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
+
+  skill-tests:
+    name: Skill collector tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      # with PyYAML the tests also compare the built-in YAML subset parser against it
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Skill collector tests
+        run: python3 -m unittest discover -v -s .claude/skills/security-advisory/scripts -p 'test_*.py'
