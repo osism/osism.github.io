@@ -2,3 +2,4 @@ node_modules
 .docusaurus
 megalinter-reports/
 build
+__pycache__
