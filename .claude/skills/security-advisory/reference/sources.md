@@ -146,6 +146,14 @@ tok=$(curl -s 'https://registry.osism.tech/service/token?service=harbor-registry
 curl -s -H "Authorization: Bearer $tok" https://registry.osism.tech/v2/kolla/keystone/tags/list
 ```
 
+`all/002-images-kolla.yml` is the only authority for the `*_image` / `*_tag` parameter names and
+the image names; they do not follow one pattern (`keystone_image` → `keystone`, but
+`glance_api_image` → `glance-api`, `keystone_httpd_image` → `httpd`). Verify an advisory with:
+
+```bash
+python3 .claude/skills/security-advisory/scripts/check_images.py docs/appendix/security/ossa-2026-038.md
+```
+
 ## Local repository
 
 - `docs/appendix/security/ossa-*.md` — existing advisories (the style exemplars are named in

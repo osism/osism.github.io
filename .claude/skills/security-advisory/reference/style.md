@@ -161,9 +161,14 @@ Standard sentence when no CVSS exists (put it in the Summary):
   `environments/kolla/configuration.yml`); the rolling images live in the `kolla` namespace. The
   snippet therefore always overrides the `*_tag` **and every `<service>*_image` parameter** of the
   affected images with the rolling namespace — a tag override alone points at an image that does
-  not exist. Take the parameter names from dossier section 9 (they come from
-  [osism/defaults all/002-images-kolla.yml](https://github.com/osism/defaults/blob/main/all/002-images-kolla.yml))
-  and list only images that exist in the rolling registry (also shown in section 9):
+  not exist. **Copy the parameter names and image names from the generated snippet in dossier
+  section 9** — they come from
+  [osism/defaults all/002-images-kolla.yml](https://github.com/osism/defaults/blob/main/all/002-images-kolla.yml),
+  the only authority for them — and delete the lines that are not needed. Never derive a name by
+  analogy with another service: there is `keystone_image`, but no `glance_image` (it is
+  `glance_api_image` with the image `kolla/glance-api`). `scripts/check_images.py` verifies the
+  finished page against that file. List only images that exist in the rolling registry (also
+  shown in section 9):
   ```yaml title="environments/kolla/images.yml"
   neutron_server_tag: "<release id>"  # or "<id>", "<id>", … depending on your OpenStack release
   neutron_server_image: "registry.osism.tech/kolla/neutron-server"

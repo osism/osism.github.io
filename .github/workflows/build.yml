@@ -33,3 +33,15 @@ jobs:
         run: pip install pyyaml
       - name: Skill collector tests
         run: python3 -m unittest discover -v -s .claude/skills/security-advisory/scripts -p 'test_*.py'
+
+  advisory-images:
+    name: Image parameters in security advisories
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      # every *_image / *_tag override must exist in osism/defaults all/002-images-kolla.yml
+      - name: Check image override snippets
+        run: python3 .claude/skills/security-advisory/scripts/check_images.py docs/appendix/security/ossa-*.md

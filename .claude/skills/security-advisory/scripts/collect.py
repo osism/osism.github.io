@@ -222,6 +222,25 @@ def resolve_series(version: str, per_series: dict) -> dict:
     return {"series": None, "candidates": by_minor or by_major, "basis": None}
 
 
+def override_snippet(parameters: list[dict]) -> list[str]:
+    """Lines of the images.yml override for one product, from the osism/defaults image parameters.
+
+    The umbrella tag(s) — the ones that follow kolla_image_version — plus every image parameter with
+    its rolling image. Images confirmed missing from the rolling registry are left out, images whose
+    lookup failed are kept and marked.
+    """
+    tags = [p for p in parameters if p["variable"].endswith("_tag") and "kolla_image_version" in p["default"]]
+    images = [p for p in parameters if p.get("image") and not (p.get("error") and not p.get("lookup_failed"))]
+    if not images:
+        return []
+    lines = [f'{t["variable"]}: "<release id>"  # a rolling tag of dossier section 11, never a pinned release tag'
+             for t in tags]
+    for p in images:
+        note = "  # registry lookup failed — verify that this rolling image exists" if p.get("lookup_failed") else ""
+        lines.append(f'{p["variable"]}: "{REGISTRY.split("//", 1)[1]}/{p["image"]}"{note}')
+    return lines
+
+
 def coverage_state(confirmed_patch: bool, confirmed_review: bool, unverified_evidence: bool) -> str:
     """'yes' needs confirmed evidence; anything weaker is 'unverified' and is asked like 'no'."""
     if confirmed_patch or confirmed_review:
@@ -1824,6 +1843,13 @@ class Collector:
                         else:
                             line += f" → rolling `{prm['image']}`: no release tags"
                     add(line)
+                snippet = override_snippet(e["osism_image_parameters"])
+                if snippet:
+                    add("- Override snippet, generated from osism/defaults. **Copy it and delete the lines of images that do "
+                        "not carry the affected code — never rename a parameter, never add one by analogy with another "
+                        "service** (there is no `glance_image`, the parameter is `glance_api_image`). "
+                        "`scripts/check_images.py` verifies the finished advisory against the same file:\n")
+                    add("  ```yaml\n" + "\n".join("  " + line for line in snippet) + "\n  ```")
             add("")
 
         add("## 10. Local documentation repository\n")
