@@ -42,6 +42,22 @@ sidebar_position: 30
    earlier run Redis. OSISM enables the matching service automatically, so only
    the role name in the command differs.
 
+   :::warning Add the Valkey secret before upgrading to OSISM 11
+
+   The Valkey role requires `valkey_master_password`, which a configuration
+   repository created before the switch does not have:
+   `environments/kolla/secrets.yml` is generated once, when the repository is
+   created, and no later upgrade adds keys to an existing one. Without it the
+   upgrade below fails part-way through with
+   `AnsibleUndefinedVariable: 'valkey_master_password' is undefined`.
+
+   Generate a password with `pwgen 32`, add `valkey_master_password` to
+   `environments/kolla/secrets.yml` in the configuration repository, commit it,
+   and sync the configuration on the manager node with `osism apply
+   configuration`. Then run the Valkey upgrade below.
+
+   :::
+
    When upgrading to OSISM 11 or later:
 
    ```bash
