@@ -72,7 +72,7 @@ and the configuration volume — see the [OSISM Manager](./manager.md) concept.
 [Ironic](https://docs.openstack.org/ironic/latest/) runs in standalone mode on the
 MetalBox — that is, without the rest of OpenStack. The only OpenStack service
 deployed alongside it is Keystone for authentication; the supporting infrastructure
-components are MariaDB, Redis, and RabbitMQ.
+components are MariaDB, Valkey (Redis with OSISM 10 and earlier), and RabbitMQ.
 
 Servers are provisioned via virtual media: Ironic mounts a small image containing
 the [ironic-python-agent](https://docs.openstack.org/ironic-python-agent/latest/) (IPA)

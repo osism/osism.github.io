@@ -35,7 +35,27 @@ sidebar_position: 30
    osism apply -a upgrade loadbalancer
    ```
 
-4. Redis
+4. Key-value store: Valkey or Redis
+
+   Which service to upgrade depends on the OSISM release you are upgrading **to**,
+   not the one you are coming from. OSISM 11 and later run Valkey; OSISM 10 and
+   earlier run Redis. OSISM enables the matching service automatically, so only
+   the role name in the command differs.
+
+   When upgrading to OSISM 11 or later:
+
+   ```bash
+   osism apply -a pull valkey
+   osism apply -a upgrade valkey
+   ```
+
+   Coming from a Redis deployment, these are the only commands to run for this
+   step — do not upgrade `redis` first. The Valkey upgrade detects the running
+   Redis instance, starts Valkey alongside it, replicates the data across, fails
+   over to Valkey, and then removes the Redis containers and their data volume.
+
+   When upgrading to OSISM 10 or earlier, both releases run Redis and nothing
+   migrates:
 
    ```bash
    osism apply -a pull redis
