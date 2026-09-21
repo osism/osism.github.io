@@ -75,8 +75,9 @@ found in the [Cluster Network](./cluster-network.md) section.
 ### OpenStack
 
 The IaaS layer is provided by OpenStack. Underlying shared services like
-MariaDB, Redis, RabbitMQ, and Memcache, as well as OpenStack itself, are
-provisioned via the OSISM Manager with Kolla Ansible to the respective servers.
+MariaDB, Valkey (Redis with OSISM 10 and earlier), RabbitMQ, and Memcache, as
+well as OpenStack itself, are provisioned via the OSISM Manager
+with Kolla Ansible to the respective servers.
 The selection and configuration of the OpenStack services happen in the Git
 configuration repository. The assignment of control, compute, network, and
 monitoring roles is controlled by NetBox.

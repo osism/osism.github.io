@@ -12,10 +12,12 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
 1. Optional: In order to reduce the active observation time for the deployment of the components,
    the container images for the following services can be downloaded in advance with the argument `-a pull`.
 
+   With OSISM 10 and earlier, use `redis` instead of `valkey` below and in step 4.
+
    ```bash
    osism apply -a pull common
    osism apply -a pull loadbalancer
-   osism apply -a pull redis
+   osism apply -a pull valkey
    osism apply -a pull memcached
    osism apply -a pull rabbitmq
    osism apply -a pull mariadb
@@ -46,7 +48,20 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
    environment, as parts of the other deployments depend on the loadbalancer
    service.
 
-4. Redis
+4. Key-value store: Valkey or Redis
+
+   Which service to deploy depends on the OSISM release. OSISM 11 and later deploy
+   Valkey; OSISM 10 and earlier deploy Redis. The change comes from Kolla Ansible,
+   which replaced Redis with Valkey upstream. OSISM enables the matching service
+   automatically, so only the role name in the command differs.
+
+   With OSISM 11 and later:
+
+   ```bash
+   osism apply valkey
+   ```
+
+   With OSISM 10 and earlier:
 
    ```bash
    osism apply redis

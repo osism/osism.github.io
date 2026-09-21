@@ -139,12 +139,14 @@ docker exec rabbitmq rabbitmqctl forget_cluster_node rabbit@ctl101
 :::
 
 **Manager.** Deploy the services of a control node in this order. The runs are limited to
-the `control` group, not to the reprovisioned node:
+the `control` group, not to the reprovisioned node. With OSISM 10 and earlier, replace
+`valkey` with `redis`: OSISM switched the key-value store from Redis to Valkey in
+OSISM 11 and enables the matching service per release.
 
 ```bash
 osism apply common -- --limit control
 osism apply loadbalancer -- --limit control
-osism apply redis -- --limit control
+osism apply valkey -- --limit control
 osism apply memcached -- --limit control
 osism apply rabbitmq -- --limit control
 osism apply mariadb -- --limit control

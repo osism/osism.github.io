@@ -310,8 +310,11 @@ import TabItem from '@theme/TabItem';
 
 ## Redis/Valkey: "Bad file format reading the append only file..."
 
+OSISM switched the key-value store from Redis to Valkey in OSISM 11. Pick the tab
+that matches the release of the deployment.
+
 <Tabs>
-<TabItem value="redis" label="Redis">
+<TabItem value="redis" label="Redis (OSISM 10 and earlier)">
 
 * Problem: A `redis` instance refuses to start with error message: "Bad file format reading the append only file appendonly.aof.11.incr.aof: make a backup of your AOF file, then use ./redis-check-aof --fix &lt;filename.manifest&gt;"
 
@@ -338,7 +341,7 @@ import TabItem from '@theme/TabItem';
   ```
 
 </TabItem>
-<TabItem value="valkey" label="Valkey">
+<TabItem value="valkey" label="Valkey (OSISM 11 and later)">
 
 * Problem: A `valkey` instance refuses to start with error message: "Bad file format reading the append only file appendonly.aof.11.incr.aof: make a backup of your AOF file, then use ./valkey-check-aof --fix &lt;filename.manifest&gt;"
 
