@@ -271,6 +271,8 @@ release. Use the linked changes as examples.
 | `container-images`                | Remove the version from the `matrix` in the per-version GitHub Actions workflows (not Zuul) under `.github/workflows/`: `build-openstackclient-container-image.yml`, `build-keystone-shib-container-image.yml`, `build-cinder-volume-extra-image.yml`, `build-cinder-volume-huawei-image.yml`. These builds do not fail at EOL — the requirements tarball outlives the deleted branch — so remove the entries proactively.                                     | [#560](https://github.com/osism/container-images/pull/560) (2023.1)                |
 | `metalbox`                        | Remove `zuul/vars/container-images-openstack-<version>.yml`, the per-image entries in `zuul/vars/container-images-metalbox.yml`, the version from the `openstack_versions` default in `zuul/mirror-octavia-image.yml`, any `.zuul.yaml` jobs, and the retired version from the `case` in `scripts/include.sh`.                                                                                                                                                 | (no prior precedent — see note)                                                    |
 | `testbed`                         | No per-version matrix, but not verification-only: remove the retired version from the `case` in `scripts/include.sh`, and check that no version lane in `.zuul.yaml` still targets it. If release upgrades are done right, the lanes have already moved forward as part of normal release preparation (see [Version pointers that move forward](#forward-pointers)).                                                                                           | (no prior example)                                                                 |
+| `cloud-in-a-box`                  | Remove the retired version from the `case` in `include.sh` (`valkey_or_redis`) and from the inline release list in `environments/custom/playbook-pull-container-images.yml`, and move `openstack_version` in `environments/manager/configuration.yml` forward if it still names it.                                                                                                                                                                            | (no prior example)                                                                 |
+| `python-osism`                    | Remove the retired version from the release-bounded roles in `osism/data/enums.py` — `Role(..., since=...)` / `Role(..., until=...)` inside `MAP_ROLE2ROLE`. A bound whose window no longer overlaps any supported release is dead: drop the bound, or the role, depending on which side retired. These bounds govern **collection expansion only**; `osism apply <role>` never consults them.                                                                 | [#2688](https://github.com/osism/python-osism/pull/2688) (valkey at 2025.2)        |
 | `defaults`                        | Remove the retired version from the version gates in `all/002-images-kolla.yml` (image selection) and `all/099-kolla.yml` (service enablement and related settings), and delete `all/010-<version>.yml` if one exists. A gate left matching no supported release is dead and can be dropped entirely, collapsing the expression to whichever branch remains; the per-version file is a backward-compat layer that exists only while that release is supported. | (no prior example)                                                                 |
 
 For builds that we kept on the `<version>-eol` tag during security support
@@ -281,9 +283,12 @@ deleting those build/push jobs and the `elif` branch that selected the
 :::note Version-keyed logic is duplicated across repositories
 The build matrices above are not the only thing keyed on the release. Several
 repositories also gate *behaviour* on it, and the same gate is often copied
-rather than shared — the redis/valkey selection currently appears in three
-repositories as near-identical shell `case` statements plus once more
-declaratively in `defaults`. Editing one copy and not the others leaves the
+rather than shared. The redis/valkey selection currently appears in **six**
+places: near-identical shell `case` statements in `testbed`
+(`scripts/include.sh`), `metalbox` (`scripts/include.sh`), `cloud-in-a-box`
+(`include.sh`) and `container-image-kolla-ansible` (`scripts/test.sh`), plus two
+declarative copies — `defaults` (`all/099-kolla.yml`) and `python-osism`
+(`osism/data/enums.py`). Editing one copy and not the others leaves the
 deployment and the image test disagreeing about which service a release runs,
 which is why the rows above name each copy individually.
 
