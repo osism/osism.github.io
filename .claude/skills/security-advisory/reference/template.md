@@ -17,7 +17,7 @@ sidebar_label: OSSA-{{YYYY}}-{{NNN}}
 | Date             | {{OSSA_DATE}}                                             |
 | CVE              | [CVE-{{ID}}](https://www.cve.org/CVERecord?id=CVE-{{ID}}) |
 | Severity         | {{SEVERITY}}                                              |
-| Affected Project | {{PROJECT}}                                               |
+| Affected Project | {{PROJECT}} {{several: comma separated, OSSA order}}      |
 | Reporter         | {{REPORTER_NAME}} ({{REPORTER_AFFILIATION}})              |
 
 ## Summary
@@ -37,14 +37,12 @@ so the fixes are expected in / are contained in {{PROJECT}} {{FIXED_VERSIONS_WIT
 {{OPTIONAL: **At the time of this advisory there is no fixed {{PROJECT}} release available upstream
 for any series.** The upstream fixes are still under review on OpenDev and have not merged yet.}}
 
-| OpenStack Release      | Upstream Status                    | Fix in OSISM Images                                                                                  |
-|:-----------------------|:-----------------------------------|:-----------------------------------------------------------------------------------------------------|
-| Caracal (2024.1)       | Unmaintained, no upstream fix      | Community-curated backport ([PR #{{N}}](https://github.com/osism/container-images-kolla/pull/{{N}})) |
-| Dalmatian (2024.2)     | End of life since {{DATE}}, no fix | Community-curated backport ([PR #{{N}}](https://github.com/osism/container-images-kolla/pull/{{N}})) |
-| Epoxy (2025.1)         | Fixed in {{PROJECT}} {{X.Y.Z}}     | Upstream fix via `stable/2025.1` branch                                                              |
-| Flamingo (2025.2)      | Fixed in {{PROJECT}} {{X.Y.Z}}     | Upstream fix via `stable/2025.2` branch                                                              |
-| Gazpacho (2026.1)      | Fixed in {{PROJECT}} {{X.Y.Z}}     | Not shipped by OSISM yet                                                                             |
-| Hibiscus (2026.2, dev) | Fix merged on master               | Not shipped by OSISM yet                                                                             |
+| OpenStack Release          | Upstream Status                 | Fix in OSISM Images          |
+|:---------------------------|:--------------------------------|:-----------------------------|
+| {{CODENAME}} ({{RELEASE}}) | {{STATUS_PHRASE_FROM_STYLE_MD}} | {{FIX_PHRASE_FROM_STYLE_MD}} |
+
+{{ONE ROW PER RELEASE FROM DOSSIER SECTION 11, OLDEST FIRST. Take release ids, codenames and status
+from the dossier (sections 5 and 11) — never from a remembered or copied list of releases.}}
 
 {{PARAGRAPH: unmaintained / EOL releases receive no official fixed release; OSISM provides
 community-curated backports as downstream patches in the {{PROJECT}} container images.}}
@@ -125,7 +123,7 @@ The image parameters therefore have to be overridden together with the tag; the 
 would point at an image that does not exist:
 
 ```yaml title="environments/kolla/images.yml"
-{{TAG_VARIABLE}}: "2025.1"  # or "2024.1", "2024.2", "2025.2", depending on your OpenStack release
+{{TAG_VARIABLE}}: "{{COVERED_RELEASE}}"  # or {{OTHER_COVERED_RELEASES}}, depending on your OpenStack release
 {{IMAGE_VARIABLE}}: "registry.osism.tech/kolla/{{IMAGE_NAME}}"
 ```
 
@@ -148,10 +146,8 @@ for this issue.}}
 - [OSSA-{{YYYY}}-{{NNN}} Advisory](https://security.openstack.org/ossa/OSSA-{{YYYY}}-{{NNN}}.html)
 - [OSISM Fix (container-images-kolla commit {{SHA7}})](https://github.com/osism/container-images-kolla/commit/{{FULL_SHA}})
 - [OSISM Fix (container-images-kolla PR #{{N}})](https://github.com/osism/container-images-kolla/pull/{{N}})
-- [OpenDev Review (Fix - Hibiscus)](https://review.opendev.org/{{NUMBER}})
-- [OpenDev Review (Fix - Gazpacho)](https://review.opendev.org/{{NUMBER}})
-- [OpenDev Review (Fix - Flamingo)](https://review.opendev.org/{{NUMBER}})
-- [OpenDev Review (Fix - Epoxy)](https://review.opendev.org/{{NUMBER}})
+- [OpenDev Review (Fix - {{SERIES}})](https://review.opendev.org/{{NUMBER}})
+  {{ONE PER SERIES AND FIX REVIEW, NEWEST SERIES FIRST}}
 - [Launchpad Bug #{{N}}](https://bugs.launchpad.net/{{project}}/+bug/{{N}})
 - [CVE-{{ID}}](https://www.cve.org/CVERecord?id=CVE-{{ID}})
 ````

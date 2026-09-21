@@ -26,10 +26,14 @@ collects from public sources:
 
 Everything is written to <output-dir>/<OSSA-ID>/dossier.md (readable summary)
 and raw.json (all collected data). Failures of individual sources are
-reported as warnings and do not abort the run.
+reported as warnings and do not abort the run. A lookup that failed is never
+reported as a negative: the dossier says "lookup failed" / "unknown" and adds
+an open point, so that an outage cannot turn into a statement about upstream.
 
 Only the Python standard library is required. PyYAML is used when available;
-without it the OSSA YAML is parsed with a small fallback parser.
+without it YAML is parsed with parse_yaml_subset(), which covers the subset
+used by openstack/ossa and openstack/releases. scripts/test_collect.py keeps
+both parsers in agreement.
 """
 
 from __future__ import annotations
@@ -70,6 +74,18 @@ REGISTRY = "https://registry.osism.tech"
 USER_AGENT = "osism-security-advisory-collector/1.0 (+https://osism.tech)"
 TIMEOUT = 30
 
+MAX_RENAME_HOPS = 10
+GITHUB_MAX_PAGES = 10
+
+COVERED_YES = "yes"
+COVERED_UNVERIFIED = "unverified"
+COVERED_NO = "no"
+PUBLIC_SECURITY = "Public Security"
+COVERED_LABEL = {COVERED_YES: "yes", COVERED_UNVERIFIED: "**unverified**", COVERED_NO: "**no**"}
+GITHUB_UNKNOWN = {"skipped": "unknown (GitHub not queried)", "failed": "unknown (GitHub lookup failed)"}
+
+RE_OSSA_ID = re.compile(r"(OSSA-\d{4}-\d{3})", re.IGNORECASE)
+RE_PRODUCT_KEY = re.compile(r"[a-z0-9._-]+")
 RE_CVE = re.compile(r"CVE-\d{4}-(?:\d{4,}|pending)", re.IGNORECASE)
 RE_LP_BUG = re.compile(r"launchpad\.net/(?:bugs/|[^/\s]+/\+bug/)(\d+)")
 RE_REVIEW = re.compile(r"review\.opendev\.org/(?:c/[^\s]+/\+/)?(\d+)")
@@ -100,19 +116,117 @@ def version_tuple(version: str) -> tuple[int, ...]:
 
 
 def parse_version_ranges(spec: str) -> dict:
-    """Parse '>=13.0.0 <27.0.3, >=28.0.0 <28.0.3, ==21.0.0' style ranges."""
-    ranges, fixed, pinned = [], [], []
+    """Parse '>=13.0.0 <27.0.3, >=28.0.0 <28.0.3, ==21.0.0' style ranges.
+
+    '<X' names the fixed version, '==X' (also written '=X' or as a bare version) a single
+    vulnerable version, '<=X' the last vulnerable version: the fixed version is then the next
+    release and is not named by the OSSA.
+    """
+    ranges, fixed, pinned, last_vulnerable = [], [], [], []
     for chunk in re.split(r"\s*,\s*", spec.strip()):
         if not chunk:
             continue
         ranges.append(chunk)
-        for op, ver in re.findall(r"(<=|>=|==|<|>)\s*(\d+(?:\.\d+)*)", chunk):
+        if RE_VERSION.fullmatch(chunk):
+            pinned.append(chunk)
+            continue
+        for op, ver in re.findall(r"(<=|>=|==|<|>|=)\s*(\d+(?:\.\d+)*)", chunk):
             if op == "<":
                 fixed.append(ver)
-            elif op == "==":
+            elif op in ("==", "="):
                 pinned.append(ver)
+            elif op == "<=":
+                last_vulnerable.append(ver)
     return {"ranges": ranges, "fixed_versions": sorted(set(fixed), key=version_tuple),
-            "pinned_versions": sorted(set(pinned), key=version_tuple)}
+            "pinned_versions": sorted(set(pinned), key=version_tuple),
+            "last_vulnerable_versions": sorted(set(last_vulnerable), key=version_tuple)}
+
+
+def normalise_products(entries: list[dict]) -> list[dict]:
+    """Turn 'affected-products' into one entry per deliverable.
+
+    'product' becomes the lowercase deliverable name that the upstream paths use
+    (deliverables/<series>/<product>.yaml, kolla docker/<product>), 'product_display' keeps the
+    spelling of the OSSA. A field naming several products ('Cinder, Glance, Nova') is split; its
+    version string is split on ';' when every part starts with the product name.
+    """
+    result = []
+    for entry in entries or []:
+        display = str(entry.get("product") or "").strip().strip("'\"").strip()
+        version = str(entry.get("version") or "").strip().strip("'\"").strip()
+        if not display:
+            continue
+        names = [n.strip() for n in display.split(",") if n.strip()]
+        versions = {}
+        if len(names) > 1:
+            for part in version.split(";"):
+                part = part.strip()
+                for name in names:
+                    if part.lower().startswith(name.lower() + " "):
+                        versions[name] = part[len(name):].strip()
+        for name in names:
+            key = name.lower()
+            ver = versions.get(name, version) if len(versions) == len(names) else version
+            result.append({"product": key, "product_display": name, "version": ver,
+                           "split_from": display if len(names) > 1 else None,
+                           "valid_name": bool(RE_PRODUCT_KEY.fullmatch(key)),
+                           **parse_version_ranges(ver)})
+    return result
+
+
+def select_ossa_file(files: list[str], wanted: str | None) -> str:
+    """Pick the OSSA document out of the ossa/OSSA-* files of a change — without guessing.
+
+    Changes that add several advisories at once are routine in openstack/ossa. With an OSSA id the
+    matching file is taken (hard error when there is none); without one a change touching several
+    advisories is a hard error, because there is no stated target to check a guess against.
+    """
+    files = sorted(files)
+    by_id: dict[str, list[str]] = {}
+    for f in files:
+        if m := RE_OSSA_ID.search(f):
+            by_id.setdefault(m.group(1).upper(), []).append(f)
+    if wanted:
+        candidates = by_id.get(wanted.upper())
+        if not candidates:
+            sys.exit(f"error: the change does not contain a file for {wanted} (OSSA files: {', '.join(files)})")
+    elif len(by_id) > 1:
+        sys.exit(f"error: the change touches several advisories ({', '.join(sorted(by_id))}); "
+                 "pass the OSSA id of the one you want instead of the change")
+    elif not by_id:
+        sys.exit(f"error: cannot derive an OSSA id from {', '.join(files)}")
+    else:
+        candidates = next(iter(by_id.values()))
+    return next((f for f in candidates if f.endswith((".yaml", ".yml"))), candidates[-1])
+
+
+def resolve_series(version: str, per_series: dict) -> dict:
+    """Map a version of a deliverable to its OpenStack series — or say that it cannot be done.
+
+    Authoritative: the version is listed in the deliverable file of a series. Accepted as well: the
+    version is unreleased, the deliverable is 'cycle-with-rc' (one major version per series) and
+    exactly one series carries that major. Everything else — libraries and other independently
+    numbered deliverables share a major across many series — is reported as candidates only.
+    """
+    for rid, info in per_series.items():
+        if version in info.get("versions", []):
+            return {"series": rid, "candidates": [rid], "basis": "released"}
+    major = version.split(".")[0]
+    minor = ".".join(version.split(".")[:2])
+    by_major = [rid for rid, info in per_series.items()
+                if any(v.split(".")[0] == major for v in info.get("versions", []))]
+    by_minor = [rid for rid in by_major
+                if any(".".join(v.split(".")[:2]) == minor for v in per_series[rid].get("versions", []))]
+    if len(by_major) == 1 and per_series[by_major[0]].get("release_model") == "cycle-with-rc":
+        return {"series": by_major[0], "candidates": by_major, "basis": "major version (cycle-with-rc)"}
+    return {"series": None, "candidates": by_minor or by_major, "basis": None}
+
+
+def coverage_state(confirmed_patch: bool, confirmed_review: bool, unverified_evidence: bool) -> str:
+    """'yes' needs confirmed evidence; anything weaker is 'unverified' and is asked like 'no'."""
+    if confirmed_patch or confirmed_review:
+        return COVERED_YES
+    return COVERED_UNVERIFIED if unverified_evidence else COVERED_NO
 
 
 def md_table(headers: list[str], rows: list[list[str]]) -> str:
@@ -164,8 +278,266 @@ def parse_patch_header(text: str) -> dict:
 
 
 # --------------------------------------------------------------------------- #
+# YAML without PyYAML
+# --------------------------------------------------------------------------- #
+
+
+class _MiniYaml:
+    """Parser for the YAML subset of openstack/ossa and openstack/releases.
+
+    Block mappings and sequences, plain / quoted / block scalars including multi-line folding,
+    comments and simple flow sequences. No anchors, tags, flow mappings or multiple documents.
+    Plain scalars stay strings except booleans and null; the collector str()s what it reads.
+    """
+
+    def __init__(self, text: str) -> None:
+        self.lines = text.expandtabs().splitlines()
+        self.i = 0
+
+    @staticmethod
+    def _indent(line: str) -> int:
+        return len(line) - len(line.lstrip(" "))
+
+    def _skip(self) -> None:
+        while self.i < len(self.lines):
+            stripped = self.lines[self.i].strip()
+            if stripped and not stripped.startswith("#") and stripped not in ("---", "..."):
+                return
+            self.i += 1
+
+    def parse(self):
+        self._skip()
+        if self.i >= len(self.lines):
+            return None
+        return self._node(self._indent(self.lines[self.i]))
+
+    @staticmethod
+    def _is_item(body: str) -> bool:
+        return body == "-" or body.startswith("- ")
+
+    @staticmethod
+    def _find_close(text: str, quote: str) -> int | None:
+        i = 0
+        while i < len(text):
+            if quote == '"' and text[i] == "\\":
+                i += 2
+                continue
+            if text[i] == quote:
+                if quote == "'" and text[i + 1:i + 2] == "'":
+                    i += 2
+                    continue
+                return i
+            i += 1
+        return None
+
+    def _split_key(self, body: str) -> tuple[str, str] | None:
+        if self._is_item(body):
+            return None
+        if body[:1] in ("'", '"'):
+            end = self._find_close(body[1:], body[0])
+            if end is None:
+                return None
+            after = body[end + 2:]
+            if after == ":" or after.startswith(": "):
+                return self._unquote(body[1:end + 1], body[0]), after[1:].strip()
+            return None
+        m = re.match(r"^(\S.*?):(?: +(.*))?$", body)
+        return (m.group(1).rstrip(), (m.group(2) or "").strip()) if m else None
+
+    def _node(self, indent: int):
+        body = self.lines[self.i][indent:]
+        if self._is_item(body):
+            return self._seq(indent)
+        if self._split_key(body):
+            return self._map(indent)
+        self.i += 1
+        return self._value(body.strip(), indent - 1)
+
+    def _map(self, indent: int) -> dict:
+        out: dict = {}
+        while True:
+            self._skip()
+            if self.i >= len(self.lines):
+                break
+            line = self.lines[self.i]
+            if self._indent(line) != indent:
+                if self._indent(line) > indent:
+                    raise ValueError(f"unexpected indentation in line {self.i + 1}")
+                break
+            pair = self._split_key(line[indent:])
+            if pair is None:
+                break
+            self.i += 1
+            out[pair[0]] = self._value(pair[1], indent)
+        return out
+
+    def _seq(self, indent: int) -> list:
+        out: list = []
+        while True:
+            self._skip()
+            if self.i >= len(self.lines):
+                break
+            line = self.lines[self.i]
+            if self._indent(line) != indent or not self._is_item(line[indent:]):
+                break
+            rest = line[indent + 1:].lstrip(" ")
+            if rest and self._split_key(rest):
+                # "- key: value" opens a mapping whose keys align with the text after the dash
+                content_indent = len(line) - len(rest)
+                self.lines[self.i] = " " * content_indent + rest
+                out.append(self._map(content_indent))
+            else:
+                self.i += 1
+                out.append(self._value(rest, indent, in_sequence=True))
+        return out
+
+    def _value(self, rest: str, parent_indent: int, in_sequence: bool = False):
+        if not rest or rest.startswith("#"):
+            self._skip()
+            if self.i >= len(self.lines):
+                return None
+            indent = self._indent(self.lines[self.i])
+            same_level_list = (indent == parent_indent and not in_sequence
+                               and self._is_item(self.lines[self.i][indent:]))
+            return self._node(indent) if indent > parent_indent or same_level_list else None
+        if rest[0] in "|>":
+            return self._block_scalar(rest, parent_indent)
+        if rest[0] in ("'", '"'):
+            return self._quoted(rest)
+        plain = self._plain(rest, parent_indent)
+        if plain.startswith("[") and plain.endswith("]"):
+            return [item.strip().strip("'\"") for item in plain[1:-1].split(",") if item.strip()]
+        if plain == "{}":
+            return {}
+        return {"true": True, "yes": True, "on": True, "false": False, "no": False, "off": False,
+                "null": None, "~": None}.get(plain.lower(), plain)
+
+    @staticmethod
+    def _fold(parts: list[str]) -> str:
+        """YAML line folding: a line break becomes a space, n empty lines become n line breaks."""
+        out, blanks = "", 0
+        for part in parts:
+            if part == "":
+                blanks += 1
+                continue
+            if out:
+                out += "\n" * blanks if blanks else " "
+            out += part
+            blanks = 0
+        return out
+
+    def _plain(self, first: str, parent_indent: int) -> str:
+        parts = [re.sub(r"\s+#.*$", "", first)]
+        while self.i < len(self.lines):
+            j = self.i
+            while j < len(self.lines) and not self.lines[j].strip():
+                j += 1
+            if j >= len(self.lines) or self._indent(self.lines[j]) <= parent_indent \
+                    or self.lines[j].strip().startswith("#"):
+                break
+            parts.extend([""] * (j - self.i))
+            parts.append(re.sub(r"\s+#.*$", "", self.lines[j].strip()))
+            self.i = j + 1
+        return self._fold(parts)
+
+    @staticmethod
+    def _unquote(text: str, quote: str) -> str:
+        if quote == "'":
+            return text.replace("''", "'")
+        escapes = {"n": "\n", "t": "\t", '"': '"', "\\": "\\", "/": "/", "0": "\0", " ": " "}
+        return re.sub(r"\\(.)", lambda m: escapes.get(m.group(1), m.group(0)), text)
+
+    def _quoted(self, first: str) -> str:
+        quote, buf, parts = first[0], first[1:], []
+        while True:
+            end = self._find_close(buf, quote)
+            if end is not None:
+                parts.append(buf[:end] if not parts else buf[:end].lstrip())
+                break
+            parts.append(buf.rstrip() if not parts else buf.strip())
+            if self.i >= len(self.lines):
+                raise ValueError("unterminated quoted scalar")
+            buf = self.lines[self.i]
+            self.i += 1
+        if quote == '"':  # a trailing backslash joins the lines without a space
+            joined: list[str] = []
+            for part in parts:
+                if joined and joined[-1].endswith("\\") and not joined[-1].endswith("\\\\"):
+                    joined[-1] = joined[-1][:-1] + part
+                else:
+                    joined.append(part)
+            parts = joined
+        return self._unquote(self._fold(parts), quote)
+
+    def _block_scalar(self, header: str, parent_indent: int) -> str:
+        style = header[0]
+        chomp = "+" if "+" in header[:3] else "-" if "-" in header[:3] else ""
+        block = []
+        while self.i < len(self.lines):
+            line = self.lines[self.i]
+            if line.strip() and self._indent(line) <= parent_indent:
+                break
+            block.append(line)
+            self.i += 1
+        filled = [line for line in block if line.strip()]
+        if not filled:
+            return ""
+        content_indent = self._indent(filled[0])
+        lines = [line[content_indent:] if line.strip() else "" for line in block]
+        trailing = 0
+        while lines and lines[-1] == "":
+            lines.pop()
+            trailing += 1
+        if style == "|":
+            text = "\n".join(lines)
+        else:  # folded: more-indented lines keep their line breaks
+            text, blanks, prev = lines[0], 0, lines[0]
+            for line in lines[1:]:
+                if line == "":
+                    blanks += 1
+                    continue
+                if line.startswith(" ") or prev.startswith(" "):
+                    text += "\n" * (blanks + 1)
+                else:
+                    text += "\n" * blanks if blanks else " "
+                text += line
+                prev, blanks = line, 0
+        if chomp == "-":
+            return text
+        return text + "\n" + ("\n" * trailing if chomp == "+" else "")
+
+
+def parse_yaml_subset(text: str):
+    """Parse YAML without PyYAML; raises ValueError for input outside the supported subset."""
+    try:
+        return _MiniYaml(text).parse()
+    except (IndexError, KeyError) as err:
+        raise ValueError(f"unsupported YAML: {err}") from err
+
+
+# --------------------------------------------------------------------------- #
 # collector
 # --------------------------------------------------------------------------- #
+
+
+class _Failed:
+    """Falsy marker: the lookup failed, so the answer is unknown.
+
+    None is reserved for a confirmed negative (an allowed HTTP 404). Callers that only need a
+    default keep writing `or {}`; callers that turn a miss into a statement must tell None and
+    FAILED apart.
+    """
+
+    __slots__ = ()
+
+    def __bool__(self) -> bool:
+        return False
+
+    def __repr__(self) -> str:
+        return "FAILED"
+
+
+FAILED = _Failed()
 
 
 class Collector:
@@ -174,9 +546,18 @@ class Collector:
         self.output_dir = output_dir
         self.use_github = use_github
         self.warnings: list[str] = []
+        self._path_commits: dict = {}
+        self._commit_details: dict = {}
         self.gh = shutil.which("gh") if use_github else None
         self.github_token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
-        self.data: dict = {"generated": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+        self.data: dict = {"generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                           "github_skipped": not use_github}
+        if not use_github:
+            self.warn("GitHub is not queried (--no-github): OSISM patch files, pull requests, built releases "
+                      "and tag dates are UNKNOWN, not absent — look them up manually")
+        if yaml is None:
+            self.warn("PyYAML is not installed — YAML is parsed with the built-in subset parser; "
+                      "compare the OSSA core data in section 2 with the raw YAML")
 
     # ---- transport -------------------------------------------------------- #
 
@@ -184,7 +565,8 @@ class Collector:
         self.warnings.append(message)
         print(f"  ! {message}", file=sys.stderr)
 
-    def fetch(self, url: str, headers: dict | None = None, allow_404: bool = False) -> bytes | None:
+    def fetch(self, url: str, headers: dict | None = None, allow_404: bool = False):
+        """Body as bytes; None for an allowed 404 (confirmed negative); FAILED for everything else."""
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
         for attempt in (1, 2):
             try:
@@ -195,32 +577,32 @@ class Collector:
                     return None
                 if attempt == 2 or err.code < 500:
                     self.warn(f"HTTP {err.code} for {url}")
-                    return None
+                    return FAILED
             except (urllib.error.URLError, TimeoutError, OSError) as err:
                 if attempt == 2:
                     self.warn(f"failed to fetch {url}: {err}")
-                    return None
-        return None
+                    return FAILED
+        return FAILED
 
-    def fetch_text(self, url: str, **kw) -> str | None:
+    def fetch_text(self, url: str, **kw):
         raw = self.fetch(url, **kw)
-        return raw.decode("utf-8", "replace") if raw is not None else None
+        return raw.decode("utf-8", "replace") if isinstance(raw, bytes) else raw
 
     def fetch_json(self, url: str, **kw):
         raw = self.fetch(url, headers={"Accept": "application/json"}, **kw)
-        if raw is None:
-            return None
+        if not isinstance(raw, bytes):
+            return raw
         try:
             return json.loads(raw.decode("utf-8"))
         except json.JSONDecodeError:
             self.warn(f"invalid JSON from {url}")
-            return None
+            return FAILED
 
     def gerrit_json(self, path: str, allow_404: bool = False):
         raw = self.fetch(f"{GERRIT}/{path.lstrip('/')}", headers={"Accept": "application/json"},
                          allow_404=allow_404)
-        if raw is None:
-            return None
+        if not isinstance(raw, bytes):
+            return raw
         text = raw.decode("utf-8", "replace")
         if text.startswith(")]}'"):
             text = text.split("\n", 1)[1] if "\n" in text else ""
@@ -228,12 +610,12 @@ class Collector:
             return json.loads(text)
         except json.JSONDecodeError:
             self.warn(f"invalid JSON from Gerrit {path}")
-            return None
+            return FAILED
 
     def github_json(self, path: str, allow_404: bool = False):
-        """GitHub REST API via `gh api` when available, urllib otherwise."""
+        """GitHub REST API via `gh api` when available, urllib otherwise. None / FAILED as in fetch()."""
         if not self.use_github:
-            return None
+            return FAILED
         if self.gh:
             proc = subprocess.run([self.gh, "api", path], capture_output=True, text=True)
             if proc.returncode == 0:
@@ -241,29 +623,40 @@ class Collector:
                     return json.loads(proc.stdout)
                 except json.JSONDecodeError:
                     self.warn(f"invalid JSON from gh api {path}")
-                    return None
+                    return FAILED
             if allow_404 and "HTTP 404" in proc.stderr:
                 return None
             self.warn(f"gh api {path} failed: {proc.stderr.strip()[:200]}")
-            return None
+            return FAILED
         headers = {"Accept": "application/vnd.github+json"}
         if self.github_token:
             headers["Authorization"] = f"Bearer {self.github_token}"
         raw = self.fetch(f"{GH_API}/{path.lstrip('/')}", headers=headers, allow_404=allow_404)
-        if raw is None:
-            return None
+        if not isinstance(raw, bytes):
+            return raw
         try:
             return json.loads(raw.decode("utf-8"))
         except json.JSONDecodeError:
             self.warn(f"invalid JSON from GitHub {path}")
-            return None
+            return FAILED
+
+    def github_list(self, path: str):
+        """All pages of a GitHub list endpoint, or FAILED."""
+        items: list = []
+        for page in range(1, GITHUB_MAX_PAGES + 1):
+            chunk = self.github_json(f"{path}{'&' if '?' in path else '?'}per_page=100&page={page}")
+            if not isinstance(chunk, list):
+                return FAILED
+            items.extend(chunk)
+            if len(chunk) < 100:
+                return items
+        self.warn(f"GitHub listing {path} has more than {GITHUB_MAX_PAGES} pages; the oldest entries are missing")
+        return FAILED
 
     def load_yaml(self, text: str, what: str):
-        if yaml is None:
-            return None
         try:
-            return yaml.safe_load(text)
-        except yaml.YAMLError as err:  # type: ignore[attr-defined]
+            return yaml.safe_load(text) if yaml is not None else parse_yaml_subset(text)
+        except Exception as err:  # yaml.YAMLError or ValueError; neither may abort the run
             self.warn(f"cannot parse YAML of {what}: {err}")
             return None
 
@@ -279,7 +672,7 @@ class Collector:
             change_number = int(m.group())
         elif m := RE_REVIEW.search(reference):
             change_number = int(m.group(1))
-        elif m := re.search(r"(OSSA-\d{4}-\d{3})", reference, re.IGNORECASE):
+        elif m := RE_OSSA_ID.search(reference):
             ossa_id = m.group(1).upper()
         else:
             sys.exit(f"error: cannot interpret OSSA reference {reference!r}")
@@ -307,7 +700,7 @@ class Collector:
         if change_number is not None:
             change = self.gerrit_json(f"changes/{change_number}?o=CURRENT_REVISION&o=CURRENT_COMMIT"
                                       "&o=CURRENT_FILES")
-            if change is None:
+            if not change:
                 sys.exit(f"error: Gerrit change {change_number} could not be loaded")
             if change.get("project") != "openstack/ossa":
                 self.warn(f"change {change_number} belongs to {change.get('project')}, "
@@ -331,10 +724,12 @@ class Collector:
             if not files:
                 self.warn("the change does not touch an ossa/OSSA-*.{yaml,rst} file")
             else:
-                path = sorted(files)[-1]
+                path = select_ossa_file(files, self.data["input"]["ossa_id"])
+                if len(files) > 1:
+                    self.warn(f"the change touches {len(files)} OSSA files ({', '.join(sorted(files))}); using {path}")
                 raw = self.fetch(f"{GERRIT}/changes/{change['_number']}/revisions/current/files/"
                                  f"{urllib.parse.quote(path, safe='')}/content")
-                if raw is not None:
+                if raw:
                     text = base64.b64decode(raw).decode("utf-8", "replace")
             info = {
                 "number": change["_number"],
@@ -356,13 +751,16 @@ class Collector:
         if path is None and ossa_id:
             path = f"ossa/{ossa_id}.yaml"
         if path and ossa_id is None:
-            ossa_id = re.search(r"(OSSA-\d{4}-\d{3})", path).group(1)
+            m = RE_OSSA_ID.search(path)
+            if not m:
+                sys.exit(f"error: cannot derive an OSSA id from {path}")
+            ossa_id = m.group(1).upper()
             self.data["input"]["ossa_id"] = ossa_id
 
         master_text = None
         if path:
             master_text = self.fetch_text(OPENDEV_RAW.format(repo="openstack/ossa", branch="master", path=path),
-                                          allow_404=True)
+                                          allow_404=True) or None
         if text is None:
             text = master_text
             if text is not None:
@@ -389,32 +787,44 @@ class Collector:
         self.data["ossa_text"] = text
         self.data["ossa_text_master"] = master_text if master_text != text else None
         self.ossa = self.parse_ossa(text, path or "")
+        if ossa_id and str(self.ossa.get("id") or ossa_id).upper() != ossa_id:
+            self.warn(f"{path} was selected for {ossa_id} but its id field says {self.ossa['id']} — "
+                      "check that this is the advisory you asked for")
+            self.ossa["id_in_document"], self.ossa["id"] = self.ossa["id"], ossa_id
         self.data["ossa"] = self.ossa
         print(f"    {self.ossa.get('id')}: {self.ossa.get('title')}")
 
     def parse_ossa(self, text: str, path: str) -> dict:
-        doc = self.load_yaml(text, "OSSA document") if path.endswith(".yaml") or path.endswith(".yml") else None
+        doc = self.load_yaml(text, "OSSA document") if path.endswith((".yaml", ".yml")) else None
         ossa: dict = {"format": "yaml" if isinstance(doc, dict) else "text"}
-        if isinstance(doc, dict):
-            ossa.update({
-                "id": doc.get("id"),
-                "title": doc.get("title"),
-                "date": str(doc.get("date")) if doc.get("date") else None,
-                "description": (doc.get("description") or "").strip(),
-                "affected_products": [
-                    {"product": p.get("product"), "version": p.get("version"),
-                     **parse_version_ranges(str(p.get("version", "")))}
-                    for p in doc.get("affected-products") or []],
-                "cves": [v.get("cve-id") for v in doc.get("vulnerabilities") or [] if v.get("cve-id")],
-                "reporters": [{"name": r.get("name"), "affiliation": r.get("affiliation")}
-                              for r in doc.get("reporters") or []],
-                "issue_links": list((doc.get("issues") or {}).get("links") or []),
-                "reviews": {str(k): list(v or []) for k, v in (doc.get("reviews") or {}).items()},
-                "notes": [str(n).strip() for n in doc.get("notes") or []],
-                "errata_history": [str(e) for e in doc.get("errata_history") or []],
-            })
-        else:
-            ossa.update(self.parse_ossa_fallback(text))
+        if not isinstance(doc, dict):
+            self.warn("the OSSA document could not be parsed as YAML — title, description, products, notes and "
+                      "errata are NOT extracted; read the raw document")
+            doc = {}
+
+        def entries(key: str) -> list[dict]:
+            return [e for e in doc.get(key) or [] if isinstance(e, dict)]
+
+        def as_list(value) -> list:
+            return [value] if isinstance(value, str) else list(value or [])
+
+        issues = doc.get("issues") if isinstance(doc.get("issues"), dict) else {}
+        reviews = doc.get("reviews") if isinstance(doc.get("reviews"), dict) else {}
+        ossa.update({
+            "id": doc.get("id"),
+            "title": doc.get("title"),
+            "date": str(doc.get("date")) if doc.get("date") else None,
+            "description": str(doc.get("description") or "").strip(),
+            "errata": str(doc.get("errata") or "").strip(),
+            "affected_products": normalise_products(entries("affected-products")),
+            "cves": [str(v["cve-id"]) for v in entries("vulnerabilities") if v.get("cve-id")],
+            "reporters": [{"name": r.get("name"), "affiliation": r.get("affiliation")} for r in entries("reporters")],
+            "issue_links": [str(link) for link in as_list(issues.get("links"))],
+            "reviews": {str(k): [str(u) for u in as_list(v)] for k, v in reviews.items()
+                        if not isinstance(v, dict)},
+            "notes": [str(n).strip() for n in as_list(doc.get("notes"))],
+            "errata_history": [str(e) for e in as_list(doc.get("errata_history"))],
+        })
 
         # union with regex extraction — robust against schema drift
         ossa["bugs"] = sorted({int(b) for b in RE_LP_BUG.findall(text)} |
@@ -426,40 +836,17 @@ class Collector:
         ossa["cves_pending_count"] = sum(1 for c in RE_CVE.findall(text) if c.upper().endswith("PENDING"))
         ossa["cves_assigned"] = sorted(c for c in cves if not c.endswith("PENDING"))
         if not ossa.get("id"):
-            m = re.search(r"(OSSA-\d{4}-\d{3})", path) or re.search(r"(OSSA-\d{4}-\d{3})", text)
-            ossa["id"] = m.group(1) if m else None
-        ossa["products"] = [p["product"] for p in ossa.get("affected_products", []) if p.get("product")]
+            m = RE_OSSA_ID.search(path) or RE_OSSA_ID.search(text)
+            ossa["id"] = m.group(1).upper() if m else None
+        ossa["products"] = [p["product"] for p in ossa["affected_products"]]
+        for p in ossa["affected_products"]:
+            if p["split_from"]:
+                self.warn(f"the OSSA names several products in one field ({p['split_from']!r}); "
+                          f"split into {p['product']!r} with the range {p['version']!r}")
+            if not p["valid_name"]:
+                self.warn(f"product {p['product_display']!r} does not look like a deliverable name — "
+                          "the upstream release, kolla and patch lookups for it come back empty")
         return ossa
-
-    @staticmethod
-    def parse_ossa_fallback(text: str) -> dict:
-        """Minimal parser for the flat OSSA YAML schema (used without PyYAML)."""
-        def scalar(key: str) -> str | None:
-            m = re.search(rf"^{key}:\s*(.+)$", text, re.MULTILINE)
-            return m.group(1).strip().strip("'\"") if m else None
-
-        description = ""
-        m = re.search(r"^description:\s*\|\s*\n((?:[ \t]+.*\n|\n)+)", text, re.MULTILINE)
-        if m:
-            description = "\n".join(line[2:] if line.startswith("  ") else line
-                                    for line in m.group(1).splitlines()).strip()
-        products = [{"product": p, "version": v.strip("'\""), **parse_version_ranges(v.strip("'\""))}
-                    for p, v in re.findall(r"- product:\s*(\S+)\s*\n\s*version:\s*(.+)", text)]
-        reporters = [{"name": n.strip(), "affiliation": a.strip()}
-                     for n, a in re.findall(r"- name:\s*(.+)\n\s*affiliation:\s*(.+)", text)]
-        reviews: dict[str, list[str]] = {}
-        block = re.search(r"^reviews:\s*\n((?:[ \t]+.*\n|\n)+)", text, re.MULTILINE)
-        if block:
-            current = None
-            for line in block.group(1).splitlines():
-                if m := re.match(r"^\s{2}(\S.*?):\s*$", line):
-                    current = m.group(1)
-                    reviews[current] = []
-                elif current and (m := re.match(r"^\s+-\s*(\S+)", line)):
-                    reviews[current].append(m.group(1))
-        return {"id": scalar("id"), "title": scalar("title"), "date": scalar("date"),
-                "description": description, "affected_products": products, "reporters": reporters,
-                "reviews": reviews, "notes": [], "errata_history": [], "issue_links": [], "cves": []}
 
     # ---- step 3: Launchpad ------------------------------------------------ #
 
@@ -468,10 +855,12 @@ class Collector:
         bugs = []
         for bug_id in self.ossa["bugs"]:
             bug = self.fetch_json(f"{LP_API}/bugs/{bug_id}", allow_404=True)
-            if bug is None:
-                self.warn(f"Launchpad bug {bug_id} not readable (private or missing)")
+            if not bug:
+                # a private bug answers 404 to anonymous requests, exactly like a deleted one
+                error = "not readable (HTTP 404: private, embargoed or missing)" if bug is None else "lookup failed"
+                self.warn(f"Launchpad bug {bug_id}: {error}")
                 bugs.append({"id": bug_id, "web_link": f"https://bugs.launchpad.net/bugs/{bug_id}",
-                             "error": "not readable"})
+                             "error": error})
                 continue
             tasks = self.fetch_json(f"{LP_API}/bugs/{bug_id}/bug_tasks") or {}
             attachments = self.fetch_json(f"{LP_API}/bugs/{bug_id}/attachments") or {}
@@ -525,7 +914,7 @@ class Collector:
         for number in sorted(set(listed) | found_numbers):
             c = self.gerrit_json(f"changes/{number}?o=CURRENT_REVISION&o=CURRENT_COMMIT&o=CURRENT_FILES",
                                  allow_404=True)
-            if c is None:
+            if not c:
                 self.warn(f"Gerrit change {number} not readable")
                 continue
             rev = c.get("revisions", {}).get(c.get("current_revision"), {})
@@ -550,10 +939,17 @@ class Collector:
                 "files": sorted(f for f in rev.get("files", {}) if f != "/COMMIT_MSG"),
                 "commit_message": message,
             })
+        # A review is a confirmed fix when the OSSA lists it or when it shares the Change-Id of a listed
+        # review (backport of the same change). Everything else only mentions the bug: follow-ups,
+        # prerequisites and Related-Bug cleanups must not count as "the fix is merged on this branch".
+        listed_change_ids = {r["change_id"] for r in reviews if r["listed_in_ossa"] and r["change_id"]}
+        for r in reviews:
+            r["confirmed_fix"] = r["listed_in_ossa"] or r["change_id"] in listed_change_ids
         reviews.sort(key=lambda r: (r["project"] or "", r["branch"] or "", r["number"]))
         self.data["reviews"] = reviews
         for r in reviews:
-            flag = "" if r["listed_in_ossa"] else "  (not listed in OSSA)"
+            flag = "" if r["listed_in_ossa"] else ("  (not listed in OSSA, same Change-Id as a listed review)"
+                                                   if r["confirmed_fix"] else "  (not listed in OSSA)")
             print(f"    {r['number']} {r['project']} {r['branch']} {r['status']}: {r['subject']}{flag}")
 
     # ---- step 5: upstream series and releases ----------------------------- #
@@ -570,19 +966,18 @@ class Collector:
                                "status": s.get("status"), "initial_release": str(s.get("initial-release") or ""),
                                "eol_date": str(s.get("eol-date") or ""),
                                "next_phase": s.get("next-phase") or {}, "slurp": bool(s.get("slurp"))})
-        elif text:
-            for block in re.split(r"\n(?=- name:)", text):
-                name = re.search(r"- name:\s*(\S+)", block)
-                if not name:
-                    continue
-                get = lambda key: (re.search(rf"^\s*{key}:\s*(.+)$", block, re.MULTILINE) or [None, ""])[1]
-                series.append({"name": name.group(1), "release_id": str(get("release-id")).strip(),
-                               "status": str(get("status")).strip(), "initial_release": str(get("initial-release")).strip(),
-                               "eol_date": str(get("eol-date")).strip(), "next_phase": {},
-                               "slurp": "slurp: yes" in block})
+        else:
+            self.warn("upstream series status not available — branch names and release status are unknown")
         self.data["series"] = series
         self.series_by_id = {s["release_id"]: s for s in series}
         self.series_by_name = {s["name"]: s for s in series}
+
+    def branch_for(self, release_id: str) -> str:
+        """Upstream branch of a release, from its series status."""
+        status = self.series_by_id.get(release_id, {}).get("status")
+        if status == "unmaintained":
+            return f"unmaintained/{release_id}"
+        return "master" if status == "development" else f"stable/{release_id}"
 
     def collect_releases(self) -> None:
         print("==> Upstream releases of the affected products")
@@ -604,19 +999,17 @@ class Collector:
                 url = OPENDEV_RAW.format(repo="openstack/releases", branch="master",
                                          path=f"deliverables/{s['name']}/{product}.yaml")
                 text = self.fetch_text(url, allow_404=True)
-                if text is None:
-                    per_series[rid] = {"series": s["name"], "error": "no deliverable file"}
+                doc = self.load_yaml(text, url) if text else None
+                if not isinstance(doc, dict):
+                    # only a 404 says that upstream has no such deliverable in this series
+                    per_series[rid] = {"series": s["name"],
+                                       "error": "no deliverable file" if text is None else "lookup failed"}
                     continue
-                doc = self.load_yaml(text, url)
                 versions = []
-                if isinstance(doc, dict):
-                    for rel in doc.get("releases") or []:
-                        hashes = [p.get("hash") for p in rel.get("projects") or []]
-                        versions.append({"version": str(rel.get("version")), "hash": hashes[0] if hashes else None})
-                    branches = [b.get("name") for b in doc.get("branches") or []]
-                else:
-                    versions = [{"version": v, "hash": None} for v in re.findall(r"- version:\s*(\S+)", text)]
-                    branches = re.findall(r"- name:\s*(stable/\S+|unmaintained/\S+)", text)
+                for rel in doc.get("releases") or []:
+                    hashes = [p.get("hash") for p in rel.get("projects") or []]
+                    versions.append({"version": str(rel.get("version")), "hash": hashes[0] if hashes else None})
+                branches = [b.get("name") for b in doc.get("branches") or []]
                 # keep final releases only; rc tags and eom/eol markers are reported separately
                 markers = [v["version"] for v in versions if not RE_VERSION.fullmatch(v["version"])]
                 versions = [v for v in versions if RE_VERSION.fullmatch(v["version"])]
@@ -624,54 +1017,49 @@ class Collector:
                 per_series[rid] = {"series": s["name"], "versions": [v["version"] for v in versions],
                                    "latest": versions[-1]["version"] if versions else None,
                                    "markers": markers, "branches": branches,
+                                   "release_model": doc.get("release-model"),
                                    "release_notes": f"https://releases.openstack.org/{s['name']}/index.html"}
             releases[product] = per_series
         self.data["releases"] = releases
 
-        # fixed versions from the OSSA ranges: released or not?
+        # fixed versions from the OSSA ranges: released or not, and in which series?
         fixed = []
         for p in self.ossa.get("affected_products", []):
             product = p.get("product")
+            per_series = releases.get(product, {})
+            lookup_failed = any(info.get("error") == "lookup failed" for info in per_series.values())
             for ver in p.get("fixed_versions", []):
-                entry = {"product": product, "version": ver, "released": False, "series": None, "tag_date": None}
-                for rid, info in releases.get(product, {}).items():
-                    if ver in info.get("versions", []):
-                        entry["released"] = True
-                        entry["series"] = rid
-                        break
-                if entry["series"] is None:
-                    major = ver.split(".")[0]
-                    for rid, info in releases.get(product, {}).items():
-                        if any(v.split(".")[0] == major for v in info.get("versions", [])):
-                            entry["series"] = rid
-                            break
-                if entry["released"] and self.use_github:
+                resolved = resolve_series(ver, per_series)
+                entry = {"product": product, "version": ver, "released": resolved["basis"] == "released",
+                         "series": resolved["series"], "series_candidates": resolved["candidates"],
+                         "series_basis": resolved["basis"], "lookup_failed": lookup_failed, "tag_date": None}
+                if entry["released"]:
                     entry["tag_date"] = self.github_tag_date(product, ver)
                 fixed.append(entry)
             for ver in p.get("pinned_versions", []):
-                entry = {"product": product, "version": ver, "pinned_vulnerable": True, "series": None,
+                resolved = resolve_series(ver, per_series)
+                entry = {"product": product, "version": ver, "pinned_vulnerable": True,
+                         "series": resolved["series"], "series_candidates": resolved["candidates"],
+                         "series_basis": resolved["basis"], "lookup_failed": lookup_failed,
                          "fixed_in": None, "released": False, "tag_date": None,
                          "note": "listed as '==' (only this version is vulnerable; the fix is the next release)"}
-                major = ver.split(".")[0]
-                for rid, info in releases.get(product, {}).items():
-                    later = [v for v in info.get("versions", []) if v.split(".")[0] == major and version_tuple(v) > version_tuple(ver)]
-                    if any(v.split(".")[0] == major for v in info.get("versions", [])):
-                        entry["series"] = rid
-                        if later:
-                            entry["fixed_in"] = later[0]
-                            entry["released"] = True
-                            if self.use_github:
-                                entry["tag_date"] = self.github_tag_date(product, later[0])
-                        break
+                if resolved["series"]:
+                    later = [v for v in per_series[resolved["series"]].get("versions", [])
+                             if version_tuple(v) > version_tuple(ver)]
+                    if later:
+                        entry["fixed_in"] = later[0]
+                        entry["released"] = True
+                        entry["tag_date"] = self.github_tag_date(product, later[0])
                 fixed.append(entry)
         self.data["fixed_versions"] = fixed
         for f in fixed:
+            series = f["series"] or f"series unverified, candidates: {', '.join(f['series_candidates']) or 'none'}"
             if f.get("pinned_vulnerable"):
                 fix = f"fixed in {f['fixed_in']} (released)" if f.get("fixed_in") else "no later release yet"
-                print(f"    {f['product']} =={f['version']} ({f['series'] or '?'}): {fix}")
+                print(f"    {f['product']} =={f['version']} ({series}): {fix}")
                 continue
             state = "released" if f["released"] else "NOT released yet"
-            print(f"    {f['product']} {f['version']} ({f['series'] or '?'}): {state}"
+            print(f"    {f['product']} {f['version']} ({series}): {state}"
                   + (f" on {f['tag_date']}" if f.get("tag_date") else ""))
 
     def github_tag_date(self, product: str, version: str) -> str | None:
@@ -692,9 +1080,11 @@ class Collector:
         records = []
         for cve in self.ossa.get("cves_assigned", []):
             doc = self.fetch_json(CVE_API.format(cve=cve), allow_404=True)
-            if doc is None:
-                records.append({"id": cve, "state": "not published", "url": f"https://www.cve.org/CVERecord?id={cve}"})
-                print(f"    {cve}: not published yet")
+            if not isinstance(doc, dict):
+                # only a 404 says "not published"; a failed lookup says nothing about upstream
+                state = "not published" if doc is None else "lookup failed"
+                records.append({"id": cve, "state": state, "url": f"https://www.cve.org/CVERecord?id={cve}"})
+                print(f"    {cve}: {state}")
                 continue
             record = doc.get("containers", {}).get("cna", {})  # codespell:ignore cna
             metrics = []
@@ -723,6 +1113,46 @@ class Collector:
 
     # ---- step 7: OSISM container-images-kolla ----------------------------- #
 
+    def patch_introduction(self, path: str) -> dict:
+        """The commit that introduced a patch file, following renames like `git log --follow`.
+
+        The commit list of a path does not follow renames, and the patch files are renumbered
+        whenever a CVE batch is added: the oldest commit of the current path is then the
+        renumbering, not the fix. The commit detail names the previous file name, so the chain is
+        walked until a commit *adds* the file. 'verified' is False when the walk could not be
+        completed; the returned commit is then only the best known candidate.
+        """
+        current, renamed_from, best, commits_of_path = path, [], None, []
+        reason = f"more than {MAX_RENAME_HOPS} renames"
+        for hop in range(MAX_RENAME_HOPS + 1):
+            if current not in self._path_commits:
+                self._path_commits[current] = self.github_list(
+                    f"repos/{KOLLA_IMAGES_REPO}/commits?path={urllib.parse.quote(current, safe='')}")
+            commits = self._path_commits[current]
+            if hop == 0:
+                commits_of_path = commits or []
+            if not commits:
+                reason = f"no commit history for {current}"
+                break
+            best = commits[-1]
+            sha = best["sha"]
+            if sha not in self._commit_details:
+                self._commit_details[sha] = self.github_json(f"repos/{KOLLA_IMAGES_REPO}/commits/{sha}")
+            files = (self._commit_details[sha] or {}).get("files") or []
+            change = next((f for f in files if f.get("filename") == current), None)
+            if change and change.get("status") == "added":
+                return {"commit": best, "renamed_from": renamed_from, "verified": True, "reason": None,
+                        "commits_of_path": commits_of_path}
+            if change and change.get("status") == "renamed" and change.get("previous_filename"):
+                current = change["previous_filename"]
+                renamed_from.append(current)
+                continue
+            reason = (f"commit {sha[:7]} changes {current} with status {change.get('status')!r}" if change
+                      else f"commit {sha[:7]} does not list {current} (lookup failed or more than 300 files)")
+            break
+        return {"commit": best, "renamed_from": renamed_from, "verified": False, "reason": reason,
+                "commits_of_path": commits_of_path}
+
     def collect_osism_kolla(self) -> None:
         print("==> OSISM container-images-kolla")
         result: dict = {"repo": f"https://github.com/{KOLLA_IMAGES_REPO}"}
@@ -731,7 +1161,10 @@ class Collector:
         for p in products:
             product_variants |= {p, p.replace("-", "_"), p.replace("_", "-")}
 
-        tree = self.github_json(f"repos/{KOLLA_IMAGES_REPO}/git/trees/main?recursive=1") or {}
+        tree = self.github_json(f"repos/{KOLLA_IMAGES_REPO}/git/trees/main?recursive=1")
+        # "skipped" and "failed" mean UNKNOWN: no built releases and no patch files must not read as "none"
+        result["state"] = "ok" if tree else ("skipped" if not self.use_github else "failed")
+        tree = tree or {}
         paths = [t["path"] for t in tree.get("tree", []) if t.get("type") == "blob"]
         if tree.get("truncated"):
             self.warn("GitHub tree listing of container-images-kolla was truncated")
@@ -754,7 +1187,7 @@ class Collector:
         reviews = self.data.get("reviews", [])
         ossa_bugs = set(self.ossa.get("bugs") or [])
         patch_entries: dict = {}
-        commit_cache: dict = {}
+        pulls_cache: dict = {}
         foreign_cache: dict = {}
         for rid in built:
             entries = []
@@ -763,21 +1196,29 @@ class Collector:
                     continue
                 header = parse_patch_header(self.fetch_text(KOLLA_IMAGES_RAW.format(path=path), allow_404=True) or "")
                 slug = patch_slug(path)
-                matches = []
+                matches, match_kind = [], None
                 if header.get("change_id"):
                     matches = [r for r in reviews if r.get("change_id") == header["change_id"]]
+                    match_kind = "change-id" if matches else None
                 if not matches:
                     matches = [r for r in reviews if r.get("subject_slug") and len(slug) >= 20
                                and (r["subject_slug"].startswith(slug) or slug.startswith(r["subject_slug"][:len(slug)]))]
+                    match_kind = "file name" if matches else None
                 if not matches and header.get("bugs") and ossa_bugs & set(header["bugs"]):
                     matches = [r for r in reviews if set(r.get("closes_bugs") or []) & set(header["bugs"])]
+                    match_kind = "bug reference" if matches else None
+                # Only the Change-Id of a confirmed fix review ties a patch file to this OSSA. A similar
+                # file name or a shared bug number is a hint for the author, not evidence of coverage.
+                confirmed = match_kind == "change-id" and any(r.get("confirmed_fix") for r in matches)
                 branch_names = {f"stable/{rid}", f"unmaintained/{rid}"}
                 same_branch = [r for r in matches if r.get("branch") in branch_names]
                 entry = {
                     "path": path, "url": f"https://github.com/{KOLLA_IMAGES_REPO}/blob/main/{path}",
                     "subject": header.get("subject"), "change_id": header.get("change_id"),
                     "author": header.get("author"), "patch_date": header.get("date"), "bugs": header.get("bugs"),
-                    "related_to_ossa": bool(matches),
+                    "related_to_ossa": confirmed,
+                    "related_unverified": bool(matches) and not confirmed,
+                    "match_kind": match_kind,
                     "matches_upstream": [{"number": r["number"], "branch": r["branch"], "status": r["status"],
                                           "subject": r["subject"]} for r in (same_branch or matches)],
                 }
@@ -789,27 +1230,34 @@ class Collector:
                         foreign_cache[cid] = [{"number": c["_number"], "project": c.get("project"), "branch": c.get("branch"),
                                               "status": c.get("status"), "subject": c.get("subject")} for c in found]
                     entry["foreign_upstream_changes"] = foreign_cache[cid]
-                commits = self.github_json(f"repos/{KOLLA_IMAGES_REPO}/commits?path={urllib.parse.quote(path, safe='')}&per_page=100") or []
-                if commits:
-                    first = commits[-1]
+                intro = self.patch_introduction(path)
+                if intro["commit"]:
+                    first = intro["commit"]
                     sha = first["sha"]
                     entry["added_by_commit"] = {"sha": sha, "date": first["commit"]["committer"]["date"],
                                                "subject": first["commit"]["message"].split("\n", 1)[0],
-                                               "url": f"https://github.com/{KOLLA_IMAGES_REPO}/commit/{sha}"}
-                    if sha not in commit_cache:
+                                               "url": f"https://github.com/{KOLLA_IMAGES_REPO}/commit/{sha}",
+                                               "renamed_from": intro["renamed_from"],
+                                               "verified": intro["verified"], "unverified_reason": intro["reason"]}
+                    if sha not in pulls_cache:
                         pulls = self.github_json(f"repos/{KOLLA_IMAGES_REPO}/commits/{sha}/pulls") or []
-                        commit_cache[sha] = [{"number": p["number"], "title": p["title"], "state": p["state"],
-                                              "merged_at": p.get("merged_at"), "merge_commit_sha": p.get("merge_commit_sha"),
-                                              "url": p["html_url"]} for p in pulls]
-                    entry["pull_requests"] = commit_cache[sha]
-                    if len(commits) > 1:
-                        entry["later_commits"] = [{"sha": c["sha"][:7], "date": c["commit"]["committer"]["date"][:10],
-                                                   "subject": c["commit"]["message"].split("\n", 1)[0]} for c in commits[:-1]]
+                        pulls_cache[sha] = [{"number": p["number"], "title": p["title"], "state": p["state"],
+                                             "merged_at": p.get("merged_at"), "merge_commit_sha": p.get("merge_commit_sha"),
+                                             "url": p["html_url"]} for p in pulls]
+                    entry["pull_requests"] = pulls_cache[sha]
+                    entry["later_commits"] = [{"sha": c["sha"][:7], "date": c["commit"]["committer"]["date"][:10],
+                                               "subject": c["commit"]["message"].split("\n", 1)[0]}
+                                              for c in intro["commits_of_path"] if c["sha"] != sha]
+                else:
+                    entry["added_by_commit"] = None
+                    entry["attribution_error"] = intro["reason"]
                 entries.append(entry)
             patch_entries[rid] = entries
             if entries:
                 related = sum(1 for e in entries if e["related_to_ossa"])
-                print(f"    {rid}: {len(entries)} patch file(s) for {', '.join(products)}, {related} related to this OSSA")
+                unverified = sum(1 for e in entries if e["related_unverified"])
+                print(f"    {rid}: {len(entries)} patch file(s) for {', '.join(products)}, {related} related to this OSSA"
+                      + (f", {unverified} possibly related (unverified)" if unverified else ""))
         result["patches"] = patch_entries
         result["overlays"] = {rid: sorted(v) for rid, v in overlays.items()}
 
@@ -846,36 +1294,56 @@ class Collector:
     # ---- OSISM container registry -------------------------------------- #
 
     def registry_tags(self, repo: str) -> dict:
-        """Tags of a repository in the OSISM registry (anonymous pull token), or an error."""
+        """Tags of a repository in the OSISM registry (anonymous pull token), or an error.
+
+        'lookup_failed' separates "the registry could not be asked" (unknown) from the confirmed
+        answer "repository not found".
+        """
         if not hasattr(self, "_registry_auth"):
             self._registry_auth = None
+            problem = "no answer"
             req = urllib.request.Request(f"{REGISTRY}/v2/", headers={"User-Agent": USER_AGENT})
-            try:
-                urllib.request.urlopen(req, timeout=TIMEOUT)
-            except urllib.error.HTTPError as err:
-                challenge = err.headers.get("WWW-Authenticate", "")
-                realm = re.search(r'realm="([^"]+)"', challenge)
-                service = re.search(r'service="([^"]+)"', challenge)
-                if realm:
-                    self._registry_auth = (realm.group(1), service.group(1) if service else "")
-            except (urllib.error.URLError, TimeoutError, OSError) as err:
-                self.warn(f"registry {REGISTRY} not reachable: {err}")
+            for _attempt in (1, 2):
+                try:
+                    urllib.request.urlopen(req, timeout=TIMEOUT)
+                    problem = "no authentication challenge (HTTP 200)"
+                    break
+                except urllib.error.HTTPError as err:
+                    challenge = err.headers.get("WWW-Authenticate", "")
+                    realm = re.search(r'realm="([^"]+)"', challenge)
+                    service = re.search(r'service="([^"]+)"', challenge)
+                    if err.code == 401 and realm:
+                        self._registry_auth = (realm.group(1), service.group(1) if service else "")
+                        break
+                    problem = f"HTTP {err.code} without a token realm"
+                    if err.code < 500:
+                        break
+                except (urllib.error.URLError, TimeoutError, OSError) as err:
+                    problem = f"not reachable: {err}"
+            if not self._registry_auth:
+                self._registry_problem = problem
+                self.warn(f"registry {REGISTRY}: {problem} — the rolling images are UNKNOWN, not missing")
         if not self._registry_auth:
-            return {"error": "no token endpoint"}
+            return {"error": self._registry_problem, "lookup_failed": True}
         realm, service = self._registry_auth
         tok = self.fetch_json(f"{realm}?service={urllib.parse.quote(service)}&scope=repository:{repo}:pull") or {}
         token = tok.get("token") or tok.get("access_token")
         if not token:
-            return {"error": "no anonymous token"}
+            self.warn(f"registry {REGISTRY}: no anonymous token for {repo}")
+            return {"error": "no anonymous token", "lookup_failed": True}
         raw = self.fetch(f"{REGISTRY}/v2/{repo}/tags/list", headers={"Authorization": f"Bearer {token}"}, allow_404=True)
         if raw is None:
-            return {"error": "repository not found"}
+            return {"error": "repository not found", "lookup_failed": False}
+        if not raw:
+            return {"error": "tag listing failed", "lookup_failed": True}
         try:
             data = json.loads(raw.decode("utf-8"))
         except json.JSONDecodeError:
-            return {"error": "invalid JSON"}
+            self.warn(f"registry {REGISTRY}: invalid JSON in the tag listing of {repo}")
+            return {"error": "invalid JSON", "lookup_failed": True}
         if data.get("errors"):
-            return {"error": data["errors"][0].get("code", "error")}
+            self.warn(f"registry {REGISTRY}: {data['errors'][0].get('code', 'error')} for {repo}")
+            return {"error": data["errors"][0].get("code", "error"), "lookup_failed": True}
         return {"tags": data.get("tags") or []}
 
     # ---- step 8: kolla images and kolla-ansible tag variables ------------- #
@@ -886,13 +1354,17 @@ class Collector:
         maintained.sort(key=lambda s: s["release_id"])
         ref_ids = [rid for rid in getattr(self, "osism_built_releases", []) if rid in self.series_by_id
                    and self.series_by_id[rid]["status"] in ("maintained", "unmaintained")]
-        ref = f"stable/{ref_ids[-1]}" if ref_ids else (f"stable/{maintained[-1]['release_id']}" if maintained else "master")
+        ref_id = ref_ids[-1] if ref_ids else (maintained[-1]["release_id"] if maintained else None)
+        ref = self.branch_for(ref_id) if ref_id else "master"
         info: dict = {"reference_branch": ref, "products": {}}
         for product in self.ossa.get("products") or []:
             entry: dict = {"kolla_images": [], "tag_variables": [], "enable_flags": [], "roles": []}
             listing = self.fetch_json(OPENDEV_API.format(repo="openstack/kolla", path=f"docker/{product}", ref=ref), allow_404=True)
             if isinstance(listing, list):
                 entry["kolla_images"] = sorted(i["name"] for i in listing if i.get("type") == "dir")
+            elif listing is not None:
+                entry["note"] = (f"the lookup of docker/{product} in openstack/kolla FAILED — the image list is "
+                                 "unknown, check it manually")
             else:
                 entry["note"] = (f"no docker/{product} directory in openstack/kolla — probably a library that is "
                                  "installed into several images (check which images consume it)")
@@ -929,6 +1401,7 @@ class Collector:
                             param["rolling_tags"] = sorted(t for t in result["tags"] if re.fullmatch(r"\d{4}\.\d", t))
                         else:
                             param["error"] = result["error"]
+                            param["lookup_failed"] = result["lookup_failed"]
                 entry["osism_image_parameters"].append(param)
             info["products"][product] = entry
             print(f"    {product}: images {entry['kolla_images'] or '-'}; tag variables "
@@ -944,7 +1417,8 @@ class Collector:
         info: dict = {"security_dir": str(security)}
         advisories = sorted(security.glob("ossa-*.md")) if security.exists() else []
         info["existing_advisories"] = [p.name for p in advisories]
-        info["exemplars"] = [str(p) for p in sorted(advisories, key=lambda p: p.stat().st_mtime)[-2:]]
+        # the file names sort chronologically; mtime is checkout time and says nothing about age
+        info["exemplars"] = [str(p) for p in advisories[-2:]]
         ossa_id = (self.ossa.get("id") or "").lower()
         target = security / f"{ossa_id}.md" if ossa_id else None
         info["target_file"] = str(target) if target else None
@@ -965,7 +1439,7 @@ class Collector:
                 same_project.append(p.name)
         info["previous_advisories_same_project"] = same_project
         if advisories:
-            newest = sorted(advisories, key=lambda p: p.stat().st_mtime)[-1]
+            newest = advisories[-1]
             info["releases_mentioned_in_newest_advisory"] = sorted(set(RE_RELEASE_ID.findall(newest.read_text())))
             info["newest_advisory"] = newest.name
 
@@ -1021,13 +1495,10 @@ class Collector:
             floor = min(floor_candidates)
             ids = {rid for rid in ids if rid >= floor}
         reviews = self.data.get("reviews", [])
+        builds_known = self.data.get("osism_kolla", {}).get("state", "ok") == "ok"
         for rid in sorted(ids):
             s = self.series_by_id.get(rid, {})
-            branch = f"stable/{rid}"
-            if s.get("status") == "unmaintained":
-                branch = f"unmaintained/{rid}"
-            elif s.get("status") == "development":
-                branch = "master"
+            branch = self.branch_for(rid)
             rel_reviews = [r for r in reviews if r["branch"] == branch and r["project"] and r["project"].split("/")[-1] in self.ossa.get("products", [])]
             statuses = sorted({r["status"] for r in rel_reviews})
             product_versions = []
@@ -1037,7 +1508,11 @@ class Collector:
                 if info.get("latest"):
                     product_versions.append(f"{product} {info['latest']}")
                 for f in self.data.get("fixed_versions", []):
-                    if f.get("product") != product or f.get("series") != rid:
+                    if f.get("product") != product:
+                        continue
+                    if f.get("series") != rid:
+                        if not f.get("series") and rid in (f.get("series_candidates") or []):
+                            fixed_here.append(f"{f['version']}? (series unverified)")
                         continue
                     if f.get("pinned_vulnerable"):
                         fixed_here.append(f"{f['fixed_in']} (released)" if f.get("fixed_in") else f"=={f['version']} vulnerable, no later release")
@@ -1045,25 +1520,31 @@ class Collector:
                         fixed_here.append(f"{f['version']} ({'released' if f['released'] else 'not released'})")
             patches = self.data.get("osism_kolla", {}).get("patches", {}).get(rid, [])
             related = [e for e in patches if e.get("related_to_ossa")]
+            unverified = [e for e in patches if e.get("related_unverified")]
             prs = sorted({f"#{p['number']}" for e in related for p in e.get("pull_requests", [])})
-            fix_merged_upstream = any(r["status"] == "MERGED" for r in rel_reviews)
-            covered = bool(related) or fix_merged_upstream
+            prs_unverified = sorted({f"#{p['number']}" for e in unverified for p in e.get("pull_requests", [])} - set(prs))
+            merged = [r for r in rel_reviews if r["status"] == "MERGED"]
+            fix_merged_upstream = any(r.get("confirmed_fix") for r in merged)
+            covered = coverage_state(bool(related), fix_merged_upstream, bool(unverified) or bool(merged))
             rows.append({
                 "release": rid,
                 "series": s.get("name"),
                 "upstream_status": s.get("status"),
                 "eol_date": s.get("eol_date") or "",
                 "branch": branch,
-                "fix_reviews": ", ".join(f"{r['number']} ({r['status']})" for r in rel_reviews) or "-",
+                "fix_reviews": ", ".join(f"{r['number']} ({r['status']}{'' if r.get('confirmed_fix') else ', not in OSSA'})"
+                                         for r in rel_reviews) or "-",
                 "fix_review_status": "/".join(statuses) or "-",
                 "fix_merged_upstream": fix_merged_upstream,
                 "latest_versions": ", ".join(product_versions) or "-",
                 "fixed_version": ", ".join(fixed_here) or "-",
-                "osism_builds": rid in built,
+                "osism_builds": (rid in built) if builds_known else None,  # None: unknown
                 "osism_officially_supported": rid in supported,
                 "osism_patch_files_total": len(patches),
                 "osism_patch_files_related": len(related),
+                "osism_patch_files_unverified": len(unverified),
                 "osism_prs": ", ".join(prs) or "-",
+                "osism_prs_unverified": ", ".join(prs_unverified) or "-",
                 "covered": covered,
             })
         self.data["coverage"] = rows
@@ -1073,7 +1554,7 @@ class Collector:
     def write(self) -> Path:
         ossa_id = self.ossa.get("id") or "OSSA-unknown"
         out = self.output_dir / ossa_id
-        out.mkdir(parents=True, exist_ok=True)
+        out.mkdir(parents=True, exist_ok=True, mode=0o700)  # may hold embargoed material
         self.data["warnings"] = self.warnings
         (out / "raw.json").write_text(json.dumps(self.data, indent=2, sort_keys=True, default=str) + "\n")
         (out / f"{ossa_id}.yaml").write_text(self.data.get("ossa_text") or "")
@@ -1093,7 +1574,7 @@ class Collector:
             "Everything below was collected automatically from public sources; verify before publishing.\n")
 
         add("## 1. Input and OSSA change\n")
-        rows = [["Reference", d["input"]["reference"]],
+        rows = [["Reference", d.get("input", {}).get("reference")],
                 ["Gerrit change", f"{ch.get('url')} ({ch.get('status')})" if ch.get("number") else "-"],
                 ["Subject", ch.get("subject") or "-"], ["Topic", ch.get("topic") or "-"],
                 ["Created / submitted", f"{(ch.get('created') or '')[:10]} / {(ch.get('submitted') or '')[:10]}"],
@@ -1108,21 +1589,25 @@ class Collector:
             add("")
         if ch.get("status") and ch["status"] != "MERGED":
             add(":warning: **The OSSA change is not merged.** Check that the embargo has been lifted "
-                "(Launchpad bugs must be *Public Security*) before writing anything.\n")
+                "(need-to-know rule in style.md; the blockers are listed in section 12) before writing anything.\n")
 
         add("## 2. OSSA core data\n")
         rows = [["ID", o.get("id")], ["Title", o.get("title")], ["Date", o.get("date")],
-                ["Products", ", ".join(o.get("products") or [])],
+                ["Products", ", ".join(f"{p['product_display']} (deliverable `{p['product']}`)"
+                                       for p in o.get("affected_products") or []) or "-"],
                 ["CVEs assigned", ", ".join(o.get("cves_assigned") or []) or "-"],
                 ["CVEs pending", f"{o.get('cves_pending_count')} requested from MITRE, not assigned yet" if o.get("cves_pending_count") else "-"],
                 ["Reporters", "; ".join(f"{r['name']} ({r['affiliation']})" for r in o.get("reporters") or []) or "-"],
                 ["Launchpad bugs", ", ".join(f"#{b}" for b in o.get("bugs") or []) or "-"],
-                ["Errata history", "; ".join(o.get("errata_history") or []) or "-"]]
+                ["Errata history (newest first)", "; ".join(o.get("errata_history") or []) or "-"],
+                ["Errata", " ".join((o.get("errata") or "").split()) or "-"]]
         add(md_table(["Field", "Value"], rows))
         add("### Affected version ranges (verbatim from the OSSA)\n")
         for p in o.get("affected_products") or []:
             add(f"- `{p.get('product')}`: `{p.get('version')}` → fixed versions {p.get('fixed_versions') or '-'}, "
-                f"pinned vulnerable versions {p.get('pinned_versions') or '-'}")
+                f"pinned vulnerable versions {p.get('pinned_versions') or '-'}"
+                + (f", last vulnerable versions ('<=', fixed version not named) {p['last_vulnerable_versions']}"
+                   if p.get("last_vulnerable_versions") else ""))
         add("")
         add("### Description (verbatim from the OSSA)\n")
         add("> " + (o.get("description") or "").replace("\n", "\n> ") + "\n")
@@ -1183,16 +1668,31 @@ class Collector:
             add(f"### {product}\n")
             add(md_table(["Release", "Series", "Latest released version", "Branches"], rows))
         add("### Fixed versions named by the OSSA\n")
+        github_unknown = GITHUB_UNKNOWN.get(d.get("osism_kolla", {}).get("state", "ok"))
+
+        def series_cell(f: dict) -> str:
+            if f.get("series"):
+                return f["series"]
+            return "**unverified** (candidates: " + (", ".join(f.get("series_candidates") or []) or "none") + ")"
+
+        def tag_date(f: dict) -> str:
+            return (f.get("tag_date") or "")[:10] or (github_unknown if github_unknown and f.get("released") else "")
+
         rows = []
         for f in d.get("fixed_versions", []):
             if f.get("pinned_vulnerable"):
                 status = (f"only this version vulnerable ('==' pin), fixed in {f['fixed_in']}" if f.get("fixed_in")
                           else "only this version vulnerable ('==' pin), **no later release yet**")
-                rows.append([f["product"], f["version"], f.get("series") or "?", status, (f.get("tag_date") or "")[:10]])
+                rows.append([f["product"], f["version"], series_cell(f), status, tag_date(f)])
             else:
-                rows.append([f["product"], f["version"], f.get("series") or "?", "released" if f["released"] else "**not released**",
-                             (f.get("tag_date") or "")[:10]])
+                status = "released" if f["released"] else (
+                    "**unknown (lookup failed)**" if f.get("lookup_failed") else "**not released**")
+                rows.append([f["product"], f["version"], series_cell(f), status, tag_date(f)])
         add(md_table(["Product", "Version", "Series", "Status", "Tag date"], rows))
+        add("A series is only named when the version is listed in the deliverable file of that series, or when the "
+            "deliverable is `cycle-with-rc` and a single series carries its major version. **unverified** means the "
+            "version cannot be mapped from the release data (libraries share a major version across many series): "
+            "take the series from the branch of the fix review in section 4.\n")
 
         add("## 7. CVE records\n")
         if o.get("cves_pending_count"):
@@ -1210,13 +1710,17 @@ class Collector:
                 add(f"- {m['version']}: **{m['score']} {m['severity']}** `{m['vector']}`")
             if c.get("metrics") == []:
                 add("- No CVSS metrics in the CVE record → use OSISM's own assessment (see style.md)")
+            if c.get("state") == "lookup failed":
+                add("- **The CVE record could not be fetched.** Nothing is known about its publication state or "
+                    "CVSS score — look it up manually, do not write that upstream published no score.")
             if c.get("description"):
                 add(f"\n> {c['description']}")
             add("")
 
         add("## 8. OSISM: container-images-kolla\n")
         ok = d.get("osism_kolla", {})
-        add(f"- Built OpenStack releases (defaults/*.sh): {', '.join(ok.get('built_releases') or []) or '-'}")
+        add(f"- Built OpenStack releases (defaults/*.sh): "
+            f"{github_unknown or ', '.join(ok.get('built_releases') or []) or '-'}")
         loc = d.get("local", {})
         add(f"- Officially supported OpenStack releases (docs/release-notes + release cadence): "
             f"{', '.join(loc.get('officially_supported_openstack_releases') or []) or '?'}")
@@ -1231,7 +1735,9 @@ class Collector:
             any_patch = True
             add(f"#### {rid}\n")
             for e in entries:
-                tag = "**related to this OSSA**" if e.get("related_to_ossa") else "not related to this OSSA"
+                tag = ("**related to this OSSA**" if e.get("related_to_ossa") else
+                       f"**possibly related — unverified** (matched by {e.get('match_kind')} only, no Change-Id of a "
+                       "fix review listed in the OSSA)" if e.get("related_unverified") else "not related to this OSSA")
                 add(f"- `{e['path']}` — {tag}")
                 if e.get("subject"):
                     add(f"  - subject: {e['subject']}" + (f" (Change-Id {e['change_id']})" if e.get("change_id") else ""))
@@ -1246,14 +1752,24 @@ class Collector:
                     add("  - no upstream review identified (no Change-Id in the patch and no matching subject)")
                 if e.get("added_by_commit"):
                     c = e["added_by_commit"]
-                    add(f"  - added by {c['url']} ({c['date'][:10]}): {c['subject']}")
+                    add(f"  - added by {c['url']} ({c['date'][:10]}): {c['subject']}"
+                        + (f" — followed {len(c['renamed_from'])} rename(s) back from the current file name"
+                           if c.get("renamed_from") else ""))
+                    if not c.get("verified", True):
+                        add(f"  - **attribution unverified** ({c.get('unverified_reason')}): this may be a renumbering "
+                            "commit, check with `git log --follow`")
+                elif e.get("attribution_error"):
+                    add(f"  - **introducing commit unknown** ({e['attribution_error']})")
                 for p in e.get("pull_requests") or []:
                     add(f"  - PR #{p['number']} {p['state']} merged {str(p.get('merged_at') or '')[:10]}: {p['title']} — {p['url']} "
                         f"(merge commit {str(p.get('merge_commit_sha') or '')[:7]})")
                 for lc in e.get("later_commits") or []:
                     add(f"  - later touched by {lc['sha']} ({lc['date']}): {lc['subject']}")
             add("")
-        if not any_patch:
+        if github_unknown:
+            add(f"_Patch files: **{github_unknown}**. This says nothing about whether OSISM ships a fix — look the "
+                "patches and pull requests up manually (reference/sources.md)._\n")
+        elif not any_patch:
             add("_No patch files for the affected products in any built release. Either the fix is not yet "
                 "shipped by OSISM, or OSISM relies on the upstream stable branch (check section 4/6)._\n")
         if ok.get("overlays"):
@@ -1300,8 +1816,11 @@ class Collector:
                     if prm.get("image"):
                         if prm.get("rolling_tags"):
                             line += f" → rolling `{prm['image']}` tags: {', '.join(prm['rolling_tags'])}"
+                        elif prm.get("error") and not prm.get("lookup_failed"):
+                            line += f" → rolling `{prm['image']}`: not in the rolling registry (do not list it in the override)"
                         elif prm.get("error"):
-                            line += f" → rolling `{prm['image']}`: **{prm['error']}** (do not list it in the override)"
+                            line += (f" → rolling `{prm['image']}`: **lookup failed ({prm['error']}) — unknown, verify "
+                                     "manually before omitting it from the override**")
                         else:
                             line += f" → rolling `{prm['image']}`: no release tags"
                     add(line)
@@ -1310,7 +1829,7 @@ class Collector:
         add("## 10. Local documentation repository\n")
         add(f"- Target file: `{loc.get('target_file')}` — {'**already exists → update mode**' if loc.get('target_exists') else 'does not exist → new advisory'}")
         add(f"- Index file: `{loc.get('index_file')}` ({len(loc.get('index_rows') or [])} rows)")
-        add("- Style exemplars (newest advisories): " + ", ".join(f"`{p}`" for p in loc.get("exemplars") or []))
+        add("- Style exemplars (the two newest advisories by file name): " + ", ".join(f"`{p}`" for p in loc.get("exemplars") or []))
         add(f"- Previous advisories for the same project: {', '.join(loc.get('previous_advisories_same_project') or []) or '-'}")
         add("- OSISM releases: " + "; ".join(f"OSISM {r['osism']} ({r['status']}): OpenStack {', '.join(r['openstack']) or '?'}"
                                           for r in loc.get("osism_releases") or []))
@@ -1319,51 +1838,134 @@ class Collector:
         add("## 11. Coverage matrix (draft input for the Affected Versions table)\n")
         rows = [[c["release"], c["series"] or "", c["upstream_status"] or "", c["eol_date"], c["branch"],
                  c["latest_versions"], c["fixed_version"], c["fix_reviews"],
-                 "yes" if c["osism_officially_supported"] else "no", "yes" if c["osism_builds"] else "no",
-                 (f"{c['osism_patch_files_related']} related ({c['osism_prs']}), {c['osism_patch_files_total']} total"
-                  if c["osism_patch_files_total"] else "-"),
-                 "yes" if c["covered"] else "**no**"]
+                 "yes" if c["osism_officially_supported"] else "no",
+                 github_unknown if c["osism_builds"] is None else ("yes" if c["osism_builds"] else "no"),
+                 github_unknown if c["osism_builds"] is None else (
+                     f"{c['osism_patch_files_related']} related ({c['osism_prs']}), "
+                     + (f"{c['osism_patch_files_unverified']} unverified ({c['osism_prs_unverified']}), "
+                        if c.get("osism_patch_files_unverified") else "")
+                     + f"{c['osism_patch_files_total']} total" if c["osism_patch_files_total"] else "-"),
+                 COVERED_LABEL[c["covered"]]]
                 for c in d.get("coverage", [])]
         add(md_table(["Release", "Series", "Upstream status", "EOL", "Branch", "Latest version", "Fixed version",
                       "Fix reviews", "OSISM supported", "OSISM builds", "OSISM patches", "Covered"], rows))
-        add("Reading guide: a release is *covered* when OSISM patch files related to this OSSA exist for it "
-            "(community-curated backport or early adoption of an unmerged upstream fix) or the upstream fix is merged "
-            "on the branch the images are built from. The advisory lists every release OSISM builds images for — "
-            "including the YYYY.2 releases that are not officially supported but always receive the fixes in "
-            "practice — so every row with Covered = no must be clarified with the author (fix in preparation? "
-            "not planned?) and the answer recorded in the advisory.\n")
+        add("Reading guide: a release is *covered* (**yes**) only on confirmed evidence: an OSISM patch file that "
+            "carries the Change-Id of a fix review listed in the OSSA (community-curated backport or early adoption "
+            "of an unmerged upstream fix), or a fix review listed in the OSSA (or a backport with the same Change-Id) "
+            "that is merged on the branch the images are built from. **unverified** means there are only hints — a "
+            "patch file matched by file name or bug number, or a merged review that merely mentions the bug. The "
+            "advisory lists every release OSISM builds images for — including the YYYY.2 releases that are not "
+            "officially supported but always receive the fixes in practice — so every row with Covered = no **or "
+            "unverified** must be clarified with the author (fix in preparation? not planned? is the hint the fix?) "
+            "and the answer recorded in the advisory.\n")
 
         add("## 12. Open points to verify manually\n")
+        for p in self.open_points():
+            add(f"- [ ] {p}")
+        add("")
+        if self.warnings:
+            add("## 13. Collection warnings\n")
+            for w in self.warnings:
+                add(f"- {w}")
+            add("")
+        return "\n".join(L)
+
+    def open_points(self) -> list[str]:  # noqa: C901 - long but linear
+        """Section 12. Everything that is unknown, unverified or a blocker must show up here."""
+        d = self.data
+        o = self.ossa
+        ok = d.get("osism_kolla", {})
+        loc = d.get("local", {})
+        github_unknown = GITHUB_UNKNOWN.get(ok.get("state", "ok"))
         points = []
+        # need-to-know (style.md): public status is established positively, per bug. An unreadable bug
+        # is what an embargoed bug looks like anonymously, so it blocks exactly like a private one.
+        for b in d.get("bugs", []):
+            if b.get("information_type") != PUBLIC_SECURITY:
+                points.append(f"STOP — bug #{b['id']} is not confirmed *{PUBLIC_SECURITY}* (information type: "
+                              f"{b.get('information_type') or b.get('error') or 'unknown'}). Do not write or publish "
+                              f"anything until its public status is positively established ({b.get('web_link')}).")
+        ch = d.get("ossa_change", {})
+        if not d.get("bugs") and ch.get("status") != "MERGED":
+            points.append("STOP — the OSSA references no Launchpad bug and its change is not merged: nothing "
+                          "establishes that the issue is public.")
+        if o.get("format") == "text":
+            points.append("The OSSA document could not be parsed — title, description, products, notes and errata "
+                          "are missing from section 2; read the raw document.")
+        for p in o.get("affected_products") or []:
+            if not p.get("valid_name"):
+                points.append(f"Product {p['product_display']!r} does not look like a deliverable name — the empty "
+                              "results in sections 6, 8, 9 and 11 are a lookup problem, not a finding. Identify the "
+                              "deliverable(s) and look them up manually.")
+            elif p.get("split_from"):
+                points.append(f"The OSSA names several products in one field ({p['split_from']!r}); check the version "
+                              f"range the collector attributed to {p['product']}: `{p['version']}`.")
+            if p.get("last_vulnerable_versions"):
+                points.append(f"{p['product']}: the OSSA gives inclusive upper bounds (<= "
+                              f"{', '.join(p['last_vulnerable_versions'])}) — the fixed version is the next release of "
+                              "that series (section 6), it is not named by the OSSA.")
         if o.get("cves_pending"):
             points.append("CVE ids are still pending — write 'CVE pending' and re-check the Launchpad bug titles / OSSA errata before publishing.")
         for c in d.get("cves", []):
             if c.get("state") == "not published":
                 points.append(f"{c['id']} is not published on cve.org yet — the link will resolve later; no CVSS available.")
-        if not any(m for c in d.get("cves", []) for m in c.get("metrics") or []):
+            elif c.get("state") == "lookup failed":
+                points.append(f"The CVE record of {c['id']} could not be fetched — publication state and CVSS score are "
+                              "UNKNOWN. Look them up manually before choosing the Severity.")
+        cve_lookup_failed = any(c.get("state") == "lookup failed" for c in d.get("cves", []))
+        if not cve_lookup_failed and not any(m for c in d.get("cves", []) for m in c.get("metrics") or []):
             points.append("No CVSS score available — the Severity is OSISM's own assessment and must say so.")
         unmerged = [r for r in d.get("reviews", []) if r["status"] == "NEW"]
         if unmerged:
             points.append(f"{len(unmerged)} upstream review(s) not merged yet — fixed versions are expectations, not releases.")
+        for product, per_series in d.get("releases", {}).items():
+            failed = sorted(rid for rid, info in per_series.items() if info.get("error") == "lookup failed")
+            if failed:
+                points.append(f"The upstream release data of {product} could not be fetched for {', '.join(failed)} — "
+                              "latest and fixed versions of these releases are UNKNOWN, not missing.")
         for f in d.get("fixed_versions", []):
-            if not f.get("pinned_vulnerable") and not f["released"]:
+            if not f.get("series"):
+                points.append(f"{f['product']} {f['version']} cannot be mapped to an OpenStack series from the release "
+                              f"data (candidates: {', '.join(f.get('series_candidates') or []) or 'none'}) — take the "
+                              "series from the branch of the fix review, never from the version number.")
+            if not f.get("pinned_vulnerable") and not f["released"] and not f.get("lookup_failed"):
                 points.append(f"{f['product']} {f['version']} is not released yet.")
-        if not any(e.get("related_to_ossa") for entries in ok.get("patches", {}).values() for e in entries):
+        if github_unknown:
+            points.append(f"OSISM patch files, pull requests, built releases and tag dates: {github_unknown}. Look them "
+                          "up manually (reference/sources.md); the coverage questions below are asked for every release.")
+        elif not any(e.get("related_to_ossa") for entries in ok.get("patches", {}).values() for e in entries):
             points.append("No OSISM patch files related to this OSSA found — confirm whether OSISM shipped a fix "
                           "(PR search / CHANGELOG / upstream stable branch) or state that it is pending.")
         for c in d.get("coverage", []):
-            if c["osism_builds"] and not c["covered"] and c["upstream_status"] != "development":
-                scope = "officially supported" if c["osism_officially_supported"] else "built (not officially supported, but always covered in practice)"
+            if c["osism_builds"] is False or c["covered"] == COVERED_YES or c["upstream_status"] == "development":
+                continue
+            scope = ("officially supported" if c["osism_officially_supported"] else
+                     "possibly built (unknown)" if c["osism_builds"] is None else
+                     "built (not officially supported, but always covered in practice)")
+            if c["covered"] == COVERED_UNVERIFIED:
+                points.append(f"{c['release']} ({c['series']}) is {scope} by OSISM and its coverage is UNVERIFIED: there "
+                              "are only hints (patch file matched by name or bug number, or a merged review that is not "
+                              "a fix listed in the OSSA) — ASK THE AUTHOR whether the fix is really shipped for this "
+                              "release and record the answer in the advisory.")
+            else:
                 points.append(f"{c['release']} ({c['series']}) is {scope} by OSISM but has neither an OSISM patch for this "
                               "issue nor a merged upstream fix — ASK THE AUTHOR about the status (backport in preparation? "
                               "next rebuild? not planned?) and record the answer in the advisory.")
+        for entries in ok.get("patches", {}).values():
+            for e in entries:
+                commit = e.get("added_by_commit")
+                if (e.get("related_to_ossa") or e.get("related_unverified")) and not (commit and commit.get("verified")):
+                    points.append(f"The commit and pull request that introduced `{e['path']}` could not be verified — "
+                                  "check with `git log --follow` before citing them in Remediation and References.")
         extra = [r for r in d.get("reviews", []) if not r["listed_in_ossa"]]
         if extra:
             points.append("Reviews referencing the bugs but not listed in the OSSA: " + ", ".join(str(r["number"]) for r in extra)
                           + " — decide whether they belong to this advisory (follow-ups, OSSN material).")
-        for b in d.get("bugs", []):
-            if b.get("information_type") and "Private" in b["information_type"]:
-                points.append(f"Bug #{b['id']} is still private — do not publish details.")
+        for product, e in (d.get("kolla", {}).get("products") or {}).items():
+            failed = [prm["variable"] for prm in e.get("osism_image_parameters") or [] if prm.get("lookup_failed")]
+            if failed:
+                points.append(f"{product}: the rolling registry could not be queried for {', '.join(failed)} — verify the "
+                              "images manually before leaving any of them out of the override snippet.")
         if loc.get("target_exists"):
             points.append("An advisory file already exists — update it (errata, CVE ids, release status) instead of rewriting it.")
         points.append("Decide which container images carry the vulnerable code (tag variables in section 9) and whether a "
@@ -1373,15 +1975,7 @@ class Collector:
                       "rolling registry and keep sidecar images without project code on their deployed tag.")
         points.append("Check the OSISM default configuration for the affected feature (enable flags in section 9 and the "
                       "configuration guide) to state whether default deployments are affected.")
-        for p in points:
-            add(f"- [ ] {p}")
-        add("")
-        if self.warnings:
-            add("## 13. Collection warnings\n")
-            for w in self.warnings:
-                add(f"- {w}")
-            add("")
-        return "\n".join(L)
+        return points
 
     # ---- driver ---------------------------------------------------------- #
 
@@ -1400,26 +1994,31 @@ class Collector:
         return self.write()
 
 
-def find_repo_dir(start: Path) -> Path:
+def find_repo_dir(start: Path) -> Path | None:
     for candidate in (start, *start.parents):
         if (candidate / "docs" / "appendix" / "security").exists():
             return candidate
-    return start
+    return None
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("reference", help="OSSA reference (Gerrit URL/number, OSSA id, or security.openstack.org URL)")
     parser.add_argument("--output-dir", type=Path, default=None,
-                        help="directory for <OSSA-ID>/dossier.md and raw.json (default: a temporary directory)")
+                        help="directory for <OSSA-ID>/dossier.md and raw.json (default: a new private temporary directory)")
     parser.add_argument("--repo-dir", type=Path, default=None,
                         help="osism.github.io checkout (default: detected from the current directory)")
     parser.add_argument("--no-github", action="store_true", help="skip everything that needs the GitHub API")
     parser.add_argument("--print", action="store_true", help="print the dossier to stdout when done")
     args = parser.parse_args()
 
-    repo_dir = args.repo_dir or find_repo_dir(Path.cwd())
-    output_dir = args.output_dir or Path(tempfile.gettempdir()) / "security-advisory"
+    repo_dir = find_repo_dir((args.repo_dir or Path.cwd()).resolve())
+    if repo_dir is None:
+        # exemplars, index rows and the release floor of the coverage matrix all come from the checkout
+        sys.exit(f"error: no docs/appendix/security directory in or above {args.repo_dir or Path.cwd()} — "
+                 "run the collector inside the osism.github.io checkout or pass --repo-dir")
+    # the dossier may contain embargoed material: a private, unpredictable directory (mode 0700)
+    output_dir = args.output_dir or Path(tempfile.mkdtemp(prefix="security-advisory-"))
     collector = Collector(repo_dir=repo_dir, output_dir=output_dir, use_github=not args.no_github)
     dossier = collector.run(args.reference)
     print(f"\nDossier written to {dossier}")
