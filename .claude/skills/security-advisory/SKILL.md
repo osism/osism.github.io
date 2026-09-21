@@ -4,6 +4,7 @@ description: Write or update an OSISM security advisory page (docs/appendix/secu
 argument-hint: <OSSA review URL | change number | OSSA-YYYY-NNN>
 allowed-tools:
   - Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/collect.py:*)
+  - Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/check_images.py:*)
   # allowed-tools pre-approves, it does not sandbox: every entry is a grant. curl is therefore
   # limited to the hosts of reference/sources.md (unquoted and single-quoted URL, as written
   # there) and gh api to the read-only endpoints the workflow uses. Anything else prompts.
@@ -56,7 +57,8 @@ is committed unless the author asks for it.
 
 Supporting files: [reference/style.md](reference/style.md) (content and wording rules),
 [reference/template.md](reference/template.md) (skeleton), [reference/sources.md](reference/sources.md)
-(APIs and commands), `scripts/collect.py` (automatic research).
+(APIs and commands), `scripts/collect.py` (automatic research), `scripts/check_images.py`
+(verifies the image override snippet).
 
 ## 1. Collect the facts
 
@@ -100,7 +102,10 @@ Supporting files: [reference/style.md](reference/style.md) (content and wording 
   libraries, name the images that install them. The override snippet sets the `*_tag` **and every
   `<service>*_image` parameter** with the rolling `kolla` namespace (stable releases pull from
   `kolla/release/<openstack_version>`); list only images that section 9 shows in the rolling
-  registry.
+  registry. **Copy the parameter names and image names from the generated snippet in section 9**
+  (source: osism/defaults `all/002-images-kolla.yml`) and only delete lines. Never build a name by
+  analogy with another service: Keystone has `keystone_image`, Glance has no `glance_image` but
+  `glance_api_image` with the image `kolla/glance-api`.
 - Determine the OSISM impact: enable flags and defaults (section 9), the OSISM configuration guide
   (`docs/guides/configuration-guide/openstack/<service>.md`) and default policies. Decide whether a
   default OSISM deployment is affected and write the checks an operator can run
@@ -143,6 +148,11 @@ Supporting files: [reference/style.md](reference/style.md) (content and wording 
 - No `{{` placeholder left; headings and their order match the template; the Date is the OSSA
   date; every CVE, bug and review from the dossier appears in References; PR numbers, commit shas,
   version numbers and dates match the dossier.
+- Run `python3 ${CLAUDE_SKILL_DIR}/scripts/check_images.py <advisory>`: it compares every `*_image`
+  and `*_tag` line of the page with osism/defaults `all/002-images-kolla.yml` (parameter exists,
+  image name matches, tag and image parameters come together). Exit status 1 → fix the snippet from
+  dossier section 9; exit status 2 → nothing was verified, compare the snippet with the file
+  manually and say so in the report.
 - Run `npx --no-install markdownlint-cli2` and `npx --no-install markdown-table-formatter --check`
   on the advisory and the index; apply the table formatter when the check fails.
 - Check that every external link resolves (loop in `reference/sources.md`; CVE links may still be

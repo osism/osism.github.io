@@ -127,6 +127,10 @@ would point at an image that does not exist:
 {{IMAGE_VARIABLE}}: "registry.osism.tech/kolla/{{IMAGE_NAME}}"
 ```
 
+{{Copy TAG_VARIABLE, IMAGE_VARIABLE and IMAGE_NAME from the generated snippet in dossier section 9
+(osism/defaults all/002-images-kolla.yml); never build them from the service name. Keep the
+`title="environments/kolla/images.yml"` of the block: scripts/check_images.py checks it.}}
+
 Replace `registry.osism.tech` if you pull the images from a mirror. {{OPTIONAL: sidecar images whose
 tag follows the umbrella tag but contain no project code, and which tag to pin for them.}}
 

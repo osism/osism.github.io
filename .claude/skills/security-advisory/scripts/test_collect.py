@@ -663,6 +663,30 @@ class RegistryLookups(unittest.TestCase):
         self.assertNotIn("(do not list it in the override)", line)
         self.assertTrue(any("neutron_server_image" in p for p in self.points))
 
+    def test_override_snippet_uses_the_parameters_of_osism_defaults(self):
+        """There is no glance_image: the names come from osism/defaults, not from analogy (PR #1086)."""
+        parameters = [
+            {"variable": "glance_tag", "default": "{{ kolla_glance_version|default(kolla_image_version) }}"},
+            {"variable": "glance_api_image", "default": "{{ docker_image_url }}glance-api", "image": "kolla/glance-api",
+             "rolling_tags": ["2025.1"]},
+            {"variable": "glance_api_tag", "default": "{{ glance_tag }}"},
+            {"variable": "glance_tls_proxy_image", "default": "{{ docker_image_url }}glance-tls-proxy",
+             "image": "kolla/glance-tls-proxy", "error": "repository not found", "lookup_failed": False},
+        ]
+        lines = collect.override_snippet(parameters)
+        self.assertTrue(lines[0].startswith('glance_tag: "<release id>"'))
+        self.assertIn('glance_api_image: "registry.osism.tech/kolla/glance-api"', lines)
+        self.assertEqual(len(lines), 2, "an image confirmed missing from the rolling registry is left out")
+        parameters[3].update(error="HTTP 503", lookup_failed=True)
+        self.assertIn("verify that this rolling image exists", collect.override_snippet(parameters)[2])
+        collector = make_collector()
+        collector.ossa = {"id": "OSSA-0000-000"}
+        collector.data["kolla"] = {"reference_branch": "stable/2025.1",
+                                   "products": {"glance": {"osism_image_parameters": parameters}}}
+        rendered = section(collector.render_dossier(), 9)
+        self.assertIn('  glance_api_image: "registry.osism.tech/kolla/glance-api"', rendered)
+        self.assertIn("never rename a parameter", rendered)
+
     def test_probe_without_a_token_realm_is_a_failed_lookup(self):
         for side_effect in (collect.urllib.error.HTTPError("u", 503, "unavailable", {}, io.BytesIO()), OSError("unreachable")):
             with self.subTest(error=side_effect):
