@@ -65,13 +65,13 @@ of MariaDB. For more details about backups, you can use the official
 * Create a full backup
 
   ```bash
-  osism apply mariadb_backup
+  osism apply mariadb-backup
   ```
 
 * Create a incremental backup
 
   ```bash
-  osism apply mariadb_backup -e mariadb_backup_type=incremental
+  osism apply mariadb-backup -e mariadb_backup_type=incremental
   ```
 
 * Accessing created backups
@@ -95,7 +95,7 @@ You can create a simple cronjob on the manager or use your enterprise backup sof
 
 ```bash
 cat /etc/cron.d/mariadb_backup <<'EOF'
-0 7 * * * dragon osism apply mariadb_backup |logger -t mariadb_backup
+0 7 * * * dragon osism apply mariadb-backup |logger -t mariadb_backup
 EOF
 ```
 
@@ -112,7 +112,7 @@ EOF
 * Execute the recovery procedure with the node name where you executed the recovery
 
   ```bash
-  osism apply mariadb_recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE
+  osism apply mariadb-recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE
   ```
 
 ### Recovery
@@ -121,7 +121,7 @@ If you stopped your mariadb galera cluster completely, you can use the following
 to start a recovery.
 
 ```bash
-osism apply mariadb_recovery
+osism apply mariadb-recovery
 ```
 
 ### Create database & user
