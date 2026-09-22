@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Infrastructure | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/operations-guide/infrastructure"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Infrastructure | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Loadbalancer"><meta data-rh="true" property="og:description" content="Loadbalancer"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/operations-guide/infrastructure"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/operations-guide/infrastructure" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/operations-guide/infrastructure" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Operations Guide","item":"https://osism.tech/docs/guides/operations-guide/"},{"@type":"ListItem","position":3,"name":"Infrastructure","item":"https://osism.tech/docs/guides/operations-guide/infrastructure"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.a635437d.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.5b33b5e6.js" defer="defer"></script>
 <script src="/assets/js/main.d8694193.js" defer="defer"></script>
 </head>
 <body>
@@ -44,11 +44,11 @@ of MariaDB. For more details about backups, you can use the official
 <ul>
 <li class="">
 <p>Create a full backup</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb_backup</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb-backup</span><br></div></code></pre></div></div>
 </li>
 <li class="">
 <p>Create a incremental backup</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb_backup -e mariadb_backup_type=incremental</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb-backup -e mariadb_backup_type=incremental</span><br></div></code></pre></div></div>
 </li>
 <li class="">
 <p>Accessing created backups</p>
@@ -60,7 +60,7 @@ are stored in this volume.
 </ul>
 <p>Currently there is no official scheduling and housekeeping (disk space) for mariadb backups.
 You can create a simple cronjob on the manager or use your enterprise backup software.</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">cat /etc/cron.d/mariadb_backup &lt;&lt;&#x27;EOF&#x27;</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">0 7 * * * dragon osism apply mariadb_backup |logger -t mariadb_backup</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">EOF</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">cat /etc/cron.d/mariadb_backup &lt;&lt;&#x27;EOF&#x27;</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">0 7 * * * dragon osism apply mariadb-backup |logger -t mariadb_backup</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">EOF</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="restore">Restore<a href="#restore" class="hash-link" aria-label="Direct link to Restore" title="Direct link to Restore" translate="no">​</a></h3>
 <ul>
 <li class="">
@@ -72,13 +72,13 @@ You can create a simple cronjob on the manager or use your enterprise backup sof
 </li>
 <li class="">
 <p>Execute the recovery procedure with the node name where you executed the recovery</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb_recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb-recovery -e mariadb_recover_inventory_name=THE_NAME_OF_THE_RESTORE_NODE</span><br></div></code></pre></div></div>
 </li>
 </ul>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="recovery">Recovery<a href="#recovery" class="hash-link" aria-label="Direct link to Recovery" title="Direct link to Recovery" translate="no">​</a></h3>
 <p>If you stopped your mariadb galera cluster completely, you can use the following procedure
 to start a recovery.</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb_recovery</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply mariadb-recovery</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="create-database--user">Create database &amp; user<a href="#create-database--user" class="hash-link" aria-label="Direct link to Create database &amp; user" title="Direct link to Create database &amp; user" translate="no">​</a></h3>
 <ol>
 <li class="">
