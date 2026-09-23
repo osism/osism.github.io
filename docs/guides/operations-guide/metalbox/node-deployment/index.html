@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Node deployment | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Node deployment | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="This page describes the generic case: a node that is described in NetBox but has never"><meta data-rh="true" property="og:description" content="This page describes the generic case: a node that is described in NetBox but has never"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Operations Guide","item":"https://osism.tech/docs/guides/operations-guide/"},{"@type":"ListItem","position":3,"name":"MetalBox","item":"https://osism.tech/docs/guides/operations-guide/metalbox/"},{"@type":"ListItem","position":4,"name":"Node deployment","item":"https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.f0497c99.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f48d0e51.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -70,6 +70,29 @@ selected components:</p>
 <p>Cleaning runs in the <code>manageable</code> state, so the command moves the node there and back
 by itself. On nodes with a RAID interface the RAID configuration is deleted as part of
 it.</p>
+<p><code>--raid</code> decides what is left behind on those nodes:</p>
+<table><thead><tr><th style="text-align:left">Mode</th><th style="text-align:left">Result</th></tr></thead><tbody><tr><td style="text-align:left"><code>--raid delete</code></td><td style="text-align:left">removes the existing RAID configuration (the default)</td></tr><tr><td style="text-align:left"><code>--raid keep</code></td><td style="text-align:left">leaves it in place and erases through the existing array</td></tr><tr><td style="text-align:left"><code>--raid recreate</code></td><td style="text-align:left">removes it and builds the node&#x27;s <code>target_raid_config</code> again</td></tr></tbody></table>
+<p>Written without a value, <code>--raid</code> means <code>recreate</code>. Nodes without a RAID interface are
+unaffected by any of the modes.</p>
+<p><code>--metadata-only</code> erases only the disk metadata rather than the disk contents. That is
+much faster, but it leaves the data itself in place. It defaults to <code>--raid keep</code>, so a
+metadata-only clean does not touch the array unless a mode is named:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism baremetal clean --metadata-only node101</span><br></div></code></pre></div></div>
+<p>Because <code>--raid</code> takes an optional value, a node name cannot follow it directly. Write
+the name first, <code>osism baremetal clean node101 --raid</code>, or name the mode,
+<code>osism baremetal clean --raid recreate node101</code>.</p>
+<p><code>--raid recreate</code> needs something to build. A named node that has no
+<code>target_raid_config</code>, or no RAID interface at all, is refused before the node is
+touched. Under <code>--all</code> such nodes are skipped and reported instead, so one
+misconfigured node does not stop the rest of the fleet, and the command exits non-zero
+so the gap is visible to whatever called it.</p>
+<p>A fleet that mixes nodes with and without RAID needs no special handling, and there is
+nothing to select. The modes only ever apply to nodes that have a RAID interface, so a
+single run erases the nodes without one and rebuilds the declared arrays of those that
+have one:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism baremetal clean --all --yes-i-really-really-mean-it --raid recreate</span><br></div></code></pre></div></div>
+<p>Building the array on its own, without deploying an image, is described in
+<a class="" href="/docs/guides/configuration-guide/metalbox/software-raid">Software RAID</a>.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="deploy-the-node">Deploy the node<a href="#deploy-the-node" class="hash-link" aria-label="Direct link to Deploy the node" title="Direct link to Deploy the node" translate="no">​</a></h2>
 <p><strong>MetalBox.</strong> Write the operating system to the node:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism baremetal deploy node101</span><br></div></code></pre></div></div>
