@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Infrastructure | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/upgrade-guide/infrastructure"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Infrastructure | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="1. Kubernetes"><meta data-rh="true" property="og:description" content="1. Kubernetes"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/upgrade-guide/infrastructure"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/infrastructure" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/infrastructure" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Upgrade Guide","item":"https://osism.tech/docs/guides/upgrade-guide/"},{"@type":"ListItem","position":3,"name":"Infrastructure","item":"https://osism.tech/docs/guides/upgrade-guide/infrastructure"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.b8c88d30.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f0497c99.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -33,7 +33,27 @@ service.</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull loadbalancer</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a upgrade loadbalancer</span><br></div></code></pre></div></div>
 </li>
 <li class="">
-<p>Redis</p>
+<p>Key-value store: Valkey or Redis</p>
+<p>Which service to upgrade depends on the OSISM release you are upgrading <strong>to</strong>,
+not the one you are coming from. OSISM 11 and later run Valkey; OSISM 10 and
+earlier run Redis. OSISM enables the matching service automatically, so only
+the role name in the command differs.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>Add the Valkey secret before upgrading to OSISM 11</div><div class="admonitionContent_BuS1"><p>The Valkey role requires <code>valkey_master_password</code>, which a configuration
+repository created before the switch does not have:
+<code>environments/kolla/secrets.yml</code> is generated once, when the repository is
+created, and no later upgrade adds keys to an existing one. Without it the
+upgrade below fails part-way through with
+<code>AnsibleUndefinedVariable: &#x27;valkey_master_password&#x27; is undefined</code>.</p><p>Generate a password with <code>pwgen 32</code>, add <code>valkey_master_password</code> to
+<code>environments/kolla/secrets.yml</code> in the configuration repository, commit it,
+and sync the configuration on the manager node with <code>osism apply configuration</code>. Then run the Valkey upgrade below.</p></div></div>
+<p>When upgrading to OSISM 11 or later:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull valkey</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a upgrade valkey</span><br></div></code></pre></div></div>
+<p>Coming from a Redis deployment, these are the only commands to run for this
+step — do not upgrade <code>redis</code> first. The Valkey upgrade detects the running
+Redis instance, starts Valkey alongside it, replicates the data across, fails
+over to Valkey, and then removes the Redis containers and their data volume.</p>
+<p>When upgrading to OSISM 10 or earlier, both releases run Redis and nothing
+migrates:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull redis</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a upgrade redis</span><br></div></code></pre></div></div>
 </li>
 <li class="">

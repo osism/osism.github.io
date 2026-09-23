@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Infrastructure | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/deploy-guide/services/infrastructure"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Infrastructure | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Common issues with deploying infrastructure services required by OpenStack"><meta data-rh="true" property="og:description" content="Common issues with deploying infrastructure services required by OpenStack"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/deploy-guide/services/infrastructure"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/services/infrastructure" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/services/infrastructure" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Deploy Guide","item":"https://osism.tech/docs/guides/deploy-guide/"},{"@type":"ListItem","position":3,"name":"Services","item":"https://osism.tech/docs/guides/deploy-guide/services/"},{"@type":"ListItem","position":4,"name":"Infrastructure","item":"https://osism.tech/docs/guides/deploy-guide/services/infrastructure"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.b8c88d30.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f0497c99.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -18,7 +18,8 @@ are documented in the <a class="" href="/docs/guides/troubleshooting-guide/opens
 <li class="">
 <p>Optional: In order to reduce the active observation time for the deployment of the components,
 the container images for the following services can be downloaded in advance with the argument <code>-a pull</code>.</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull common</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull loadbalancer</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull redis</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull memcached</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull rabbitmq</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull mariadb</span><br></div></code></pre></div></div>
+<p>With OSISM 10 and earlier, use <code>redis</code> instead of <code>valkey</code> below and in step 4.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull common</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull loadbalancer</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull valkey</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull memcached</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull rabbitmq</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">osism apply -a pull mariadb</span><br></div></code></pre></div></div>
 </li>
 <li class="">
 <p>Cron, Fluentd &amp; Kolla Toolbox</p>
@@ -38,7 +39,14 @@ environment, as parts of the other deployments depend on the loadbalancer
 service.</p>
 </li>
 <li class="">
-<p>Redis</p>
+<p>Key-value store: Valkey or Redis</p>
+<p>Which service to deploy depends on the OSISM release. OSISM 11 and later deploy
+Valkey; OSISM 10 and earlier deploy Redis. The change comes from Kolla Ansible,
+which replaced Redis with Valkey upstream. OSISM enables the matching service
+automatically, so only the role name in the command differs.</p>
+<p>With OSISM 11 and later:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply valkey</span><br></div></code></pre></div></div>
+<p>With OSISM 10 and earlier:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism apply redis</span><br></div></code></pre></div></div>
 </li>
 <li class="">

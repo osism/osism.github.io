@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Concepts | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/concepts/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Concepts | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="This section explains OSISM&#x27;s architecture, the components that make up a cloud"><meta data-rh="true" property="og:description" content="This section explains OSISM&#x27;s architecture, the components that make up a cloud"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/concepts/"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Concepts","item":"https://osism.tech/docs/concepts/"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.b8c88d30.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f0497c99.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -64,8 +64,9 @@ fully replaced by BFD, BGP, and ECMP. Details about the network design can be
 found in the <a class="" href="/docs/concepts/cluster-network">Cluster Network</a> section.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="openstack">OpenStack<a href="#openstack" class="hash-link" aria-label="Direct link to OpenStack" title="Direct link to OpenStack" translate="no">​</a></h3>
 <p>The IaaS layer is provided by OpenStack. Underlying shared services like
-MariaDB, Redis, RabbitMQ, and Memcache, as well as OpenStack itself, are
-provisioned via the OSISM Manager with Kolla Ansible to the respective servers.
+MariaDB, Valkey (Redis with OSISM 10 and earlier), RabbitMQ, and Memcache, as
+well as OpenStack itself, are provisioned via the OSISM Manager
+with Kolla Ansible to the respective servers.
 The selection and configuration of the OpenStack services happen in the Git
 configuration repository. The assignment of control, compute, network, and
 monitoring roles is controlled by NetBox.</p>
