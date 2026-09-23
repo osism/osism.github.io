@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Manager | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/upgrade-guide/manager"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Manager | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Always read the release notes first to learn what has changed and what"><meta data-rh="true" property="og:description" content="Always read the release notes first to learn what has changed and what"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/upgrade-guide/manager"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/manager" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/upgrade-guide/manager" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Upgrade Guide","item":"https://osism.tech/docs/guides/upgrade-guide/"},{"@type":"ListItem","position":3,"name":"Manager","item":"https://osism.tech/docs/guides/upgrade-guide/manager"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.f48d0e51.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.e3784c33.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -48,8 +48,25 @@ workflows for changes to the configuration repository, only a generic example fo
 </li>
 <li class="">
 <p>Update the configuration repository on the manager node.</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh configuration</span><br></div></code></pre></div></div>
-<ul>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">With external connectivity</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Without external connectivity</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh configuration</span><br></div></code></pre></div></div></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li class="">
+<p>Follow the instructions for your local environment to manually copy the
+configuration repository on the manager node(s).</p>
+</li>
+<li class="">
+<p>Make sure your MetalBox registry is updated to contain the new release
+images by following the
+<a class="" href="/docs/guides/upgrade-guide/metalbox/data-updates#update-of-the-container-registry">procedure described in the MetalBox data update section</a></p>
+</li>
+<li class="">
+<p>When using the seed container for the upgrade (see notes below ), point
+the <code>run.sh</code> script to the correct registry, using the
+<code>SEED_CONTAINER_REGISTRY</code> environment. In case of a MetalBox-based
+installation:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">export SEED_CONTAINER_REGISTRY=metalbox:5001</span><br></div></code></pre></div></div>
+</li>
+</ul></div></div></div>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_BuS1"><ul>
 <li class="">
 <p>The playbooks in steps 2 and 3 are driven against the manager over SSH, so it does
 not matter which machine runs them, as long as that machine has a checkout of the
@@ -110,10 +127,15 @@ OSISM &gt;= 8.0.0 relief from <code>--ask-vault-pass</code> applies to <code>osi
 <p>Arguments after the playbook name are passed on to <code>ansible-playbook</code>, so
 <code>./run.sh configuration --ask-vault-pass</code> works as well.</p>
 </li>
-</ul>
+</ul></div></div>
 </li>
 <li class="">
 <p>Update the manager service.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_BuS1"><p>In case of multiple manager nodes, consider doing the update sequentially
+by limiting each run to a single manager. To do so append the <code>--limit $MANAGER</code> parameter to the command below and repeat it for each manager
+instance once the upgrade on the previous manager was successful.
+Without the parameter the command will upgrade all managers in a single
+run.</p></div></div>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">./run.sh manager</span><br></div></code></pre></div></div>
 <ul>
 <li class="">This recreates the manager containers. The notes on <code>run.sh</code> in step 2 apply here
