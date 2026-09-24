@@ -146,7 +146,7 @@ import TabItem from '@theme/TabItem';
     Unfortunately loadbalancers cannot be moved out of PENDING states using the API, so they are set to `ERROR` state in the DB  
     Connect to the octavia database on a control node using the octavia DB credentials
     ```sh
-    docker exec -it mariadb mysql -uoctavia -p octavia
+    docker exec -it mariadb mariadb -uoctavia -p octavia
     ```
     For every ID of a loadbalancer stuck in a pending state set the `provisioning_status` to `ERROR`
     ```sql
@@ -270,7 +270,7 @@ import TabItem from '@theme/TabItem';
 
   ```console
   read -rs PW
-  docker exec mariadb mysql -uneutron -p${PW} neutron -N -B -e 'SELECT network_id, network_type FROM networksegments ORDER BY network_id;' | docker exec -i ovn_nb_db /usr/bin/tee /tmp/neutron-network-types
+  docker exec mariadb mariadb -uneutron -p${PW} neutron -N -B -e 'SELECT network_id, network_type FROM networksegments ORDER BY network_id;' | docker exec -i ovn_nb_db /usr/bin/tee /tmp/neutron-network-types
   ```
 
   Open an interactive shell inside the OVN northb container
