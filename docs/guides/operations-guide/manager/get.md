@@ -79,3 +79,37 @@ A `get` command is available in the OSISM CLI. This allows to gather specific in
   | testbed-manager.testbed.osism.xyz | ansible_architecture | 'x86_64' |
   +-----------------------------------+----------------------+----------+
   ```
+
+## MariaDB backup host
+
+* Get the host that `osism apply mariadb-backup` writes its archives to
+
+  ```console
+  $ osism get mariadb-backup-host
+  +----------------------------------+
+  | Host                             |
+  |----------------------------------|
+  | testbed-node-0.testbed.osism.xyz |
+  +----------------------------------+
+  ```
+
+* Get the bare host name, for use in scripts
+
+  ```console
+  $ osism get mariadb-backup-host --format script
+  testbed-node-0.testbed.osism.xyz
+  ```
+
+The host is resolved by the kolla-ansible mariadb role itself, the same way a backup
+run does. So an override of `mariadb_backup_host` in the inventory or in
+`environments/kolla/configuration.yml` is taken into account. The command runs a
+read-only play on the kolla-ansible worker, so it takes a few seconds; `--timeout`
+sets how long it waits (default: 300 seconds).
+
+With several MariaDB shards, every shard resolves a backup host, but kolla-ansible
+backs up only the default shard; the command reports that shard's host. If no host
+would be backed up, for example because `mariadb_backup_host` is set to a host outside
+the default shard, the command prints no host, names the hosts the shards resolved,
+and exits non-zero: kolla-ansible would skip the backup without reporting an error.
+If the play itself fails, `osism apply -e kolla mariadb-backup-host` shows its full
+output.
