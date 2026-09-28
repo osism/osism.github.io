@@ -1,0 +1,347 @@
+---
+sidebar_label: Backup
+sidebar_position: 10
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# MariaDB Backup
+
+This guide covers backups of the OpenStack control plane database:
+which host holds them, how to take one, and how to schedule and prune them.
+Restoring one is covered in [MariaDB Restore](./restore.md).
+
+:::warning Backups on OSISM 10.2.0 and earlier can be silently wrong
+
+The archive can record a restore point that belongs to a different node than the
+files it copied, and may not restore at all. Nothing reports an error when it
+happens, and fixing it does not repair archives already taken. Settle this
+before relying on backups: [MariaDB backup connection
+fix](./connection-fix.md).
+
+:::
+
+## The backup host
+
+Backups run on one MariaDB host and land in the `mariadb_backup` volume there.
+Nothing copies them elsewhere, so that host is where the archives are, where the
+prune script runs, and where a restore begins.
+
+From OSISM 10.3.0 and 11.0.0, ask for it on the **manager**:
+
+```bash
+osism get mariadb-backup-host
+```
+
+It resolves the host the way a backup run does, so an override of
+`mariadb_backup_host` is taken into account. See [osism
+get](../manager/get.md) for what it reports on a sharded deployment.
+
+Earlier releases have no such command, and the order kolla takes the host from is
+not one they report either. There the backup names it: the task `Taking database
+backup via Mariabackup` reports the backup host as `changed` and every other
+member as `skipping`. The scheduled entry below logs to the journal, so a run
+that has already happened answers it too, on the **manager**:
+
+```bash
+journalctl -t mariadb_backup | grep -A3 'Taking database backup'
+```
+
+## Take a backup
+
+On the **manager**:
+
+```bash
+osism apply mariadb-backup
+```
+
+For an incremental backup, on the **manager**:
+
+```bash
+osism apply mariadb-backup -e mariadb_backup_type=incremental
+```
+
+Each increment is taken against the newest **full** backup, not against the increment
+before it, and its directory records which one: `incr-<time>-since-<full-date>`. So
+increments do not form a chain — restoring needs the full and exactly one increment,
+whichever state you want, and the ones between are not involved. An increment cannot
+be taken before a full has succeeded.
+
+## Confirm the backup succeeded
+
+The backup script writes into a Docker volume named `mariadb_backup` on the backup
+host, and records what it wrote. On the **backup host**:
+
+<Tabs>
+<TabItem value="new-layout" label="OSISM >= 9.2.0" default>
+
+```bash
+IMAGE=$(docker inspect --format '{{.Image}}' mariadb)
+docker run --rm -v mariadb_backup:/backup:ro "$IMAGE" cat /backup/last_full_file
+```
+
+This prints the path of the most recent full archive. The
+`full-<date>-<timestamp>` directory in that path is the run that wrote it. The
+trailing number is Unix epoch seconds, and it is the part that discriminates — the
+date alone does not, once more than one backup has run in a day:
+
+```bash
+date -u -d @1790435642      # -> Sat 26 Sep 15:14:02 UTC 2026
+```
+
+`last_full_file` holds a single entry, and it is written only after a backup
+succeeds, so a failed run cannot move it. The next successful backup overwrites it:
+nothing in the volume records the outcome of any earlier run.
+
+`last_full_file` does not move for an increment; it names the last full and nothing
+else. What confirms an increment is the directory it left:
+
+```bash
+IMAGE=$(docker inspect --format '{{.Image}}' mariadb)
+docker run --rm -v mariadb_backup:/backup:ro "$IMAGE" sh -c 'ls -1dt /backup/incr-*' | head -1
+```
+
+An increment is staged as `incomplete-incr-…` and renamed once it finishes, exactly as
+a full is, so a directory under `incr-*` is one whose run completed. If the newest one
+is not the run you just took, that run did not finish.
+
+</TabItem>
+<TabItem value="old-layout" label="OSISM < 9.2.0">
+
+```bash
+IMAGE=$(docker inspect --format '{{.Image}}' mariadb)
+docker run --rm -v mariadb_backup:/backup:ro "$IMAGE" \
+    sh -c 'cat /backup/last_full_date; ls -l /backup'
+```
+
+These releases write the archives straight into the volume, named
+`mysqlbackup-<date>-<timestamp>...`, and `last_full_date` records only the
+**day** of the most recent full backup — not which file it is. So read the date
+to confirm a full backup ran today, and take the newest `mysqlbackup-*` from the
+listing as the archive it produced. The date is written only after the backup
+succeeds, so a failed run cannot move it.
+
+</TabItem>
+</Tabs>
+
+If any of these commands fails, you are most likely on the wrong host: the `mariadb`
+container runs only on a MariaDB node, and only the backup host holds archives.
+Check which host it is under [The backup
+host](#the-backup-host). If this is the right host, then the backup
+produced nothing, and the output of the `osism apply mariadb-backup` run is
+where to look.
+
+Note that running them on the wrong host **creates** an empty
+`mariadb_backup` volume there — mounting a named volume that does not exist
+creates it. So the volume's presence is not evidence that backups were ever taken
+on a host; its contents are.
+
+## Copy the archives off the hosts
+
+Copy the archive files off the database hosts, from
+`/var/lib/docker/volumes/mariadb_backup/_data/` on the backup host: one in each
+`full-*` directory, and one in each `incr-*` if you take increments. Use whatever
+transfer or backup tooling you already run.
+
+The files name themselves, so the directories carry nothing their names do not. A
+full is `mysqlbackup-<date>-<timestamp>.qp.xbc.xbs.gz`; an increment is
+`incremental-<its own time>-` followed by the file name of the full it was taken
+against.
+
+## Scheduling and pruning
+
+OSISM schedules no backups and removes no old ones. Both are yours, and they
+belong together: every run creates a new directory, so a schedule on its own fills
+the backup host's root filesystem, and the failure lands on a control node.
+
+Leave room for a restore too: it extracts and prepares a copy beside the live
+database before anything is stopped, so the filesystem briefly holds the database
+twice, plus the archives you keep.
+
+Two cron entries, on two machines: the backup is triggered on the **manager**,
+while the archives land in a volume on `mariadb_backup_host`, so the prune script
+runs there.
+
+On the **manager**:
+
+```bash
+sudo tee /etc/cron.d/mariadb_backup <<'EOF'
+0 7 * * * dragon osism apply mariadb-backup 2>&1 | logger -t mariadb_backup
+30 * * * * dragon osism apply mariadb-backup -e mariadb_backup_type=incremental 2>&1 | logger -t mariadb_backup
+EOF
+```
+
+A daily full with hourly increments bounds how far the database can diverge from
+the newest backup — and that divergence is what [step
+5](./restore.md#5-verify-before-returning-to-service) makes you reconcile against
+OVN, Ceph and the hypervisors after a restore. An increment usually costs a
+fraction of a full, so the hourly entry buys a much shorter window cheaply. Leave
+the second entry out if you do not want increments.
+
+Every increment is taken against the newest full and carries everything since it,
+so increments grow as the full ages. A daily full keeps them small, which is why
+the entry above takes one; a longer interval suits a cluster whose churn is low, or
+whose only comfortable window for a full is at the weekend.
+
+An increment also carries the redo InnoDB has not yet checkpointed, plus whatever
+is written while the backup itself runs. That part follows the write rate and how
+long the run takes rather than the amount of data that differs from the full, and
+on a busy cluster it can dominate the archive.
+
+On the **backup host**, install the prune script. It is for releases **past OSISM
+10.2.0**.
+
+```bash
+sudo tee /usr/local/bin/mariadb-backup-prune <<'EOF'
+#!/bin/bash
+set -euo pipefail
+
+KEEP=${KEEP:-2}
+INCR_KEEP=${INCR_KEEP:-24}
+DEBRIS_DAYS=${DEBRIS_DAYS:-2}
+
+cd "$(docker volume inspect mariadb_backup -f '{{.Mountpoint}}')"
+
+# Increments are settled first, so that the pass over full backups below sees the
+# set that will still exist when this run ends.
+for d in incr-*/; do
+    d=${d%/}
+    [ -d "$d" ] || continue
+    [ -d "full-${d#*-since-}" ] || rm -rf "$d"
+done
+
+if compgen -G "incr-*" >/dev/null; then
+    ls -1dt incr-* | tail -n +$((INCR_KEEP + 1)) | xargs -r rm -rf
+fi
+
+if compgen -G "full-*" >/dev/null; then
+    for d in $(ls -1d full-* | sort -t- -k5 -n | head -n -"$KEEP"); do
+        if compgen -G "incr-*-since-${d#full-}" >/dev/null; then
+            echo "prune: keeping $d, increments still reference it" >&2
+            continue
+        fi
+        rm -rf "$d"
+    done
+fi
+
+find . -maxdepth 1 -name 'incomplete-*' -mtime +"$DEBRIS_DAYS" -exec rm -rf {} +
+EOF
+sudo chmod 0755 /usr/local/bin/mariadb-backup-prune
+```
+
+:::warning Do not use this prune script on OSISM 10.2.0 or earlier
+
+Those releases do not stage a run, so a failed backup leaves a directory
+indistinguishable from a good one. Keeping "the newest `KEEP` directories" then
+counts debris towards `KEEP`, and every failed run displaces a good archive. After
+`KEEP` consecutive failures the only restorable backup left is the one
+`last_full_file` names — and the prune script reports success throughout.
+
+See [Pruning on earlier releases](#pruning-on-earlier-releases).
+
+:::
+
+`KEEP` is the number of full backups kept counting from the newest, not a number
+kept in addition to it, so `KEEP=2` normally leaves two. A full that increments
+still reference is kept as well, whatever `KEEP` says. At `KEEP=0` that reference
+check is the only thing left holding anything back: every other full goes,
+including the one `last_full_file` names.
+
+`INCR_KEEP` is the number of increments kept, 24 covering a day of the hourly
+schedule above.
+
+`DEBRIS_DAYS` is how long a staging directory is left alone before the prune
+script removes it. A backup still running has one too, so this delay is what keeps
+the prune script from deleting a run in progress — the two need no coordination and
+may overlap — and it leaves a failed run in place long enough to look at. Whole
+days are counted, so `DEBRIS_DAYS=2` clears one during its fourth day.
+
+All three have defaults; you can set them in the cron entry rather than by editing
+the script:
+
+```bash
+sudo tee /etc/cron.d/mariadb_backup_prune <<'EOF'
+0 9 * * * root KEEP=2 INCR_KEEP=24 DEBRIS_DAYS=2 /usr/local/bin/mariadb-backup-prune 2>&1 | logger -t mariadb_backup_prune
+EOF
+```
+
+### Pruning on earlier releases
+
+Past OSISM 10.2.0 the backup script stages each run as
+`incomplete-full-<date>-<timestamp>/` and renames it to `full-<date>-<timestamp>/`
+only once the run has finished, so a `full-*` directory is one whose backup
+succeeded and the prune script above needs no other evidence.
+
+On OSISM 10.2.0 or earlier there is no staging. A run that dies leaves
+`full-<date>-<epoch>/` holding a partial archive, named by the same rule as a good one
+and indistinguishable from it by any listing, while `last_full_file` records only
+the newest success.
+
+What can be done safely is narrower than `KEEP`: keep the archive `last_full_file`
+names, and remove what is older than it. On the **backup host**:
+
+```bash
+sudo tee /usr/local/bin/mariadb-backup-prune <<'EOF'
+#!/bin/bash
+set -euo pipefail
+
+cd "$(docker volume inspect mariadb_backup -f '{{.Mountpoint}}')"
+
+if compgen -G "incr-*" >/dev/null; then
+    echo "prune: incremental archives present; not handled" >&2
+    exit 1
+fi
+
+if [ ! -s last_full_file ]; then
+    echo "prune: no last_full_file; nothing removed" >&2
+    exit 1
+fi
+current=$(basename "$(dirname "$(cat last_full_file)")")
+if [ ! -d "$current" ]; then
+    echo "prune: last_full_file names a missing directory ($current)" >&2
+    exit 1
+fi
+
+keep=${current##*-}
+for d in full-*/; do
+    d=${d%/}
+    if [ -d "$d" ] && [ "${d##*-}" -lt "$keep" ]; then
+        rm -rf "$d"
+        echo "prune: removed $d"
+    fi
+done
+EOF
+sudo chmod 0755 /usr/local/bin/mariadb-backup-prune
+```
+
+Schedule it with the same cron entry as above.
+
+What it gives you, and what it does not:
+
+* **One known-good archive is always present.** `last_full_file` is written only after
+  a backup succeeds, so the archive it names is one that finished. That is what
+  whatever copies backups off the host needs to find, and it is what stops the volume
+  growing without bound.
+* **It keeps exactly one.** There is no on-host history and no `KEEP`, because on
+  these releases there is no way to tell a second good archive from a failed run's
+  leftovers. Copy archives off the host if you want depth — the guide says to do that
+  anyway.
+* **It never removes anything newer than the pointer.** A directory newer than the
+  archive `last_full_file` names is either a failed run or a backup **still being
+  written**, and nothing in these releases distinguishes them. So the script leaves
+  both, and needs no coordination with the backup: the next successful run moves the
+  pointer past the debris, and the prune script after that removes it.
+* **It fails closed.** A missing `last_full_file`, a pointer naming an archive that is
+  gone, or any `incr-*` directory stops it before anything is deleted.
+
+Before 9.2.0 the layout is flatter but the same rule still works. Archives go straight
+into the volume as `mysqlbackup-<date>-<epoch>.qp.xbc.xbs.gz`, and the record of success
+is `last_full_date`, which holds a **day** rather than a filename. It is still written
+only after a backup succeeds, and an archive's own timestamp is taken after the day is,
+so the last good archive can never be older than the day recorded. Keep every archive
+whose trailing epoch is at or after midnight of `last_full_date` and remove the rest:
+that retains a day's worth of files instead of one, which is all the coarser record
+costs.
+
+The prune script does not check the archives it keeps. The restore procedure checks the
+one it is about to use, in [step 1](./restore.md#1-extract-and-prepare--restore-node-before-the-outage).
