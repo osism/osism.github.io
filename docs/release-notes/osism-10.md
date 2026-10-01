@@ -26,11 +26,111 @@ independently of it.
 
 :::
 
-| Release | Release Date   |
-|:--------|:---------------|
-| 10.2.0  | 14.August      |
-| 10.1.0  | 16. June 2026  |
-| 10.0.0  | 22. March 2026 |
+| Release | Release Date    |
+|:--------|:----------------|
+| 10.3.0  | 1. October 2026 |
+| 10.2.0  | 14.August       |
+| 10.1.0  | 16. June 2026   |
+| 10.0.0  | 22. March 2026  |
+
+## 10.3.0
+
+### Hostname validation during bootstrap
+
+A new `hostname_check` step now runs during `osism apply bootstrap` and refuses a host, before anything is configured, if its kernel host name disagrees with its own DNS-resolvable canonical name, differs from it only in case, cannot be resolved at all, or collides with another host's kernel name. The `hostname` role additionally refuses a name longer than 64 bytes (`HOST_NAME_MAX`), which previously only failed later with an opaque kernel error.
+
+This exists because several components key lookups on the host name and silently disagree when it is inconsistent: kolla's `compute_id` delivery can overwrite a registered compute's identity, nova-compute fails to authenticate to libvirtd, and OVN refuses to bind any port. The check only runs during bootstrap, so it has no effect on already-bootstrapped clusters or on upgrades.
+
+If a host intentionally uses a name DNS cannot confirm, downgrade the refusal to a warning:
+
+```yaml title="environments/kolla/configuration.yml"
+hostname_split_accepted: true
+```
+
+### MariaDB backups now always run from the local node
+
+`mariadb_backup_target` is pinned to `active`: mariabackup's control connection now always targets the node being copied, instead of being derived from the load balancer. On deployments with ProxySQL that derivation could point the control connection at a different Galera node than the one being backed up, stalling backups for minutes or longer. Full backups are now named `mysqlbackup-<date>.qp.xbc.xbs.gz` and incrementals `incremental-<date>-mysqlbackup-<date>.qp.xbc.xbs.gz`. Existing backups remain restorable, but update any tooling that parses the old filenames.
+
+The host a backup runs on can no longer be eyeballed from the inventory, so use the new command instead:
+
+```bash
+osism get mariadb-backup-host
+```
+
+### OpenStack services (OpenStack 2025.1)
+
+- `wait-for-keystone` and `wait-for-nova` now time out after 900 seconds instead of retrying for several hours when a service never comes up.
+- Nova-cell no longer invents a `compute_id` for a registered compute: hypervisors are matched by address instead of by name, so re-running nova-cell can no longer overwrite a compute's identity.
+- Container facts lookups no longer fail outright when an unrelated container is removed mid-walk, and a real failure now reports the actual module error.
+- `kolla-facts`, `kolla-gather-facts` and `kolla-certificates` now run in the kolla-ansible runtime instead of osism-ansible and gather facts there, keeping the kolla-ansible fact cache from expiring; the `kolla-facts` playbook also gained a valid `gather_subset` default and now gathers facts before the common role runs, fixing empty fact caches on mixed ansible-core versions.
+- Upstream fixes landed: RabbitMQ's precheck now accepts the shared backend TLS certificate fallback, fernet keys are distributed to the correct host group on existing deployments, and the Prometheus precheck no longer fails on vault-encrypted passwords.
+
+### Wazuh agent enrollment and outbound proxy
+
+- The `wazuh_agent` role can now enroll through `authd` instead of a static `client.keys`: set `wazuh_agent_enrollment_enabled` plus the manager address, agent name, port, groups and agent address, and optionally `wazuh_agent_enrollment_key` for authenticated enrollment.
+- A new `wazuh_proxy` role deploys an nginx stream proxy for environments where agents cannot reach the Wazuh manager directly. It proxies the agent protocol's own TCP ports 1514 and 1515, which a regular HTTP(S) proxy cannot carry, and ships as its own container image.
+
+### Manager service outbound proxy
+
+The manager services can now be configured to reach the internet through an HTTP/HTTPS proxy:
+
+```yaml title="environments/manager/configuration.yml"
+manager_configure_proxy: true
+manager_proxy_http: "http://10.0.0.10:3128"
+manager_proxy_no_proxy_extra:
+  - 192.168.16.0/20
+  - api-int.example.com
+```
+
+Internal manager endpoints (NetBox, the API, Vault, the internal OpenStack API) are excluded automatically. Proxy and CA bundle environment variables are now also preserved for the OpenStack image, flavor and project managers. Note that `openstack-image-manager` does not pick up the proxy yet, since it still starts with an empty environment.
+
+### Baremetal cleaning RAID modes
+
+`osism baremetal clean --raid` now takes one of three explicit modes instead of a boolean: `delete`, `keep`, or `recreate` (the default when `--raid` is given with no value). `recreate` tears the array down and rebuilds it from a node's declared `target_raid_config`, and refuses a node that has no RAID declaration instead of silently skipping it. A plain `clean` without `--raid` still only deletes the array, as before.
+
+### SONiC validation improvements
+
+- Devices can now declare their breakout mode explicitly through the `sonic_parameters.breakout` custom field in NetBox, which takes precedence over inferred breakout detection.
+- ConfigDB cross-table validation now also checks leafref references encoded in composite row keys (port channel, VLAN and BGP membership) and BGP_NEIGHBOR_AF entries against BGP_NEIGHBOR, catching more invalid configurations before rollout.
+- Several validator correctness fixes landed: BGP_NEIGHBOR_AF `admin_status` is validated as true/false again to match the platform's schema, leaf-lists written as a single delimited string are accepted, non-string row keys no longer crash the validator, and LAG member IP/BGP neighbor resolution now excludes untagged VLAN port channels.
+
+### Validation improvements
+
+- Tempest's `tempest_enable_barbican`, `_designate`, `_octavia` and `_swift` flags are now derived from the service catalog instead of defaulting to `true`. A deployment that skips one of those services now has its tests skipped instead of failing the whole tempest run; set the corresponding `tempest_enable_*` variable explicitly to restore the old strict behavior.
+- The `ceph-rgws` validator works again: it authenticates with keystone EC2 credentials, runs inside the osism-ansible container without a virtualenv, cleans up its S3 test bucket and object afterwards, and is registered again so `osism validate ceph-rgws` no longer fails with an invalid choice error. It also gained port, backend and endpoint checks, and the ceph-mgrs validator gained a test that probes the endpoints `ceph mgr services` advertises.
+- The mon, mgr and osd validators now reach Ceph through the cephclient container and match cephadm's actual container names, fixing false failures on healthy cephadm clusters; the osd validator also skips encryption and CRUSH location tests on hosts without OSDs.
+
+### Kubernetes
+
+- `cilium_mode` gained a `tunnel` option, and the existing `routed` value was repaired: it previously selected an invalid Cilium routing mode that could never start. Use `tunnel` on fabrics without L2 adjacency between nodes (for example BGP-unnumbered uplinks with dummy-interface addressing), where `native` silently leaves pods on other nodes unreachable.
+- Deployment now waits for Cilium to report full node-to-node reachability, not just for its pods to become ready, catching a broken datapath immediately instead of later as a stuck `LoadBalancer` service.
+- `cilium_bgp` now defaults to `false`, so MetalLB load balancer pools are deployed by default again.
+
+### netbox-manager
+
+- `import-archive` now guards tar extraction against path traversal and decompression bombs.
+- NetBox connection settings that fail validation now exit with a non-zero status instead of silently succeeding.
+- PortChannel numbers are preserved across runs and no longer collide when a switch shares multiple pairs deriving the same number, so removing one channel no longer renames a surviving one.
+- IP-prefix validation now matches against the network base instead of the host IP, so an orphaned IP address is no longer wrongly reported as having a matching prefix.
+
+### osism CLI improvements
+
+- `osism openstack` gained per-service plugin command groups: loadbalancer, dns, baremetal, share and coe.
+- `osism wait` reports what a stalled task last did, including line count and time since its last output, and `--output` now prints a failed task's output instead of hiding the cause of the failure.
+- `osism apply` reports a missing Ansible Vault password explicitly, naming the remedy (`osism set vault password`), instead of failing with a misleading missing-file error; the same fix landed in the kolla-ansible and osism-ansible container images.
+- A failed Ansible play now aborts the rest of its task chain instead of continuing to dispatch dependent roles, and a successful collection's exit code no longer causes chained `osism apply` segments to be skipped.
+- Collections now deploy valkey instead of redis from OpenStack 2025.2 on, matching the `enable_valkey` default. This also fixes `osism apply nutshell` aborting on 2025.2 and 2026.1.
+- Shell metacharacters in Ansible task arguments are now quoted, fixing syntax errors from values containing parentheses, for example tempest regex filters.
+
+### Notable changes
+
+- `om_rabbitmq_qos_prefetch_count` now defaults to 50 instead of 1; OSISM does not override it.
+- OVN SB relay port calculation is fixed for relay counts above 9.
+- Ceph image pulls are retried on transient registry errors instead of failing the whole pull action on one blip.
+- `kolla_operations` custom Prometheus/Grafana overlays are now explicitly limited to OpenStack 2024.1 and 2024.2; the feature had already stopped working on 2025.1 and later since the patch it depends on no longer applies upstream.
+- The `docker_login` role now also logs in as the operator user by default, so pulled images work with private registries without extra configuration; tune this with `docker_login_as_root`, `docker_login_as_operator` and `docker_login_operator_user`.
+- Manager services are now reloaded instead of restarted when an environment file changes, and their output is unbuffered, so piped or redirected logs arrive as they happen instead of in delayed blocks.
+- The octavia overlay directory is now created before its certificates are copied, avoiding a failure on fresh deployments.
 
 ## 10.2.0
 
