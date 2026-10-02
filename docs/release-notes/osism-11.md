@@ -78,6 +78,32 @@ Cinder, Glance) are not affected.
 non-zero when the validation fails. Before, the result was recorded only in the
 report file and the command reported success.
 
+### Deployments are refused when host names are inconsistent
+
+During bootstrap OSISM now checks each host's name and stops the deployment if
+it cannot be used reliably. A host is refused when the name the kernel reports
+differs from the name that looking up that name returns, when the two differ
+only in case, when the name cannot be resolved at all, or when two hosts in the
+inventory would end up with the same name.
+
+The usual way into this is an inventory of fully qualified names on hosts that
+are configured to use only the first label. Each machine then answers to a short
+name while the network answers with the fully qualified one. Components differ
+in which of the two they use, so anything that looks a host up by name can miss.
+Three such lookups are known, and each breaks a deployment on its own: the
+compute identity kolla-ansible writes for nova, nova-compute's authentication to
+libvirt, and OVN port binding.
+
+Use one form everywhere. Either set `hostname_use_fqdn: true`, so every name is
+the fully qualified one, or give the hosts short inventory names, so every name
+is short. Names have to be lowercase and at most 64 bytes, which is the kernel's
+limit. The choice is free before a deployment and not afterwards: nova records
+the name it first saw and has no way to rename a compute.
+
+Setting `hostname_split_accepted: true` turns the refusal into a warning, for a
+deployment that wants this state deliberately. It records the decision; it does
+not make the state safe.
+
 ### OpenStack 2026.1
 
 - The `mariadb_backup` playbook alias is gone; use `osism apply mariadb-backup`.
