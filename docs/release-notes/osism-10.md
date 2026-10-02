@@ -35,6 +35,16 @@ independently of it.
 
 ## 10.3.0
 
+### Security fixes
+
+This release includes all security fixes that were known and patched up to 1 October 2026. Compared to OSISM 10.2.0, the container images additionally contain the fixes for the following advisories:
+
+- [OSSA-2026-037](../appendix/security/ossa-2026-037.md) (Keystone, CVE-2026-80182, CVE-2026-80184): tokens obtained through application credentials, EC2 credentials or OAuth1 access tokens can no longer create new long-lived delegations or escape their project scope by reauthenticating.
+- [OSSA-2026-038](../appendix/security/ossa-2026-038.md) (Glance, CVE-2026-71196, CVE-2026-71197, CVE-2026-71198): fixed several SSRF vulnerabilities in the web-download import method and the HTTP image location API that allowed authenticated users to fetch internal URLs and read the result back as image data.
+- [OSSA-2026-039](../appendix/security/ossa-2026-039.md) (Octavia, CVE pending): the `tls_ciphers` fields of listeners and pools and the redirect fields of L7 policies now reject control characters, closing an HAProxy configuration injection that could be escalated to remote code execution as root on the amphora.
+
+The fixes for the advisories already covered by OSISM 10.2.0 remain included. If you obtained one of the fixes above ahead of this release through the rolling tags, remove the corresponding image overrides from `environments/kolla/images.yml` when upgrading, so that the images pinned by the release are used again. All advisories are listed in the [Security](../appendix/security/index.md) section.
+
 ### Hostname validation during bootstrap
 
 A new `hostname_check` step now runs during `osism apply bootstrap` and refuses a host, before anything is configured, if its kernel host name disagrees with its own DNS-resolvable canonical name, differs from it only in case, cannot be resolved at all, or collides with another host's kernel name. The `hostname` role additionally refuses a name longer than 64 bytes (`HOST_NAME_MAX`), which previously only failed later with an opaque kernel error.
