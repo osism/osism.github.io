@@ -125,6 +125,71 @@ $ skopeo list-tags docker://registry.osism.tech/kolla/release/2025.1/neutron-ser
 }
 ```
 
+### Image tags of OSISM services
+
+The services that OSISM deploys itself, rather than through Kolla, take their image tags from the OSISM
+release as well. Most of them get theirs from the `osism/osism-ansible` image, which ships the tags
+pinned in [osism/release](https://github.com/osism/release) in its `versions.yml`. The inventory
+reconciler places that file in the inventory as `group_vars/all/100-versions-osism-ansible.yml`, where it
+overrides the defaults of the roles and of [osism/defaults](https://github.com/osism/defaults). Only the
+tag is set. The registry and the image path stay those of the role. `openstackclient_version` and
+`cephclient_version` also come from other images on the `latest` track — see the note below the table.
+
+To deploy another tag, set the variable in the `images.yml` of the environment the service's play runs in:
+
+| Service                 | Parameter                         | File                                     |
+|:------------------------|:----------------------------------|:-----------------------------------------|
+| step-ca                 | `stepca_tag`                      | `environments/kolla/images.yml`          |
+| OpenTelemetry Collector | `opentelemetry_collector_version` | `environments/monitoring/images.yml`     |
+| gNMIc                   | `gnmic_tag`                       | `environments/monitoring/images.yml`     |
+| Scaphandre              | `scaphandre_tag`                  | `environments/monitoring/images.yml`     |
+| Squid                   | `squid_tag`                       | `environments/infrastructure/images.yml` |
+| dnsdist                 | `dnsdist_tag`                     | `environments/infrastructure/images.yml` |
+| dnsmasq                 | `dnsmasq_tag`                     | `environments/infrastructure/images.yml` |
+| cgit                    | `cgit_tag`                        | `environments/infrastructure/images.yml` |
+| Adminer                 | `adminer_tag`                     | `environments/infrastructure/images.yml` |
+| phpMyAdmin              | `phpmyadmin_tag`                  | `environments/infrastructure/images.yml` |
+| Substation              | `substation_tag`                  | `environments/infrastructure/images.yml` |
+| wazuh-proxy             | `wazuh_proxy_tag`                 | `environments/infrastructure/images.yml` |
+| cephclient              | `cephclient_version`              | `environments/infrastructure/images.yml` |
+| openstackclient         | `openstackclient_version`         | `environments/infrastructure/images.yml` |
+| NetBox                  | `netbox_tag`                      | `environments/infrastructure/images.yml` |
+| NetBox Redis            | `netbox_redis_tag`                | `environments/infrastructure/images.yml` |
+| pgautoupgrade           | `pgautoupgrade_tag`               | `environments/infrastructure/images.yml` |
+| PostgreSQL              | `postgres_tag`                    | `environments/infrastructure/images.yml` |
+| Tempest                 | `tempest_osism_tag`               | `environments/openstack/images.yml`      |
+
+:::note
+In a release build, osism-ansible's `versions.yml` carries `openstackclient_version` and
+`cephclient_version` too. Under `manager_version: latest` it carries neither: `openstackclient_version`
+then comes from kolla-ansible's `versions.yml` and follows the OpenStack series, and `cephclient_version`
+from ceph-ansible's `versions.yml`, or from the cephclient role's default (`ceph_version`) when no
+ceph-ansible container runs. Every runner's file reaches the inventory as its own
+`group_vars/all/100-versions-*.yml` file, so the override place and the warning below apply to these two
+the same way as to the rest of the table.
+:::
+
+```yaml title="environments/kolla/images.yml"
+stepca_tag: "0.28.4"
+```
+
+:::warning
+A value set in a file in the configuration's `inventory/group_vars/all/` loses to the release value
+unless the file's name sorts after `100-versions-osism-kubernetes.yml`, the last of the four runners'
+version files. A numeric prefix such as `050-images.yml` therefore loses. Use the `images.yml` of the
+environment as shown above, or a file name that sorts after `100-versions-osism-kubernetes.yml`, for
+example one starting with a letter (`images.yml`). A flat `inventory/group_vars/all.yml` is a special
+case: the reconciler moves it to `group_vars/all/999-all.yml`, which also sorts after the runners and so
+wins.
+:::
+
+The services of the manager environment (ARA, Traefik, Vault, the runner images, …) take their
+tags from `environments/manager/images.yml`, which is rendered from the release when the configuration
+repository is generated. NetBox is split by how it is applied: `run.sh netbox` on the manager loads that
+same `environments/manager/images.yml`, but `osism apply netbox` runs in the infrastructure environment
+and never reads it — it takes its tags from the release through `versions.yml`, overridable in
+`environments/infrastructure/images.yml` as shown in the table above.
+
 ## Endpoints
 
 ### Public endpoints
