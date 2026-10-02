@@ -104,6 +104,36 @@ Setting `hostname_split_accepted: true` turns the refusal into a warning, for a
 deployment that wants this state deliberately. It records the decision; it does
 not make the state safe.
 
+### Image tags of OSISM services follow the release
+
+The services that osism-ansible deploys itself are now deployed at the tags the
+release pins. In OSISM 10, `osism apply` deployed them at the tag of the role's
+default. Compared with OSISM 10, seven tags change:
+
+| Service                                  | OSISM 10     | OSISM 11      |
+|:-----------------------------------------|:-------------|:--------------|
+| Adminer                                  | 4.7          | 5.5.1         |
+| dnsmasq                                  | 2.90         | 2.91          |
+| OpenTelemetry Collector                  | 0.136.0      | 0.161.0       |
+| phpMyAdmin                               | 5.2          | 5.2.3         |
+| Scaphandre                               | 1.0.0        | 1.0.3         |
+| step-ca                                  | 0.28.4       | 0.30.2        |
+| NetBox Redis (`osism apply netbox` only) | 7.4.6-alpine | 7.4.10-alpine |
+
+cgit, dnsdist, gNMIc, NetBox, pgautoupgrade, PostgreSQL, Squid, Substation,
+Tempest and wazuh-proxy keep their tags. Homer and Nexus keep their role
+defaults. To deploy another tag, set it as described in
+[Image tags of OSISM services](../guides/configuration-guide/openstack/index.md#image-tags-of-osism-services).
+
+On the `latest` track the change arrives with the next `osism/osism-ansible:latest`
+image. An air-gapped registry needs the new tags before the services are applied
+again. step-ca holds the PKI of the internal TLS in `/opt/stepca`, so back up that
+directory before applying it.
+
+The unused `/ansible/group_vars/all/images.yml` file and the
+`/interface/osism-ansible/` directory are no longer part of the
+`osism/osism-ansible` image.
+
 ### OpenStack 2026.1
 
 - The `mariadb_backup` playbook alias is gone; use `osism apply mariadb-backup`.
