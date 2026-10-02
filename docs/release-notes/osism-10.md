@@ -53,7 +53,7 @@ This exists because several components key lookups on the host name and silently
 
 If a host intentionally uses a name DNS cannot confirm, downgrade the refusal to a warning:
 
-```yaml title="environments/kolla/configuration.yml"
+```yaml title="environments/configuration.yml"
 hostname_split_accepted: true
 ```
 
