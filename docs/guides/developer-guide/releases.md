@@ -127,6 +127,13 @@ in the steps below validates an inventory that aborts on the new release.
    release. The documentation promises that this default is always the latest
    stable release.
 
+   For a release on a new OpenStack series, `openstack_version` moves with
+   `manager_version`: a numbered release does not write it into the manager
+   configuration, but the secret generation still uses it to select
+   `environments/kolla/secrets.yml.<version>`, so both must name the same
+   release. `ceph_version` moves as well when the release changes the default
+   Ceph release.
+
 ## How we write release notes
 
 Release notes for OSISM releases are maintained as Markdown pages in the
