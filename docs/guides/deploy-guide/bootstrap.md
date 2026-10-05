@@ -128,6 +128,12 @@ the nodes are already ready for use.
    osism apply bootstrap
    ```
 
+   To also apply the CIS benchmark hardening for Ubuntu 24.04, set
+   `enable_cis_hardening: true` and `enable_hardening: false` in
+   `environments/configuration.yml` before this step; with `hardening` enabled
+   as well, both roles rewrite the SSH server settings on every run. The role
+   can also run on its own with `osism apply ubuntu24-cis`.
+
 9. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
    the reboot should always be performed.
 
