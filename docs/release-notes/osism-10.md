@@ -242,7 +242,7 @@ The NTP check (`validate-ntp`) moved into a dedicated role and, in doing so, clo
 - NetBox device lookups now query the correct `ipam.ip_addresses` endpoint (previously a non-existent `dcim.addresses`) and match the `primary` filter keyword as a whole word, so a site named e.g. `primary-region` is no longer matched by substring. Maintenance/provision/power-state updates now correctly report failure instead of always succeeding when the underlying device update fails.
 - Ceph rolling upgrades on reef and squid no longer intermittently fail during the mon quorum check, which now probes the live monmap instead of a recomputed address.
 - Image tags for dnsmasq, gnmic, pgautoupgrade, scaphandre, stepca, opentelemetry_collector and substation are now wired into the images template, so pinned release versions reach the deployed containers instead of drifting to each role's own default tag.
-- The sshd hardening role now creates the privilege-separation directory before validating `sshd_config`, fixing a failure on hosts where it didn't already exist.
+- The `hardening` play no longer fails on Ubuntu 24.04 when the socket-activated `ssh.service` is stopped: the ansible-hardening role now creates the privilege separation directory before validating `sshd_config`.
 - The `nginx` and `registry` container images are no longer part of OSISM's image set; the last, orphaned references to them in the image and manager environment templates were removed.
 - Several bundled Ansible collections and roles moved to new major versions: community.general (11 to 13), community.mysql (4 to 5), and the CIS hardening role ubuntu22_cis (2 to 3). If you call their modules directly from custom overlays or playbooks, check each project's changelog for breaking changes.
 
@@ -983,8 +983,12 @@ with the [cephadm documentation](https://docs.ceph.com/en/latest/cephadm/).
 ### Deprecation of hardening
 
 The [ansible-hardening](https://github.com/openstack/ansible-hardening) role used by the `hardening`
-play is deprecated as of OSISM 10 and will be removed in a future OSISM release. The role does not
-work reliably with Ubuntu 24.04.
+play is deprecated as of OSISM 10 and will be removed in a future OSISM release.
+
+On Ubuntu 24.04 the role failed intermittently: `ssh.service` is socket-activated there and often
+stopped, so the privilege separation directory `/run/sshd` is missing and the validation of
+`sshd_config` aborts. Since OSISM 10.2.0 the osism-ansible image patches the role to create the
+directory first, so the `hardening` play works on Ubuntu 24.04. The deprecation still applies.
 
 As an alternative, we recommend [UBUNTU24-CIS](https://github.com/ansible-lockdown/UBUNTU24-CIS),
 which provides CIS benchmark hardening for Ubuntu 24.04. This role is currently not integrated
