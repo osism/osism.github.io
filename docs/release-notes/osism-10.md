@@ -112,7 +112,6 @@ Internal manager endpoints (NetBox, the API, Vault, the internal OpenStack API) 
 - `osism wait` reports what a stalled task last did, including line count and time since its last output, and `--output` now prints a failed task's output instead of hiding the cause of the failure.
 - `osism apply` reports a missing Ansible Vault password explicitly, naming the remedy (`osism set vault password`), instead of failing with a misleading missing-file error; the same fix landed in the kolla-ansible and osism-ansible container images.
 - A failed Ansible play now aborts the rest of its task chain instead of continuing to dispatch dependent roles, and a successful collection's exit code no longer causes chained `osism apply` segments to be skipped.
-- Collections now deploy valkey instead of redis from OpenStack 2025.2 on, matching the `enable_valkey` default. This also fixes `osism apply nutshell` aborting on 2025.2 and 2026.1.
 - Shell metacharacters in Ansible task arguments are now quoted, fixing syntax errors from values containing parentheses, for example tempest regex filters.
 
 ### Notable changes
