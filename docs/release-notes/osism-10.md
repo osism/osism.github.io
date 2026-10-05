@@ -94,16 +94,6 @@ manager_proxy_no_proxy_extra:
 
 Internal manager endpoints (NetBox, the API, Vault, the internal OpenStack API) are excluded automatically. Proxy and CA bundle environment variables are now also preserved for the OpenStack image, flavor and project managers. Note that `openstack-image-manager` does not pick up the proxy yet, since it still starts with an empty environment.
 
-### Baremetal cleaning RAID modes
-
-`osism baremetal clean --raid` now takes one of three explicit modes instead of a boolean: `delete`, `keep`, or `recreate` (the default when `--raid` is given with no value). `recreate` tears the array down and rebuilds it from a node's declared `target_raid_config`, and refuses a node that has no RAID declaration instead of silently skipping it. A plain `clean` without `--raid` still only deletes the array, as before.
-
-### SONiC validation improvements
-
-- Devices can now declare their breakout mode explicitly through the `sonic_parameters.breakout` custom field in NetBox, which takes precedence over inferred breakout detection.
-- ConfigDB cross-table validation now also checks leafref references encoded in composite row keys (port channel, VLAN and BGP membership) and BGP_NEIGHBOR_AF entries against BGP_NEIGHBOR, catching more invalid configurations before rollout.
-- Several validator correctness fixes landed: BGP_NEIGHBOR_AF `admin_status` is validated as true/false again to match the platform's schema, leaf-lists written as a single delimited string are accepted, non-string row keys no longer crash the validator, and LAG member IP/BGP neighbor resolution now excludes untagged VLAN port channels.
-
 ### Validation improvements
 
 - Tempest's `tempest_enable_barbican`, `_designate`, `_octavia` and `_swift` flags are now derived from the service catalog instead of defaulting to `true`. A deployment that skips one of those services now has its tests skipped instead of failing the whole tempest run; set the corresponding `tempest_enable_*` variable explicitly to restore the old strict behavior.
@@ -115,13 +105,6 @@ Internal manager endpoints (NetBox, the API, Vault, the internal OpenStack API) 
 - `cilium_mode` gained a `tunnel` option, and the existing `routed` value was repaired: it previously selected an invalid Cilium routing mode that could never start. Use `tunnel` on fabrics without L2 adjacency between nodes (for example BGP-unnumbered uplinks with dummy-interface addressing), where `native` silently leaves pods on other nodes unreachable.
 - Deployment now waits for Cilium to report full node-to-node reachability, not just for its pods to become ready, catching a broken datapath immediately instead of later as a stuck `LoadBalancer` service.
 - `cilium_bgp` now defaults to `false`, so MetalLB load balancer pools are deployed by default again.
-
-### netbox-manager
-
-- `import-archive` now guards tar extraction against path traversal and decompression bombs.
-- NetBox connection settings that fail validation now exit with a non-zero status instead of silently succeeding.
-- PortChannel numbers are preserved across runs and no longer collide when a switch shares multiple pairs deriving the same number, so removing one channel no longer renames a surviving one.
-- IP-prefix validation now matches against the network base instead of the host IP, so an orphaned IP address is no longer wrongly reported as having a matching prefix.
 
 ### osism CLI improvements
 
@@ -141,6 +124,27 @@ Internal manager endpoints (NetBox, the API, Vault, the internal OpenStack API) 
 - The `docker_login` role now also logs in as the operator user by default, so pulled images work with private registries without extra configuration; tune this with `docker_login_as_root`, `docker_login_as_operator` and `docker_login_operator_user`.
 - Manager services are now reloaded instead of restarted when an environment file changes, and their output is unbuffered, so piped or redirected logs arrive as they happen instead of in delayed blocks.
 - The octavia overlay directory is now created before its certificates are copied, avoiding a failure on fresh deployments.
+
+### MetalBox
+
+The following changes are only relevant for the [MetalBox](../concepts/metalbox.md) and the OSISM Manager running on it. They add no new functionality to an OSISM Manager that is used to deploy an OpenStack environment.
+
+#### Baremetal cleaning RAID modes
+
+`osism baremetal clean --raid` now takes one of three explicit modes instead of a boolean: `delete`, `keep`, or `recreate` (the default when `--raid` is given with no value). `recreate` tears the array down and rebuilds it from a node's declared `target_raid_config`, and refuses a node that has no RAID declaration instead of silently skipping it. A plain `clean` without `--raid` still only deletes the array, as before.
+
+#### SONiC validation improvements
+
+- Devices can now declare their breakout mode explicitly through the `sonic_parameters.breakout` custom field in NetBox, which takes precedence over inferred breakout detection.
+- ConfigDB cross-table validation now also checks leafref references encoded in composite row keys (port channel, VLAN and BGP membership) and BGP_NEIGHBOR_AF entries against BGP_NEIGHBOR, catching more invalid configurations before rollout.
+- Several validator correctness fixes landed: BGP_NEIGHBOR_AF `admin_status` is validated as true/false again to match the platform's schema, leaf-lists written as a single delimited string are accepted, non-string row keys no longer crash the validator, and LAG member IP/BGP neighbor resolution now excludes untagged VLAN port channels.
+
+#### netbox-manager
+
+- `import-archive` now guards tar extraction against path traversal and decompression bombs.
+- NetBox connection settings that fail validation now exit with a non-zero status instead of silently succeeding.
+- PortChannel numbers are preserved across runs and no longer collide when a switch shares multiple pairs deriving the same number, so removing one channel no longer renames a surviving one.
+- IP-prefix validation now matches against the network base instead of the host IP, so an orphaned IP address is no longer wrongly reported as having a matching prefix.
 
 ## 10.2.0
 
