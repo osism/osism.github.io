@@ -64,8 +64,9 @@ in the steps below validates an inventory that aborts on the new release.
    the image checks of the README pass and the Renovate PRs for the new images
    are merged.
 
-2. Create one or more release candidates (e.g. `10.1.0-rc.1`) in the
-   osism/release repository as described in its README.
+2. Create a release candidate (e.g. `10.1.0-rc.1`) in the osism/release
+   repository as described in its README. It pins the images built in
+   step 1.
 
 3. Add temporary release candidate jobs to `.zuul.yaml` in the
    [osism/testbed](https://github.com/osism/testbed) repository that deploy
@@ -77,8 +78,17 @@ in the steps below validates an inventory that aborts on the new release.
 
 4. Test. Test. Test.
 
+   If testing turns up bugs, fix them in the affected components, then build
+   new component images with a new version (step 1) and create the next
+   release candidate from them (e.g. `10.1.0-rc.2`). Repeat steps 3 and 4 for
+   it.
+
 5. Create the final release version (e.g. `10.1.0`) in the osism/release
-   repository as described in its README.
+   repository as described in its README. It must pin the same versions as
+   the last tested release candidate. Do not merge any updates in the
+   osism/release repository or build new component images in between:
+   anything that changes after the last release candidate has not been
+   tested.
 
 6. Add the release to `seed/files/releases.txt` in the
    [osism/container-images](https://github.com/osism/container-images)
