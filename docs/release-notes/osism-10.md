@@ -29,7 +29,7 @@ independently of it.
 | Release | Release Date    |
 |:--------|:----------------|
 | 10.3.0  | 1. October 2026 |
-| 10.2.0  | 14.August       |
+| 10.2.0  | 14. August 2026 |
 | 10.1.0  | 16. June 2026   |
 | 10.0.0  | 22. March 2026  |
 
