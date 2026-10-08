@@ -56,6 +56,12 @@ not deploy, to the IGNORE lists) and merge. The inventory is baked into the
 series before the release candidate is built and tested; otherwise the testing
 in the steps below validates an inventory that aborts on the new release.
 
+Also point `latest/openstack.yml` in the osism/release repository to the new
+series before the component images are built, as described in
+[Tag creation](https://github.com/osism/release#2-tag-creation) in its README.
+The kolla and kolla-ansible images are built for whichever series this
+symlink points to at the release tag.
+
 :::
 
 1. Build the component images by following
