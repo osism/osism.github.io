@@ -7,8 +7,9 @@ sidebar_position: 95
 
 | Series                    | Status               | Initial Release Date | Next Phase           |
 |:--------------------------|:---------------------|:---------------------|:---------------------|
-| [OSISM 10](./osism-10.md) | Maintained           | 20. March 2026       | Extended Maintenance |
-| [OSISM 9](./osism-9.md)   | Extended Maintenance | 8. April 2025        | End of life          |
+| [OSISM 11](./osism-11.md) | Maintained           | 8. October 2026      | Extended Maintenance |
+| [OSISM 10](./osism-10.md) | Extended Maintenance | 20. March 2026       | End of life          |
+| [OSISM 9](./osism-9.md)   | End of life          | 8. April 2025        |                      |
 | [OSISM 8](./osism-8.md)   | End of life          | 11. September 2024   |                      |
 | [OSISM 7](./osism-7.md)   | End of life          | 20. March 2024       |                      |
 | OSISM 6                   | End of life          | 20. September 2023   |                      |
