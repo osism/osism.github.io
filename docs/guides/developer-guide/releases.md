@@ -58,34 +58,40 @@ in the steps below validates an inventory that aborts on the new release.
 
 :::
 
-1. Create one or more release candidates (e.g. `10.1.0-rc.1`) in the
+1. Build the component images by following
+   [Tag creation](https://github.com/osism/release#2-tag-creation)
+   in the osism/release README. Continue once all `tag` builds have succeeded,
+   the image checks of the README pass and the Renovate PRs for the new images
+   are merged.
+
+2. Create one or more release candidates (e.g. `10.1.0-rc.1`) in the
    osism/release repository as described in its README.
 
-2. Add temporary release candidate jobs to `.zuul.yaml` in the
+3. Add temporary release candidate jobs to `.zuul.yaml` in the
    [osism/testbed](https://github.com/osism/testbed) repository that deploy
    the release candidate and upgrade from the current stable release to the
    release candidate (e.g. `abstract-testbed-deploy-rc` with
    `manager_version: 10.1.0-rc.1` and `abstract-testbed-upgrade-rc`).
    Before they run, add the candidate to the seed image as described in
-   step 5; otherwise they stop at `run.sh`.
+   step 6; otherwise they stop at `run.sh`.
 
-3. Test. Test. Test.
+4. Test. Test. Test.
 
-4. Create the final release version (e.g. `10.1.0`) in the osism/release
+5. Create the final release version (e.g. `10.1.0`) in the osism/release
    repository as described in its README.
 
-5. Add the release to `seed/files/releases.txt` in the
+6. Add the release to `seed/files/releases.txt` in the
    [osism/container-images](https://github.com/osism/container-images)
    repository and wait until the seed image built from it is published. The
    seed image carries one collection set per listed release, and `run.sh`
    refuses a `manager_version` it has no set for: a manager pinned to an
    unlisted release stops with `no collection set for manager_version`. The
    testbed jobs switched in the next step deploy exactly such a manager.
-   Remove the release candidates listed in step 2 at the same time.
+   Remove the release candidates listed in step 3 at the same time.
 
-6. Switch the pinned stable jobs in the
+7. Switch the pinned stable jobs in the
    [osism/testbed](https://github.com/osism/testbed) repository to the new
-   release and remove the temporary release candidate jobs added in step 2.
+   release and remove the temporary release candidate jobs added in step 3.
    Do this before the documentation steps that follow: the stable jobs are
    what validate the release, so they must pass before it is announced. For
    the `10.1.0` example the version variables change as follows.
@@ -111,17 +117,17 @@ in the steps below validates an inventory that aborts on the new release.
    `testbed-upgrade-stable-next-*` (upgrade to `latest`) — are not touched
    here. All stable jobs must pass successfully.
 
-7. Add release notes to the
+8. Add release notes to the
    [osism/osism.github.io](https://github.com/osism/osism.github.io)
    repository: a new `docs/release-notes/osism-N.md` file for a major
    release, or a new entry in the existing file for a minor release.
 
-8. Update the version examples in the documentation that reference a concrete
+9. Update the version examples in the documentation that reference a concrete
    release, e.g. `docs/guides/configuration-guide/manager.mdx`,
    `docs/guides/upgrade-guide/manager.mdx` and
    `docs/guides/configuration-guide/configuration-repository.md`.
 
-9. As the last step, bump the `manager_version` default in the
+10. As the last step, bump the `manager_version` default in the
    [osism/cfg-cookiecutter](https://github.com/osism/cfg-cookiecutter)
    repository so that newly created configuration repositories use the new
    release. The documentation promises that this default is always the latest
