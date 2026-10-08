@@ -127,10 +127,15 @@ in the steps below validates an inventory that aborts on the new release.
    `testbed-upgrade-stable-next-*` (upgrade to `latest`) — are not touched
    here. All stable jobs must pass successfully.
 
-8. Add release notes to the
+8. Add the release notes to the
    [osism/osism.github.io](https://github.com/osism/osism.github.io)
-   repository: a new `docs/release-notes/osism-N.md` file for a major
-   release, or a new entry in the existing file for a minor release.
+   repository by following
+   [Changelog generation](https://github.com/osism/release#4-changelog-generation-per-component)
+   and
+   [Release notes generation](https://github.com/osism/release#5-release-notes-generation-per-release)
+   in the osism/release README. For a major release, first create the new
+   page `docs/release-notes/osism-N.md` with a release table: the release
+   notes generation only adds to an existing page.
 
 9. Update the version examples in the documentation that reference a concrete
    release, e.g. `docs/guides/configuration-guide/manager.mdx`,
@@ -157,6 +162,8 @@ Release notes for OSISM releases are maintained as Markdown pages in the
 (`docs/release-notes/`) and published at
 [osism.tech/docs/release-notes](https://osism.tech/docs/release-notes/).
 
-Per-component changelogs are generated from the git history in the
-osism/release repository. This is documented in the
-[README of the osism/release repository](https://github.com/osism/release#release-process).
+Per-component changelogs are generated from the git history of the component
+repositories, with a script of the osism/release repository. This is
+documented in
+[Changelog generation](https://github.com/osism/release#4-changelog-generation-per-component)
+in the osism/release README.
