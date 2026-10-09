@@ -36,11 +36,9 @@ independently of it.
 
 OSISM 11.0.0 deploys OpenStack 2026.1.
 
-The kolla-ansible container image now rotates HAProxy's logs by renaming them instead of copying and truncating them. `copytruncate` needs free space equal to the size of the log, so a log that had outgrown its rotation interval filled the disk on every rotation attempt. Renaming needs no such space.
-
 ### Ceph deployment with cephadm
 
-The nutshell collection, used to set up a new Ceph cluster, now deploys it with cephadm instead of ceph-ansible from OSISM 11 onward, and already on the `latest` track. `osism apply` gained `--osism-version` and `--ceph-backend` options to control the selection explicitly.
+The nutshell collection, used to set up a new Ceph cluster, now deploys it with cephadm instead of ceph-ansible from OSISM 11 onward. `osism apply` gained `--osism-version` and `--ceph-backend` options to control the selection explicitly.
 
 New plays cover the full bootstrap: installing cephadm, bootstrapping the cluster on the monitor hosts, registering the remaining Ceph hosts, moving configuration overrides into the monitor config store, enabling the configured mgr modules, deploying MON, MGR and crash, creating OSDs from prepared LVM volumes, and deploying RGW and CephFS with their pools when enabled. The dashboard is configured on plain HTTP with standby handling. The OSD device preparation plays `configure-lvm-volumes` and `create-lvm-devices`, previously shipped only in the ceph-ansible image, now also live in osism-ansible, so they work regardless of backend; run them as `osism apply configure-lvm-volumes` and `osism apply create-lvm-devices` (no `ceph-` prefix, to avoid colliding with the existing ceph-ansible roles).
 
@@ -65,7 +63,7 @@ The kolla images now install the Ceph client from download.ceph.com (20.2.4) ins
 
 ### Notable changes
 
-- **Image registries**: ten registry defaults for OSISM-built images (Ceph, cephclient, osism-ansible, kolla-ansible, netbox, cgit, dnsdist, homer, nexus, openstackclient) now point at `registry.osism.tech` instead of `quay.io`, which OSISM stopped publishing to in February 2025. A deployment that never overrode these registries could not pull Tentacle's Ceph images at all, and got stale images of everything else.
+- **Image registries**: ten registry defaults for OSISM-built images (Ceph, cephclient, the Ansible images run by the manager such as osism-ansible and kolla-ansible, dnsmasq, netbox, cgit, dnsdist, homer, nexus, openstackclient) now point at `registry.osism.tech` instead of `quay.io`, which OSISM stopped publishing to in February 2025. A deployment that never overrode these registries could not pull Tentacle's Ceph images at all, and got stale images of everything else.
 - **SSH reliability**: `ssh_args` now includes server-alive probes, so a session whose transport died silently, for example when a host's own package upgrade restarts `systemd-networkd` mid-play, is dropped after five minutes instead of waiting on the kernel's two-hour TCP keepalive and wedging the play.
-- **Log rotation on generic-only hosts**: the kolla `cron` container is now deployed to every host that runs fluentd, not only to hosts in the `compute`, `control`, `monitoring`, `network` and `storage` groups. Dedicated loadbalancer nodes and managers outside the `monitoring` group received HAProxy's syslog output but had nothing to rotate it, so the log grew until the disk filled.
+- **HAProxy log rotation**: the kolla `cron` container is now deployed to every host that runs fluentd, not only to hosts in the `compute`, `control`, `monitoring`, `network` and `storage` groups. Dedicated loadbalancer nodes and managers outside the `monitoring` group received HAProxy's syslog output but had nothing to rotate it, so the log grew until the disk filled. HAProxy's logs are also rotated by renaming them instead of copying and truncating them: `copytruncate` needs free space equal to the size of the log, so a log that had outgrown its rotation interval filled the disk on every rotation attempt.
 - **step-ca**: a deployment with a separate manager failed to bring up stepca at all, because its health check resolved the CA's own DNS name to the unreachable internal VIP instead of to itself; it now resolves to itself while still verifying TLS against the CA's real certificate. Separately, the SSH CA was never actually initialized by this role, on any deployment, because the init flag was rendered as a Python boolean instead of the string the entrypoint checks for. This is now fixed.
