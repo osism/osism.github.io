@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Releases | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/developer-guide/releases"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Releases | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="How we handle releases"><meta data-rh="true" property="og:description" content="How we handle releases"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/developer-guide/releases"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/developer-guide/releases" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/developer-guide/releases" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Developer Guide","item":"https://osism.tech/docs/guides/developer-guide/"},{"@type":"ListItem","position":3,"name":"Releases","item":"https://osism.tech/docs/guides/developer-guide/releases"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.848c03f0.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.39d4e99e.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -61,7 +61,9 @@ osism/release repository as described in its README.</p>
 <a href="https://github.com/osism/testbed" target="_blank" rel="noopener noreferrer" class="">osism/testbed</a> repository that deploy
 the release candidate and upgrade from the current stable release to the
 release candidate (e.g. <code>abstract-testbed-deploy-rc</code> with
-<code>manager_version: 10.1.0-rc.1</code> and <code>abstract-testbed-upgrade-rc</code>).</p>
+<code>manager_version: 10.1.0-rc.1</code> and <code>abstract-testbed-upgrade-rc</code>).
+Before they run, add the candidate to the seed image as described in
+step 5; otherwise they stop at <code>run.sh</code>.</p>
 </li>
 <li class="">
 <p>Test. Test. Test.</p>
@@ -69,6 +71,16 @@ release candidate (e.g. <code>abstract-testbed-deploy-rc</code> with
 <li class="">
 <p>Create the final release version (e.g. <code>10.1.0</code>) in the osism/release
 repository as described in its README.</p>
+</li>
+<li class="">
+<p>Add the release to <code>seed/files/releases.txt</code> in the
+<a href="https://github.com/osism/container-images" target="_blank" rel="noopener noreferrer" class="">osism/container-images</a>
+repository and wait until the seed image built from it is published. The
+seed image carries one collection set per listed release, and <code>run.sh</code>
+refuses a <code>manager_version</code> it has no set for: a manager pinned to an
+unlisted release stops with <code>no collection set for manager_version</code>. The
+testbed jobs switched in the next step deploy exactly such a manager.
+Remove the release candidates listed in step 2 at the same time.</p>
 </li>
 <li class="">
 <p>Switch the pinned stable jobs in the
@@ -121,6 +133,12 @@ release, e.g. <code>docs/guides/configuration-guide/manager.mdx</code>,
 repository so that newly created configuration repositories use the new
 release. The documentation promises that this default is always the latest
 stable release.</p>
+<p>For a release on a new OpenStack series, <code>openstack_version</code> moves with
+<code>manager_version</code>: a numbered release does not write it into the manager
+configuration, but the secret generation still uses it to select
+<code>environments/kolla/secrets.yml.&lt;version&gt;</code>, so both must name the same
+release. <code>ceph_version</code> moves as well when the release changes the default
+Ceph release.</p>
 </li>
 </ol>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-we-write-release-notes">How we write release notes<a href="#how-we-write-release-notes" class="hash-link" aria-label="Direct link to How we write release notes" title="Direct link to How we write release notes" translate="no">​</a></h2>
