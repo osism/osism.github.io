@@ -5,11 +5,11 @@ sidebar_position: 5
 
 # OSISM 11
 
-Instructions for the upgrade can be found in the [Upgrade Guide](../guides/upgrade-guide/manager.mdx).
+:::warning
 
-:::info
-
-Similar to the Ubuntu point release model, the first release of OSISM 11 is intended for new installations, early adopters and testing purposes. For existing production environments we recommend to wait until the first point release OSISM 11.1 before upgrading.
+OSISM 11.0.0 is validated for **new installations only**. Upgrading an existing
+deployment to OSISM 11 is not covered by this release. Do not upgrade an existing
+environment to OSISM 11 until a release documents the upgrade path.
 
 :::
 
