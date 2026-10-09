@@ -36,17 +36,24 @@ independently of it.
 
 OSISM 11.0.0 deploys OpenStack 2026.1.
 
+- The `mariadb_backup` playbook alias is gone in 2026.1; use `osism apply mariadb-backup`.
+- Keystone federation is served from its own httpd container in 2026.1. Federation has not been validated with OSISM 11.
+
 ### Ceph deployment with cephadm
 
 The nutshell collection, used to set up a new Ceph cluster, now deploys it with cephadm instead of ceph-ansible from OSISM 11 onward. `osism apply` gained `--osism-version` and `--ceph-backend` options to control the selection explicitly.
 
 New plays cover the full bootstrap: installing cephadm, bootstrapping the cluster on the monitor hosts, registering the remaining Ceph hosts, moving configuration overrides into the monitor config store, enabling the configured mgr modules, deploying MON, MGR and crash, creating OSDs from prepared LVM volumes, and deploying RGW and CephFS with their pools when enabled. The dashboard is configured on plain HTTP with standby handling. The OSD device preparation plays `configure-lvm-volumes` and `create-lvm-devices`, previously shipped only in the ceph-ansible image, now also live in osism-ansible, so they work regardless of backend; run them as `osism apply configure-lvm-volumes` and `osism apply create-lvm-devices` (no `ceph-` prefix, to avoid colliding with the existing ceph-ansible roles).
 
-cephadm reaches the Ceph hosts with its own SSH key, `ceph_ssh_private_key` in `secrets.yml`, instead of the shared operator key. It is authorized only on the Ceph hosts through a new group-scoped mechanism, `operator_additional_authorized_keys` (with an `operator_additional_authorized_keys_delete` counterpart), which can also authorize other keys on a specific host group without touching the deployment-wide `operator_authorized_keys` list.
+cephadm reaches the Ceph hosts with its own SSH key, `ceph_ssh_private_key` in `secrets.yml`, instead of the shared operator key. cfg-cookiecutter generates it for new configurations, together with `ceph_public_key` and `inventory/group_vars/ceph.yml`. It is authorized only on the Ceph hosts through a new group-scoped mechanism, `operator_additional_authorized_keys` (with an `operator_additional_authorized_keys_delete` counterpart), which can also authorize other keys on a specific host group without touching the deployment-wide `operator_authorized_keys` list.
 
 The ceph-ansible image now refuses to run any `ceph-*` play, including the LVM preparation plays, against a cluster already managed by cephadm. It also refuses to run when the deployment's `ceph_version` does not match the Ceph release series the image was built for. Without this guard, ceph-ansible's legacy container names made these plays fail only after they had already changed things on the hosts. Override either check with `-e ceph_cephadm_guard=false`, or durably with `ceph_cephadm_guard: false` in `environments/ceph/configuration.yml`.
 
+`rgw keystone api version` is removed in Tentacle together with Keystone v2.0 support, and setting it fails the cephadm configuration step. cfg-cookiecutter now emits it only up to Squid, but a configuration repository generated before OSISM 11, or one carried over from an earlier deployment, still sets it in `ceph_conf_overrides` in `environments/ceph/configuration.yml`. Remove it there before deploying Tentacle.
+
 The kolla images now install the Ceph client from download.ceph.com (20.2.4) instead of the Ubuntu archives, so OpenStack services can connect to a Ceph cluster that mints `aes256k` cephx keys (Squid 19.2.6+ or Tentacle 20.2.4+); the Ubuntu and UCA client packages cannot read those keys yet, which broke the connection for every Ceph-consuming service.
+
+Kernel Ceph clients need `aes256k` support as well, which according to the upstream Ceph advisory is available from Linux 7.0. This affects tenants mounting CephFS shares with the kernel client through Manila's native CephFS backend, and kernel RBD mappings. Manila's CephFS-via-NFS backend and all librbd/librados consumers (Nova, Cinder, Glance) are not affected.
 
 `osism validate ceph-rgws` now tests S3 at the address the gateway actually listens on instead of the inventory hostname, which is what cephadm's routed topology requires, since there the gateway binds only to the Ceph public network address. The `ceph-mons`, `-mgrs`, `-osds` and `-rgws` validators now fail the play when a validation fails, so `osism validate` reports the failure instead of exiting successfully regardless of the result.
 
