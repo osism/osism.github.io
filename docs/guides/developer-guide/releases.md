@@ -70,6 +70,24 @@ symlink points to at the release tag.
    the image checks of the README pass and the Renovate PRs for the new images
    are merged.
 
+   The `tag` builds push the images to `osism.harbor.regio.digital`, and the
+   image checks of the README run against that registry. Deployments,
+   including the testbed jobs of step 3, pull from public registries such as
+   `registry.osism.tech` instead. The kolla release images are not copied
+   there automatically: this is deliberate, so that images from a wrongly
+   built tag never reach users. Once the image checks pass, ask a Harbor
+   administrator to replicate the kolla images of the build, naming the tag
+   and its OpenStack series.
+
+   Before you continue, check that the images arrived under the namespace of
+   the right series. The SBOM image of the build is a quick indicator; its
+   tag is the tag of the build without the leading `v`:
+
+   ```bash
+   docker manifest inspect \
+     registry.osism.tech/kolla/release/2026.1/sbom:0.20261008.0
+   ```
+
 2. Create a release candidate (e.g. `10.1.0-rc.1`) in the osism/release
    repository as described in its README. It pins the images built in
    step 1.
