@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Releases | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/developer-guide/releases"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Releases | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="How we handle releases"><meta data-rh="true" property="og:description" content="How we handle releases"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/developer-guide/releases"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/developer-guide/releases" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/developer-guide/releases" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Developer Guide","item":"https://osism.tech/docs/guides/developer-guide/"},{"@type":"ListItem","position":3,"name":"Releases","item":"https://osism.tech/docs/guides/developer-guide/releases"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.36882647.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.d0906a24.js" defer="defer"></script>
 <script src="/assets/js/main.f4833969.js" defer="defer"></script>
 </head>
 <body>
@@ -50,11 +50,35 @@ new kolla-ansible service groups to the inventory (or, for services OSISM does
 not deploy, to the IGNORE lists) and merge. The inventory is baked into the
 <code>osism-ansible</code> and <code>inventory-reconciler</code> images, so it must match the new
 series before the release candidate is built and tested; otherwise the testing
-in the steps below validates an inventory that aborts on the new release.</p></div></div>
+in the steps below validates an inventory that aborts on the new release.</p><p>Also point <code>latest/openstack.yml</code> in the osism/release repository to the new
+series before the component images are built, as described in
+<a href="https://github.com/osism/release#2-tag-creation" target="_blank" rel="noopener noreferrer" class="">Tag creation</a> in its README.
+The kolla and kolla-ansible images are built for whichever series this
+symlink points to at the release tag.</p></div></div>
 <ol>
 <li class="">
-<p>Create one or more release candidates (e.g. <code>10.1.0-rc.1</code>) in the
-osism/release repository as described in its README.</p>
+<p>Build the component images by following
+<a href="https://github.com/osism/release#2-tag-creation" target="_blank" rel="noopener noreferrer" class="">Tag creation</a>
+in the osism/release README. Continue once all <code>tag</code> builds have succeeded,
+the image checks of the README pass and the Renovate PRs for the new images
+are merged.</p>
+<p>The <code>tag</code> builds push the images to <code>osism.harbor.regio.digital</code>, and the
+image checks of the README run against that registry. Deployments,
+including the testbed jobs of step 3, pull from public registries such as
+<code>registry.osism.tech</code> instead. The kolla release images are not copied
+there automatically: this is deliberate, so that images from a wrongly
+built tag never reach users. Once the image checks pass, ask a Harbor
+administrator to replicate the kolla images of the build, naming the tag
+and its OpenStack series.</p>
+<p>Before you continue, check that the images arrived under the namespace of
+the right series. The SBOM image of the build is a quick indicator; its
+tag is the tag of the build without the leading <code>v</code>:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">docker manifest inspect \</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  registry.osism.tech/kolla/release/2026.1/sbom:0.20261008.0</span><br></div></code></pre></div></div>
+</li>
+<li class="">
+<p>Create a release candidate (e.g. <code>10.1.0-rc.1</code>) in the osism/release
+repository as described in its README. It pins the images built in
+step 1.</p>
 </li>
 <li class="">
 <p>Add temporary release candidate jobs to <code>.zuul.yaml</code> in the
@@ -63,14 +87,22 @@ the release candidate and upgrade from the current stable release to the
 release candidate (e.g. <code>abstract-testbed-deploy-rc</code> with
 <code>manager_version: 10.1.0-rc.1</code> and <code>abstract-testbed-upgrade-rc</code>).
 Before they run, add the candidate to the seed image as described in
-step 5; otherwise they stop at <code>run.sh</code>.</p>
+step 6; otherwise they stop at <code>run.sh</code>.</p>
 </li>
 <li class="">
 <p>Test. Test. Test.</p>
+<p>If testing turns up bugs, fix them in the affected components, then build
+new component images with a new version (step 1) and create the next
+release candidate from them (e.g. <code>10.1.0-rc.2</code>). Repeat steps 3 and 4 for
+it.</p>
 </li>
 <li class="">
 <p>Create the final release version (e.g. <code>10.1.0</code>) in the osism/release
-repository as described in its README.</p>
+repository as described in its README. It must pin the same versions as
+the last tested release candidate. Do not merge any updates in the
+osism/release repository or build new component images in between:
+anything that changes after the last release candidate has not been
+tested.</p>
 </li>
 <li class="">
 <p>Add the release to <code>seed/files/releases.txt</code> in the
@@ -80,12 +112,12 @@ seed image carries one collection set per listed release, and <code>run.sh</code
 refuses a <code>manager_version</code> it has no set for: a manager pinned to an
 unlisted release stops with <code>no collection set for manager_version</code>. The
 testbed jobs switched in the next step deploy exactly such a manager.
-Remove the release candidates listed in step 2 at the same time.</p>
+Remove the release candidates listed in step 3 at the same time.</p>
 </li>
 <li class="">
 <p>Switch the pinned stable jobs in the
 <a href="https://github.com/osism/testbed" target="_blank" rel="noopener noreferrer" class="">osism/testbed</a> repository to the new
-release and remove the temporary release candidate jobs added in step 2.
+release and remove the temporary release candidate jobs added in step 3.
 Do this before the documentation steps that follow: the stable jobs are
 what validate the release, so they must pass before it is announced. For
 the <code>10.1.0</code> example the version variables change as follows.</p>
@@ -116,10 +148,15 @@ onwards.</p>
 here. All stable jobs must pass successfully.</p>
 </li>
 <li class="">
-<p>Add release notes to the
+<p>Add the release notes to the
 <a href="https://github.com/osism/osism.github.io" target="_blank" rel="noopener noreferrer" class="">osism/osism.github.io</a>
-repository: a new <code>docs/release-notes/osism-N.md</code> file for a major
-release, or a new entry in the existing file for a minor release.</p>
+repository by following
+<a href="https://github.com/osism/release#4-changelog-generation-per-component" target="_blank" rel="noopener noreferrer" class="">Changelog generation</a>
+and
+<a href="https://github.com/osism/release#5-release-notes-generation-per-release" target="_blank" rel="noopener noreferrer" class="">Release notes generation</a>
+in the osism/release README. For a major release, first create the new
+page <code>docs/release-notes/osism-N.md</code> with a release table: the release
+notes generation only adds to an existing page.</p>
 </li>
 <li class="">
 <p>Update the version examples in the documentation that reference a concrete
@@ -133,21 +170,23 @@ release, e.g. <code>docs/guides/configuration-guide/manager.mdx</code>,
 repository so that newly created configuration repositories use the new
 release. The documentation promises that this default is always the latest
 stable release.</p>
+</li>
+</ol>
 <p>For a release on a new OpenStack series, <code>openstack_version</code> moves with
 <code>manager_version</code>: a numbered release does not write it into the manager
 configuration, but the secret generation still uses it to select
 <code>environments/kolla/secrets.yml.&lt;version&gt;</code>, so both must name the same
 release. <code>ceph_version</code> moves as well when the release changes the default
 Ceph release.</p>
-</li>
-</ol>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-we-write-release-notes">How we write release notes<a href="#how-we-write-release-notes" class="hash-link" aria-label="Direct link to How we write release notes" title="Direct link to How we write release notes" translate="no">​</a></h2>
 <p>Release notes for OSISM releases are maintained as Markdown pages in the
 <a href="https://github.com/osism/osism.github.io" target="_blank" rel="noopener noreferrer" class="">osism/osism.github.io</a> repository
 (<code>docs/release-notes/</code>) and published at
 <a href="https://osism.tech/docs/release-notes/" target="_blank" rel="noopener noreferrer" class="">osism.tech/docs/release-notes</a>.</p>
-<p>Per-component changelogs are generated from the git history in the
-osism/release repository. This is documented in the
-<a href="https://github.com/osism/release#release-process" target="_blank" rel="noopener noreferrer" class="">README of the osism/release repository</a>.</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/osism/osism.github.io/tree/main/docs/guides/developer-guide/releases.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/guides/developer-guide/"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Developer Guide</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/guides/developer-guide/retiring-openstack-releases"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Retiring OpenStack Releases</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#how-we-handle-releases" class="table-of-contents__link toc-highlight">How we handle releases</a></li><li><a href="#how-to-make-a-release" class="table-of-contents__link toc-highlight">How to make a release</a></li><li><a href="#how-we-write-release-notes" class="table-of-contents__link toc-highlight">How we write release notes</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Resources</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/docs">Documentation</a></li><li class="footer__item"><a href="https://osism.cloud/de/partner" target="_blank" rel="noopener noreferrer" class="footer__link-item">Partner<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">External links</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.linkedin.com/company/osism/" target="_blank" rel="noopener noreferrer" class="footer__link-item">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/osism" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/osism/issues/issues/new/choose" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open issue on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zuul.services.osism.tech/t/osism/status" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zuul CI<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Company</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://osism.cloud/de/ueber-uns" target="_blank" rel="noopener noreferrer" class="footer__link-item">About Us<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud" target="_blank" rel="noopener noreferrer" class="footer__link-item">Contact Us<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:info@osism.tech?subject=OSISM Demo" target="_blank" rel="noopener noreferrer" class="footer__link-item">Schedule a demo<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/subskription" target="_blank" rel="noopener noreferrer" class="footer__link-item">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/datenschutz" target="_blank" rel="noopener noreferrer" class="footer__link-item">Privacy Policy<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/impressum" target="_blank" rel="noopener noreferrer" class="footer__link-item">Legals<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2026 OSISM GmbH. Built with Docusaurus.</div></div></div></footer></div>
+<p>Per-component changelogs are generated from the git history of the component
+repositories, with a script of the osism/release repository. This is
+documented in
+<a href="https://github.com/osism/release#4-changelog-generation-per-component" target="_blank" rel="noopener noreferrer" class="">Changelog generation</a>
+in the osism/release README.</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/osism/osism.github.io/tree/main/docs/guides/developer-guide/releases.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/guides/developer-guide/"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Developer Guide</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/guides/developer-guide/retiring-openstack-releases"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Retiring OpenStack Releases</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#how-we-handle-releases" class="table-of-contents__link toc-highlight">How we handle releases</a></li><li><a href="#how-to-make-a-release" class="table-of-contents__link toc-highlight">How to make a release</a></li><li><a href="#how-we-write-release-notes" class="table-of-contents__link toc-highlight">How we write release notes</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Resources</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/docs">Documentation</a></li><li class="footer__item"><a href="https://osism.cloud/de/partner" target="_blank" rel="noopener noreferrer" class="footer__link-item">Partner<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">External links</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.linkedin.com/company/osism/" target="_blank" rel="noopener noreferrer" class="footer__link-item">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/osism" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/osism/issues/issues/new/choose" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open issue on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zuul.services.osism.tech/t/osism/status" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zuul CI<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Company</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://osism.cloud/de/ueber-uns" target="_blank" rel="noopener noreferrer" class="footer__link-item">About Us<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud" target="_blank" rel="noopener noreferrer" class="footer__link-item">Contact Us<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:info@osism.tech?subject=OSISM Demo" target="_blank" rel="noopener noreferrer" class="footer__link-item">Schedule a demo<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/subskription" target="_blank" rel="noopener noreferrer" class="footer__link-item">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/datenschutz" target="_blank" rel="noopener noreferrer" class="footer__link-item">Privacy Policy<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://osism.cloud/de/impressum" target="_blank" rel="noopener noreferrer" class="footer__link-item">Legals<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2026 OSISM GmbH. Built with Docusaurus.</div></div></div></footer></div>
 </body>
 </html>
