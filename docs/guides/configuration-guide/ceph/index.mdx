@@ -113,6 +113,15 @@ vm.min_free_kbytes=4194303
     If the `ceph_conf_overrides` parameter already exists in `environments/ceph/configuration.yml`,
     expand it and do not overwrite it.
 
+    With Ceph Tentacle, leave out `"rgw keystone api version"`. Tentacle removed the
+    option together with Keystone v2.0 support, and setting it fails the deployment
+    with cephadm. Reef and Squid still accept it.
+
+    With cephadm, the RGW daemons are configured through the monitor configuration
+    database instead of a `ceph.conf`. The section name from the example can be kept:
+    every `client.rgw.*` section is written to the database as `client.rgw`, which all
+    RGW daemons inherit.
+
     If self-signed SSL certificates are used, two additional parameters must be set.
 
     ```yaml title="environments/ceph/configuration.yml"
@@ -136,9 +145,21 @@ vm.min_free_kbytes=4194303
     ceph_rgw_swift_account_in_url: true
     ```
 
+    When Ceph is deployed with cephadm, additionally set `enable_ceph_rgw` in
+    `environments/ceph/configuration.yml`. The cephadm plays that deploy RGW and
+    create its pools run in the ceph environment, which does not read
+    `environments/kolla/configuration.yml`. Without it, RGW is not deployed, while
+    Keystone still gets the object-store endpoints.
+
+    ```yaml title="environments/ceph/configuration.yml"
+    enable_ceph_rgw: true
+    ```
+
 4. On the nodes on which the RGW service is to be deployed, `radosgw_interface` **or**
    `radosgw_address` must be set in the host vars for the nodes in the inventory.
    If `radosgw_interface` is used, the first IPv4 address on this interface is used.
+   When Ceph is deployed with cephadm, only `radosgw_address` is supported, and the
+   deployment fails for every RGW host without it.
 
     ```yaml title=inventory/host_vars/testbed-node-0.testbed.osism.xyz/vars.yml
     ##########################################################
