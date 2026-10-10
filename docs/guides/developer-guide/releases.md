@@ -62,6 +62,14 @@ series before the component images are built, as described in
 The kolla and kolla-ansible images are built for whichever series this
 symlink points to at the release tag.
 
+Then re-read the reasons in `src/drift-allowlist.yml` in the osism/release
+repository against the new series. The drift checks fail on an entry that no
+longer matches anything, but not on one whose reason has become false while it
+still matches. Fix or remove every entry whose reason no longer holds, as
+described under
+[Allowlist](https://github.com/osism/release/blob/main/docs/check-drift-kolla.md#allowlist)
+in its drift documentation.
+
 :::
 
 1. Build the component images by following
