@@ -14,18 +14,22 @@ adjustments are necessary. Read the release notes even if you are only updating 
 
 :::
 
-In the example, OSISM release 10.1.0 is used.
+In the example, OSISM release 11.0.1 is used.
 
 1. Set the new manager version in the configuration repository.
 
    ```bash
-   MANAGER_VERSION="10.1.0"
+   MANAGER_VERSION="11.0.1"
    sed -i "~s,^manager_version:.*\$,manager_version: ${MANAGER_VERSION}," environments/manager/configuration.yml
    ```
 
 2. If `openstack_version` or `ceph_version` are set in `environments/manager/configuration.yml`
    (or anywhere else), they must be removed. If these are set, the stable release is not used for
    these components.
+
+   There is one exception from OSISM 11 on: keep `ceph_version` in `environments/configuration.yml`.
+   A stable release carries the image versions of several Ceph releases and uses this parameter
+   to select the one of your cluster.
 
 3. Sync the image versions in the configuration repository.
 
