@@ -75,17 +75,20 @@ in its drift documentation.
 1. Build the component images by following
    [Tag creation](https://github.com/osism/release#2-tag-creation)
    in the osism/release README. Continue once all `tag` builds have succeeded,
-   the image checks of the README pass and the Renovate PRs for the new images
-   are merged.
+   the image checks of the README pass, the kolla images have been replicated
+   to `registry.osism.tech` (see below) and the Renovate PRs for the new
+   images are merged.
 
    The `tag` builds push the images to `osism.harbor.regio.digital`, and the
    image checks of the README run against that registry. Deployments,
    including the testbed jobs of step 3, pull from public registries such as
    `registry.osism.tech` instead. The kolla release images are not copied
    there automatically: this is deliberate, so that images from a wrongly
-   built tag never reach users. Once the image checks pass, ask a Harbor
-   administrator to replicate the kolla images of the build, naming the tag
-   and its OpenStack series.
+   built tag never reach users. As soon as the kolla image check passes, ask
+   a Harbor administrator to replicate the kolla images of the build, naming
+   the tag and its OpenStack series. Unless you are a Harbor administrator
+   yourself, this waits for someone else, so do not hold the request back
+   until the images are needed.
 
    Before you continue, check that the images arrived under the namespace of
    the right series. The SBOM image of the build is a quick indicator; its
