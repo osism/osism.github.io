@@ -7,9 +7,9 @@ sidebar_position: 5
 
 :::warning
 
-OSISM 11.0.0 is validated for **new installations only**. Upgrading an existing
-deployment to OSISM 11 is not covered by this release. Do not upgrade an existing
-environment to OSISM 11 until a release documents the upgrade path.
+OSISM 11 is validated for **new installations only**. Upgrading an existing
+deployment to OSISM 11 is not covered by its releases so far. Do not upgrade an
+existing environment to OSISM 11 until a release documents the upgrade path.
 
 :::
 
@@ -26,9 +26,35 @@ independently of it.
 
 :::
 
-| Release | Release Date    |
-|:--------|:----------------|
-| 11.0.0  | 8. October 2026 |
+| Release | Release Date     |
+|:--------|:-----------------|
+| 11.0.1  | 11. October 2026 |
+| 11.0.0  | 8. October 2026  |
+
+## 11.0.1
+
+OSISM 11.0.1 supersedes 11.0.0. OSISM 11.0.0 fails to deploy because of the image
+tag problems fixed in this release, so use 11.0.1 for new installations.
+
+### OpenStack services (2026.1)
+
+* **Nova scheduler no longer drops consumers on every `osism apply nova`**: kolla-ansible's cell-cache refresh sends SIGHUP to `nova-scheduler` on every nova deploy or reconfigure, and nova's shutdown handler used to sleep for `manager_shutdown_timeout` (160s by default) before respawning. Every `scheduler` queue in the cloud was left without consumers for close to three minutes, during which `select_destinations` calls could time out. A carried patch now renders `manager_shutdown_timeout = 0` for `nova-scheduler` only; `nova-compute` and `nova-conductor` keep the default, so live migrations and other in-progress operations still wait for it. Override the value in the custom config file `nova/nova-scheduler.conf` if you need a different shutdown behavior for the scheduler.
+* **RabbitMQ consumers now respect the configured prefetch count**: with `om_enable_rabbitmq_stream_fanout` set to `false` in OSISM's 2026.1 overlay, kolla-ansible only rendered `rabbit_qos_prefetch_count` inside the stream-fanout block, so `om_rpc_qos_prefetch_count` (50 by default) never reached any service configuration. Consumers ran with unlimited prefetch, letting a single consumer claim every ready message of a quorum queue instead of spreading load across workers. The prefetch count is now rendered unconditionally in every affected service template.
+* **Several kolla images no longer request nonexistent tags**: on 11.0.0, ten images requested a tag that was never populated because the image's own release version never reached the variable the tag is read from. This is fixed for keystone's httpd frontend (and ironic's and the Let's Encrypt webserver's, if enabled), for `hacluster` and `hacluster-corosync`, for `ovsdpdk`, and for the Prometheus valkey and openstack-network exporters, both enabled by default in this release. No configuration change is required.
+* **ProxySQL's Galera reader hostgroup now includes the backup writers**: `writer_is_also_reader` changed from `0` to `2`, so the standby Galera nodes are also members of the reader hostgroup; the active writer stays out of it. This does not change where queries go on a standard deployment: kolla's ProxySQL query rules send every service's traffic to the writer hostgroup, so all reads and writes still reach the single active writer. It only affects query routing if you add your own query rules that send reads to the reader hostgroup.
+
+### osism-ansible now pins infrastructure service versions
+
+`osism apply` stopped loading `group_vars/all/images.yml` in 2022, so adminer, dnsmasq, opentelemetry-collector, phpmyadmin, scaphandre and step-ca have been running at each role's own default tag since then. `versions.yml` now carries pinned tags for all of them, reaching the inventory through the osism-ansible image and the inventory reconciler:
+
+* adminer 4.7 → 5.5.1 (fixes CVE-2026-25892, CVE-2021-29625 and GHSA-r4x9-5m63-3vxw, among others)
+* dnsmasq 2.90 → 2.91 (memory-safety fixes)
+* opentelemetry-collector 0.136.0 → 0.162.0
+* phpmyadmin 5.2 → 5.2.3
+* scaphandre 1.0.0 → 1.0.3
+* step-ca 0.28.4 → 0.30.2 (fixes CVE-2025-44005, affecting ACME and SCEP provisioners, plus CVE-2025-66406, CVE-2026-30836 and CVE-2026-40097)
+
+An operator override in the service's own `images.yml` (for example `environments/kolla/images.yml` for step-ca, `environments/monitoring/images.yml` for scaphandre) still takes precedence over these pins. The opentelemetry-collector role also now renders the OTLP gRPC exporter as `otlp_grpc` for collector versions 0.144.0 and later, matching the bumped tag and avoiding a deprecation warning.
 
 ## 11.0.0
 
