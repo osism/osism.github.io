@@ -18,7 +18,6 @@ sidebar_label: Networks
 | `homer_network`                    | `172.31.100.208/28` |
 | `substation_network`               | `172.31.100.240/28` |
 | `manager_network`                  | `172.31.101.0/27`   |
-| `nexus_network`                    | `172.31.101.32/28`  |
 | `dnsdist_network`                  | `172.31.101.80/28`  |
 | `squid_network`                    | `172.31.101.144/28` |
 | `cgit_network`                     | `172.31.101.112/28` |
