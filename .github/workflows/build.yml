@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.15"
       # with PyYAML the tests also compare the built-in YAML subset parser against it
       - name: Install PyYAML
         run: pip install pyyaml
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.15"
       # every *_image / *_tag override must exist in osism/defaults all/002-images-kolla.yml
       - name: Check image override snippets
         run: python3 .claude/skills/security-advisory/scripts/check_images.py docs/appendix/security/ossa-*.md
