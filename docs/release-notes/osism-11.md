@@ -93,6 +93,40 @@ A new OSISM 11 deployment can start from a configuration repository taken over f
 - `valkey_master_password` in `environments/kolla/secrets.yml`. Valkey replaces Redis from OpenStack 2025.2 on, and this is the only secret OpenStack 2026.1 adds over 2025.1.
 - The ProxySQL certificate, key and CA described under [OpenStack services](#openstack-services-20261), if internal TLS is enabled.
 
+### CIS hardening for Ubuntu 24.04
+
+The [UBUNTU24-CIS](https://github.com/ansible-lockdown/UBUNTU24-CIS) role is
+integrated as `osism apply ubuntu24-cis`; the play only accepts Ubuntu 24.04
+hosts. Setting `enable_cis_hardening: true` also runs CIS hardening in
+`osism apply bootstrap` and `osism apply maintenance`; it is off by default.
+The flag is not tied to an Ubuntu release: the hook picks the CIS role that
+matches each host's release and skips hosts on a release without one.
+
+The defaults apply the CIS Level 1 server profile without the controls that
+break an OSISM node: no firewall management; forwarding, `rp_filter` and time
+sync left to OSISM; host logging kept on rsyslog; unowned and world-writable
+files reported rather than changed, since container and Ceph data has no host
+owner; no AIDE; and no Level 2 rules. Tighten them
+with `ubtu24cis_*` variables in `environments/configuration.yml`; the OSISM
+values are in `all/099-ubuntu24-cis.yml` of
+[osism/defaults](https://github.com/osism/defaults).
+
+The role uninstalls `apport` and the `telnet` and `ftp` clients. That removes
+the `ubuntu-server` and `ubuntu-standard` metapackages, and the next
+`osism apply maintenance` autoremoves what they pulled in, among others
+`open-vm-tools`, `fwupd`, `udisks2`, `tcpdump` and `nano`. To keep such
+packages, list them in `required_packages_extra`; that marks them as manually
+installed, so autoremove keeps them. It does not help for packages the role
+removes itself: keep those with the role's switches, such as
+`ubtu24cis_telnet_required: true` or `ubtu24cis_ftp_client: true`.
+
+The `hardening` play (ansible-hardening) is unchanged and still deprecated.
+With both enabled, the two roles set the SSH server and `login.defs` options
+differently and rewrite them on every bootstrap and maintenance run; the CIS
+values win because the CIS role runs last. Both also declare `TMOUT` read-only,
+so every login shell prints a `readonly variable` error. Set
+`enable_hardening: false` when enabling `enable_cis_hardening`.
+
 ### openstack-image-manager
 
 - `--verify-checksum` checks a downloaded image's bytes against its published checksum before anything is created in Glance, including for rolling `latest` versions and `file:` imports, which were previously imported unchecked. It recognizes bare MD5/SHA1/SHA512 digests as well as `algo:hex` ones. Without the flag, an import that cannot be checked is only logged as a warning, as before.
