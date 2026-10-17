@@ -113,8 +113,8 @@ Not all of the services listed there are supported by OSISM.
             auth_url: https://api.testbed.osism.xyz:5000/v3
             project_domain_name: default
             user_domain_name: default
+          endpoint_type: internalURL
           cacert: /etc/ssl/certs/ca-certificates.crt
-          identity_api_version: 3
       ```
 
       The password: set `os_password_octavia` to the value of `octavia_keystone_password` from
