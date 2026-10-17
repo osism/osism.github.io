@@ -93,10 +93,15 @@ Not all of the services listed there are supported by OSISM.
     We provide regularly updated images for Octavia in
     [osism/openstack-octavia/amphora-image](https://github.com/osism/openstack-octavia-amphora-image).
 
-    * Configure API Endpoint
+    * Credentials
 
-      For the command to be usable, a cloud profile for octavia must currently be added in the
-      clouds.yml file of the OpenStack environment. The `auth_url` is changed accordingly.
+      `osism manage image octavia` uses the `octavia` cloud profile from
+      `environments/openstack/clouds.yml` and takes its password from `os_password_octavia`
+      in `environments/openstack/secrets.yml`. cfg-cookiecutter has generated the cloud profile
+      since May 2024 and `os_password_octavia` since June 2026, so a configuration repository
+      generated since June 2026 needs no changes.
+
+      In an older configuration repository, add whichever of the two is missing. The cloud profile:
 
       ```yaml title="environments/openstack/clouds.yml"
       clouds:
@@ -112,23 +117,16 @@ Not all of the services listed there are supported by OSISM.
           identity_api_version: 3
       ```
 
-    * Configure the secret
+      The password: set `os_password_octavia` to the value of `octavia_keystone_password` from
+      `environments/kolla/secrets.yml`.
 
-      The secret is added to the secure.yml file. The password is set in the parameter
-      `octavia_keystone_password` in the file `environments/kolla/secrets.yml`.
-
-      Get the secret with
       ```bash
-      make ansible_vault_show FILE=environments/kolla/secrets.yml |grep octavia_keystone_password
+      make ansible_vault_show FILE=environments/kolla/secrets.yml | grep octavia_keystone_password
+      make ansible_vault_edit FILE=environments/openstack/secrets.yml
       ```
 
-      ```yaml title="environments/openstack/secure.yml"
-      ---
-      clouds:
-        [...]
-        octavia:
-          auth:
-            password: VALUE_OF_octavia_keystone_password
+      ```yaml title="environments/openstack/secrets.yml"
+      os_password_octavia: VALUE_OF_octavia_keystone_password
       ```
 
     * Upload the correct and current image depending on the current Openstack release:
