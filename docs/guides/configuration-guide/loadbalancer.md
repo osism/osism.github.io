@@ -137,7 +137,6 @@ by the [general procedure](#general-procedure) described above.
     * Configure the custom CA to be copied to the OpenStack containers
       ```yaml title="environments/kolla/configuration.yml"
       kolla_copy_ca_into_containers: "yes"
-      openstack_cacert: /etc/ssl/certs/ca-certificates.crt
       ```
 
 4. Import the ca certificate to all nodes so that the custom CA is known everywhere and the self-signed certificates are accepted as valid.
