@@ -122,8 +122,10 @@ by the [general procedure](#general-procedure) described above.
 
 2. Manager service
 
-    The local environment variable `REQUESTS_CA_BUNDLE` must be set explicitly so that
-    the manager service knows the custom CA in all necessary places.
+    If you are running OSISM 11.0.1 or older, set the environment variable
+    `REQUESTS_CA_BUNDLE` explicitly so that the manager service knows the custom
+    CA in all necessary places. Later releases set it by default
+    (`manager_requests_ca_bundle`).
 
     ```yaml title="environments/manager/configuration.yml"
     manager_environment_extra:
