@@ -184,17 +184,16 @@ internal_interface: loopback0
 # network
 
 network_type: netplan
-network_dummy_interfaces:
-  - loopback0
+network_dummy_devices:
+  loopback0:
+    addresses:
+      - 10.10.42.10/32
+      - 2001:db8::10:10:42:10/128
 network_ethernets:
   enp99s0f0np0:
     mtu: 9100
   enp99s0f1np1:
     mtu: 9100
-  loopback0:
-    addresses:
-      - 10.10.42.10/32
-      - 2001:db8::10:10:42:10/128
 ```
 
 ```yaml
