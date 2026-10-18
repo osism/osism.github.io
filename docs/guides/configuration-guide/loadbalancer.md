@@ -135,7 +135,7 @@ by the [general procedure](#general-procedure) described above.
     * Add the custom CA to the configuration repository in the directory `environments/kolla/certificates/ca` with the same
       name like in step 1
     * Configure the custom CA to be copied to the OpenStack containers
-      ```yaml title="environments/manager/configuration.yml"
+      ```yaml title="environments/kolla/configuration.yml"
       kolla_copy_ca_into_containers: "yes"
       openstack_cacert: /etc/ssl/certs/ca-certificates.crt
       ```
