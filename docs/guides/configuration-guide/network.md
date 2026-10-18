@@ -127,16 +127,32 @@ Use the name `loopback0` for this interface, not the legacy `dummy0`. Also set
 addresses of the interface this variable names, and the frr role has defaulted
 to `dummy0`.
 
-Dummy devices are created with the help of
-[systemd.netdev](https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html)
-and can then be used as a normal network device in the Netplan configuration.
+On Ubuntu 24.04 and later, define the device and its addresses in
+`network_dummy_devices`. It is written to the `dummy-devices` section of the
+Netplan configuration. This is also what the inventory reconciler generates for
+`loopback0` when the network configuration comes from NetBox.
+
+```yaml
+network_dummy_devices:
+  loopback0:
+    addresses:
+      - 10.10.42.10/32
+      - 2001:db8::10:10:42:10/128
+```
+
+Configurations from before `network_dummy_devices` existed use the older
+`network_dummy_interfaces`. It creates the devices with the help of
+[systemd.netdev](https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html),
+and their addresses go in `network_ethernets`. It still works, and hosts older
+than Ubuntu 24.04, where `dummy-devices` is not rendered, need it.
 
 ```yaml
 network_dummy_interfaces:
   - loopback0
 ```
 
-The MTU is set to 9000 by default and can be set via `network_dummy_interface_mtu`.
+The MTU of these devices is set to 9000 by default and can be set via
+`network_dummy_interface_mtu`.
 
 ## `/etc/interfaces`
 
