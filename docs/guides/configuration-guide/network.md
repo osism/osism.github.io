@@ -149,7 +149,7 @@ ansible_host: 10.10.42.10
 ##########################################################
 # generic
 
-internal_interface: dummy0
+internal_interface: loopback0
 ```
 
 ```yaml
@@ -158,13 +158,13 @@ internal_interface: dummy0
 
 network_type: netplan
 network_dummy_interfaces:
-  - dummy0
+  - loopback0
 network_ethernets:
   enp99s0f0np0:
     mtu: 9100
   enp99s0f1np1:
     mtu: 9100
-  dummy0:
+  loopback0:
     addresses:
       - 10.10.42.10/32
       - 2001:db8::10:10:42:10/128
@@ -175,6 +175,7 @@ network_ethernets:
 # frr
 
 frr_local_as: 4210042010
+frr_loopback_interface: loopback0  # the dummy interface FRR announces
 frr_loopback_v4: 10.10.42.10
 frr_loopback_v6: 2001:db8::10:10:42:10
 frr_uplinks:
