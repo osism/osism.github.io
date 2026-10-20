@@ -116,13 +116,24 @@ network_vlans:
 
 ### Dummy interfaces
 
+A dummy interface carries addresses that do not belong to a physical link. In a
+routed (BGP to the host) network, each node has one, named `loopback0`, that
+carries the node's own addresses (a /32 and a /128). FRR announces them to the
+fabric, and OSISM's defaults use `loopback0` as `network_interface` and, where
+`internal_interface` is not set, for the console, hosts and management interfaces.
+Use the name `loopback0` for this interface, not the legacy `dummy0`. Also set
+`frr_loopback_interface: loopback0`, as in the
+[IPv6 fabric underlay](#ipv6-fabric-underlay) example. FRR announces the
+addresses of the interface this variable names, and the frr role has defaulted
+to `dummy0`.
+
 Dummy devices are created with the help of
 [systemd.netdev](https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html)
 and can then be used as a normal network device in the Netplan configuration.
 
 ```yaml
 network_dummy_interfaces:
-  - dummy0
+  - loopback0
 ```
 
 The MTU is set to 9000 by default and can be set via `network_dummy_interface_mtu`.
@@ -175,7 +186,7 @@ network_ethernets:
 # frr
 
 frr_local_as: 4210042010
-frr_loopback_interface: loopback0  # the dummy interface FRR announces
+frr_loopback_interface: loopback0
 frr_loopback_v4: 10.10.42.10
 frr_loopback_v6: 2001:db8::10:10:42:10
 frr_uplinks:
