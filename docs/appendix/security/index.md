@@ -37,3 +37,4 @@ handling of security-related information.
 | [OSSA-2026-037](ossa-2026-037.md) | Inconsistent scope enforcement for delegated tokens   | OpenStack Keystone           |
 | [OSSA-2026-038](ossa-2026-038.md) | Multiple SSRF vulnerabilities in Glance               | OpenStack Glance             |
 | [OSSA-2026-039](ossa-2026-039.md) | HAProxy configuration injection leading to RCE        | OpenStack Octavia            |
+| [OSSA-2026-045](ossa-2026-045.md) | Cross-project information disclosure in Messages API  | OpenStack Cinder             |
