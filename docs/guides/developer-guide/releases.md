@@ -72,7 +72,7 @@ symlink points to at the release tag.
 
    The `tag` builds push the images to `osism.harbor.regio.digital`, and the
    image checks of the README run against that registry. Deployments,
-   including the testbed jobs of step 3, pull from public registries such as
+   including the testbed jobs of step 4, pull from public registries such as
    `registry.osism.tech` instead. The kolla release images are not copied
    there automatically: this is deliberate, so that images from a wrongly
    built tag never reach users. Once the image checks pass, ask a Harbor
@@ -88,44 +88,50 @@ symlink points to at the release tag.
      registry.osism.tech/kolla/release/2026.1/sbom:0.20261008.0
    ```
 
-2. Create a release candidate (e.g. `10.1.0-rc.1`) in the osism/release
+2. Generate the changelogs of the component repositories by following
+   [Changelog generation](https://github.com/osism/release#4-changelog-generation-per-component)
+   in the osism/release README, and merge the changelog pull requests. If
+   testing leads to new component tags, run the generation again; it picks
+   up every tag not yet documented.
+
+3. Create a release candidate (e.g. `10.1.0-rc.1`) in the osism/release
    repository as described in its README. It pins the images built in
    step 1.
 
-3. Add temporary release candidate jobs to `.zuul.yaml` in the
+4. Add temporary release candidate jobs to `.zuul.yaml` in the
    [osism/testbed](https://github.com/osism/testbed) repository that deploy
    the release candidate and upgrade from the current stable release to the
    release candidate (e.g. `abstract-testbed-deploy-rc` with
    `manager_version: 10.1.0-rc.1` and `abstract-testbed-upgrade-rc`).
    Before they run, add the candidate to the seed image as described in
-   step 6; otherwise they stop at `run.sh`.
+   step 7; otherwise they stop at `run.sh`.
 
-4. Test. Test. Test.
+5. Test. Test. Test.
 
    If testing turns up bugs, fix them in the affected components, then build
-   new component images with a new version (step 1) and create the next
-   release candidate from them (e.g. `10.1.0-rc.2`). Repeat steps 3 and 4 for
-   it.
+   new component images with a new version (step 1), generate their
+   changelogs (step 2) and create the next release candidate from them
+   (e.g. `10.1.0-rc.2`). Repeat steps 4 and 5 for it.
 
-5. Create the final release version (e.g. `10.1.0`) in the osism/release
+6. Create the final release version (e.g. `10.1.0`) in the osism/release
    repository as described in its README. It must pin the same versions as
    the last tested release candidate. Do not merge any updates in the
    osism/release repository or build new component images in between:
    anything that changes after the last release candidate has not been
    tested.
 
-6. Add the release to `seed/files/releases.txt` in the
+7. Add the release to `seed/files/releases.txt` in the
    [osism/container-images](https://github.com/osism/container-images)
    repository and wait until the seed image built from it is published. The
    seed image carries one collection set per listed release, and `run.sh`
    refuses a `manager_version` it has no set for: a manager pinned to an
    unlisted release stops with `no collection set for manager_version`. The
    testbed jobs switched in the next step deploy exactly such a manager.
-   Remove the release candidates listed in step 3 at the same time.
+   Remove the release candidates listed in step 4 at the same time.
 
-7. Switch the pinned stable jobs in the
+8. Switch the pinned stable jobs in the
    [osism/testbed](https://github.com/osism/testbed) repository to the new
-   release and remove the temporary release candidate jobs added in step 3.
+   release and remove the temporary release candidate jobs added in step 4.
    Do this before the documentation steps that follow: the stable jobs are
    what validate the release, so they must pass before it is announced. For
    the `10.1.0` example the version variables change as follows.
@@ -151,22 +157,22 @@ symlink points to at the release tag.
    `testbed-upgrade-stable-next-*` (upgrade to `latest`) — are not touched
    here. All stable jobs must pass successfully.
 
-8. Add the release notes to the
+9. Add the release notes to the
    [osism/osism.github.io](https://github.com/osism/osism.github.io)
    repository by following
-   [Changelog generation](https://github.com/osism/release#4-changelog-generation-per-component)
-   and
    [Release notes generation](https://github.com/osism/release#5-release-notes-generation-per-release)
-   in the osism/release README. For a major release, first create the new
-   page `docs/release-notes/osism-N.md` with a release table: the release
-   notes generation only adds to an existing page.
+   in the osism/release README. The release notes are generated from the
+   changelogs of step 2, so all changelog pull requests must be merged
+   first. For a major release, first create the new page
+   `docs/release-notes/osism-N.md` with a release table: the release notes
+   generation only adds to an existing page.
 
-9. Update the version examples in the documentation that reference a concrete
+10. Update the version examples in the documentation that reference a concrete
    release, e.g. `docs/guides/configuration-guide/manager.mdx`,
    `docs/guides/upgrade-guide/manager.mdx` and
    `docs/guides/configuration-guide/configuration-repository.md`.
 
-10. As the last step, bump the `manager_version` default in the
+11. As the last step, bump the `manager_version` default in the
    [osism/cfg-cookiecutter](https://github.com/osism/cfg-cookiecutter)
    repository so that newly created configuration repositories use the new
    release. The documentation promises that this default is always the latest
