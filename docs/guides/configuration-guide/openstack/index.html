@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OpenStack | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/configuration-guide/openstack/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OpenStack | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="Image tags"><meta data-rh="true" property="og:description" content="Image tags"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/configuration-guide/openstack/"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/configuration-guide/openstack/" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/configuration-guide/openstack/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Configuration Guide","item":"https://osism.tech/docs/guides/configuration-guide/"},{"@type":"ListItem","position":3,"name":"OpenStack","item":"https://osism.tech/docs/guides/configuration-guide/openstack/"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.c2bd076e.js" defer="defer"></script>
-<script src="/assets/js/main.c102ea57.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.76b56ee9.js" defer="defer"></script>
+<script src="/assets/js/main.d804e88f.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -36,8 +36,9 @@ tagging scheme. The two schemes are not interchangeable — which tags you can u
 <li class="">
 <p><strong>Rolling tags</strong> exist only in the <code>kolla</code> namespace. A rolling tag such as <code>2025.1</code> is a moving
 reference: it is republished whenever new images are built for OpenStack 2025.1 (Epoxy), so it always
-resolves to the latest available build — including the latest security patches. It is a safe choice to
-keep such a pin in place permanently, but the image it resolves to changes over time.</p>
+resolves to the latest available build — including the latest security patches. The image it resolves
+to changes over time, and the pin stays on its OpenStack release: it has to be removed before upgrading
+to a new OpenStack release (see <a class="" href="/docs/guides/operations-guide/openstack/security-updates">Security Updates</a>).</p>
 </li>
 <li class="">
 <p><strong>Release tags</strong> exist only in the <code>kolla/release/&lt;openstack_version&gt;</code> namespaces, which is what
