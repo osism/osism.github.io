@@ -134,6 +134,20 @@ would point at an image that does not exist:
 Replace `registry.osism.tech` if you pull the images from a mirror. {{OPTIONAL: sidecar images whose
 tag follows the umbrella tag but contain no project code, and which tag to pin for them.}}
 
+Commit the override to the configuration repository and roll it out:
+
+```bash
+osism apply configuration
+osism apply -a pull {{PLAY}}
+osism apply {{PLAY}}
+```
+
+{{PLAY: the kolla play of the affected service (`cinder`, `neutron`, `keystone`, …); one pull/deploy
+pair per play when several services are affected. Never `-a upgrade`.}}
+
+See [Security Updates](../../guides/operations-guide/openstack/security-updates.md) for the
+individual steps, how to verify the deployed image, and when to remove the override again.
+
 {{OPTIONAL: The {{OTHER}} images do not contain the affected code and do not need to be updated
 for this issue.}}
 
