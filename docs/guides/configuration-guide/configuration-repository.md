@@ -72,7 +72,7 @@ listed there will be queried during the execution of Cookiecutter.
    this is always set to the latest stable version.
 
    ```yaml
-   manager_version [11.0.1]: latest
+   manager_version [11.0.2]: latest
    ```
 
    If the `manager_version` parameter is set to `latest` it is also possible to explicitly
@@ -92,7 +92,7 @@ listed there will be queried during the execution of Cookiecutter.
    [11/18] git_version (main):
    [12/18] ip_external (192.168.16.254):
    [13/18] ip_internal (192.168.16.9):
-   [14/18] manager_version (11.0.1):
+   [14/18] manager_version (11.0.2):
    [15/18] name_server (149.112.112.112):
    [16/18] ntp_server (de.pool.ntp.org):
    [17/18] openstack_version (2026.1):
@@ -411,7 +411,7 @@ If you want to use the latest version, this is done using the `manager_version` 
 this is always set to the latest stable version.
 
 ```yaml
-manager_version [11.0.1]: latest
+manager_version [11.0.2]: latest
 ```
 
 If the `manager_version` parameter is set to `latest` it is also possible to explicitly
