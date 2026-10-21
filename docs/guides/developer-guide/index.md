@@ -42,6 +42,9 @@ repository. The example here is from the `osism.services.keycloak` role: https:/
 Whenever possible, upstream container images should be used. If only minor customizations are necessary,
 always work with overlay container images based on upstream container images.
 
+An image built from a release tag carries the labels described in
+[Container Image Labels](./container-image-labels.md).
+
 ## How service deployment works
 
 ### Docker
