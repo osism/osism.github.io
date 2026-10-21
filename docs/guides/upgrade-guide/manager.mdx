@@ -43,6 +43,10 @@ are at the same commit by the time step 3 runs.
          (or anywhere else), they must be removed. If these are set, the stable release is not used for
          these components.
 
+         There is one exception from OSISM 11 on: keep `ceph_version` in `environments/configuration.yml`.
+         A stable release carries the image versions of several Ceph releases and uses this parameter
+         to select the one of your cluster.
+
 
     3. Sync the image versions and files in the configuration repository.
 
