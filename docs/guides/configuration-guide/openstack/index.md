@@ -39,8 +39,9 @@ tagging scheme. The two schemes are not interchangeable — which tags you can u
 
 * **Rolling tags** exist only in the `kolla` namespace. A rolling tag such as `2025.1` is a moving
   reference: it is republished whenever new images are built for OpenStack 2025.1 (Epoxy), so it always
-  resolves to the latest available build — including the latest security patches. It is a safe choice to
-  keep such a pin in place permanently, but the image it resolves to changes over time.
+  resolves to the latest available build — including the latest security patches. The image it resolves
+  to changes over time, and the pin stays on its OpenStack release: it has to be removed before upgrading
+  to a new OpenStack release (see [Security Updates](../../operations-guide/openstack/security-updates.md)).
 
 * **Release tags** exist only in the `kolla/release/<openstack_version>` namespaces, which is what
   deployments using an OSISM release consume (see
