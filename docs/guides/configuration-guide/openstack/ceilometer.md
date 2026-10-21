@@ -33,9 +33,13 @@ in queries:
 max by (resource) (ceilometer_volume_size)
 ```
 
-Ceilometer polls every 300 seconds, so a value changes at most once per
-polling interval. Which meters are polled is decided by Ceilometer's
-`polling.yaml`.
+Do not `sum` the raw series; that counts every resource once per control node.
+The central agents do not poll in step, so an increase shows in the aggregate
+at the first agent's next poll, but a decrease or a deleted resource only once
+every central agent has polled again. That takes up to one polling interval,
+and longer if one agent's calls to an OpenStack API hang.
+
+Which meters are polled is described in [Polled meters](#polled-meters).
 
 To turn the export off, or to move it to another port, override the defaults:
 
@@ -62,3 +66,40 @@ Ceilometer so that it picks up the new scrape job:
 osism apply ceilometer
 osism apply prometheus
 ```
+
+## Polled meters
+
+OSISM renders Ceilometer's `polling.yaml` for every agent. The agents poll
+every 300 seconds (`ceilometer_polling_interval`).
+
+* Compute agents, 22 meters: `power.state`, `cpu`, `vcpus`, `memory`,
+  `memory.available`, `memory.usage`, `memory.resident`, `memory.swap.in`,
+  `memory.swap.out`, `network.incoming.bytes`, `network.incoming.packets`,
+  `network.outgoing.bytes`, `network.outgoing.packets`, `disk.root.size`,
+  `disk.ephemeral.size`, `disk.device.read.bytes`,
+  `disk.device.read.requests`, `disk.device.write.bytes`,
+  `disk.device.write.requests`, `disk.device.capacity`,
+  `disk.device.allocation` and `disk.device.usage`.
+* Central agents, only for the services that are enabled:
+  * Cinder: `volume.size`, `volume.snapshot.size`, `volume.backup.size`
+  * Glance: `image.size`
+  * Neutron: `ip.floating`
+  * Manila: `manila.share.size`
+  * Designate: `dns.zone.status`, `dns.zone.recordsets`, `dns.zone.ttl`,
+    `dns.zone.serial`
+  * Octavia: `loadbalancer.operating`, `loadbalancer.provisioning`
+* `radosgw.*` and `hardware.ipmi.*` are not polled.
+
+To poll further meters, add them to the default list:
+
+```yaml title="environments/kolla/configuration.yml"
+ceilometer_polling_meters_extra:
+  - disk.device.read.latency
+```
+
+To replace the list, provide your own
+`environments/kolla/files/overlays/ceilometer/polling.yaml`. It is used for
+every agent instead of the rendered one. Ceilometer ignores meter names it
+does not know without a message, so check that the series you expect appear.
+When you remove the file again, `osism apply -a reconfigure ceilometer`
+restores the rendered default.
