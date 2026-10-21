@@ -183,6 +183,13 @@ Standard sentence when no CVSS exists (put it in the Summary):
   no project code (for example `keystone_httpd_*`) must keep their deployed tag — say so.
   Libraries (keystonemiddleware, oslo.*) land in every image that installs them — say which images
   matter for OSISM.
+- After the override, give the rollout commands: `osism apply configuration`, then
+  `osism apply -a pull <play>` and `osism apply <play>` for each affected kolla play, followed by
+  the link to
+  [Security Updates](../../guides/operations-guide/openstack/security-updates.md), which covers
+  verification and removing the override. Use the default action (deploy), never `-a upgrade`:
+  upgrade is the OpenStack release-to-release path and does more than needed (for instance, it
+  restarts all Cinder containers).
 
 `### Mitigation`:
 
