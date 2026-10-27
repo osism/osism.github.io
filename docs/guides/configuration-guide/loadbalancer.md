@@ -66,6 +66,13 @@ To enable TLS encryption the following steps are needed.
     * private key & certificates for `kolla_external_fqdn`: `environments/kolla/certificates/haproxy.pem`
     * private key & certificates for `kolla_internal_fqdn`: `environments/kolla/certificates/haproxy-internal.pem`
 
+    :::note
+    With internal TLS enabled, ProxySQL requires its own certificate, key and CA
+    in `environments/kolla/certificates/`. ProxySQL is enabled by default from
+    OSISM 11 on, so this applies to most environments. See
+    [ProxySQL and internal TLS](#proxysql-and-internal-tls).
+    :::
+
 3. Encrypt the certificates using ansible vault:
 
     ```bash
@@ -135,6 +142,19 @@ by the [general procedure](#general-procedure) described above.
       ```yaml title="environments/kolla/configuration.yml"
       kolla_copy_ca_into_containers: "yes"
       ```
+
+    :::warning
+    ProxySQL is the exception to the free choice of file name. Whenever ProxySQL
+    uses internal TLS it needs the CA, and from OSISM 11 on the CA belongs in
+    `environments/kolla/certificates/proxysql-ca.pem`, see
+    [ProxySQL and internal TLS](#proxysql-and-internal-tls). Without that file,
+    and always on OSISM 10, ProxySQL reads the CA from this directory
+    under the fixed name `root.crt`, so it has to be available as
+    `environments/kolla/certificates/ca/root.crt` — otherwise the ProxySQL
+    container fails to start. The name of the `certificates_ca` entry from step 1
+    is independent of this, so the same certificate can simply be added a second
+    time as `root.crt`.
+    :::
 
 4. Import the ca certificate to all nodes so that the custom CA is known everywhere and the self-signed certificates are accepted as valid.
 
@@ -262,4 +282,63 @@ osism apply --sub external loadbalancer-without-service-config
 
 ```yaml title="environments/kolla/configuration.yml"
 enable_proxysql: "yes"
+```
+
+From OSISM 11 on, ProxySQL is the default MariaDB loadbalancer and no longer
+has to be enabled explicitly.
+
+### ProxySQL and internal TLS
+
+ProxySQL is coupled to internal TLS: `database_enable_tls_internal` defaults to
+`kolla_enable_tls_internal and enable_proxysql`. With internal TLS enabled — see
+the [general procedure](#general-procedure) — it therefore resolves to `yes` as
+soon as ProxySQL is in use, and ProxySQL then expects its own certificate and key
+in the configuration repository. If they are missing, the rollout fails:
+
+```text
+TASK [loadbalancer : Copying over proxysql-cert.pem]
+fatal: [...]: FAILED! => Could not find or access
+'/opt/configuration/environments/kolla/certificates/proxysql-cert.pem'
+```
+
+Choose one of the two options.
+
+**Option 1 — encrypt the connections from the services to ProxySQL
+(recommended).** Add the certificate and the private key as separate files,
+alongside the HAProxy PEMs from the [general procedure](#general-procedure):
+
+* certificate: `environments/kolla/certificates/proxysql-cert.pem`
+* private key: `environments/kolla/certificates/proxysql-key.pem`
+* CA certificate (OSISM 11 and later): `environments/kolla/certificates/proxysql-ca.pem`
+
+If the configuration repository contains these files as placeholders, as
+cfg-cookiecutter generates them, replace their content. Do not leave the
+`proxysql-ca.pem` placeholder as it is: ProxySQL uses the file whenever it
+exists, so fill it or delete it.
+
+Unlike `haproxy.pem`, the certificate is **not** bundled with the key. Encrypt the
+private key with ansible vault and leave the certificates in plain text:
+
+```bash
+make ansible_vault_edit FILE=environments/kolla/certificates/proxysql-key.pem
+```
+
+The certificate has to be valid for the internal API FQDN, because the OpenStack
+services connect to ProxySQL through the internal VIP.
+
+:::note
+ProxySQL needs the CA that issued its certificate. Without `proxysql-ca.pem`,
+and always on OSISM 10, it reads the CA from
+`environments/kolla/certificates/ca/root.crt` instead. That file only reaches
+the ProxySQL container with `kolla_copy_ca_into_containers: "yes"`, which is
+off by default. See [Self-signed certificates](#self-signed-certificates).
+:::
+
+**Option 2 — run ProxySQL without TLS for the service connections.** Decouple
+ProxySQL from internal TLS. The internal and external HAProxy endpoints keep using
+TLS, only the connections between the OpenStack services and ProxySQL are
+unencrypted:
+
+```yaml title="environments/kolla/configuration.yml"
+database_enable_tls_internal: "no"
 ```
