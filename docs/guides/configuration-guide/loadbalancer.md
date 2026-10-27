@@ -76,13 +76,8 @@ To enable TLS encryption the following steps are needed.
 4. Add the changes to the Git repository
 
     ```bash
-    git add environments/kolla/certificates/haproxy.pem \
-      environments/kolla/certificates/haproxy-internal.pem \
-      environments/kolla/configuration.yml
-
-    git commit -m "Add new certificates" environments/kolla/certificates/haproxy.pem \
-      environments/kolla/certificates/haproxy-internal.pem \
-      environments/kolla/configuration.yml
+    git add environments/kolla/certificates environments/kolla/configuration.yml
+    git commit -m "Add new certificates"
     ```
 
 5. Rollout changes
@@ -147,7 +142,9 @@ by the [general procedure](#general-procedure) described above.
     osism apply certificates
     ```
 
-5. Execute all steps in the [general procedure](#general-procedure) above
+5. Execute all steps in the [general procedure](#general-procedure) above. In its
+    step 4, also add `environments/configuration.yml` from step 1 and, if you changed
+    it in step 2, `environments/manager/configuration.yml`.
 
 ### Generating TLS certificates with Let's Encrypt
 
