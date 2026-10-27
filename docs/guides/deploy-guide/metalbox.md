@@ -72,7 +72,7 @@ image (`octavia-export-2025.1.img`) is only published for `2025.1`.
 
 ### Container registry tarballs {#container-registry-tarballs}
 
-Four tarballs are published, all built from
+The following tarballs are published, all built from
 [`zuul/mirror-container-images.yml`](https://github.com/osism/metalbox/blob/main/zuul/mirror-container-images.yml)
 using the image lists under
 [`zuul/vars/`](https://github.com/osism/metalbox/tree/main/zuul/vars).
