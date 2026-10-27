@@ -258,6 +258,13 @@ for all parameters. After a change to the configuration, validate it with
   in the metadata of an image.
 * The value of `url` of a specific version of an image is stored as `image_source`
   in the metadata of an image.
+* When an image of type `multi` is rotated, the `os_purpose` of the superseded
+  image is changed from `generic` to `oldgeneric` if the new image is also
+  `generic`, is `public` or `community`, is not hidden, and has the same
+  `architecture`, `os_distro` and `os_version`. The standard permits at most one
+  such image for any one combination of these three values. Every superseded
+  image keeps `oldgeneric`. It marks a general purpose image that has been
+  replaced, not the most recent replacement.
 
 ### Image with regular rebuilds
 
