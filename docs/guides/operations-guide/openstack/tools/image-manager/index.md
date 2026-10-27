@@ -321,8 +321,10 @@ The next run imports the new build and the following rotation takes place:
   changes from `generic` to `oldgeneric`
 * the new image becomes **Ubuntu 24.04**
 
-By default the last three images will be visible. When a fourth image is added, the visibility of
-the last image in the list is changed to `community` and the image can be deleted in the future.
+With `--hide`, which `osism manage images` always passes, the visibility of a
+superseded image is changed to `community`. Superseded images are only deleted
+with `--delete`, and only those beyond what their `uuid_validity` promises. For
+instance, `last-3` keeps the newest three images, the current one included.
 
 ### Image without regular rebuild
 
