@@ -302,20 +302,23 @@ images:
     versions:
       - version: '20240416'
         url: https://cloud-images.ubuntu.com/noble/20240416/noble-server-cloudimg-amd64.img
-      - version: '20240422'
-        url: https://cloud-images.ubuntu.com/noble/20240422/noble-server-cloudimg-amd64.img
 ```
 
+Only one version is listed. Every listed version is imported, and here all of
+them would have `os_version: '24.04'`. Several versions would therefore create
+several images with `os_purpose: generic` for the same combination of
+`architecture`, `os_distro` and `os_version`, which the SCS image standard does
+not permit.
 
-This configuration creates the following images:
+This configuration creates the following image:
 
-* **Ubuntu 24.04 (20240416)**
 * **Ubuntu 24.04**
 
-If a newer build is added, the following rotation takes place:
+When a newer build is released, the entry in `versions` is replaced with it.
+The next run imports the new build and the following rotation takes place:
 
-* **Ubuntu 24.04 (20240416)** does not change
-* **Ubuntu 24.04** becomes **Ubuntu 24.04 (20240422)**
+* **Ubuntu 24.04** becomes **Ubuntu 24.04 (20240416)** and its `os_purpose`
+  changes from `generic` to `oldgeneric`
 * the new image becomes **Ubuntu 24.04**
 
 By default the last three images will be visible. When a fourth image is added, the visibility of
