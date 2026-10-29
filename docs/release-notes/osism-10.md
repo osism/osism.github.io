@@ -145,6 +145,29 @@ The following changes are only relevant for the [MetalBox](../concepts/metalbox.
 - PortChannel numbers are preserved across runs and no longer collide when a switch shares multiple pairs deriving the same number, so removing one channel no longer renames a surviving one.
 - IP-prefix validation now matches against the network base instead of the host IP, so an orphaned IP address is no longer wrongly reported as having a matching prefix.
 
+### Known issues
+
+#### NetBox operator token missing after the manager deployment
+
+When NetBox is enabled in the manager environment (`netbox_enable: true`) and
+`run.sh` runs the playbooks in the [seed container](../guides/deploy-guide/seed.md#option-1-seed-container),
+the NetBox user initializer fails with `'str' object has no attribute 'items'`.
+The operator user and its API token are not created, and `osism manage netbox`
+fails with `403 Invalid token`.
+
+The seed container ships ansible-core 2.19, which no longer turns the
+`netbox_init_users` default of the NetBox role in OSISM 10.3.0 into a mapping.
+This is fixed in OSISM 11.0.2
+([osism/ansible-collection-services#2178](https://github.com/osism/ansible-collection-services/pull/2178)).
+For OSISM 10.3.0, set the fixed default in the configuration repository before
+running `run.sh manager`:
+
+```yaml title="environments/manager/configuration.yml"
+netbox_init_users: "{{ {netbox_user_name: {'api_token': netbox_user_api_token}} }}"
+```
+
+With ansible-core 2.18 the setting renders the same users as the old default.
+
 ## 10.2.0
 
 ### Rook removed as a Ceph deployment option
