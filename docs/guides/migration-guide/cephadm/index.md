@@ -217,9 +217,12 @@ is not installed on the host, execute the command inside the crash container on
 docker exec ceph-crash-$(hostname) ceph config assimilate-conf -i /etc/ceph/ceph.conf
 ```
 
-In a typical OSISM deployment, the `ceph.conf` is identical across all nodes, so running
-this once is sufficient. If nodes have individual tuning parameters in their `ceph.conf`,
-run the command on each affected node.
+In a typical OSISM deployment, the `ceph.conf` is the same on every node except for one
+section: the RGW options sit under a section naming that node's own legacy RGW daemon,
+`client.rgw.<zone>.<host>.rgw0`, on RGW and non-RGW nodes alike. Running the command once
+is sufficient. The RGW options then land under the section of the node it ran on; the
+RGW migration in Step 5 copies them to `client.rgw` for the new daemons. If nodes have
+individual tuning parameters in their `ceph.conf`, run the command on each affected node.
 
 ## Step 4: Configure cephadm
 
@@ -751,6 +754,42 @@ Ceph config-key store **before** deploying. Run this on each RGW node:
 sudo ceph config-key set rgw/cert/rgw.$(hostname) -i <path_to_ssl_certificate>
 ```
 
+#### Copy the RGW configuration for the new daemons
+
+:::warning Do this before deploying the new RGW daemons
+cephadm generates new daemon names, and **per-daemon configuration does not follow
+them**. ceph-ansible stores RGW options under a section naming the legacy daemon
+(`client.rgw.<zone>.<host>.rgw0`); the new daemons are called
+`client.rgw.<realm>.<zone>.<host>.<random>` and inherit none of it. Without this step,
+every RGW option set by the deployment -- Keystone integration, the enabled API set --
+reverts to its default on the new daemons. They run and `ceph orch ps` shows them healthy,
+so nothing in the later steps reveals it, while Keystone users get `401 Unauthorized`.
+:::
+
+Copy the options to `client.rgw`, which every RGW daemon inherits regardless of its
+generated name:
+
+```bash
+OLD=$(ceph config dump -f json | python3 -c "import json,sys; print(sorted({e['section'] for e in json.load(sys.stdin) if e['name']=='rgw_keystone_url'})[0])")
+echo "Copying from ${OLD}"
+ceph config dump -f json | python3 -c "import json,sys; [print(e['name']) for e in json.load(sys.stdin) if e['section']=='$OLD' and e['name'] not in ('rgw_frontends','log_file')]" | while read -r k; do
+    ceph config set client.rgw "$k" "$(ceph config get "$OLD" "$k")"
+done
+```
+
+ceph-ansible renders these options into `ceph.conf`. The `ceph config assimilate-conf`
+in Step 3 moves them into the monitor config store, but under the legacy section name,
+which no cephadm daemon reads. `rgw_frontends` and `log_file` are left out of the copy:
+they name the legacy daemon's host, and cephadm sets the frontend for each daemon itself.
+The copy does not change the legacy daemons, which keep running until the migration
+below: they already run with the same values.
+
+If the deployment sets any **per-daemon MDS** options, the same rule applies to the MDS
+section below: `ceph orch apply mds` likewise renames daemons. The OSISM default sets
+none, so a default deployment is unaffected.
+
+#### Deploy the new RGW daemons
+
 :::warning
 
 Unlike MDS daemons, RGW daemons bind to a specific port. The legacy daemon on a node must
@@ -838,6 +877,20 @@ rgw.default.default.testbed-node-3.dhmops  testbed-node-3  *:8081  running (39s)
 rgw.default.default.testbed-node-4.ibjvjy  testbed-node-4  *:8081  running (41s)    32s ago  41s    90.5M        -  18.2.8   fb822dbe2ee6  fcf4d6c837f4
 rgw.default.default.testbed-node-5.xcegdm  testbed-node-5  *:8081  running (43s)    32s ago  43s    91.5M        -  18.2.8   fb822dbe2ee6  569fd2afad81
 ```
+
+Check that each new daemon has the deployment's configuration:
+
+```bash
+for d in $(ceph orch ps --daemon-type rgw --format json | python3 -c "import json,sys; [print(x['daemon_name']) for x in json.load(sys.stdin)]"); do
+    echo "${d}: $(ceph config show client.${d} rgw_enable_apis) | $(ceph config show client.${d} rgw_keystone_url)"
+done
+```
+
+Each line should show the API list and Keystone URL of the `client.rgw.…` section of
+`ceph_conf_overrides` in `environments/ceph/configuration.yml`. Ceph's defaults, an API list starting with
+`s3, s3website` and an empty Keystone URL, mean the copy above was skipped or failed:
+run it now, then restart the daemons with `ceph orch restart rgw.${RGW_SERVICE_ID}`,
+since `rgw_enable_apis` is not applied at runtime.
 
 ### Migrating MDS daemons
 
