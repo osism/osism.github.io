@@ -72,37 +72,70 @@ check that `%RAW USED` is well below 85% (Ceph's default nearfull threshold).
 
 ## Step 2: Install cephadm
 
-Install cephadm on **all** Ceph nodes. The version of cephadm must match the running Ceph
+Install cephadm on **all** Ceph nodes, the hosts in the `ceph` inventory group
+(`osism get hosts -l ceph`). The version of cephadm must match the running Ceph
 release.
 
-First, determine the running Ceph release on the OSISM manager node :
+First, determine the running Ceph release on the OSISM manager node:
 
 ```bash
-ceph version
+ceph versions
 ```
 
-This returns output like `ceph version 18.2.7 (...)  reef (stable)`. The full version
-number (e.g. `18.2.7`) is needed for the next step.
+This lists the version of the running daemons, for example
+`"ceph version 18.2.8 (...) reef (stable)": 21` under `overall`. The release name
+(`reef`, `squid`) decides which of the following sections applies. The Reef commands
+read the exact version from the running daemons themselves. Use `ceph versions`, not
+`ceph version`: on the manager, `ceph version` reports the version of the `cephclient`
+container, which need not match the cluster.
 
-### Control nodes (mon, mgr)
+### Reef (18.x)
 
-:::note
-OSD nodes require a different installation method due to a known bug in the UCA cephadm
-package for Reef. See the [OSD nodes](#osd-nodes) section below before installing on OSD nodes.
+:::warning Do not use the UCA package on Reef
+The Ubuntu Cloud Archive has not moved past cephadm 18.2.4, which contains a
+[known bug](https://tracker.ceph.com/issues/63151) in its AppArmor profile parsing,
+[fixed upstream](https://github.com/ceph/ceph/pull/57955) in 18.2.5+. The crash is in
+`HostFacts`, so it is **not** limited to OSD adoption: on any node it also breaks
+`cephadm shell` and `cephadm gather-facts`, the commands you reach for after the
+migration. Any AppArmor profile whose name contains a space triggers it, and stock
+Ubuntu 24.04 ships one (`/etc/apparmor.d/MongoDB_Compass`), so a default installation
+is affected.
 :::
+
+On Reef, install cephadm as a standalone Python script from the Ceph Git repository on
+**all** Ceph nodes, control and OSD alike:
+
+```bash
+CEPH_RELEASE=$(docker exec $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) ceph --version | awk '{print $3}')
+curl --fail --silent --remote-name --location https://raw.githubusercontent.com/ceph/ceph/v${CEPH_RELEASE}/src/cephadm/cephadm.py
+sudo install -m 0755 -o root -g root cephadm.py /usr/sbin/cephadm
+rm cephadm.py
+```
+
+The release is read from the running daemon rather than from the container image tag,
+because a tag is not always a Git reference: a stable tag (`18.2.8`) is not a branch, and
+a registry that includes a port (`registry.example:5001/ceph/ceph:18.2.8`) defeats naive
+parsing of the image name. `--fail` makes `curl` stop on a 404 instead of saving the
+error page over `cephadm.py`. Every node fetches the script itself, so each needs HTTPS
+access to `raw.githubusercontent.com`.
+
+The standalone script does not know its own version: `cephadm version` prints
+`cephadm version UNKNOWN` and exits with 1. Check the installation with
+`sudo cephadm --help` instead, which exits with 0.
+
+### Quincy (17)
+
+No cephadm for Quincy has the fix: the bug is in the last Quincy release, 17.2.9, and
+in its UCA package. Upgrade a Quincy cluster to Reef first (see the
+[Ceph upgrade guide](../../upgrade-guide/ceph/index.md)), then follow the Reef
+instructions above.
+
+### Squid (19)
 
 Install the cephadm package from the
 [Ubuntu Cloud Archive](https://ubuntu-cloud.archive.canonical.com/ubuntu/pool/main/c/ceph/)
-on the control nodes:
-
-| Ceph Release | cephadm Package                                    |
-|:-------------|:---------------------------------------------------|
-| Quincy (17)  | `cephadm_17.2.9-0ubuntu0.22.04.1~cloud0_amd64.deb` |
-| Reef (18)    | `cephadm_18.2.4-0ubuntu1~cloud1_amd64.deb`         |
-| Squid (19)   | `cephadm_19.2.3-0ubuntu0.24.04.2~cloud0_amd64.deb` |
-
-These are the only versions available in the UCA. The exact point release does not need
-to match your running Ceph version -- only the release series (Quincy, Reef, Squid) matters.
+on **all** Ceph nodes. The exact point release does not need to match your running Ceph
+version -- only the release series matters.
 
 The package is installed directly via `dpkg` rather than `apt install` because the
 Ubuntu Cloud Archive is typically not configured as an apt source in OSISM environments.
@@ -111,34 +144,14 @@ introduce unintended package upgrades from the UCA that conflict with the versio
 managed by OSISM.
 
 ```bash
-CEPHADM_PKG=cephadm_18.2.4-0ubuntu1~cloud1_amd64.deb
+CEPHADM_PKG=cephadm_19.2.3-0ubuntu0.24.04.2~cloud0_amd64.deb
 ```
 
 ```bash
-curl --silent --remote-name --location https://ubuntu-cloud.archive.canonical.com/ubuntu/pool/main/c/ceph/${CEPHADM_PKG}
+curl --fail --silent --remote-name --location https://ubuntu-cloud.archive.canonical.com/ubuntu/pool/main/c/ceph/${CEPHADM_PKG}
 sudo dpkg -i ${CEPHADM_PKG}
 ```
 
-### OSD nodes
-
-If you are running **Quincy or Squid**, install cephadm on OSD nodes using the same UCA
-package as described for control nodes above.
-
-If you are running **Reef (18.x)**, the UCA cephadm package (18.2.4) contains a
-[known bug](https://tracker.ceph.com/issues/63151) that causes a crash when parsing
-AppArmor profiles during OSD adoption. This was
-[fixed upstream](https://github.com/ceph/ceph/pull/57955) and is included in Reef
-v18.2.5+, but the UCA package has not been updated beyond 18.2.4.
-
-On Reef OSD nodes, install cephadm as a standalone Python script from the Ceph Git
-repository instead to get a version that includes the fix:
-
-```bash
-CEPH_RELEASE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}' | cut -d: -f2)
-curl --silent --remote-name --location https://raw.githubusercontent.com/ceph/ceph/${CEPH_RELEASE}/src/cephadm/cephadm.py
-chmod +x cephadm.py
-sudo mv cephadm.py /usr/sbin/cephadm
-```
 
 ## Step 3: Prepare the cephadm configuration
 
@@ -335,7 +348,8 @@ container. During this process cephadm will:
 The monitor remains available throughout — the other monitors maintain quorum while one
 is being adopted.
 
-On each monitor node, set the required variables and adopt the daemon:
+On each monitor node (`osism get hosts -l ceph-mon`), set the required variables and adopt
+the daemon:
 
 ```bash
 CEPH_HOSTNAME=$(hostname)
@@ -365,7 +379,8 @@ unit, migrates data and logs, and creates new cephadm-managed systemd units. Sin
 multiple managers run in active/standby mode, adopting one at a time ensures the
 cluster always has an active manager available.
 
-On each manager node, set the required variables and adopt the daemon:
+On each manager node (`osism get hosts -l ceph-mgr`), set the required variables and adopt
+the daemon:
 
 ```bash
 CEPH_HOSTNAME=$(hostname)
@@ -472,7 +487,8 @@ for pool in $(ceph osd pool ls); do
 done
 ```
 
-On each OSD node, set the required variable and identify the OSDs running on the node:
+On each OSD node (`osism get hosts -l ceph-osd`), set the required variable and identify the
+OSDs running on the node:
 
 ```bash
 CEPH_IMAGE=$(docker inspect $(docker ps --filter "name=ceph" --format "{{.Names}}" | head -1) --format '{{.Config.Image}}')
