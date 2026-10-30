@@ -233,14 +233,34 @@ ceph orch set backend cephadm
 Configure cephadm to use the `dragon` user (which has passwordless sudo) instead of
 `root`. In a standard OSISM deployment, the operator SSH key already exists at
 `/opt/ansible/secrets/id_rsa.operator`. Import it so that cephadm can connect to all
-Ceph nodes. On the OSISM manager node:
+Ceph nodes.
+
+:::note The public key has to be derived
+`/opt/ansible/secrets/` holds the **private** key only. This is true of every OSISM
+deployment rather than a local quirk: the `manager` role writes
+`{{ secrets_directory }}/id_rsa.{{ item.key }}` for each configured private key and never
+a matching `.pub`. The public half is therefore generated from the private one below,
+before it is imported.
+:::
+
+On the OSISM manager node:
 ```bash
 ceph cephadm set-user dragon
-cp /opt/ansible/secrets/id_rsa.operator* /opt/cephclient/data/
+cp /opt/ansible/secrets/id_rsa.operator /opt/cephclient/data/
+ssh-keygen -y -f /opt/ansible/secrets/id_rsa.operator > /opt/cephclient/data/id_rsa.operator.pub
 ceph cephadm set-priv-key -i /data/id_rsa.operator
 ceph cephadm set-pub-key -i /data/id_rsa.operator.pub
 rm /opt/cephclient/data/id_rsa.operator*
 ```
+
+The paths differ on purpose: on the manager, `ceph` runs inside the `cephclient`
+container, which sees the host directory `/opt/cephclient/data` as `/data`. The files
+are copied there on the host and read by `ceph` from inside the container.
+
+Only the private key is needed for cephadm to reach the nodes, so a cluster where
+`set-pub-key` was skipped still orchestrates normally. The public key is what
+`ceph cephadm get-pub-key` returns, which is how the key is distributed to hosts added
+later -- including by the alternative path below.
 
 :::info
 
