@@ -1120,13 +1120,90 @@ version across all daemon types.
    The first command prints nothing; the second lists `ceph.target` and
    `ceph-<FSID>.target`.
 
-2. The ceph-ansible configuration in the OSISM configuration repository
+2. Remove the data directories of the legacy MDS and RGW daemons. Adoption moves the
+   data of the mon, mgr and OSD daemons, but the MDS and RGW daemons were replaced, and
+   their directories stay behind with the legacy keyrings in them. `cephadm ls` keeps
+   reporting a legacy MDS daemon for as long as its directory exists. Run this on **each
+   Ceph node**, not only the MDS and RGW nodes: the first monitor node holds copies of
+   the RGW directories of all RGW nodes.
+
+   ```bash
+   sudo sh -c 'rm -rf /var/lib/ceph/mds/ceph-$(hostname) /var/lib/ceph/radosgw/ceph-rgw.*'
+   ```
+
+3. Remove the cephx entities of the daemons that were replaced rather than adopted.
+   Crash, RGW and MDS daemons are redeployed under new names, so their legacy entities
+   outlive the daemons and stay in `ceph auth ls`. On the OSISM manager node, list them
+   first:
+
+   ```bash
+   ceph auth ls | grep -E '^(mds\.|client\.rgw\.|client\.crash$)'
+   ceph orch ps --daemon-type mds
+   ceph orch ps --daemon-type rgw
+   ```
+
+   Delete only the entities with no matching daemon in `ceph orch ps` -- the legacy
+   names (`mds.<host>`, `client.rgw.<zone>.<host>.rgw0`), never the cephadm-generated
+   ones. The cephadm crash daemons authenticate as `client.crash.<host>`; the shared
+   `client.crash` that ceph-ansible's crash daemons used is left without a user:
+
+   ```bash
+   ceph auth del mds.<host>
+   ceph auth del client.rgw.<zone>.<host>.rgw0
+   ceph auth del client.crash
+   ```
+
+   :::warning This matters from Ceph 19.2.6 and 20.2.4 on
+   Ceph 19.2.6 and 20.2.4 added health checks for cephx keys of the old key type. The
+   upgrade rotates the keys of the monitor, manager, OSD and MDS daemons cephadm manages,
+   but not these leftover entities. A cluster migrated on an older release and left
+   uncleaned therefore reports **`HEALTH_ERR` after the next Ceph upgrade**:
+   `AUTH_INSECURE_SERVICE_KEY_TYPE`, naming MDS daemons that no longer exist. Deleting the
+   orphans clears it. The legacy `client.rgw.*` entities and `client.crash` are reported
+   with `AUTH_INSECURE_CLIENT_KEY_TYPE` (`HEALTH_WARN`), along with every other client key
+   that the upgrade does not rotate.
+   :::
+
+4. Remove the configuration sections of the legacy RGW daemons. No daemon reads them
+   any more: they hold the options Step 3 imported, which Step 5 copied to
+   `client.rgw`, and possibly `rgw_frontends` and `log_file` that ceph-ansible set for
+   each legacy daemon. On the OSISM manager node, list them first:
+
+   ```bash
+   ceph config dump -f json | python3 -c "import json,re,sys; [print(e['section'], e['name']) for e in json.load(sys.stdin) if re.fullmatch(r'client\.rgw\..+\.rgw[0-9]+', e['section'])]"
+   ```
+
+   The match is on the legacy names, `client.rgw.<zone>.<host>.rgw<n>`. The sections of
+   the cephadm daemons end in a random suffix, such as
+   `client.rgw.default.default.testbed-node-3.vcezwz`, and are not listed. Then remove
+   the listed options:
+
+   ```bash
+   ceph config dump -f json | python3 -c "import json,re,sys; [print(e['section'], e['name']) for e in json.load(sys.stdin) if re.fullmatch(r'client\.rgw\..+\.rgw[0-9]+', e['section'])]" | while read -r section name; do
+       ceph config rm "${section}" "${name}"
+   done
+   ```
+
+5. The ceph-ansible configuration in the OSISM configuration repository
    (`environments/ceph/`) can be kept as a reference but is no longer active.
 
 :::note
 
-Do **not** remove `/etc/ceph/ceph.conf` or any keyring files. These are still
-used by the cluster and are now managed by cephadm.
+Keep `/etc/ceph/ceph.conf` and the keyrings in `/etc/ceph` on the nodes. They are still
+read: `cephadm shell` falls back to `/etc/ceph/ceph.conf` and
+`/etc/ceph/ceph.client.admin.keyring`, and `osism apply copy-ceph-keys` collects the
+OpenStack keyrings from `/etc/ceph` on the first monitor node. cephadm does not manage
+these files on an adopted cluster (`ceph config get mgr
+mgr/cephadm/manage_etc_ceph_ceph_conf` returns `false`), so they stay as ceph-ansible
+left them and nothing updates them any more.
+
+One of them is stale after item 3: `/etc/ceph/ceph.client.crash.keyring` holds the key
+of the deleted `client.crash`. The cephadm crash daemons use their own keyrings under
+`/var/lib/ceph/<FSID>/`. Remove it on each Ceph node:
+
+```bash
+sudo rm -f /etc/ceph/ceph.client.crash.keyring
+```
 
 :::
 
