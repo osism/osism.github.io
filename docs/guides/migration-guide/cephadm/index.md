@@ -181,10 +181,8 @@ configuration.
 Run the following commands on the OSISM manager node:
 
 ```bash
-MON_NODE=$(osism get hosts -l ceph-mon | awk 'NR>3 && /\|/ {print $2}' | head
--1)
-CEPH_IMAGE=$(ssh ${MON_NODE} "docker inspect \$(docker ps --filter 'name=ceph'
---format '{{.Names}}' | head -1) --format '{{.Config.Image}}'")
+MON_NODE=$(osism get hosts -l ceph-mon | awk 'NR>3 && /\|/ {print $2}' | head -1)
+CEPH_IMAGE=$(ssh ${MON_NODE} "docker inspect \$(docker ps --filter 'name=ceph' --format '{{.Names}}' | head -1) --format '{{.Config.Image}}'")
 echo "Container image: ${CEPH_IMAGE}"
 ceph config set global container_image ${CEPH_IMAGE}
 ```
@@ -550,28 +548,6 @@ for osd_id in $(docker ps --filter "name=ceph-osd" --format "{{.Names}}" | sed '
 done
 ```
 
-:::warning
-
-Adopt OSDs **one node at a time**. After completing all OSDs on a node, wait until all
-PGs return to `active+clean` (`ceph -s` shows all PGs `active+clean` under `data:`)
-before proceeding to the next node. The overall health may still show `HEALTH_WARN` for
-stray daemons during migration — this is expected and not a stop condition.
-
-Within a single node, it is safe to use the loop above without waiting between individual
-OSDs, provided your cluster meets both of the following conditions:
-
-* At least **3 OSD nodes**.
-* **Host-level CRUSH failure domain** — the OSISM default. Verify with:
-  ```bash
-  ceph osd crush rule dump
-  ```
-  All rules should show `"type": "host"` in the `chooseleaf` step.
-
-If your cluster has only 2 OSD nodes, or any rule shows a different failure domain type,
-adopt each OSD individually and wait for all PGs to return to `active+clean` after each
-one before continuing.
-
-:::
 
 :::info
 
@@ -640,8 +616,7 @@ if [ -f /home/dragon/autoscale_pools.txt ]; then
         fi
     done < /home/dragon/autoscale_pools.txt
 fi
-# Once all pools show OK:, run: rm /home/dragon/autoscale_pools.txt
-fi
+# Once all pools show OK, run: rm /home/dragon/autoscale_pools.txt
 ```
 
 ### Migrating crash daemons
