@@ -495,9 +495,11 @@ during adoption. The PG autoscaler is also disabled to avoid placement group cha
 during the process.
 
 Before adopting OSDs, set safety flags on the OSISM manager node to prevent unnecessary data
-movement and PG changes during the adoption process:
+movement and PG changes during the adoption process. Record first whether the balancer is
+active, so that it is switched back on only if it was on before:
 
 ```bash
+ceph balancer status -f json | python3 -c "import json,sys; print(json.load(sys.stdin)['active'])" > /home/dragon/balancer_active.txt
 ceph osd set noout
 ceph osd set nodeep-scrub
 ceph balancer off
@@ -653,7 +655,10 @@ autoscaler on the OSISM manager node:
 ```bash
 ceph osd unset noout
 ceph osd unset nodeep-scrub
-ceph balancer on
+if [ "$(cat /home/dragon/balancer_active.txt)" = "True" ]; then
+    ceph balancer on
+fi
+rm /home/dragon/balancer_active.txt
 ```
 
 ```bash
