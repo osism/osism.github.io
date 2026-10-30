@@ -203,8 +203,8 @@ ceph config set global container_image ${CEPH_IMAGE}
 :::warning
 Do not run the `docker inspect` command on the manager node — it runs the
 `cephclient`
-container there and would return a wrong image (`cephclient:reef` instead of
-`ceph-daemon:reef`).
+container there and would return a wrong image (`cephclient` instead of
+`ceph-daemon`).
 :::
 
 Import the existing `ceph.conf` into the central monitor config store. This ensures
@@ -744,7 +744,13 @@ The service ID for the `ceph orch apply rgw` command is composed as
 
 Determine the RGW frontend port from the ceph-ansible configuration
 (`environments/ceph/configuration.yml`). The variable `radosgw_frontend_port` contains
-the port (default: `8081`).
+the port; without it, OSISM's default `8081` applies. The new daemons have to listen on
+the port the legacy ones use, since the load balancer points there. Before the migration,
+compare it with what a legacy RGW listens on, on an RGW node:
+
+```bash
+sudo ss -ltnp | grep radosgw
+```
 
 If the RGW service was configured with SSL (i.e. `radosgw_frontend_ssl_certificate` is
 set in the ceph-ansible configuration), the SSL certificate must be imported into the
@@ -805,7 +811,21 @@ once the legacy daemon on that node has been stopped. Until then, `ceph orch ps
 --daemon-type rgw` reports no RGW daemons, and `ceph -s` shows `HEALTH_WARN` with
 `CEPHADM_DAEMON_PLACE_FAIL` ("Failed to place 3 daemon(s)", "Cannot bind to IP 0.0.0.0
 port …: Address already in use"). This is expected and clears once the loop below has
-migrated every node. If SSL is used, add `--ssl` to the command:
+migrated every node.
+
+Which command to use depends on the container image Step 3 printed:
+
+* An image with a revision suffix, such as `ceph-daemon:18.2.8-r1` (shipped from OSISM
+  11.0.0 on): deploy with `--networks`. Each daemon then listens only on its host's
+  address in the Ceph public network, as in a new OSISM 11 deployment. The
+  `CEPHADM_DAEMON_PLACE_FAIL` message above still names `0.0.0.0`; the address shows in
+  the `PORTS` column of `ceph orch ps` once the loop below has run.
+* An image without it, such as `ceph-daemon:18.2.8` (OSISM 10.3.0): deploy without
+  `--networks`. With these images, cephadm cannot match the hosts' addresses on the
+  routed topology and places no RGW daemon at all, while `ceph -s` stays `HEALTH_OK`.
+  The daemons then listen on all addresses of the host; see the note below.
+
+If SSL is used, add `--ssl` to the command:
 
 ```bash
 RGW_REALM=$(radosgw-admin realm list --format json | python3 -c "import json,sys; print(json.load(sys.stdin)['realms'][0])" 2>/dev/null || echo "default")
@@ -813,10 +833,13 @@ RGW_ZONE=$(radosgw-admin zone list --format json | python3 -c "import json,sys; 
 RGW_SERVICE_ID="${RGW_REALM}.${RGW_ZONE}"
 RGW_PLACEMENT=$(osism get hosts -l ceph-rgw | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
 RGW_PORT=$(python3 -c "import yaml; print(yaml.safe_load(open('/opt/configuration/environments/ceph/configuration.yml')).get('radosgw_frontend_port', 8081))")
+RGW_NETWORK=$(ceph config get mon public_network)
 
-ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT}
-# If SSL is enabled, add --ssl:
-# ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT} --ssl
+# Image with a revision suffix (e.g. ceph-daemon:18.2.8-r1):
+ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT} --networks=${RGW_NETWORK}
+
+# Image without it (e.g. ceph-daemon:18.2.8):
+# ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT}
 ```
 
 Then migrate each RGW node sequentially. On the OSISM manager node:
@@ -877,6 +900,32 @@ rgw.default.default.testbed-node-3.dhmops  testbed-node-3  *:8081  running (39s)
 rgw.default.default.testbed-node-4.ibjvjy  testbed-node-4  *:8081  running (41s)    32s ago  41s    90.5M        -  18.2.8   fb822dbe2ee6  fcf4d6c837f4
 rgw.default.default.testbed-node-5.xcegdm  testbed-node-5  *:8081  running (43s)    32s ago  43s    91.5M        -  18.2.8   fb822dbe2ee6  569fd2afad81
 ```
+
+Deployed with `--networks`, the `PORTS` column shows each daemon's address, such as
+`10.10.0.13:8081`, instead of `*:8081`.
+
+:::note Daemons deployed without `--networks`
+They listen on all addresses of the host (`beast port=<port>`), so they also answer on
+the host's other networks, such as the management network. Restrict access with a
+firewall if that matters. Depending on how ceph-ansible last configured them, the legacy
+daemons did the same, or were bound to the public network address.
+
+Once the cluster runs an image with a revision suffix, the daemons can be bound to the
+public network: add the network to the RGW service, then replace the daemons one at a
+time. cephadm chooses the address only when it creates a daemon; `ceph orch redeploy`
+keeps the old binding.
+
+```bash
+ceph orch ls rgw --export > /opt/cephclient/data/rgw.yaml
+# add to /opt/cephclient/data/rgw.yaml, at the top level:
+# networks:
+# - <public_network>
+ceph orch apply -i /data/rgw.yaml
+ceph orch daemon rm <one RGW daemon from ceph orch ps --daemon-type rgw>
+```
+
+Wait until its replacement runs, then remove the next one.
+:::
 
 Check that each new daemon has the deployment's configuration:
 
