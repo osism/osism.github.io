@@ -1082,9 +1082,16 @@ version across all daemon types.
 
 1. Remove old systemd unit files that are no longer used. Run on **each Ceph node**.
    Do **not** use a wildcard like `ceph-*.service` as this would also remove the
-   cephadm-managed units (e.g. `ceph-<FSID>@.service`). Remove only the legacy units:
+   cephadm-managed units (e.g. `ceph-<FSID>@.service`). Keep `ceph.target` and
+   `ceph.target.wants/`: cephadm writes its own `ceph.target`, and its cluster target
+   `ceph-<FSID>.target` is linked from there. Disable the legacy targets first, so that
+   no links to deleted files stay behind, then remove only the legacy units:
 
    ```bash
+   for target in ceph-mon ceph-mgr ceph-osd ceph-mds ceph-radosgw; do
+       sudo systemctl disable ${target}.target 2>/dev/null
+   done
+   sudo find /etc/systemd/system -type l -name 'ceph-radosgw@*.service' -delete
    sudo rm -f /etc/systemd/system/ceph-mon@.service \
               /etc/systemd/system/ceph-mgr@.service \
               /etc/systemd/system/ceph-osd@.service \
@@ -1095,11 +1102,23 @@ version across all daemon types.
               /etc/systemd/system/ceph-mgr.target \
               /etc/systemd/system/ceph-osd.target \
               /etc/systemd/system/ceph-mds.target \
-              /etc/systemd/system/ceph-radosgw.target \
-              /etc/systemd/system/ceph.target
-   sudo rm -rf /etc/systemd/system/ceph.target.wants
+              /etc/systemd/system/ceph-radosgw.target
    sudo systemctl daemon-reload
    ```
+
+   The `find` removes the links of legacy RGW instances
+   (`ceph-radosgw@rgw.<zone>.<host>.rgw0.service`), which the RGW migration stops but
+   does not disable, together with links of that name that point to `/dev/null`
+   (masked units). Check that no link points to a removed file and that the cluster
+   target is still enabled:
+
+   ```bash
+   sudo find /etc/systemd/system -xtype l -name 'ceph*'
+   systemctl list-unit-files 'ceph*' --state=enabled
+   ```
+
+   The first command prints nothing; the second lists `ceph.target` and
+   `ceph-<FSID>.target`.
 
 2. The ceph-ansible configuration in the OSISM configuration repository
    (`environments/ceph/`) can be kept as a reference but is no longer active.
