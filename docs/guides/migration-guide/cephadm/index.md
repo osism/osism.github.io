@@ -348,7 +348,10 @@ Verify cluster health with `ceph -s` on the OSISM manager node after each step.
 Do not proceed if `ceph -s` reports `HEALTH_ERR` or degraded/unavailable PGs.
 
 During migration, `HEALTH_WARN` with messages like "stray daemon(s) not managed by
-cephadm" or "failed to probe daemons or devices" is expected and safe to continue.
+cephadm" or "failed to probe daemons or devices" is expected and safe to continue. The
+stray daemons are reported from Step 4 on, as soon as the hosts are added, and right
+after `ceph orch host add` a short-lived "stray host(s)" (`CEPHADM_STRAY_HOST`) can
+appear as well.
 
 :::
 
@@ -431,6 +434,12 @@ List all services known to the orchestrator:
 ```bash
 ceph orch ls --refresh
 ```
+
+:::note
+`--refresh` asks the orchestrator to update its view and returns at once with what it
+knew before, so daemons adopted a moment ago can be missing or show a lower count. Run
+the command again a minute later. The same applies to every `--refresh` in this guide.
+:::
 
 The output should look similar to this. Both services show as `<unmanaged>` at this point,
 which is expected:
@@ -584,6 +593,11 @@ for osd_id in $(docker ps --filter "name=ceph-osd" --format "{{.Names}}" | sed '
 done
 ```
 
+Right after the OSDs of a node have been adopted, `ceph -s` shows them restarting:
+some OSDs `down`, PGs `peering` and briefly inactive ("Reduced data availability"),
+and degraded objects. This is the restart, not a failure. It settled within 30 seconds
+per node on a test cluster; wait until all PGs are `active+clean` before you judge the
+state or continue with the next node.
 
 :::info
 
@@ -743,8 +757,11 @@ The migration is therefore performed one node at a time to minimize S3/Swift API
 
 Prepare the variables and deploy the RGW service on the OSISM manager node. The
 orchestrator will attempt to start daemons on each node, but they will only come up
-once the legacy daemon on that node has been stopped. If SSL is used, add `--ssl` to
-the command:
+once the legacy daemon on that node has been stopped. Until then, `ceph orch ps
+--daemon-type rgw` reports no RGW daemons, and `ceph -s` shows `HEALTH_WARN` with
+`CEPHADM_DAEMON_PLACE_FAIL` ("Failed to place 3 daemon(s)", "Cannot bind to IP 0.0.0.0
+port …: Address already in use"). This is expected and clears once the loop below has
+migrated every node. If SSL is used, add `--ssl` to the command:
 
 ```bash
 RGW_REALM=$(radosgw-admin realm list --format json | python3 -c "import json,sys; print(json.load(sys.stdin)['realms'][0])" 2>/dev/null || echo "default")
@@ -776,6 +793,11 @@ sys.exit(0 if any(d['hostname'] == '${node}' and d.get('status_desc') == 'runnin
     echo "New RGW daemon on ${node} is running."
 done
 ```
+
+The loop can wait up to about a minute per node: `systemctl stop` returns before the
+legacy container has released the port, and cephadm only retries placing the new daemon
+on its next cycle. If it waits much longer, check `ceph health detail` for
+`CEPHADM_DAEMON_PLACE_FAIL`.
 
 The output should look similar to this:
 
@@ -840,11 +862,14 @@ on the OSISM manager node:
 
 :::info
 
-The new MDS daemons deployed by the orchestrator will come up as **standby** instances.
-CephFS supports multiple MDS daemons simultaneously (controlled by `max_mds`), and new
-daemons automatically join as standby. The legacy active daemons continue serving requests
-until they are explicitly stopped, at which point CephFS promotes the standby daemons to
-active. This brief coexistence of old and new daemons is expected and safe.
+The active MDS moves to a new daemon as soon as the new daemons are up, not when the
+legacy ones are stopped. cephadm sets `mds_join_fs` to the file system name for its MDS
+daemons, and the monitors replace an active MDS without that affinity by a standby that
+has it. The cluster log shows `Dropping low affinity active daemon mds.<host> in favor
+of higher affinity standby`, and `ceph -s` reports `FS_DEGRADED` for a few seconds while
+CephFS clients reconnect. Plan for this short CephFS interruption at the deployment below.
+Stopping the legacy daemons afterwards causes no further failover: by then they are all
+standby.
 
 :::
 
@@ -890,19 +915,24 @@ for node in $(osism get hosts -l ceph-mds | awk 'NR>3 && /\|/ {print $2}'); do
 done
 ```
 
+`ceph -s` keeps reporting the stopped legacy MDS daemons as stray
+(`CEPHADM_STRAY_DAEMON`) until the orchestrator updates its view. Run
+`ceph orch ps --refresh` and check `ceph -s` again a minute later.
+
 ## Step 6: Verify the migration
 
 Verify the full cluster state on the OSISM manager node:
 
 ```bash
 ceph -s
+ceph orch ls
 ceph orch ps
 ```
 
-All daemons should appear in the `ceph orch ps` output with status `running`. Monitor
-and manager services should show with a placement (managed). OSD daemons will still
-show as `<unmanaged>` — this is expected (see the note in Step 6 on how to optionally
-transition them to a managed state). Cluster health should be `HEALTH_OK`.
+All daemons should appear in the `ceph orch ps` output with status `running`. In
+`ceph orch ls`, the crash, MDS and RGW services show a placement, because the
+orchestrator deployed them. The adopted monitor, manager and OSD services still show
+`<unmanaged>`, as in Step 5; this is expected. Cluster health should be `HEALTH_OK`.
 
 Verify that all daemons are running the same Ceph version (on the OSISM manager node):
 
