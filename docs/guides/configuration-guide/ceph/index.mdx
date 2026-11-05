@@ -160,6 +160,9 @@ vm.min_free_kbytes=4194303
    If `radosgw_interface` is used, the first IPv4 address on this interface is used.
    When Ceph is deployed with cephadm, only `radosgw_address` is supported, and the
    deployment fails for every RGW host without it.
+   The address must be the node's own address, different on each node: the
+   loadbalancer uses it as this node's RGW backend. Do not use a VIP. With cephadm,
+   the deployment fails if two RGW nodes share an address.
 
     ```yaml title=inventory/host_vars/testbed-node-0.testbed.osism.xyz/vars.yml
     ##########################################################
