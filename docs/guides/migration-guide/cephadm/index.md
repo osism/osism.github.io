@@ -816,16 +816,22 @@ migrated every node.
 Which command to use depends on the container image Step 3 printed:
 
 * An image with a revision suffix, such as `ceph-daemon:18.2.8-r1` (shipped from OSISM
-  11.0.0 on): deploy with `--networks`. Each daemon then listens only on its host's
-  address in the Ceph public network, as in a new OSISM 11 deployment. The
-  `CEPHADM_DAEMON_PLACE_FAIL` message above still names `0.0.0.0`; the address shows in
-  the `PORTS` column of `ceph orch ps` once the loop below has run.
+  11.0.0 on): deploy with `--networks`, listing each RGW node's `radosgw_address` as a
+  `/32` (`/128` for IPv6), followed by the Ceph public network. Each daemon then
+  listens only on its node's `radosgw_address`, the address the loadbalancer forwards
+  to, as in a new OSISM 11 deployment. The public network alone is not enough: if
+  other addresses of the RGW nodes lie in it, such as API VIPs on `loopback0`,
+  cephadm may bind a daemon to one of those. The `CEPHADM_DAEMON_PLACE_FAIL` message
+  above still names `0.0.0.0`; the address shows in the `PORTS` column of
+  `ceph orch ps` once the loop below has run.
 * An image without it, such as `ceph-daemon:18.2.8` (OSISM 10.3.0): deploy without
   `--networks`. With these images, cephadm cannot match the hosts' addresses on the
   routed topology and places no RGW daemon at all, while `ceph -s` stays `HEALTH_OK`.
   The daemons then listen on all addresses of the host; see the note below.
 
-If SSL is used, add `--ssl` to the command:
+Before running `ceph orch apply`, check the printed `RGW_NETWORKS`: one address per RGW
+node, each different, then the public network. A node missing from it has no
+`radosgw_address` in the inventory. If SSL is used, add `--ssl` to the command:
 
 ```bash
 RGW_REALM=$(radosgw-admin realm list --format json | python3 -c "import json,sys; print(json.load(sys.stdin)['realms'][0])" 2>/dev/null || echo "default")
@@ -833,10 +839,13 @@ RGW_ZONE=$(radosgw-admin zone list --format json | python3 -c "import json,sys; 
 RGW_SERVICE_ID="${RGW_REALM}.${RGW_ZONE}"
 RGW_PLACEMENT=$(osism get hosts -l ceph-rgw | awk 'NR>3 && /\|/ {print $2}' | paste -sd,)
 RGW_PORT=$(python3 -c "import yaml; print(yaml.safe_load(open('/opt/configuration/environments/ceph/configuration.yml')).get('radosgw_frontend_port', 8081))")
-RGW_NETWORK=$(ceph config get mon public_network)
+RGW_NETWORKS=$(for node in ${RGW_PLACEMENT//,/ }; do
+    osism get hostvars ${node} radosgw_address | awk -F'|' 'NR==4 {gsub(/[ \047]/, "", $4); print $4 ($4 ~ /:/ ? "/128" : "/32")}'
+done | paste -sd,),$(ceph config get mon public_network)
+echo ${RGW_NETWORKS}
 
 # Image with a revision suffix (e.g. ceph-daemon:18.2.8-r1):
-ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT} --networks=${RGW_NETWORK}
+ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT} --networks=${RGW_NETWORKS}
 
 # Image without it (e.g. ceph-daemon:18.2.8):
 # ceph orch apply rgw ${RGW_SERVICE_ID} --placement="${RGW_PLACEMENT}" --port=${RGW_PORT}
@@ -902,7 +911,7 @@ rgw.default.default.testbed-node-5.xcegdm  testbed-node-5  *:8081  running (43s)
 ```
 
 Deployed with `--networks`, the `PORTS` column shows each daemon's address, such as
-`10.10.0.13:8081`, instead of `*:8081`.
+`10.10.0.13:8081`, instead of `*:8081`. It must be the node's `radosgw_address`.
 
 :::note Daemons deployed without `--networks`
 They listen on all addresses of the host (`beast port=<port>`), so they also answer on
@@ -910,15 +919,18 @@ the host's other networks, such as the management network. Restrict access with 
 firewall if that matters. Depending on how ceph-ansible last configured them, the legacy
 daemons did the same, or were bound to the public network address.
 
-Once the cluster runs an image with a revision suffix, the daemons can be bound to the
-public network: add the network to the RGW service, then replace the daemons one at a
+Once the cluster runs an image with a revision suffix, the daemons can be bound to their
+nodes' addresses: add the networks to the RGW service, then replace the daemons one at a
 time. cephadm chooses the address only when it creates a daemon; `ceph orch redeploy`
 keeps the old binding.
 
 ```bash
 ceph orch ls rgw --export > /opt/cephclient/data/rgw.yaml
-# add to /opt/cephclient/data/rgw.yaml, at the top level:
+# add to /opt/cephclient/data/rgw.yaml, at the top level, one /32 per RGW node
+# (its radosgw_address), then the public network:
 # networks:
+# - <radosgw_address of node 1>/32
+# - <radosgw_address of node 2>/32
 # - <public_network>
 ceph orch apply -i /data/rgw.yaml
 ceph orch daemon rm <one RGW daemon from ceph orch ps --daemon-type rgw>
