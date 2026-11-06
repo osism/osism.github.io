@@ -17,6 +17,8 @@ are `0600` by default (cane be changed via the `network_netplan_permissions` par
 By default, all other files in `/etc/netplan` are removed. If you do not want this, you
 can set `network_netplan_remove_unmanaged_files` to `false`. It is also possible to explicitly
 list individual files that should not be deleted in `network_netplan_managed_files_extra`.
+To leave the network of a host completely unchanged, see
+[Network managed outside of OSISM](#network-managed-outside-of-osism).
 
 An existing `/etc/interfaces` file is replaced with a placeholder file. It is not possible
 to use `/etc/interfaces` and Netplan in parallel.
@@ -158,6 +160,37 @@ The MTU of these devices is set to 9000 by default and can be set via
 
 ```yaml title="If /etc/interfaces is to be used, the network_type must be explicitly set in environments/configuration.yml"
 network_type: interfaces
+```
+
+## Network managed outside of OSISM
+
+A host may come with a working network that OSISM must leave alone. Set
+`network_managed_externally` in the `host_vars` file of such a host in the
+`inventory` directory of the configuration repository:
+
+```yaml title="inventory/host_vars/manager.yml"
+network_managed_externally: true
+```
+
+The `network` and `frr` roles then change nothing on this host: no Netplan or
+`/etc/interfaces` file, no removal of other files in `/etc/netplan` or
+`/etc/systemd/network`, no dummy or VXLAN interfaces, no network-extra-init
+service, and no FRR package, configuration or service. `osism apply network`
+and `osism apply frr` print a message for the host and skip it, so they can run
+without a limit. All other roles, for example those of the bootstrap, still run
+on the host.
+
+The `frr` role has its own switch, `frr_managed_externally`, which defaults to
+`network_managed_externally`. Set it only when FRR is to be handled differently
+from the rest of the network:
+
+```yaml title="inventory/host_vars/manager.yml: network left alone, FRR managed by OSISM"
+network_managed_externally: true
+frr_managed_externally: false
+```
+
+```yaml title="inventory/host_vars/manager.yml: only FRR left alone"
+frr_managed_externally: true
 ```
 
 ## IPv6 fabric underlay
