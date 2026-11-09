@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Seed | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/deploy-guide/seed"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Seed | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="The prerequisite for the deployment of a cluster is a configuration repository."><meta data-rh="true" property="og:description" content="The prerequisite for the deployment of a cluster is a configuration repository."><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/deploy-guide/seed"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/seed" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/seed" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Deploy Guide","item":"https://osism.tech/docs/guides/deploy-guide/"},{"@type":"ListItem","position":3,"name":"Seed","item":"https://osism.tech/docs/guides/deploy-guide/seed"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.160706fb.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f8485a9c.js" defer="defer"></script>
 <script src="/assets/js/main.413d1519.js" defer="defer"></script>
 </head>
 <body>
@@ -79,15 +79,15 @@ configuration repository is individual for each environment and is therefore not
 by us.</p>
 <p>The configuration repository to be used must be available on the seed node. In the following
 example, replace <code>YOUR_ORG</code> and <code>YOUR_NEW_CONFIGURATION_REPOSITORY</code> accordingly.</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">git clone ssh://git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">git clone git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git</span><br></div></code></pre></div></div>
 <p>Examples:</p>
 <ul>
 <li class="">The repository is located in the <code>regiocloud</code> organization on GitHub, has the name
-configuration and can be accessed via SSH: <code>ssh://git@github.com:regiocloud/configuration.git</code></li>
+configuration and can be accessed via SSH: <code>git@github.com:regiocloud/configuration.git</code></li>
 <li class="">The repository is located in the <code>regiocloud</code> organization on Gitlab, has the name configuration
-and can be accessed via SSH: <code>ssh://git@gitlab.com:regiocloud/configuration.git</code></li>
+and can be accessed via SSH: <code>git@gitlab.com:regiocloud/configuration.git</code></li>
 <li class="">The repository is located in the <code>regiocloud</code> organization on an internal Gitlab, has the name
-configuration and can be accessed via SSH: <code>ssh://git@git.services.osism.tech:regiocloud/configuration.git</code></li>
+configuration and can be accessed via SSH: <code>git@git.services.osism.tech:regiocloud/configuration.git</code></li>
 </ul>
 <p>If necessary, the configuration SSH key can be used for the initial transfer of the repository.</p>
 <p>For this, the following content is added in <code>~/.ssh/config</code> and the SSH private key is stored in
