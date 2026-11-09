@@ -112,17 +112,17 @@ The configuration repository to be used must be available on the seed node. In t
 example, replace `YOUR_ORG` and `YOUR_NEW_CONFIGURATION_REPOSITORY` accordingly.
 
 ```bash
-git clone ssh://git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git
+git clone git@github.com:YOUR_ORG/YOUR_NEW_CONFIGURATION_REPOSITORY.git
 ```
 
 Examples:
 
 * The repository is located in the `regiocloud` organization on GitHub, has the name
-  configuration and can be accessed via SSH: `ssh://git@github.com:regiocloud/configuration.git`
+  configuration and can be accessed via SSH: `git@github.com:regiocloud/configuration.git`
 * The repository is located in the `regiocloud` organization on Gitlab, has the name configuration
-  and can be accessed via SSH: `ssh://git@gitlab.com:regiocloud/configuration.git`
+  and can be accessed via SSH: `git@gitlab.com:regiocloud/configuration.git`
 * The repository is located in the `regiocloud` organization on an internal Gitlab, has the name
-  configuration and can be accessed via SSH: `ssh://git@git.services.osism.tech:regiocloud/configuration.git`
+  configuration and can be accessed via SSH: `git@git.services.osism.tech:regiocloud/configuration.git`
 
 If necessary, the configuration SSH key can be used for the initial transfer of the repository.
 
