@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Releases | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/developer-guide/releases"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Releases | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="How we handle releases"><meta data-rh="true" property="og:description" content="How we handle releases"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/developer-guide/releases"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/developer-guide/releases" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/developer-guide/releases" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Developer Guide","item":"https://osism.tech/docs/guides/developer-guide/"},{"@type":"ListItem","position":3,"name":"Releases","item":"https://osism.tech/docs/guides/developer-guide/releases"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.e2514de4.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f198a6e5.js" defer="defer"></script>
 <script src="/assets/js/main.cb1d4d86.js" defer="defer"></script>
 </head>
 <body>
@@ -57,6 +57,33 @@ The kolla and kolla-ansible images are built for whichever series this
 symlink points to at the release tag.</p></div></div>
 <ol>
 <li class="">
+<p>Tag the components. A release only contains what is tagged: a change
+merged on the default branch of a component is not part of it until that
+repository is tagged. Every component that the release pins directly is
+tagged with the version of the release round (e.g. <code>v0.20261111.0</code>),
+whether it changed since its previous tag or not: defaults, generics, the
+playbooks (ansible-playbooks, ansible-playbooks-manager), the <code>osism.*</code>
+collections and python-osism. The tools pinned by python-osism
+(netbox-manager, openstack-image-manager, openstack-flavor-manager) are
+tagged when they changed; python-osism then needs the new pins and a new
+tag of its own.</p>
+<p>Run <code>./scripts/check-versions.sh --release-tag v0.20261111.0</code> in the
+osism/release repository as described in
+<a href="https://github.com/osism/release#1-continuous-dependency-updates" target="_blank" rel="noopener noreferrer" class="">Continuous dependency updates</a>
+in its README. It lists the components that lack the release tag, every
+component repository with untagged changes, and the pins that Renovate
+has not updated yet. Tag the components, merge the Renovate pull requests
+in osism/release that follow, and continue once the check passes. A tag
+without changes gets a short &quot;rebuild without changes&quot; changelog entry
+in step 3.</p>
+<p>Changes of the tools pinned by python-osism can be left out of a release
+with <code>--allow</code> (e.g. <code>--allow osism/netbox-manager</code>). The same option
+accepts a pin or symlink that is intentionally not current, such as a
+newer Ceph release that is not adopted in a minor release
+(<code>--allow latest/ceph.yml</code>). <code>create-tags.sh</code> in step 2 runs the same
+check with the version it tags as the release tag.</p>
+</li>
+<li class="">
 <p>Build the component images by following
 <a href="https://github.com/osism/release#2-tag-creation" target="_blank" rel="noopener noreferrer" class="">Tag creation</a>
 in the osism/release README. Continue once all <code>tag</code> builds have succeeded,
@@ -64,7 +91,7 @@ the image checks of the README pass and the Renovate PRs for the new images
 are merged.</p>
 <p>The <code>tag</code> builds push the images to <code>osism.harbor.regio.digital</code>, and the
 image checks of the README run against that registry. Deployments,
-including the testbed jobs of step 4, pull from public registries such as
+including the testbed jobs of step 5, pull from public registries such as
 <code>registry.osism.tech</code> instead. The kolla release images are not copied
 there automatically: this is deliberate, so that images from a wrongly
 built tag never reach users. Once the image checks pass, ask a Harbor
@@ -85,7 +112,7 @@ up every tag not yet documented.</p>
 <li class="">
 <p>Create a release candidate (e.g. <code>10.1.0-rc.1</code>) in the osism/release
 repository as described in its README. It pins the images built in
-step 1.</p>
+step 2.</p>
 </li>
 <li class="">
 <p>Add temporary release candidate jobs to <code>.zuul.yaml</code> in the
@@ -94,14 +121,14 @@ the release candidate and upgrade from the current stable release to the
 release candidate (e.g. <code>abstract-testbed-deploy-rc</code> with
 <code>manager_version: 10.1.0-rc.1</code> and <code>abstract-testbed-upgrade-rc</code>).
 Before they run, add the candidate to the seed image as described in
-step 7; otherwise they stop at <code>run.sh</code>.</p>
+step 8; otherwise they stop at <code>run.sh</code>.</p>
 </li>
 <li class="">
 <p>Test. Test. Test.</p>
-<p>If testing turns up bugs, fix them in the affected components, then build
-new component images with a new version (step 1), generate their
-changelogs (step 2) and create the next release candidate from them
-(e.g. <code>10.1.0-rc.2</code>). Repeat steps 4 and 5 for it.</p>
+<p>If testing turns up bugs, fix them in the affected components and tag
+them (step 1), then build new component images with a new version
+(step 2), generate their changelogs (step 3) and create the next release
+candidate from them (e.g. <code>10.1.0-rc.2</code>). Repeat steps 5 and 6 for it.</p>
 </li>
 <li class="">
 <p>Create the final release version (e.g. <code>10.1.0</code>) in the osism/release
@@ -119,12 +146,12 @@ seed image carries one collection set per listed release, and <code>run.sh</code
 refuses a <code>manager_version</code> it has no set for: a manager pinned to an
 unlisted release stops with <code>no collection set for manager_version</code>. The
 testbed jobs switched in the next step deploy exactly such a manager.
-Remove the release candidates listed in step 4 at the same time.</p>
+Remove the release candidates listed in step 5 at the same time.</p>
 </li>
 <li class="">
 <p>Switch the pinned stable jobs in the
 <a href="https://github.com/osism/testbed" target="_blank" rel="noopener noreferrer" class="">osism/testbed</a> repository to the new
-release and remove the temporary release candidate jobs added in step 4.
+release and remove the temporary release candidate jobs added in step 5.
 Do this before the documentation steps that follow: the stable jobs are
 what validate the release, so they must pass before it is announced. For
 the <code>10.1.0</code> example the version variables change as follows.</p>
@@ -160,7 +187,7 @@ here. All stable jobs must pass successfully.</p>
 repository by following
 <a href="https://github.com/osism/release#5-release-notes-generation-per-release" target="_blank" rel="noopener noreferrer" class="">Release notes generation</a>
 in the osism/release README. The release notes are generated from the
-changelogs of step 2, so all changelog pull requests must be merged
+changelogs of step 3, so all changelog pull requests must be merged
 first. For a major release, first create the new page
 <code>docs/release-notes/osism-N.md</code> with a release table: the release notes
 generation only adds to an existing page.</p>
