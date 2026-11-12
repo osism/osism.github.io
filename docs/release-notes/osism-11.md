@@ -26,11 +26,110 @@ independently of it.
 
 :::
 
-| Release | Release Date     |
-|:--------|:-----------------|
-| 11.0.2  | 20. October 2026 |
-| 11.0.1  | 11. October 2026 |
-| 11.0.0  | 8. October 2026  |
+| Release | Release Date      |
+|:--------|:------------------|
+| 11.0.3  | 12. November 2026 |
+| 11.0.2  | 20. October 2026  |
+| 11.0.1  | 11. October 2026  |
+| 11.0.0  | 8. October 2026   |
+
+## 11.0.3
+
+### Security fixes
+
+This release includes all security fixes that were known and patched up to 12 November 2026. Compared to OSISM 11.0.2, the container images additionally contain the fixes for the following advisories:
+
+- [OSSA-2026-045](../appendix/security/ossa-2026-045.md) (Cinder, CVE-2026-93856): closes a flaw that let any project member or reader list the Block Storage Messages API of every other project, exposing the UUIDs, types, timestamps and generic status text of resources belonging to projects they don't own.
+- [OSSA-2026-050](../appendix/security/ossa-2026-050.md) (keystonemiddleware, CVE-2026-115642): closes a bypass where adding an `X-Service-Token` header to a request let an access-restricted application credential skip its access rules and act with the full permissions of the user who created it.
+
+The fixes for the advisories already covered by OSISM 11.0.2 remain included. If you obtained one of the fixes above ahead of this release through the rolling tags, remove the corresponding image overrides from `environments/kolla/images.yml` when upgrading, so that the images pinned by the release are used again. All advisories are listed in the [Security](../appendix/security/index.md) section.
+
+### FRR now announces `loopback0` by default
+
+The `frr` role (osism.services) now defaults `frr_loopback_interface`, the interface whose addresses FRR announces as the host's own, to `loopback0`. Until now the role default `frr_dummy_interface: dummy0` decided the interface for every host that set neither variable. `frr_loopback_interface` was introduced earlier as a preparation for this switch; `frr_dummy_interface` is now dropped from the role defaults, still works if you set it, and is deprecated. `loopback0` matches the rest of OSISM: NetBox-generated netplan and the network configuration guide already use it. The FRR configuration that `osism baremetal` applies sets the interface itself and is not affected.
+
+The role now also checks, before writing `frr.conf`, that the configured interface actually exists on the host, and fails that host with a clear message if it doesn't, instead of silently announcing no addresses and dropping it off the fabric.
+
+The update itself does not touch FRR; the change takes effect on the next `osism apply frr`, for example when adding a node. If a host carries its FRR-announced addresses on `dummy0` (as in earlier versions of the [network configuration guide](../guides/configuration-guide/network.md)) and neither `frr_loopback_interface` nor `frr_dummy_interface` is set, set `frr_loopback_interface` before that run, or rename the interface to `loopback0`. Otherwise the play fails on that host with "frr_loopback_interface is loopback0, but this host has no interface loopback0" before it changes anything, and FRR keeps running with its previous configuration.
+
+```yaml title="environments/configuration.yml"
+frr_loopback_interface: dummy0
+```
+
+### Ceph RGW daemons now bind to their own address
+
+On a routed fabric, `cephadm-rgw` applied the RGW service with `--networks=<public_network>`. Because the API VIPs are anycast `/32` addresses on the control nodes' `loopback0`, inside that same network, cephadm could bind an RGW daemon to a VIP instead of the host's own `radosgw_address`. The play now lists every RGW host's `radosgw_address` as an explicit `/32` (or `/128`) ahead of `public_network`, so each host matches its own address on both routed and flat networks.
+
+The play now also fails before making any `ceph orch` call if two RGW hosts share the same `radosgw_address`. Give each RGW host its own address. If a previous run already bound a daemon to a shared VIP, re-applying the play does not move it: after the new spec is applied, remove the misplaced daemon with `ceph orch daemon rm <daemon-name>`, one RGW host at a time, so cephadm recreates it on that host's own address.
+
+### Ceph OSD and LVM play improvements
+
+- Works around a cephadm bug (Ceph 20.2.x) that could create a cluster's first OSD unencrypted even with `dmcrypt: true`, by registering the `osd.default` service as unmanaged before any OSD is added. If you deployed Ceph with `dmcrypt` enabled before this release, run `osism validate ceph-osds`, whose `osds-dmcrypt` test checks for exactly this, and recreate the affected OSD if it reports unencrypted.
+- The Ceph LVM plays now fail early with a clear message, instead of silently skipping, when a configured device key matches no disk or would get no volume group.
+- The Ceph LVM plays refresh device facts at the start of the run instead of relying on previously cached ones.
+
+### Opt out of network and FRR management on externally managed hosts
+
+New `network_managed_externally` (default `false`) leaves a host's network entirely untouched: no netplan or `/etc/network/interfaces` file is written or cleaned up, and no dummy or vxlan interfaces or the network-extra-init service are touched. `osism.services.frr` gets a matching `frr_managed_externally`, defaulting to the same value, so a single host variable covers both roles. Set this on hosts whose networking is already managed outside OSISM.
+
+### FRR router template for numbered BGP neighbors
+
+The default leaf template can only express interface-based unnumbered uplinks and can only ever re-export connected routes, which makes one case unreachable: a peer that isn't on a directly connected link and announces prefixes the fabric needs to carry, such as a route injector or a neutron-dynamic-routing agent. A new `frr_type: router` template covers this. Configure numbered neighbors with `frr_bgp_neighbors` (`address` and `remote_as` required; `description`, `password`, `passive`, `ebgp_multihop`, `update_source`, `bfd` and per-address-family activation optional), and re-export the prefixes learned from them into the fabric with `frr_bgp_out_prefixes`. The default leaf template is unaffected and needs no changes. Contributed by Timon Schnell ([@kingspeedy95](https://github.com/kingspeedy95)).
+
+### Restrict SSH access with AllowUsers and DenyUsers
+
+New `sshd_allow_users` and `sshd_deny_users` variables manage `AllowUsers` and `DenyUsers` in `/etc/ssh/sshd_config.d/99-osism.conf`. The generated configuration is validated with `sshd -t` before it is applied.
+
+### Bootstrap now checks host clocks against the manager
+
+Bootstrap now compares a host's clock against the manager before any package operations and applies chrony to correct the drift. If the offset remains too large after that, bootstrap fails on that host with a clear message instead of continuing with a clock that is still wrong.
+
+### OpenStack services (2026.1)
+
+- **Grafana proxy support**: new `grafana_container_proxy` (defaults to `container_proxy`) lets the Grafana container use its own proxy environment instead of the one shared by all containers. Contributed by Freerk-Ole Zakfeld ([@fzakfeld](https://github.com/fzakfeld)).
+- **Ceilometer Prometheus export**: if you enable Ceilometer together with Prometheus, the polling agents now serve their samples directly to Prometheus (`enable_ceilometer_prometheus_exporter`, on by default whenever both are enabled; `ceilometer_prometheus_exporter_port` defaults to `9181`), and a new `ceilometer` scrape job picks them up. A host that runs both the central and the compute agent needs them on different ports; set `ceilometer_central_prometheus_exporter_port` or `ceilometer_compute_prometheus_exporter_port` for that host, since the deploy otherwise fails on it and names the clash.
+- **Ceilometer default polling meters widened**: the default polled meters grew from 15 to 22 compute meters, adding the ones billing needs (`vcpus`, `memory`, `disk.root.size` and others), plus up to 12 central meters depending on which services are enabled (Cinder, Glance, Neutron, Manila, Designate, Octavia). Adjust the lists with the new `ceilometer_polling_meters_compute`, `ceilometer_polling_meters_central` and `ceilometer_polling_meters_extra`, and the interval with `ceilometer_polling_interval` (still 300 seconds by default).
+- The Octavia precheck no longer rejects `octavia_network_type: tenant` together with the OVN Neutron plugin agent. Only the `osism apply -a precheck octavia` check was affected; a deployment with that combination already worked.
+- Trove now uses a unique oslo.messaging queue manager process name for `trove-api`, avoiding shared-memory file collisions under uWSGI. Relevant only if Trove is enabled.
+
+### New validation checks
+
+- New `docker_ready` role validates that Docker on a host is ready for the Docker Compose based services from `osism.services` and kolla-ansible.
+- `network_connectivity` gets a `network_connectivity_network` variable that resolves host addresses by network name, the same way kolla-ansible resolves `api`, `tunnel` and other network addresses.
+- The `chrony` role now compares the system clocks of the cluster's nodes against a common NTP reference.
+- New `name_resolution` role validates systemd-resolved configuration, upstream nameservers, inventory host and reverse DNS resolution, additional hosts entries, external registry and repository resolution, and API endpoint resolution.
+- `network_connectivity` now fails instead of silently passing when no address can be pinged, sizes its pings by the route MTU instead of the source interface MTU, and picks the correct IPv6 address and MTU.
+
+### Inventory reconciler improvements
+
+- Host_vars and group_vars files for deleted hosts are now dropped from the fast inventory, and rsync errors during that step are no longer hidden.
+- Keys already present in a host's host_vars file are no longer overwritten by NetBox-sourced values, so manual overrides survive a reconciler run.
+
+### osism CLI
+
+- Fixed task output streaming hitting premature timeouts or being thrown off by clock steps, by keeping reads below the Redis socket timeout and measuring the inactivity deadline with a monotonic clock.
+- Stopped a false "backup was not created properly" warning when creating an SSH known_hosts backup on a host with an empty known_hosts file.
+
+### openstack-image-manager
+
+- A deactivated image is now reactivated before it is deleted, so its data is no longer left behind in the image store, and waiting for an existing image version now only happens while it is actively being imported, not for the whole time it stays retained and deactivated. Contributed by Tore Anderson ([@toreanderson](https://github.com/toreanderson)).
+- Boolean image properties are now compared against their current value instead of always being rewritten, avoiding spurious updates on every run now that openstacksdk reads them correctly. Contributed by Tore Anderson ([@toreanderson](https://github.com/toreanderson)).
+- A multi-image's single version is now rotated whenever it changes, with or without `--latest`, instead of being left unimported.
+
+### Notable changes
+
+- Removing `unattended-upgrades` during cleanup is now optional via `cleanup_unattended_upgrades` (default `true`, matching the previous behavior).
+- Kolla's connectivity validation now checks each network by its kolla network name instead of a derived CIDR, fixing checks that could silently pass on routed fabrics.
+- The `community.general` Ansible collection was updated to 14.0.0, a new major version.
+
+### MetalBox
+
+The following changes are only relevant for the [MetalBox](../concepts/metalbox.md) and the OSISM Manager running on it. They add no new functionality to an OSISM Manager that is used to deploy an OpenStack environment.
+
+#### netbox-manager
+
+- `uri` tasks can now set an optional `device` key to explicitly associate them with a device for `--filter-device` matching.
+- `--filter-task` and `--filter-device` are now applied to `uri` and `debug` tasks as well, so filtered runs no longer execute `uri` tasks whose register dependencies were filtered out. Contributed by Timon Schnell ([@kingspeedy95](https://github.com/kingspeedy95)).
 
 ## 11.0.2
 
