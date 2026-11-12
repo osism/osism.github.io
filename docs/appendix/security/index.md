@@ -38,3 +38,4 @@ handling of security-related information.
 | [OSSA-2026-038](ossa-2026-038.md) | Multiple SSRF vulnerabilities in Glance               | OpenStack Glance             |
 | [OSSA-2026-039](ossa-2026-039.md) | HAProxy configuration injection leading to RCE        | OpenStack Octavia            |
 | [OSSA-2026-045](ossa-2026-045.md) | Cross-project information disclosure in Messages API  | OpenStack Cinder             |
+| [OSSA-2026-050](ossa-2026-050.md) | Access rules bypass via X-Service-Token               | OpenStack keystonemiddleware |
