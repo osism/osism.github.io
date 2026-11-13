@@ -28,9 +28,8 @@ the nodes are already ready for use.
    osism apply operator -u osism
    ```
 
-   * When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
-     and the password of this user is `password`. If you install Ubuntu manually the user usually
-     is `ubuntu`. If you want to use any other user here, with exception of `dragon`, that's no problem.
+   * The [manual provisioning](./provisioning.md#manual-provisioning) creates the user `osism`.
+     If you want to use any other user here, with exception of `dragon`, that's no problem.
      The later used operator user `dragon` is created during the bootstrap and **should not be created**
      during the installation. Do not use `dragon` as username. It is important that
      this user has sudo rights. The password according to what you have set yourself.
@@ -65,9 +64,8 @@ the nodes are already ready for use.
        --conn-pass-file /opt/configuration/secrets/conn_password
      ```
 
-   * When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism` and the password of this
-     user is `password`. If you install Ubuntu manually the user usually is `ubuntu`. The password according to what you
-     have set yourself
+   * The [manual provisioning](./provisioning.md#manual-provisioning) creates the user `osism`.
+     The password according to what you have set yourself
 
 2. Proxy deployment (optional). This is only necessary if you use the proxy on the manager to enable external access to
    the nodes.
@@ -162,8 +160,5 @@ the nodes are already ready for use.
 
     * The playbook removes the user `osism` together with its home directory. If a different
       user was used in step 1, name it with `-e deploy_user=ubuntu`.
-
-    * When using the [osism/node-image](https://github.com/osism/node-image) the user `osism` has
-      sudo rights, and its password is the same on every node.
 
 Ready. All nodes are now bootstrapped and available to deploy services.

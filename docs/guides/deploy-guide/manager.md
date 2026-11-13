@@ -28,8 +28,7 @@ Requirements for the manager node:
   - the system should have direct access to the network areas of the individual server systems in the
     cloud environment
 - An Ubuntu version matching the OSISM version should be [provisioned](./provisioning.md) on the system
-  (typically the latest Ubuntu LTS version, a system based on one of the [OSISM node images](https://github.com/osism/node-image)
-  would be ideal)
+  (typically the latest Ubuntu LTS version)
 - No manual adjustments or installations should have been made on the system apart from the basic installation
 - The system has to be accessible from the [seed node](./seed.md) via SSH
 
@@ -71,10 +70,9 @@ containers run with this user. Ansible also uses this user to access the nodes. 
 on the manager node need to be run as this user. The name of the operator user is always `dragon`.
 
 With `ANSIBLE_USER` the existing user account is set after the provisioning of the management
-node. When using the [osism/node-image](https://github.com/osism/node-image) the user is `osism`
-and the password of this user is `password`. If you install Ubuntu manually the user usually
-is `ubuntu`. If you want to use any other user here, that's no problem. It is important that
-this user has sudo rights. The password according to what you have set yourself.
+node. The [manual provisioning](./provisioning.md#manual-provisioning) creates the user `osism`.
+If you want to use any other user here, that's no problem. It is important that this user
+has sudo rights. The password according to what you have set yourself.
 
 The `ANSIBLE_USER` parameter is only required when executing `operator` play using the `run.sh`
 script. After this step, the `ANSIBLE_USER` is always set to `dragon` in the `run.sh` script.
