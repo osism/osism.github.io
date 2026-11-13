@@ -79,6 +79,33 @@ built for either tag. `unmaintained-<version>` is therefore the last tarball a
 version gets; after that, see the caution in [Version pointers that move
 forward](#forward-pointers).
 
+### When to move
+
+Upstream does not rename all repositories at once. For 2025.1, the
+`unmaintained/2025.1` branches and `2025.1-eom` tags appeared in three waves
+over four days (2026-10-30, 2026-11-02 and 2026-11-03). The `stable/2025.1`
+branches were deleted only afterwards, starting on 2026-11-03 and spread over
+the following three days.
+
+Move **when the first `stable/<version>` branch that OSISM uses is deleted**,
+and move every reference whose `unmaintained/<version>` branch exists by then in
+one batch. In practice the trigger is the first build that fails because a
+`stable/<version>` checkout is gone; a day of red builds is an accepted signal.
+For 2025.1, every repository OSISM pins already had its unmaintained branch when
+the first stable branch was deleted, so a single batch covered all of them. A
+reference whose project has not transitioned yet stays on `stable/` and moves
+once its own branch is deleted.
+
+Waiting costs nothing. `unmaintained/<version>` is cut from the
+`<version>-eom` tag, which is the last commit on `stable/<version>`, so until
+the deletion both branches carry the same sources.
+
+The `kolla_source_ref_phase` drift check in `release` reports a source ref as
+soon as its `unmaintained-<version>` tarball appears, days before the first
+deletion, and keeps the `release-tox-drift` job red until the ref moves. Treat
+its findings in that window as advance notice; the move still waits for the
+first deletion.
+
 ### What to change
 
 Only repositories that still build the version need changing — check each
@@ -97,6 +124,15 @@ editing.
 An `unmaintained-<version>` IPA artifact can lag behind the branch. For 2025.1
 it did not exist when the stable branches were deleted, so the IPA reference
 stays on `stable-<version>` until it is published.
+
+Forward pointers that name the version (see [Version pointers that move
+forward](#forward-pointers)), such as `files/osism-ipa.yml` in
+`openstack-ironic-images` and `devstack_release` in `zuul-jobs`, break at the
+same moment. Move them in the same batch: either forward to a maintained
+release, or to `unmaintained/<version>` where a consumer depends on that
+version. For 2025.1, `osism-ipa` stayed on `unmaintained/2025.1` because the
+MetalBox's Ironic was not yet newer
+([#225](https://github.com/osism/openstack-ironic-images/pull/225)).
 
 Search for **both** spellings: `stable/<version>` for git refs and
 `stable-<version>` for tarball names. Some are assembled by string
