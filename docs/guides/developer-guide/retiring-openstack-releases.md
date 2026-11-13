@@ -120,6 +120,7 @@ editing.
 | `container-images`                | `openstackclient/Containerfile` — `requirements-<branch>`                                                         | tarball |
 | `container-image-kolla-ansible`   | `Containerfile` and `playbooks/build.yml` — kolla-ansible clone and the commit recorded in the labels; must match | git     |
 | `container-image-kolla-ansible`   | `files/playbooks/kolla-ironic-download-ipa-images.yml` — IPA artifacts                                            | tarball |
+| `openstack-octavia-amphora-image` | `playbooks/build.yml` — `BRANCH` passed to `diskimage-create.sh`                                                  | git     |
 
 An `unmaintained-<version>` IPA artifact can lag behind the branch. For 2025.1
 it did not exist when the stable branches were deleted, so the IPA reference
@@ -226,23 +227,25 @@ now as usual (see [Removing the version](#removing)).
 - `cfg-cookiecutter` only scaffolds a *new* configuration repository. An existing
   site generated its configuration once and never re-runs cookiecutter for a
   patch, so it is removed now.
-- `openstack-octavia-amphora-image` builds the Octavia amphora appliance image.
-  Removing it means no fresh amphora builds for the EOL release — a deliberate
-  scope decision that amphora-level rebuilds are not part of the EOL
-  security-update commitment.
+- `openstack-octavia-amphora-image` builds the Octavia amphora image. It keeps
+  building on the same terms as `container-images-kolla`, so that every image
+  build follows the same rule rather than a list of exceptions. Rebuilding it
+  does not commit OSISM to amphora-level security updates.
 
 The rule of thumb: keep the repositories that carry patched OpenStack code to a
 running site; remove the ones only needed to *stand up* a new deployment, which
 should not happen after EOL.
 
 :::note Re-evaluate this split for each release
-The split above reflects how 2024.2 was handled, where
-`container-images-kolla` and `container-image-kolla-ansible` received the
-`-eol` build fix while `cfg-cookiecutter` and `openstack-octavia-amphora-image`
-were removed. If a future release needs amphora security updates for a
-site, `openstack-octavia-amphora-image` would have to keep building too —
-re-evaluate the list against the actual support commitment for the release
-being retired.
+Check the list against the actual support commitment for the release being
+retired. Earlier releases handled the amphora image differently: it was removed
+for 2024.2 at EOL
+([#142](https://github.com/osism/openstack-octavia-amphora-image/pull/142)),
+for 2024.1 shortly before it became unmaintained
+([#118](https://github.com/osism/openstack-octavia-amphora-image/pull/118)),
+and for 2025.1 when it became unmaintained
+([#160](https://github.com/osism/openstack-octavia-amphora-image/pull/160)).
+From 2026.1 on it follows the rule above.
 :::
 
 `release` — `latest/openstack-2024.2.yml`, read by `container-images-kolla`
