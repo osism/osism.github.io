@@ -85,14 +85,18 @@ Only repositories that still build the version need changing — check each
 one's `.zuul.yaml`, or the GitHub Actions matrix for `container-images`, before
 editing.
 
-| Repository                      | Reference                                                              | Kind    |
-|:--------------------------------|:-----------------------------------------------------------------------|:--------|
-| `release`                       | `latest/openstack-<version>.yml` — every `openstack_projects` ref      | tarball |
-| `container-images-kolla`        | `scripts/001-prepare.sh` — kolla checkout                              | git     |
-| `container-images-kolla`        | `scripts/002-generate.sh` — `requirements-<branch>`                    | tarball |
-| `container-images`              | `openstackclient/Containerfile` — `requirements-<branch>`              | tarball |
-| `container-image-kolla-ansible` | `Containerfile` — kolla-ansible clone                                  | git     |
-| `container-image-kolla-ansible` | `files/playbooks/kolla-ironic-download-ipa-images.yml` — IPA artifacts | tarball |
+| Repository                        | Reference                                                                                                         | Kind    |
+|:----------------------------------|:------------------------------------------------------------------------------------------------------------------|:--------|
+| `release`                         | `latest/openstack-<version>.yml` — every `openstack_projects` ref                                                 | tarball |
+| `release`                         | `latest/openstack-<version>.yml` — `kolla_build.kolla`, the kolla checkout of `container-images-kolla`            | git     |
+| `release`                         | `latest/openstack-<version>.yml` — `kolla_build.requirements`, the requirements of `container-images-kolla`       | tarball |
+| `container-images`                | `openstackclient/Containerfile` — `requirements-<branch>`                                                         | tarball |
+| `container-image-kolla-ansible`   | `Containerfile` and `playbooks/build.yml` — kolla-ansible clone and the commit recorded in the labels; must match | git     |
+| `container-image-kolla-ansible`   | `files/playbooks/kolla-ironic-download-ipa-images.yml` — IPA artifacts                                            | tarball |
+
+An `unmaintained-<version>` IPA artifact can lag behind the branch. For 2025.1
+it did not exist when the stable branches were deleted, so the IPA reference
+stays on `stable-<version>` until it is published.
 
 Search for **both** spellings: `stable/<version>` for git refs and
 `stable-<version>` for tarball names. Some are assembled by string
@@ -143,9 +147,10 @@ Retirement always ends the same way: the version is removed from every
 repository that references it. The only open question is *when*. Work through
 this once the release reaches EOL upstream:
 
-1. **The trigger.** Upstream deletes `stable/<version>`, so every build that
-   checked it out fails. That broken build is usually the first sign the
-   release has reached EOL.
+1. **The trigger.** Upstream deletes the release's last branch —
+   `stable/<version>` for a non-SLURP release, `unmaintained/<version>` for a
+   SLURP release — so every build that checked it out fails. That broken build
+   is usually the first sign the release has reached EOL.
 2. **Do we know any operators running this version that still need security updates?**
    - **No** — remove the version now. Go straight to [Removing the
      version](#removing).
@@ -204,18 +209,17 @@ re-evaluate the list against the actual support commitment for the release
 being retired.
 :::
 
-`container-images-kolla` — `scripts/001-prepare.sh`
-([#728](https://github.com/osism/container-images-kolla/pull/728)):
+`release` — `latest/openstack-2024.2.yml`, read by `container-images-kolla`
+since [#835](https://github.com/osism/container-images-kolla/pull/835):
 
-```bash
-if [[ "$OPENSTACK_VERSION" == "2024.1" ]]; then
-    git checkout origin/unmaintained/$OPENSTACK_VERSION
-elif [[ "$OPENSTACK_VERSION" == "2024.2" ]]; then
-    git checkout 2024.2-eol
-else
-    git checkout origin/stable/$OPENSTACK_VERSION
-fi
+```yaml
+kolla_build:
+  kolla: 2024.2-eol
+  requirements: stable-2024.2
 ```
+
+The requirements tarball stays on `stable-2024.2`: 2024.2 never had an
+unmaintained phase, and no tarball is built for a tag.
 
 `container-image-kolla-ansible` — `Containerfile`
 ([#909](https://github.com/osism/container-image-kolla-ansible/pull/909)):
@@ -230,13 +234,19 @@ else
 fi
 ```
 
+`playbooks/build.yml` carries the same mapping as a `case` statement, to
+resolve the commit recorded in the image labels, and has to change with the
+`Containerfile`
+([#993](https://github.com/osism/container-image-kolla-ansible/pull/993)).
+
 The same pattern applies to any other build that checks out a per-version
 branch: point the retired version at its `<version>-eol` tag instead of
 `stable/<version>`.
 
-The intermediate `unmaintained/<version>` phase (the `2024.1` line above) is
-handled the same way — point at `origin/unmaintained/<version>` while the
-branch still exists, then switch to the `<version>-eol` tag once it is deleted.
+The intermediate `unmaintained/<version>` phase is handled the same way — point
+at `unmaintained/<version>` while the branch still exists (as
+`latest/openstack-2025.1.yml` does for kolla), then switch to the
+`<version>-eol` tag once it is deleted.
 
 ### Defer the removal
 
