@@ -153,4 +153,17 @@ the nodes are already ready for use.
     osism apply known-hosts
     ```
 
+13. Remove the deploy user that was used in step 1 to create the operator user. All
+    further work is done as the operator user `dragon`.
+
+    ```bash
+    osism apply remove-deploy-user -e ireallymeanit=yes
+    ```
+
+    * The playbook removes the user `osism` together with its home directory. If a different
+      user was used in step 1, name it with `-e deploy_user=ubuntu`.
+
+    * When using the [osism/node-image](https://github.com/osism/node-image) the user `osism` has
+      sudo rights, and its password is the same on every node.
+
 Ready. All nodes are now bootstrapped and available to deploy services.

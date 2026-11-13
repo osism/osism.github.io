@@ -112,6 +112,15 @@ osism apply reboot -- --limit node101 -e ireallymeanit=yes
 osism apply wait-for-connection -- --limit node101
 ```
 
+**Manager.** Remove the deploy user `osism`, which every reinstallation creates again:
+
+```bash
+osism apply remove-deploy-user -- --limit node101 -e ireallymeanit=yes
+```
+
+Why this user has to go is explained in
+[Node deployment](./node-deployment.md#hand-the-node-over-to-the-manager).
+
 Everything after this is role-specific.
 
 :::note
