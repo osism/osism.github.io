@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Manager | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/deploy-guide/manager"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Manager | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="The prerequisite for deploying the Manager node is a Seed node. What a Seed node is"><meta data-rh="true" property="og:description" content="The prerequisite for deploying the Manager node is a Seed node. What a Seed node is"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/deploy-guide/manager"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/manager" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/manager" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Deploy Guide","item":"https://osism.tech/docs/guides/deploy-guide/"},{"@type":"ListItem","position":3,"name":"Manager","item":"https://osism.tech/docs/guides/deploy-guide/manager"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.1bdfa222.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.d1078303.js" defer="defer"></script>
 <script src="/assets/js/main.cb1d4d86.js" defer="defer"></script>
 </head>
 <body>
@@ -32,8 +32,7 @@ cloud environment</li>
 </ul>
 </li>
 <li class="">An Ubuntu version matching the OSISM version should be <a class="" href="/docs/guides/deploy-guide/provisioning">provisioned</a> on the system
-(typically the latest Ubuntu LTS version, a system based on one of the <a href="https://github.com/osism/node-image" target="_blank" rel="noopener noreferrer" class="">OSISM node images</a>
-would be ideal)</li>
+(typically the latest Ubuntu LTS version)</li>
 <li class="">No manual adjustments or installations should have been made on the system apart from the basic installation</li>
 <li class="">The system has to be accessible from the <a class="" href="/docs/guides/deploy-guide/seed">seed node</a> via SSH</li>
 </ul>
@@ -57,10 +56,9 @@ do not need to set anything:</p>
 containers run with this user. Ansible also uses this user to access the nodes. Commands
 on the manager node need to be run as this user. The name of the operator user is always <code>dragon</code>.</p>
 <p>With <code>ANSIBLE_USER</code> the existing user account is set after the provisioning of the management
-node. When using the <a href="https://github.com/osism/node-image" target="_blank" rel="noopener noreferrer" class="">osism/node-image</a> the user is <code>osism</code>
-and the password of this user is <code>password</code>. If you install Ubuntu manually the user usually
-is <code>ubuntu</code>. If you want to use any other user here, that&#x27;s no problem. It is important that
-this user has sudo rights. The password according to what you have set yourself.</p>
+node. The <a class="" href="/docs/guides/deploy-guide/provisioning#manual-provisioning">manual provisioning</a> creates the user <code>osism</code>.
+If you want to use any other user here, that&#x27;s no problem. It is important that this user
+has sudo rights. The password according to what you have set yourself.</p>
 <p>The <code>ANSIBLE_USER</code> parameter is only required when executing <code>operator</code> play using the <code>run.sh</code>
 script. After this step, the <code>ANSIBLE_USER</code> is always set to <code>dragon</code> in the <code>run.sh</code> script.
 It is therefore important to only set this parameter for exactly this step.</p>
