@@ -11,45 +11,14 @@ the nodes must be pre-provisioned with Ubuntu 24.04.
 Data plane nodes can be automatically provisioned after the initial deployment and
 do not need to be pre-provisioned.
 
-It is recommended not to install the initial nodes of the management plane and the
-control plane manually. An ISO image is provided for this purpose which automatically
-provisions a node. The ISO images are available for download in the
-[osism/node-image](https://github.com/osism/node-image) repository.
-
-## Automated Installation using Node Images
-
-There are different variants of the ISO image. The variants differ in the disc layout.
-
-The pre-build variants are described in the [osism/node-image](https://github.com/osism/node-image/blob/main/README.md) repository.
-
-A good way to provision the nodes is to use virtual media mounts via the usually available Redfish
-functionality of the BMC of the servers used. In this way, the basic installation can be carried
-out without external dependencies such as adapting the switch configuration, DHCP, upstream connectivity, etc.
-In many cases, this simplifies the process, makes it more automation-friendly and avoids potential sources of error.
-
-OSISM also provides a [tool](https://github.com/osism/node-image?tab=readme-ov-file#creation-of-specific-images) to generate node images specific for you needs.
-
-This makes particular sense for the node-provisioning in the following situations:
-
-* Make complex configurations like layer3 underlay
-* Add your SSH keys to the image
-* Configure a specific root password
-* Change other characteristics of the setup
-  * Templates
-  * Partitioning
-  * Packages
-  * ...
-* Develop new standard images
-
-The procedures for building custom images are described in the
-[osism/node-image](https://github.com/osism/node-image/blob/main/README.md) repository.
-
+Nodes can be provisioned automatically with the
+[MetalBox](../operations-guide/metalbox/node-deployment.md), or installed manually
+as described below.
 
 ## Manual provisioning
 
-If none of the provided variants is suitable, this section describes the manual
-installation with the help of the Ubuntu 24.04 live ISO image. The manual installation
-is possible without network connectivity.
+This section describes the manual installation with the help of the Ubuntu 24.04
+live ISO image. The manual installation is possible without network connectivity.
 
 * Download the latest ISO image for Ubuntu 24.04 from [releases.ubuntu.com](https://www.releases.ubuntu.com/24.04/).
   * Use the `ubuntu-24.04.2-live-server-amd64.iso` image.
