@@ -123,11 +123,10 @@ routed (BGP to the host) network, each node has one, named `loopback0`, that
 carries the node's own addresses (a /32 and a /128). FRR announces them to the
 fabric, and OSISM's defaults use `loopback0` as `network_interface` and, where
 `internal_interface` is not set, for the console, hosts and management interfaces.
-Use the name `loopback0` for this interface, not the legacy `dummy0`. Also set
-`frr_loopback_interface: loopback0`, as in the
-[IPv6 fabric underlay](#ipv6-fabric-underlay) example. FRR announces the
-addresses of the interface this variable names, and the frr role has defaulted
-to `dummy0`.
+Use the name `loopback0` for this interface, not the legacy `dummy0`. FRR
+announces the addresses of the interface that `frr_loopback_interface` names.
+The frr role defaults it to `loopback0`. In releases before OSISM 11.0.3, it
+defaults to `dummy0`, so set `frr_loopback_interface: loopback0` there.
 
 On Ubuntu 24.04 and later, define the device and its addresses in
 `network_dummy_devices`. It is written to the `dummy-devices` section of the
@@ -234,7 +233,6 @@ network_ethernets:
 # frr
 
 frr_local_as: 4210042010
-frr_loopback_interface: loopback0
 frr_loopback_v4: 10.10.42.10
 frr_loopback_v6: 2001:db8::10:10:42:10
 frr_uplinks:
