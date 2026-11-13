@@ -158,6 +158,10 @@ Use `--no-wait` to start the task in the background without waiting for it to fi
 
 ### Third-party image definitions
 
+:::warning
+Third-party definitions are not reviewed by OSISM: check their source before using them.
+:::
+
 Image definitions do not have to come from `/etc/images`: any file that follows the
 [definition format](#image-definitions) can be passed with `--images`. Some projects publish
 their catalog in this format. For example, [openimages.cloud](https://openimages.cloud) provides
@@ -173,8 +177,6 @@ curl -fsSo images/openimages.yml https://images.openimages.cloud/osism/images.ym
 openstack-image-manager --cloud openstack --images images/openimages.yml --latest --dry-run
 openstack-image-manager --cloud openstack --images images/openimages.yml --latest
 ```
-
-Third-party definitions are not reviewed by OSISM: check their source before using them.
 
 ## Standalone usage
 
