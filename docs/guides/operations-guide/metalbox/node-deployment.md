@@ -208,6 +208,16 @@ osism apply reboot -- --limit node101 -e ireallymeanit=yes
 osism apply wait-for-connection -- --limit node101
 ```
 
+**Manager.** Remove the deploy user `osism`:
+
+```bash
+osism apply remove-deploy-user -- --limit node101 -e ireallymeanit=yes
+```
+
+The `osism-node` image contains the user `osism` with sudo rights, and its credentials are
+the same in every copy of the image. The Manager works with the operator user `dragon`
+only, so `osism` is not needed.
+
 The node is now a managed node of the CloudPod. What has to be deployed on top of this
 depends on the role of the node:
 
