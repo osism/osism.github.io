@@ -156,6 +156,28 @@ osism manage images --latest --filter 'Ubuntu 24.04'
 By default the command waits until the image management has been completed and streams the output.
 Use `--no-wait` to start the task in the background without waiting for it to finish.
 
+### Third-party image definitions
+
+:::warning
+Third-party definitions are not reviewed by OSISM: check their source before using them.
+:::
+
+Image definitions do not have to come from `/etc/images`: any file that follows the
+[definition format](#image-definitions) can be passed with `--images`. Some projects publish
+their catalog in this format. For example, [openimages.cloud](https://openimages.cloud) provides
+signed, boot-tested qcow2 cloud images for OpenStack and publishes their definitions at
+`https://images.openimages.cloud/osism/images.yml` (images of type `multi`, with the sha256
+of every version).
+
+With the [standalone tool](#standalone-usage), check what would change, then import the
+latest versions:
+
+```bash
+curl -fsSo images/openimages.yml https://images.openimages.cloud/osism/images.yml
+openstack-image-manager --cloud openstack --images images/openimages.yml --latest --dry-run
+openstack-image-manager --cloud openstack --images images/openimages.yml --latest
+```
+
 ## Standalone usage
 
 For use independently of OSISM, the OpenStack Image Manager can be installed and run directly.
