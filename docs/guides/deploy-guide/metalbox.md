@@ -257,7 +257,7 @@ Execute these commands as any user on the server that has `sudo` access.
 cd
 sudo apt update
 sudo apt full-upgrade -y
-sudo apt install -y git pipx python3-venv sshpass
+sudo apt install -y git pipx python3-venv sshpass bzip2
 git clone https://github.com/osism/metalbox/
 sudo mv metalbox /opt/configuration
 cd /opt/configuration/environments/manager/
