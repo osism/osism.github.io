@@ -6,7 +6,8 @@ sidebar_position: 20
 # Service updates on the MetalBox
 
 The services running on the MetalBox are updated by running the corresponding
-`update-*.sh` script.
+`update-*.sh` script. At the end of the update, the script removes the container
+images it has replaced from the MetalBox node. The local registry still holds them.
 
 :::warning
 

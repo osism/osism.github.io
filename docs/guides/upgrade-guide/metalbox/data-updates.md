@@ -15,6 +15,10 @@ the variant without external connectivity, the artifacts are downloaded elsewher
 copied to `/home/dragon` on the MetalBox node, and the update script is run with
 `SKIP_DOWNLOAD=true` so that it uses the local file instead of fetching it.
 
+`update-registry.sh` and `update-repository.sh` delete the tarball in `/opt` once its
+content has been imported. Set `KEEP_TARBALL=true` to keep it. A tarball copied to
+`/home/dragon` is left in place and can be removed once the update has finished.
+
 :::tip
 
 Downloads from the Hetzner Object Storage can occasionally be interrupted. Use
@@ -144,6 +148,9 @@ tarball and pushes to `localhost:5001` by default; the target can be overridden 
 the `TARGET_REGISTRY` environment variable. The registry must already be running.
 
 ## Update of the Ubuntu repository files
+
+`update-repository.sh` replaces the repository files with the content of the tarball.
+Packages that the tarball no longer contains are removed from the repository.
 
 ### Without external connectivity
 
