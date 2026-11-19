@@ -102,7 +102,7 @@ const config = {
         logo: {
           alt: 'OSISM Logo',
           src: 'img/logo.svg',
-          href: 'https://osism.tech/docs',
+          href: 'https://osism.tech/docs/',
           style: {display: 'none'},
         },
       },

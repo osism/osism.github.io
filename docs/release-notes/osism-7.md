@@ -300,7 +300,7 @@ Release date: 24. May 2024
 * New features in the osism.services.docker role.
 
   * With the `docker_throttle_restart` parameter it's possible to
-    [throttle the service restarts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_strategies.html#restricting-execution-with-throttle).
+    [throttle the service restarts](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html#restricting-execution-with-throttle).
     By default service restarts will not be throttled.
 
     ```yaml title="environments/configuration.yml
@@ -403,7 +403,7 @@ Release date: 24. May 2024
     has been completely revised. In the Cookiecutter itself, notes have been added in many places to simplify
     the initial reworking of the created configuration repository.
 
-  * Documentation for the [deployment of a second loadbalancer](https://osism.tech/docs/guides/configuration-guide/loadbalancer#second-loadbalancer) has been added.
+  * Documentation for the [deployment of a second loadbalancer](https://osism.tech/docs/guides/configuration-guide/loadbalancer/#second-loadbalancer) has been added.
 
 * Changes in the Testbed.
 

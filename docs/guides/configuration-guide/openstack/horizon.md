@@ -11,9 +11,9 @@ sidebar_label: Horizon
 ## Problems uploading machine images larger than 1 GiB
 
 By default, the `LimitRequestBody` is set to `1073741824` (1 GiB).
-This is a security feature ([CVE-2022-29404](https://access.redhat.com/security/cve/CVE-2022-29404))
+This is a security feature ([CVE-2022-29404](https://access.redhat.com/security/cve/cve-2022-29404))
 and not a bug. Further details in the
-[A new default for the LimitRequestBody directive in httpd configuration](https://access.redhat.com/articles/6975397)
+[A new default for the LimitRequestBody directive in httpd configuration](https://access.redhat.com/kb/6975397)
 article in the RedHat knowledgebase.
 
 This limit can be increased via the parameter `horizon_httpd_limitrequestbody`.
