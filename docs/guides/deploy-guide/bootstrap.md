@@ -87,13 +87,19 @@ the nodes are already ready for use.
    osism apply network
    ```
 
-5. Reboot (optional). The reboot at this point is recommended to ensure that the network configuration is working.
+5. Host-based routing configuration (optional). This is only necessary if you use the [L3 network concept](https://osism.tech/docs/concepts/cluster-network) with FRR.
+
+   ```bash
+   osism apply frr
+   ```
+
+6. Reboot (optional). The reboot at this point is recommended to ensure that the network configuration is working.
 
    ```bash
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
-6. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
+7. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
    ```bash
    osism apply ping
@@ -114,44 +120,44 @@ the nodes are already ready for use.
      to host\r", "unreachable": true}
      ```
 
-7. Refresh facts.
+8. Refresh facts.
 
    ```bash
    osism apply facts
    ```
 
-8. Bootstrap.
+9. Bootstrap.
 
    ```bash
    osism apply bootstrap
    ```
 
-9. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
+10. Reboot (non-optional). Since the kernel version often changes after the initial bootstrap,
    the reboot should always be performed.
 
    ```bash
    osism apply reboot -l 'all:!manager' -e ireallymeanit=yes
    ```
 
-10. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
+11. Check if all systems are reachable (you probably have to do this several times until all systems are accessible).
 
     ```bash
     osism apply ping
     ```
 
-11. Prepare the SSH configuration of the manager node.
+12. Prepare the SSH configuration of the manager node.
 
     ```bash
     osism apply sshconfig
     ```
 
-12. Make all SSH public keys known.
+13. Make all SSH public keys known.
 
     ```bash
     osism apply known-hosts
     ```
 
-13. Remove the deploy user that was used in step 1 to create the operator user. All
+14. Remove the deploy user that was used in step 1 to create the operator user. All
     further work is done as the operator user `dragon`.
 
     ```bash
