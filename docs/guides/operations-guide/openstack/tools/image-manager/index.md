@@ -242,6 +242,27 @@ the help of the OpenStack Image Manager.
    openstack-image-manager --cloud openstack --filter ".*Cirr.*" --images images/
    ```
 
+### Third-party image definitions
+
+:::warning
+Third-party definitions are not reviewed by OSISM: check their source before using them.
+:::
+
+Image definitions do not have to come from `/etc/images`: any file that follows the
+[definition format](#image-definitions) can be passed with `--images`. Some projects publish
+their catalog in this format. For example, [openimages.cloud](https://openimages.cloud) provides
+signed, boot-tested qcow2 cloud images for OpenStack and publishes their definitions at
+`https://images.openimages.cloud/osism/images.yml` (images of type `multi`, with the sha256
+of every version).
+
+Check what would change, then import the latest versions:
+
+```bash
+curl -fsSo images/openimages.yml https://images.openimages.cloud/osism/images.yml
+openstack-image-manager --cloud openstack --images images/openimages.yml --latest --dry-run
+openstack-image-manager --cloud openstack --images images/openimages.yml --latest
+```
+
 ## Image definitions
 
 The configuration consists of different parameter settings, such as values for
