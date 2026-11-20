@@ -64,6 +64,32 @@ symlink points to at the release tag.
 
 :::
 
+:::note Major releases: carry the patches forward
+
+A new OpenStack series gets its own build in
+[osism/container-image-kolla-ansible](https://github.com/osism/container-image-kolla-ansible)
+and [osism/container-images-kolla](https://github.com/osism/container-images-kolla),
+with its own set of carried patches (`patches/<series>/`, and
+`kolla-patches/<series>/` in container-images-kolla). The new set usually
+starts as a copy of an older one, made when the pull request that adds the
+build is opened. Patches merged into the older sets while that pull request is
+open are not in the copy, and nobody adds them to a set that does not exist on
+the default branch yet. Once the new set is merged, new patches are added to
+it as usual.
+
+So check the new set right before the pull request is merged, not when it is
+opened. Compare it with the current default branch's set of the series being
+upgraded from (e.g. `2025.1` for a `2026.1` build, even if the copy was made
+from `2025.2`):
+
+- Compare by the `Subject:` of the patch, not by its filename; patches are
+  often renamed between series.
+- A patch that is not carried forward needs a reason in the commit message:
+  merged upstream in the new series (with the review URL), or retired on
+  purpose (with the reason).
+
+:::
+
 1. Tag the components. A release only contains what is tagged: a change
    merged on the default branch of a component is not part of it until that
    repository is tagged. Every component that the release pins directly is
