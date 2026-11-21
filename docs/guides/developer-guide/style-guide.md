@@ -76,7 +76,8 @@ docker_hosts: "{{ docker_hosts_defaults + docker_hosts_extra }}"
 ## Commit messages
 
 We try to follow the
-[OpenStack git commit message guidelines](https://wiki.openstack.org/wiki/GitCommitMessages).
+[OpenStack git commit message guidelines](https://wiki.openstack.org/wiki/GitCommitMessages)
+([archived copy](https://web.archive.org/web/20260510181736/https://wiki.openstack.org/wiki/GitCommitMessages)).
 Please read that document; the essentials are:
 
 * **One logical change per commit.** Do not mix unrelated changes, and keep
