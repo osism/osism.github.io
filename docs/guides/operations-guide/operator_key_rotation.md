@@ -140,8 +140,9 @@ This step is optional. Since the old key has been removed from the nodes, it may
 
 ## Rotating the key in the NetBox (MetalBox)
 
-In case the hardware is provisioned using the OSISM MetalBox, the operator key also needs to be replaced in the `local_context` of each device, so that a newly provisioned system is accessible through the manager.
-This step is independent of the rotation described above and can be performed at any time; it only affects systems that are newly provisioned via the MetalBox afterwards.
+In case the hardware is provisioned using the OSISM MetalBox, the operator key also needs to be replaced in the `local_context_data` of each device, so that a newly provisioned system is accessible through the manager.
+The key in `local_context_data` is applied when a node boots for the first time, and it is also a host variable in the inventory of the manager: later `osism apply operator` runs use it like any other host variable, unless your configuration repository sets `operator_authorized_keys` with higher precedence, for example in `environments/configuration.yml`.
+If it does, this step only affects systems that are newly provisioned via the MetalBox afterwards and can be performed at any time. If it does not, change the key here as part of the rotation described above, not independently of it.
 If your setup uses a separate repository for NetBox management, apply the following change there and update the git submodule in the configuration repository afterwards by running `git submodule update --init`. Remember to also commit the updated submodule.
 In case your setup manages the NetBox from the configuration directory, apply the changes there and commit them directly.
 
