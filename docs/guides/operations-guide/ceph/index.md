@@ -654,6 +654,9 @@ These playbooks will validate that the deployed Ceph environment matches
 the configuration and is overall in a healthy state. The playbooks will
 generate report files in JSON format on the first manager node in `/opt/reports/validator`.
 
+`osism validate ceph-keys` checks the cephx keys, see
+[cephx key validation](./cephx-key-validation.md).
+
 ### Shutdown a Ceph cluster
 
 In order to fully shutdown a Ceph cluster safely, you first do the following steps:
