@@ -6,7 +6,8 @@ sidebar_label: cephx key rotation
 
 Every client and daemon of a Ceph cluster authenticates with a cephx key. This page
 rotates the keys of a cluster managed by cephadm: after a key may have been exposed, by
-policy, or for a new key type.
+policy, or for a new key type (see
+[Move to the aes256k key type](../../upgrade-guide/ceph/cephx-keys.md)).
 
 Two commands do the work:
 
