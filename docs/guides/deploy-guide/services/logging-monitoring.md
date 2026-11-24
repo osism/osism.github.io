@@ -24,6 +24,19 @@ are documented in the [OpenStack Troubleshooting Guide](../../troubleshooting-gu
    osism apply prometheus
    ```
 
+   With OSISM 11 and later, the node exporter and cAdvisor, which run on every
+   node, are deployed with their own `prometheus-node-exporters` role. The
+   change comes from Kolla Ansible, which moved both exporters out of the
+   `prometheus` role upstream. With OSISM 10 and earlier, the `prometheus` role
+   deploys them and there is no further command.
+
+   With OSISM 11 and later:
+
+   ```bash
+   osism apply -a pull prometheus-node-exporters
+   osism apply prometheus-node-exporters
+   ```
+
 3. Grafana
 
    ```bash
