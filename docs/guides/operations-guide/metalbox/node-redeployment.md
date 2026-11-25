@@ -42,6 +42,15 @@ osism baremetal power off --soft node101
 watch osism baremetal list
 ```
 
+Before reprovisioning, make sure that the NetBox device, or a config context that applies
+to it, still carries the operator key the Manager logs in with. The reinstalled node gets
+the operator user's first key the same way as a new node: from the first-boot play that
+the deployment builds from NetBox, see
+[First boot of a node](../../configuration-guide/metalbox/first-boot.md). Keys added to the node by hand
+after its last installation are gone. From OSISM 11.1.0 on, `osism baremetal deploy` warns
+when the first boot installs no operator key; the node is then reachable only through
+credentials built into the image, if it has any.
+
 **MetalBox.** Reprovision the node. Either in a single step:
 
 ```bash
