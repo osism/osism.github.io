@@ -33,7 +33,7 @@ so that all Ansible containers share the same gathered host facts. Separate
 queues exist for each workload type:
 
 * `kolla-ansible job queue` — OpenStack service lifecycle
-* `ceph-ansible job queue` — Ceph deployment and management
+* `ceph-ansible job queue` — Ceph deployment and management with ceph-ansible
 * `osism-ansible job queue` — Infrastructure-level playbooks
 * `osism-kubernetes job queue` — Kubernetes-related operations
 * `reconciler job queue` — Inventory reconciliation
@@ -50,7 +50,8 @@ maintained at
 
 ### ceph-ansible
 
-Handles Ceph deployment and day-2 management. The container image is maintained at
+Handles Ceph deployment and day-2 management for clusters that use the ceph-ansible
+backend. The container image is maintained at
 [github.com/osism/container-image-ceph-ansible](https://github.com/osism/container-image-ceph-ansible).
 
 ### osism-ansible
@@ -59,6 +60,17 @@ Handles infrastructure-level playbooks that are not covered by kolla-ansible or
 ceph-ansible — for example, bootstrapping nodes, managing network configuration, and
 operating supporting services. The container image is maintained at
 [github.com/osism/container-image-osism-ansible](https://github.com/osism/container-image-osism-ansible).
+
+It also runs the playbooks of the Ceph environment that are implemented in
+[osism/ansible-playbooks](https://github.com/osism/ansible-playbooks), most notably the
+`cephadm-*` plays for clusters deployed with cephadm and the `validate-ceph-*`
+validators. They run in the `osism-ansible job queue` with the `ceph` environment of the
+configuration repository. Except for `cephadm-bootstrap`, which installs cephadm on the
+Ceph hosts and bootstraps the first monitor over SSH, the `cephadm-*` plays target the
+manager and drive the cluster with the `ceph` CLI of the `cephclient` container. The Ceph
+daemons themselves are deployed by the cephadm orchestrator in the Ceph manager. When a
+collection such as `osism apply nutshell` deploys Ceph, the OSISM release selects the
+backend, and `--ceph-backend` overrides it.
 
 ### osism-kubernetes
 
