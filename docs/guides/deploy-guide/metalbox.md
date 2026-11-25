@@ -341,6 +341,27 @@ above, and because a dummy interface does not survive a reboot, it should also b
 added to the permanent network configuration, for example in a file in
 `/etc/netplan`.
 
+The nodes do not use this address to reach the MetalBox. A node that is being deployed
+runs the deploy ramdisk, which looks the MetalBox up under the name `metalbox`: it
+resolves to `fd33:fd0e:2aee::42` unless the kernel parameter `osism-ipa-metalbox`
+names another address. The ramdisk starts the Ironic agent only once Ironic answers
+there on port 6385, and then fetches the node image from port 80. The httpd service
+publishes both:
+
+* the images on port 80 of every IPv4 address,
+* Ironic on port 6385 of the IPv4 address of the interface named by
+  `httpd_ironic_interface`,
+* and both ports on the global IPv6 addresses of that interface.
+
+`httpd_ironic_interface` defaults to `loopback0`. On an existing server without such an
+interface, httpd does not publish Ironic at all, and the deploy ramdisk never starts the
+agent. Set `httpd_ironic_interface` in `environments/infrastructure/configuration.yml`
+to the interface that carries the address the nodes reach, for example:
+
+```yaml
+httpd_ironic_interface: eno1
+```
+
 ### Fill the NetBox directory
 
 In the directory containing the NetBox data — this can be either a dedicated Git
