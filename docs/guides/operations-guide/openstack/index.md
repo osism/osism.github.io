@@ -13,6 +13,15 @@ The play `network-external` is used to create an external network.
 osism apply network-external
 ```
 
+The plays in the OpenStack environment, including `network-external`, `flavors` and site-specific
+plays (`playbook-<name>.yml` in `environments/openstack`), authenticate with the
+`os_password_<cloud>` secrets from `environments/openstack/secrets.yml`. These are the same
+credentials that `osism openstack` and `osism manage` use. A hyphen in the cloud name becomes an
+underscore in the secret name, so the cloud `admin-system` uses `os_password_admin_system`. A custom
+cloud needs a profile in `environments/openstack/clouds.yml` and a matching `os_password_<name>`
+secret. Do not commit a `secure.yml`, encrypted or not. A plain-text `secure.yml` on the manager is
+only used as a fallback for clouds that have no `os_password_*` secret.
+
 Available parameters for the OpenStack Environment (`environments/openstack/configuration.yml`).
 
 | Parameter                                  | Default            |

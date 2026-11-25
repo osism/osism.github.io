@@ -26,7 +26,8 @@ name `admin` is used; another profile can be selected with the `--cloud` paramet
 
 No `clouds.yaml` needs to be provided. The cloud credentials are taken from the OSISM configuration
 (the `environments/openstack` directory of your configuration repository, where the secrets are
-kept in `secure.yml`) that has been deployed to the manager.
+the `os_password_<cloud>` entries in `environments/openstack/secrets.yml`) that has been deployed to
+the manager.
 
 ```console
 $ osism manage flavors --help
