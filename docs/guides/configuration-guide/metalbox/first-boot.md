@@ -62,4 +62,6 @@ Before OSISM 11.1.0, set the key as `operator_authorized_keys` at the top level 
 device's `local_context_data`.
 
 Without a key in NetBox, a newly provisioned node is reachable only through credentials
-built into the image, if it has any.
+built into the image, if it has any. From OSISM 11.1.0 on, `osism baremetal deploy`
+warns about such a node, see
+[Node deployment](../../operations-guide/metalbox/node-deployment.md#deploy-the-node).

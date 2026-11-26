@@ -163,6 +163,21 @@ config drive, which configures the node when it comes up for the first time; wha
 sets and where its values come from is described in
 [First boot of a node](../../configuration-guide/metalbox/first-boot.md).
 
+From OSISM 11.1.0 on, when the play would install no operator key, `osism baremetal
+deploy` says so for that node, together with the reason (NetBox is not configured, the
+lookup failed, no device matches the node, or the device carries none of
+`operator_authorized_keys`, `operator_additional_authorized_keys` and
+`operator_authorized_github_accounts`):
+
+```text
+node101: the first boot installs no operator key (no operator_authorized_keys, operator_additional_authorized_keys or operator_authorized_github_accounts in first_boot or local_context_data of NetBox device node101). After the deploy the node is reachable only through credentials built into the image, if it has any.
+```
+
+The deployment still goes ahead. The warning cannot see the image: whether the node is
+reachable then depends on what the image contains. Add the key to NetBox before deploying,
+rather than relying on the image; the deployment reads it from NetBox when it builds the
+config drive.
+
 Provisioning takes a while and ends in the `active` state. Follow it with:
 
 ```bash
