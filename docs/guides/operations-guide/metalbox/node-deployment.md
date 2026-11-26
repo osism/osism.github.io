@@ -146,6 +146,11 @@ Building the array on its own, without deploying an image, is described in
 
 ## Deploy the node
 
+Before deploying, make sure that NetBox carries the operator key the Manager logs in
+with, as described in
+[First boot of a node](../../configuration-guide/metalbox/first-boot.md). The node is
+reachable afterwards only through that key or through credentials built into the image.
+
 **MetalBox.** Write the operating system to the node:
 
 ```bash
@@ -153,9 +158,10 @@ osism baremetal deploy node101
 ```
 
 The node boots the ironic-python-agent over virtual media, pulls the target image from
-the MetalBox and writes it to disk. The configuration for the first boot is generated
-from the `local_context_data` of the NetBox device, so the node configures itself when
-it comes up.
+the MetalBox and writes it to disk. The deployment also puts a short play on the node's
+config drive, which configures the node when it comes up for the first time; what it
+sets and where its values come from is described in
+[First boot of a node](../../configuration-guide/metalbox/first-boot.md).
 
 Provisioning takes a while and ends in the `active` state. Follow it with:
 

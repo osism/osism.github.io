@@ -1,6 +1,8 @@
 ---
 sidebar_label: Rotate Operator Key
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Rotation of the operator key
 
@@ -140,11 +142,70 @@ This step is optional. Since the old key has been removed from the nodes, it may
 
 ## Rotating the key in the NetBox (MetalBox)
 
-In case the hardware is provisioned using the OSISM MetalBox, the operator key also needs to be replaced in the `local_context_data` of each device, so that a newly provisioned system is accessible through the manager.
-The key in `local_context_data` is applied when a node boots for the first time, and it is also a host variable in the inventory of the manager: later `osism apply operator` runs use it like any other host variable, unless your configuration repository sets `operator_authorized_keys` with higher precedence, for example in `environments/configuration.yml`.
-If it does, this step only affects systems that are newly provisioned via the MetalBox afterwards and can be performed at any time. If it does not, change the key here as part of the rotation described above, not independently of it.
-If your setup uses a separate repository for NetBox management, apply the following change there and update the git submodule in the configuration repository afterwards by running `git submodule update --init`. Remember to also commit the updated submodule.
-In case your setup manages the NetBox from the configuration directory, apply the changes there and commit them directly.
+In case the hardware is provisioned using the OSISM MetalBox, the operator key also
+needs to be replaced in NetBox, so that a newly provisioned system is accessible
+through the manager. Where the key is kept in NetBox depends on the release.
+
+If your setup uses a separate repository for NetBox management, apply the following
+change there and update the git submodule in the configuration repository afterwards by
+running `git submodule update --init`. Remember to also commit the updated submodule.
+In case your setup manages the NetBox from the configuration directory, apply the
+changes there and commit them directly.
+
+<Tabs>
+<TabItem value="osism-11.1" label="OSISM >= 11.1.0">
+
+The operator key is needed in two places: in `environments/configuration.yml` of the
+configuration repository, from which the manager installs it on all nodes, and in
+NetBox, from which the MetalBox puts it on the config drive of a newly provisioned node —
+the MetalBox does not read the configuration repository. A rotation changes both.
+
+In NetBox, keep the key in one place only: under `first_boot`, preferably in a single
+config context for the site, so that a rotation changes one entry there (see
+[First boot of a node](../configuration-guide/metalbox/first-boot.md)). A key under
+`first_boot` is applied when a node boots for the first time and never reaches the
+inventory of the manager. Replacing it there only affects systems that are newly
+provisioned via the MetalBox afterwards, so it does not have to happen at the same time
+as the steps above and can be done whenever convenient.
+
+* Find the config context that sets `first_boot.operator_authorized_keys`:
+  ```yaml
+  - config_context:
+      name: first-boot-operator-key
+      [...]
+      data:
+        first_boot:
+          operator_authorized_keys:
+            - ssh-rsa AAAA...old key content...
+  ```
+  and replace the old key with the new **public** key.
+* A device can also carry the key itself, under `first_boot` or at the top level of its
+  `local_context_data`. A device's own `first_boot` key wins over the config context,
+  and both win over a top-level key at the first boot. Move such keys into the config
+  context, or replace them as well.
+* A top-level `operator_authorized_keys` in `local_context_data` that was only there
+  for provisioning can be removed: it is still a host variable in the inventory of the
+  manager.
+* Commit and push the change to the repository.
+
+</TabItem>
+<TabItem value="osism-11.0" label="OSISM < 11.1.0">
+
+The key is set as `operator_authorized_keys` at the top level of each device's
+`local_context_data`. It is applied when a node boots for the first time, and it is
+also a host variable in the inventory of the manager.
+
+A configuration repository created from cfg-cookiecutter sets
+`operator_authorized_keys` in `environments/configuration.yml` (the rotation above
+extends exactly that list), and that value wins over the host variable from NetBox. Later `osism apply operator` runs
+therefore install the keys from the configuration repository, and replacing the key in
+NetBox only affects systems that are newly provisioned via the MetalBox afterwards. This
+step can then be performed at any time.
+
+If your configuration repository does not set `operator_authorized_keys` in
+`environments/configuration.yml`, the key in NetBox is the one that later
+`osism apply operator` runs install on all nodes. Replace it as part of the rotation
+described above, together with adding the new key, not independently of it.
 
 * Find each occurrence of
   ```yaml
@@ -156,6 +217,9 @@ In case your setup manages the NetBox from the configuration directory, apply th
   ```
   and replace the old key with the new **public** key.
 * Commit and push the change to the repository.
+
+</TabItem>
+</Tabs>
 
 On your MetalBox(es):
 
