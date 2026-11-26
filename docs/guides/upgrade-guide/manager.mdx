@@ -136,7 +136,7 @@ are at the same commit by the time step 3 runs.
       It writes that file from `operator_private_key` in `environments/secrets.yml`, but
       only when it does not exist yet. The file is listed in `.gitignore`, so a copy from
       an earlier run survives every `git pull` unnoticed. After the operator key has been
-      [rotated](../operations-guide/operator_key_rotation.md), delete the stale file so
+      [rotated](../operations-guide/operator_key_rotation.mdx), delete the stale file so
       that it is written again from `secrets.yml`, otherwise steps 2 and 3 keep offering
       the old key and the SSH login fails:
 
