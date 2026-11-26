@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Installation of the MetalBox | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/deploy-guide/metalbox"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Installation of the MetalBox | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="For the architecture of the MetalBox and the purpose of its individual components —"><meta data-rh="true" property="og:description" content="For the architecture of the MetalBox and the purpose of its individual components —"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/deploy-guide/metalbox"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/metalbox" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/deploy-guide/metalbox" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Deploy Guide","item":"https://osism.tech/docs/guides/deploy-guide/"},{"@type":"ListItem","position":3,"name":"MetalBox","item":"https://osism.tech/docs/guides/deploy-guide/metalbox"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.28ce183e.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.6623235b.js" defer="defer"></script>
 <script src="/assets/js/main.d39ff409.js" defer="defer"></script>
 </head>
 <body>
@@ -270,6 +270,23 @@ resolve to.</li>
 above, and because a dummy interface does not survive a reboot, it should also be
 added to the permanent network configuration, for example in a file in
 <code>/etc/netplan</code>.</p>
+<p>The nodes do not use this address to reach the MetalBox. A node that is being deployed
+runs the deploy ramdisk, which looks the MetalBox up under the name <code>metalbox</code>: it
+resolves to <code>fd33:fd0e:2aee::42</code> unless the kernel parameter <code>osism-ipa-metalbox</code>
+names another address. The ramdisk starts the Ironic agent only once Ironic answers
+there on port 6385, and then fetches the node image from port 80. The httpd service
+publishes both:</p>
+<ul>
+<li class="">the images on port 80 of every IPv4 address,</li>
+<li class="">Ironic on port 6385 of the IPv4 address of the interface named by
+<code>httpd_ironic_interface</code>,</li>
+<li class="">and both ports on the global IPv6 addresses of that interface.</li>
+</ul>
+<p><code>httpd_ironic_interface</code> defaults to <code>loopback0</code>. On an existing server without such an
+interface, httpd does not publish Ironic at all, and the deploy ramdisk never starts the
+agent. Set <code>httpd_ironic_interface</code> in <code>environments/infrastructure/configuration.yml</code>
+to the interface that carries the address the nodes reach, for example:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">httpd_ironic_interface</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> eno1</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="fill-the-netbox-directory">Fill the NetBox directory<a href="#fill-the-netbox-directory" class="hash-link" aria-label="Direct link to Fill the NetBox directory" title="Direct link to Fill the NetBox directory" translate="no">​</a></h3>
 <p>In the directory containing the NetBox data — this can be either a dedicated Git
 repository or the <code>netbox</code> subdirectory of the CloudPod repository — run:</p>
