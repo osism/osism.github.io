@@ -46,8 +46,11 @@ they can be called by their plain name.
 
 For the [container registry](../../concepts/metalbox.md#docker-registry) — the mirror
 that serves all container images to the MetalBox and to the nodes of the CloudPod —
-two variants are available:
+these variants are available:
 
+* **2026.1** — a rolling build of the current `2026.1` release. The images are rebuilt
+  and republished regularly, so the tags inside `registry-2026.1-full.tar.bz2` move
+  forward over time.
 * **2025.1** — a rolling build of the current `2025.1` release. The images are rebuilt
   and republished regularly, so the tags inside `registry-2025.1-full.tar.bz2` move
   forward over time.
@@ -56,7 +59,7 @@ two variants are available:
   resolves to is listed in the [Release Notes](../../release-notes/index.md). The
   image versions inside `registry-stable-full.tar.bz2` are pinned per release and only
   change when a new stable OSISM release is published. Use this variant for
-  reproducible deployments that should not track the rolling `2025.1` build.
+  reproducible deployments that should not track the rolling builds.
 
 The following sections default to the `2025.1` artifacts. Replace the file name with
 the `stable` counterpart (e.g. `registry-stable-full.tar.bz2` instead of
@@ -80,6 +83,7 @@ using the image lists under
 | Tarball                        | Contents                                                                                                                                                                                                                                                                                                                                                                                                               |
 |:-------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `registry.tar.bz2`             | Version-independent base tarball for the MetalBox itself. Built from [`container-images-metalbox.yml`](https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-metalbox.yml) only.                                                                                                                                                                                                                      |
+| `registry-2026.1-full.tar.bz2` | Contents of `registry.tar.bz2` plus the OpenStack image set from [`container-images-openstack-2026.1.yml`](https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-openstack-2026.1.yml).                                                                                                                                                                                                               |
 | `registry-2025.1-full.tar.bz2` | Contents of `registry.tar.bz2` plus the OpenStack image set from [`container-images-openstack-2025.1.yml`](https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-openstack-2025.1.yml).                                                                                                                                                                                                               |
 | `registry-stable-full.tar.bz2` | Contents of `registry.tar.bz2` plus the OpenStack image set from [`container-images-openstack-stable.yml`](https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-openstack-stable.yml) and the Manager image set from [`container-images-manager-stable.yml`](https://github.com/osism/metalbox/blob/main/zuul/vars/container-images-manager-stable.yml), pinned to the current OSISM stable release. |
 
@@ -128,6 +132,7 @@ Downloads from the Hetzner Object Storage can occasionally be interrupted. Use
    [ubuntu-noble.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/ubuntu-noble.tar.bz2).
 2. If the MetalBox is to be used as a container registry for nodes inside the
    CloudPod, download
+   [registry-2026.1-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-2026.1-full.tar.bz2),
    [registry-2025.1-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-2025.1-full.tar.bz2)
    or, for the pinned variant,
    [registry-stable-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2).
@@ -431,7 +436,8 @@ documentation, e.g. managing Ironic nodes or SONiC switches.
 
 ### Using the MetalBox as a full container registry {#full-container-registry}
 
-1. Download
+1. Download either
+   [registry-2026.1-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-2026.1-full.tar.bz2),
    [registry-2025.1-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-2025.1-full.tar.bz2)
    or, to use the pinned variant,
    [registry-stable-full.tar.bz2](https://nbg1.your-objectstorage.com/osism/metalbox/registry-stable-full.tar.bz2).
