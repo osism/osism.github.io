@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Node deployment | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Node deployment | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="This page describes the generic case: a node that is described in NetBox but has never"><meta data-rh="true" property="og:description" content="This page describes the generic case: a node that is described in NetBox but has never"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Guides","item":"https://osism.tech/docs/guides/"},{"@type":"ListItem","position":2,"name":"Operations Guide","item":"https://osism.tech/docs/guides/operations-guide/"},{"@type":"ListItem","position":3,"name":"MetalBox","item":"https://osism.tech/docs/guides/operations-guide/metalbox/"},{"@type":"ListItem","position":4,"name":"Node deployment","item":"https://osism.tech/docs/guides/operations-guide/metalbox/node-deployment"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.55210d5c.js" defer="defer"></script>
-<script src="/assets/js/main.d39ff409.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.40682567.js" defer="defer"></script>
+<script src="/assets/js/main.2047bedf.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -94,12 +94,17 @@ have one:</p>
 <p>Building the array on its own, without deploying an image, is described in
 <a class="" href="/docs/guides/configuration-guide/metalbox/software-raid">Software RAID</a>.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="deploy-the-node">Deploy the node<a href="#deploy-the-node" class="hash-link" aria-label="Direct link to Deploy the node" title="Direct link to Deploy the node" translate="no">​</a></h2>
+<p>Before deploying, make sure that NetBox carries the operator key the Manager logs in
+with, as described in
+<a class="" href="/docs/guides/configuration-guide/metalbox/first-boot">First boot of a node</a>. The node is
+reachable afterwards only through that key or through credentials built into the image.</p>
 <p><strong>MetalBox.</strong> Write the operating system to the node:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">osism baremetal deploy node101</span><br></div></code></pre></div></div>
 <p>The node boots the ironic-python-agent over virtual media, pulls the target image from
-the MetalBox and writes it to disk. The configuration for the first boot is generated
-from the <code>local_context_data</code> of the NetBox device, so the node configures itself when
-it comes up.</p>
+the MetalBox and writes it to disk. The deployment also puts a short play on the node&#x27;s
+config drive, which configures the node when it comes up for the first time; what it
+sets and where its values come from is described in
+<a class="" href="/docs/guides/configuration-guide/metalbox/first-boot">First boot of a node</a>.</p>
 <p>Provisioning takes a while and ends in the <code>active</code> state. Follow it with:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">watch osism baremetal list</span><br></div></code></pre></div></div>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hand-the-node-over-to-the-manager">Hand the node over to the Manager<a href="#hand-the-node-over-to-the-manager" class="hash-link" aria-label="Direct link to Hand the node over to the Manager" title="Direct link to Hand the node over to the Manager" translate="no">​</a></h2>
