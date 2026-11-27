@@ -61,12 +61,8 @@ Backing up the control plane database and restoring it are covered under
 
 ### Recovery
 
-If you stopped your mariadb galera cluster completely, you can use the following procedure
-to start a recovery.
-
-```bash
-osism apply mariadb-recovery
-```
+Bringing back a cluster that stopped completely is covered in [MariaDB
+Recovery](mariadb-recovery.md).
 
 ### Create database & user
 
