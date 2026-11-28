@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">OSISM Manager | OSISM – Sovereign Cloud Platform</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://osism.tech/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://osism.tech/docs/concepts/manager"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="OSISM Manager | OSISM – Sovereign Cloud Platform"><meta data-rh="true" name="description" content="The OSISM Manager is the central management node in every OSISM deployment. It is the"><meta data-rh="true" property="og:description" content="The OSISM Manager is the central management node in every OSISM deployment. It is the"><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://osism.tech/docs/concepts/manager"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/manager" hreflang="en"><link data-rh="true" rel="alternate" href="https://osism.tech/docs/concepts/manager" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Concepts","item":"https://osism.tech/docs/concepts/"},{"@type":"ListItem","position":2,"name":"OSISM Manager","item":"https://osism.tech/docs/concepts/manager"}]}</script><link rel="stylesheet" href="/assets/css/styles.5a2c7df3.css">
-<script src="/assets/js/runtime~main.bf4e7ad5.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.c7a0aab8.js" defer="defer"></script>
 <script src="/assets/js/main.2047bedf.js" defer="defer"></script>
 </head>
 <body>
@@ -33,7 +33,7 @@ so that all Ansible containers share the same gathered host facts. Separate
 queues exist for each workload type:</p>
 <ul>
 <li class=""><code>kolla-ansible job queue</code> — OpenStack service lifecycle</li>
-<li class=""><code>ceph-ansible job queue</code> — Ceph deployment and management</li>
+<li class=""><code>ceph-ansible job queue</code> — Ceph deployment and management with ceph-ansible</li>
 <li class=""><code>osism-ansible job queue</code> — Infrastructure-level playbooks</li>
 <li class=""><code>osism-kubernetes job queue</code> — Kubernetes-related operations</li>
 <li class=""><code>reconciler job queue</code> — Inventory reconciliation</li>
@@ -46,13 +46,24 @@ other.</p>
 maintained at
 <a href="https://github.com/osism/container-image-kolla-ansible" target="_blank" rel="noopener noreferrer" class="">github.com/osism/container-image-kolla-ansible</a>.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ceph-ansible">ceph-ansible<a href="#ceph-ansible" class="hash-link" aria-label="Direct link to ceph-ansible" title="Direct link to ceph-ansible" translate="no">​</a></h3>
-<p>Handles Ceph deployment and day-2 management. The container image is maintained at
+<p>Handles Ceph deployment and day-2 management for clusters that use the ceph-ansible
+backend. The container image is maintained at
 <a href="https://github.com/osism/container-image-ceph-ansible" target="_blank" rel="noopener noreferrer" class="">github.com/osism/container-image-ceph-ansible</a>.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="osism-ansible">osism-ansible<a href="#osism-ansible" class="hash-link" aria-label="Direct link to osism-ansible" title="Direct link to osism-ansible" translate="no">​</a></h3>
 <p>Handles infrastructure-level playbooks that are not covered by kolla-ansible or
 ceph-ansible — for example, bootstrapping nodes, managing network configuration, and
 operating supporting services. The container image is maintained at
 <a href="https://github.com/osism/container-image-osism-ansible" target="_blank" rel="noopener noreferrer" class="">github.com/osism/container-image-osism-ansible</a>.</p>
+<p>It also runs the playbooks of the Ceph environment that are implemented in
+<a href="https://github.com/osism/ansible-playbooks" target="_blank" rel="noopener noreferrer" class="">osism/ansible-playbooks</a>, most notably the
+<code>cephadm-*</code> plays for clusters deployed with cephadm and the <code>validate-ceph-*</code>
+validators. They run in the <code>osism-ansible job queue</code> with the <code>ceph</code> environment of the
+configuration repository. Except for <code>cephadm-bootstrap</code>, which installs cephadm on the
+Ceph hosts and bootstraps the first monitor over SSH, the <code>cephadm-*</code> plays target the
+manager and drive the cluster with the <code>ceph</code> CLI of the <code>cephclient</code> container. The Ceph
+daemons themselves are deployed by the cephadm orchestrator in the Ceph manager. When a
+collection such as <code>osism apply nutshell</code> deploys Ceph, the OSISM release selects the
+backend, and <code>--ceph-backend</code> overrides it.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="osism-kubernetes">osism-kubernetes<a href="#osism-kubernetes" class="hash-link" aria-label="Direct link to osism-kubernetes" title="Direct link to osism-kubernetes" translate="no">​</a></h3>
 <p>Handles Kubernetes-related operations, including cluster provisioning and lifecycle
 management. The source is maintained at
