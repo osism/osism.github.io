@@ -136,11 +136,8 @@ with the image of that release.
     Every daemon reports the target version from step 2. The cluster is `HEALTH_WARN`, from client
     keys of the old key type (`AUTH_INSECURE_CLIENT_KEY_TYPE`) and from the monitors
     still allowing that type (`AUTH_INSECURE_KEYS_ALLOWED`, `AUTH_INSECURE_KEYS_CREATABLE`,
-    `AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE`). The cluster works with these warnings.
-    They clear once the remaining keys have been rotated and the old key type is
-    disallowed. Do not rotate the keys of the OpenStack services without distributing
-    them: a service loses access to Ceph as soon as its key is rotated, until the new key
-    is in the configuration repository and the service has been applied.
+    `AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE`). The cluster works with these warnings;
+    step 7 clears them.
 
 5. Remove `rgw_keystone_api_version`, if the cluster sets it. Tentacle no longer knows the
    option (`ceph config dump` lists it as `unknown`) and the RGW daemons ignore it:
@@ -181,6 +178,9 @@ with the image of that release.
     ```
 
     `ceph --version` on the manager then reports the same Tentacle version.
+
+7. Move the cluster to the new cephx key type, in a maintenance window:
+   [Move to the aes256k key type](./cephx-keys.md).
 
 :::note RGW daemons deployed without `--networks`
 
